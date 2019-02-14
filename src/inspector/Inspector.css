@@ -1,0 +1,63 @@
+.jsonschema-inspector {
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.jsonschema-inspector-container {
+    display: inline-flex;
+    flex-direction: column;
+}
+.jsonschema-inspector-colview {
+    display: flex;
+    flex-direction: row;
+    height: 25em;
+    padding: 0.2em 0.1em;
+    border: 1px solid darkslategray;
+    overflow-x: auto;
+}
+.jsonschema-inspector-column {
+    display: flex;
+    flex-direction: column;
+    width: 15em;
+    border-right: 1px solid darkslategray;
+    overflow-y: scroll;
+}
+.jsonschema-inspector-item {
+    text-align: start;
+    border: none;
+    background: inherit;
+    font: inherit;
+    padding: 0;
+}
+.jsonschema-inspector-item:hover {
+    background-color: #eceff1;
+}
+.jsonschema-inspector-item.selected {
+    background-color: #cfd8dc;
+    color: black;
+}
+.jsonschema-inspector-column.trailing-selection .jsonschema-inspector-item.selected {
+    background-color: #bbdefb;
+    color: black;
+}
+.jsonschema-inspector-item-content {
+    display: flex;
+    flex-direction: row;
+}
+.jsonschema-inspector-item-name {
+    display: block;
+    flex-grow: 1;
+    padding: 0.25em 0.5em 0.25em 0.75em;
+}
+.jsonschema-inspector-item-icon {
+    display: none;
+    flex-grow: 0;
+    padding: 0.25em 0.5em 0.25em 0;
+}
+.jsonschema-inspector-item-icon:after {
+    content: '\25B6';
+    font-size: 10px;
+}
+.jsonschema-inspector-item.has-nested-items > .jsonschema-inspector-item-content > .jsonschema-inspector-item-icon {
+    display: block;
+}
