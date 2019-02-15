@@ -42,6 +42,9 @@ export function getNestedProperties(schema, refTargets) {
         // the given schema represents an "object" with a list of "properties"
         return schema.properties;
     }
+    if (schema.allOf) {
+        return schema.allOf.reduce(mergeSchemas(refTargets), {});
+    }
     if (typeof schema.items === 'boolean') {
         // the given schema is an array which may specify its content type in "additionalItems"
         return getNestedProperties(schema.additionalItems, refTargets);
@@ -56,4 +59,14 @@ export function getNestedProperties(schema, refTargets) {
     }
     // for other types, there are no nested properties to show
     return null;
+}
+
+function mergeSchemas(refTargets) {
+    return (combined, nextToMerge) => {
+        const nestedProperties = getNestedProperties(nextToMerge, refTargets);
+        if (isNonEmptyObject(nestedProperties)) {
+            return Object.assign(combined, nestedProperties);
+        }
+        return combined;
+    };
 }

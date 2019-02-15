@@ -33,18 +33,26 @@ class App extends Component {
                         vegetables: {
                             type: "array",
                             items: {
-                                type: "object",
-                                required: ["veggieName", "veggieLike"],
-                                properties: {
-                                    veggieName: {
-                                        type: "string",
-                                        description: "The name of the vegetable."
-                                    },
-                                    veggieLike: {
-                                        type: "boolean",
-                                        description: "Do I like this vegetable?"
+                                allOf: [{
+                                    type: "object",
+                                    required: ["veggieName", "veggieLike"],
+                                    properties: {
+                                        veggieName: {
+                                            type: "string",
+                                            description: "The name of the vegetable."
+                                        }
                                     }
-                                }
+                                },
+                                {
+                                    type: "object",
+                                    required: ["veggieLike"],
+                                    properties: {
+                                        veggieLike: {
+                                            type: "boolean",
+                                            description: "Do I like this vegetable?"
+                                        }
+                                    }
+                                }]
                             }
                         }
                     }

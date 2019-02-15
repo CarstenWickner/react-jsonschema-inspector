@@ -66,10 +66,12 @@ jsonSchemaShape.additionalItems = PropTypes.oneOfType([PropTypes.bool, JsonSchem
 */
 // cater for re-usable sub-schemas that can be referenced via { "$ref": "..." }
 jsonSchemaShape.definitions = PropTypes.objectOf(JsonSchemaPropType);
+
+// cater for recursive combined schemas
+jsonSchemaShape.allOf = PropTypes.arrayOf(JsonSchemaPropType);
 /* commented out: unsupported fields (for now)
-    // cater for recursive combined schemas
+    // cater for conditional recursive combined schemas
     jsonSchemaShape.anyOf = PropTypes.arrayOf(JsonSchemaPropType);
-    jsonSchemaShape.allOf = PropTypes.arrayOf(JsonSchemaPropType);
     jsonSchemaShape.oneOf = PropTypes.arrayOf(JsonSchemaPropType);
     jsonSchemaShape.not = JsonSchemaPropType;
     // one property may only be required if another is also present
