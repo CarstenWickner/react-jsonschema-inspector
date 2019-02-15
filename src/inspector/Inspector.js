@@ -30,18 +30,38 @@ class Inspector extends Component {
      * @return object containing a 'columnData' array - each element being an object with the props expected by <InspectorColumn>
      */
     getRenderDataForSelection = memoize((schemas, selectedItems) => {
+        const refTargets = {};
+        if (selectedItems.length > 0) {
+            const rootSchema = schemas[selectedItems[0]];
+            refTargets['#'] = rootSchema;
+            const { $id, definitions } = rootSchema;
+            if ($id) {
+                refTargets[$id] = rootSchema;
+            }
+            if (definitions) {
+                Object.keys(definitions).forEach(key => {
+                    const subSchema = definitions[key];
+                    refTargets['#/definitions/' + key] = subSchema;
+                    if (subSchema.$id) {
+                        refTargets[subSchema.$id] = subSchema;
+                    }
+                });
+            }
+        }
+
         // the first column always lists all top-level schemas
         let nextColumnScope = schemas;
         const lastSelectionIndex = selectedItems.length - 1;
         const columnData = selectedItems.map((selection, index) => {
             const currentColumnScope = nextColumnScope;
             if (currentColumnScope) {
-                nextColumnScope = getNestedProperties(currentColumnScope[selection]);
+                nextColumnScope = getNestedProperties(currentColumnScope[selection], refTargets);
                 return {
                     items: currentColumnScope, // mapped JsonSchema definitions to select from in this column
                     selectedItem: selection, // name of the selected item (i.e. key in 'items')
                     trailingSelection: lastSelectionIndex === index, // whether this is the last column with a selection
-                    onSelect: this.onSelect(index)
+                    onSelect: this.onSelect(index),
+                    refTargets
                 };
             }
             // the selection in the previous column refers to a schema that has no nested properties/items
@@ -55,7 +75,8 @@ class Inspector extends Component {
                 items: nextColumnScope,
                 selectedItem: null,
                 trailingSelection: false,
-                onSelect: this.onSelect(selectedItems.length)
+                onSelect: this.onSelect(selectedItems.length),
+                refTargets
             });
         }
         return { columnData };
@@ -65,8 +86,14 @@ class Inspector extends Component {
         // the lowest child component accepting the click/selection event should consume it
         event.stopPropagation();
         const { selectedItems } = this.state;
+        if (selectedItems.length === columnIndex && !name) {
+            // click clearing selection in next column (where there was no selection yet)
+            // i.e. no change = no need for any action
+            return;
+        }
         if (selectedItems.length === (columnIndex + 1) && selectedItems[columnIndex] === name) {
-            // selection has not changed, no need for any action
+            // click on current/last selection
+            // i.e. no change = no need for any action
             return;
         }
         // shallow-copy array of item identifiers (i.e. strings)

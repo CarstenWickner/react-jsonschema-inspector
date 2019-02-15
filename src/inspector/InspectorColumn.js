@@ -7,7 +7,7 @@ import InspectorItem from './InspectorItem';
 
 class InspectorColumn extends PureComponent {
     renderItem(name) {
-        const { items, selectedItem, onSelect, renderItemContent } = this.props;
+        const { items, selectedItem, refTargets, onSelect, renderItemContent } = this.props;
         const item = items[name];
         return (
             <InspectorItem
@@ -15,6 +15,7 @@ class InspectorColumn extends PureComponent {
                 name={name}
                 schema={item}
                 selected={name === selectedItem}
+                refTargets={refTargets}
                 onSelect={event => onSelect(event, name)}
                 renderContent={renderItemContent}
             />
@@ -40,6 +41,7 @@ InspectorColumn.propTypes = {
     items: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.bool, JsonSchemaPropType])).isRequired,
     selectedItem: PropTypes.string,
     trailingSelection: PropTypes.bool,
+    refTargets: PropTypes.objectOf(JsonSchemaPropType),
     onSelect: PropTypes.func.isRequired, // func(SyntheticEvent: event, string: name)
     renderItemContent: PropTypes.func // func(string: name, JsonSchema: schema, boolean: selected)
 };

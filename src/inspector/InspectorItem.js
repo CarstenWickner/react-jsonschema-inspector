@@ -17,10 +17,10 @@ class InspectorItem extends PureComponent {
     }
 
     render() {
-        const { name, schema, selected, onSelect, renderContent } = this.props;
+        const { name, schema, selected, refTargets, onSelect, renderContent } = this.props;
         const itemClassName = classNames({
             'jsonschema-inspector-item': true,
-            'has-nested-items': hasNestedProperties(schema),
+            'has-nested-items': hasNestedProperties(schema, refTargets),
             selected
         });
         return (
@@ -35,6 +35,7 @@ InspectorItem.propTypes = {
     name: PropTypes.string.isRequired,
     schema: PropTypes.oneOfType([PropTypes.bool, JsonSchemaPropType]).isRequired,
     selected: PropTypes.bool.isRequired,
+    refTargets: PropTypes.objectOf(JsonSchemaPropType),
     onSelect: PropTypes.func.isRequired, // func(SyntheticEvent: event)
     renderContent: PropTypes.func // func(string: name, JsonSchema: schema, boolean: selected)
 };
