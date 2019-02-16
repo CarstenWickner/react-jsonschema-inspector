@@ -4,7 +4,8 @@ import memoize from 'memoize-one';
 
 import './Inspector.css';
 
-import InspectorColumn from './InspectorColumn';
+import InspectorColView from './InspectorColView';
+import InspectorDetails from './InspectorDetails';
 import JsonSchemaPropType from './JsonSchemaPropType';
 import { getNestedProperties } from './utils';
 
@@ -19,7 +20,7 @@ class Inspector extends Component {
             selectedItems: defaultSelectedItems
         };
 
-        this.renderColumn = this.renderColumn.bind(this);
+        this.onSelect = this.onSelect.bind(this);
     }
 
     /**
@@ -110,26 +111,14 @@ class Inspector extends Component {
         });
     };
 
-    renderColumn(columnData, index) {
-        const { renderItemContent } = this.props;
-        return (
-            <InspectorColumn
-                key={index}
-                renderItemContent={renderItemContent}
-                {...columnData}
-            />
-        );
-    }
-
     render() {
         const { schemas } = this.props;
         const { selectedItems } = this.state;
         const { columnData } = this.getRenderDataForSelection(schemas, selectedItems);
         return (
             <div className="jsonschema-inspector jsonschema-inspector-container">
-                <div className="jsonschema-inspector-colview">
-                    {columnData.map(this.renderColumn)}
-                </div>
+                <InspectorColView columnData={columnData} />
+                {columnData && <InspectorDetails columnData={columnData} />}
             </div>
         );
     }

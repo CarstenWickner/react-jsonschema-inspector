@@ -13,23 +13,26 @@ const jsonSchemaShape = {
     examples: PropTypes.array,
     default: PropTypes.any,
     type: PropTypes.oneOfType([simpleTypes, PropTypes.arrayOf(simpleTypes)]),
+
+    // "enum" of allowed values
+    enum: PropTypes.array,
+    // "const" is just an alternative to an "enum" with a single entry
+    const: PropTypes.any,
+    // the following options are only applicable if the "type" includes the value "string"
+    minLength: PropTypes.number,
+    maxLength: PropTypes.number,
+    pattern: PropTypes.string,
+    format: PropTypes.string,
+    // the following options are only applicable if the "type" includes the value "number"
+    multipleOf: PropTypes.number,
+    minimum: PropTypes.number,
+    exclusiveMinimum: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
+    maximum: PropTypes.number,
+    exclusiveMaximum: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
+
+    // the following options are only applicable if the "type" includes the value "object"
+    required: PropTypes.arrayOf(PropTypes.string),
     /* commented out: unsupported fields (for now)
-        // "enum" of allowed values
-        enum: PropTypes.array,
-        // "const" is just an alternative to an "enum" with a single entry
-        const: PropTypes.any,
-        // the following options are only applicable if the "type" includes the value "string"
-        minLength: PropTypes.number,
-        maxLength: PropTypes.number,
-        pattern: PropTypes.string,
-        format: PropTypes.string,
-        // the following options are only applicable if the "type" includes the value "number"
-        multipleOf: PropTypes.number,
-        minimum: PropTypes.number,
-        exclusiveMinimum: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
-        maximum: PropTypes.number,
-        exclusiveMaximum: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
-        // the following options are only applicable if the "type" includes the value "object"
         propertyNames: PropTypes.shape({
             minLength: PropTypes.number,
             maxLength: PropTypes.number,
@@ -38,12 +41,11 @@ const jsonSchemaShape = {
         }),
         minProperties: PropTypes.number,
         maxProperties: PropTypes.number,
-        required: PropTypes.arrayOf(PropTypes.string),
-        // the following options are only applicable if the "type" includes the value "array"
-        minItems: PropTypes.number,
-        maxItems: PropTypes.number,
-        uniqueItems: PropTypes.bool
     */
+    // the following options are only applicable if the "type" includes the value "array"
+    minItems: PropTypes.number,
+    maxItems: PropTypes.number,
+    uniqueItems: PropTypes.bool
 };
 const JsonSchemaPropType = PropTypes.shape(jsonSchemaShape);
 

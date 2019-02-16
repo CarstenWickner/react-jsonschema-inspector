@@ -35,7 +35,7 @@ class App extends Component {
                             items: {
                                 allOf: [{
                                     type: "object",
-                                    required: ["veggieName", "veggieLike"],
+                                    required: ["veggieName"],
                                     properties: {
                                         veggieName: {
                                             type: "string",
@@ -226,7 +226,7 @@ class App extends Component {
                     "default": true
                 },
             },
-            selection: ['Foods', 'vegetables']
+            selection: ['Meta Schema', 'allOf']
         };
     }
 

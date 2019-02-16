@@ -6,8 +6,8 @@
  */
 function isNonEmptyObject(target) {
     return target !== null
-            && typeof target === 'object'
-            && Object.keys(target).length > 0;
+        && typeof target === 'object'
+        && Object.keys(target).length > 0;
 }
 
 /**
@@ -26,7 +26,7 @@ export function hasNestedProperties(schema, refTargets) {
  * Look-up of any nested sub-schemas in the given JSON schema definition.
  * 
  * @param {JsonSchema} schema definition of a JSON structure to traverse
- * @param (Object.<string, JsonSchema>) refTargets re-usable sub-schemas
+ * @param {Object.<string, JsonSchema>} refTargets re-usable sub-schemas
  * @returns object containing nested sub-schemas as values with their names as keys
  */
 export function getNestedProperties(schema, refTargets) {
@@ -43,7 +43,9 @@ export function getNestedProperties(schema, refTargets) {
         return schema.properties;
     }
     if (schema.allOf) {
-        return schema.allOf.reduce(mergeSchemas(refTargets), {});
+        return schema.allOf
+            .map(part => getNestedProperties(part, refTargets))
+            .reduce(mergeValues, {});
     }
     if (typeof schema.items === 'boolean') {
         // the given schema is an array which may specify its content type in "additionalItems"
@@ -61,12 +63,35 @@ export function getNestedProperties(schema, refTargets) {
     return null;
 }
 
-function mergeSchemas(refTargets) {
-    return (combined, nextToMerge) => {
-        const nestedProperties = getNestedProperties(nextToMerge, refTargets);
-        if (isNonEmptyObject(nestedProperties)) {
-            return Object.assign(combined, nestedProperties);
-        }
+export function getPropertyValue(schema, propertyName, refTargets) {
+    if (schema.$ref) {
+        return getPropertyValue(refTargets[schema.$ref], propertyName, refTargets);
+    }
+    if (schema.allOf) {
+        return schema.allOf
+            .map(part => getPropertyValue(part, propertyName, refTargets))
+            .reduce(mergeValues, null);
+    }
+    return schema[propertyName];
+}
+
+/**
+ * Reduce function
+ * @param {Object.<string, JsonSchema>} refTargets re-usable sub-schemas
+ * @returns {func} function for use in Array.reduce()
+ */
+function mergeValues(combined, nextValue) {
+    if (!nextValue && nextValue !== false && nextValue !== 0) {
         return combined;
-    };
+    }
+    if (!combined && combined !== false && combined !== 0) {
+        return nextValue;
+    }
+    if (Array.isArray(combined) && Array.isArray(nextValue)) {
+        return combined.concat(nextValue);
+    }
+    if (typeof combined === 'object' && isNonEmptyObject(nextValue)) {
+        return Object.assign(combined, nextValue);
+    }
+    return combined;
 }
