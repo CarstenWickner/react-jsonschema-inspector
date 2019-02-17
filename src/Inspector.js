@@ -119,7 +119,7 @@ class Inspector extends Component {
     };
 
     render() {
-        const { schemas, renderSelectionDetails, renderEmptyDetails } = this.props;
+        const { schemas, renderItemContent, renderSelectionDetails, renderEmptyDetails } = this.props;
         const { selectedItems, appendEmptyColumn } = this.state;
         const { columnData, refTargets } = this.getRenderDataForSelection(schemas, selectedItems);
         return (
@@ -129,6 +129,7 @@ class Inspector extends Component {
                         columnData={columnData}
                         refTargets={refTargets}
                         appendEmptyColumn={appendEmptyColumn}
+                        renderItemContent={renderItemContent}
                     />}
                 {columnData
                     && <InspectorDetails
@@ -147,11 +148,11 @@ Inspector.propTypes = {
     schemas: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     /** default selection identified by names of object properties */
     defaultSelectedItems: PropTypes.arrayOf(PropTypes.string),
-    /** func(string: name, JsonSchema: schema, boolean: selected) */
+    /** func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refTargets }) */
     renderItemContent: PropTypes.func,
-    /** func(selectedItemSchema: JsonSchema, columnData, selectionColumnIndex: number) */
+    /** func({ itemSchema: JsonSchema, columnData, refTargets, selectionColumnIndex: number }) */
     renderSelectionDetails: PropTypes.func,
-    /** func(schemas, refTargets) */
+    /** func({ rootColumnSchemas, refTargets }) */
     renderEmptyDetails: PropTypes.func
 };
 

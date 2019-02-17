@@ -42,7 +42,7 @@ InspectorColView.propTypes = {
     })),
     refTargets: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     appendEmptyColumn: PropTypes.bool,
-    renderItemContent: PropTypes.func // func(string: name, JsonSchema: schema, boolean: selected)
+    renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refTargets })
 }
 
 export default InspectorColView;

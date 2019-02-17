@@ -6,7 +6,7 @@ import Inspector from '../src/Inspector';
 
 import personSchema from './schema-person.json';
 import metaSchema from './schema-meta.json';
-import shopSelectionSchema from './schema-show-selection.json';
+import shopSelectionSchema from './schema-shop-selection.json';
 
 storiesOf('Inspector', module)
     .addDecorator(withInfo({
@@ -16,33 +16,24 @@ storiesOf('Inspector', module)
         maxPropArrayLength: 5,
         propTablesExclude: [Inspector]
     }))
-    .add('standard', () => (
+    .add('minimal', () => (
         <Inspector
             schemas={{
                 "Person": personSchema
             }}
         />
     ))
-    .add('with defaultSelectedItems', () => (
-        <Inspector
-            schemas={{
-                "Person": personSchema,
-                "Shop Selection": shopSelectionSchema
-            }}
-            defaultSelectedItems={["Shop Selection", "vegetables"]}
-        />
-    ))
-    .add('with renderEmptyDetails prop', () => (
+    .add('with empty Details', () => (
         <Inspector
             schemas={{
                 "Meta JSON Schema": metaSchema
             }}
-            renderEmptyDetails={schemas => {
+            renderEmptyDetails={({ rootColumnSchemas }) => {
                 return (
-                    <div style={{margin: "1em" }}>
-                        <h4>JSON Schema Inspector</h4>
+                    <div style={{ "padding": "1em", "background-color": "#80cbc4" }}>
+                        <h3>JSON Schema Inspector</h3>
                         <p>
-                            Just click on "{Object.keys(schemas)}" on the left side
+                            Just click on "{Object.keys(rootColumnSchemas)}" on the left side
                             in order to traverse its nested properties
                             – but beware of its circular references.
                         </p>
@@ -50,4 +41,50 @@ storiesOf('Inspector', module)
                 );
             }}
         />
-    ));   
+    ))
+    .add('with custom Details', () => (
+        <Inspector
+            schemas={{
+                "Shop": shopSelectionSchema
+            }}
+            defaultSelectedItems={["Shop", "vegetables"]}
+            renderSelectionDetails={({ itemSchema, columnData, selectionColumnIndex }) => {
+                return (
+                    <div style={{ "padding": "1em", "background-color": "#80cbc4" }}>
+                        <h3>Custom Details</h3>
+                        <p>
+                            {itemSchema.description}
+                        </p>
+                        <h4>Selection Path</h4>
+                        <code>
+                            {'//' + columnData
+                                .filter((column, index) => index <= selectionColumnIndex)
+                                .map(column => column.selectedItem)
+                                .join('/')}
+                        </code>
+                    </div>
+                );
+            }}
+        />
+    ))
+    .add('with custom Items', () => (
+        <Inspector
+            schemas={{
+                "Shop": shopSelectionSchema,
+                "Meta JSON Schema": metaSchema
+            }}
+            defaultSelectedItems={["Meta JSON Schema"]}
+            renderItemContent={({ name, hasNestedItems, selected, focused }) => {
+                return (
+                    <div
+                        className="jsonschema-inspector-item-content"
+                        style={{
+                            "background-color": (focused ? "#005b4f" : (selected ? "#80cbc4" : "#80cbc4")),
+                            "color": (focused ? "white" : "black")
+                        }}>
+                        <span className="jsonschema-inspector-item-name">{(hasNestedItems ? "\u25A0 " : "\u25A1 ") + name}</span>
+                    </div>
+                );
+            }}
+        />
+    ));

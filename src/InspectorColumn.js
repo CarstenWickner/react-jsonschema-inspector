@@ -45,7 +45,7 @@ InspectorColumn.propTypes = {
     selectedItem: PropTypes.string,
     trailingSelection: PropTypes.bool,
     onSelect: PropTypes.func.isRequired, // func(SyntheticEvent: event, string: name)
-    renderItemContent: PropTypes.func // func(string: name, JsonSchema: schema, boolean: selected)
+    renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refTargets })
 };
 
 export default InspectorColumn;

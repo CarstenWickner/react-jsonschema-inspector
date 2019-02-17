@@ -1,9 +1,9 @@
 {
     "title": "Person",
     "properties": {
-        "name": {
+        "alias": {
             "type": "string",
-            "description": "The person's full name (i.e. including first and last name)."
+            "description": "The person's login name."
         },
         "friends": {
             "type": "array",
@@ -11,5 +11,5 @@
             "items": { "$ref": "#" }
         }
     },
-    "required": ["name"]
+    "required": ["alias"]
 }

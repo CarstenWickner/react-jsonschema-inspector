@@ -1,9 +1,10 @@
 {
-    "description": "A representation of a person, company, organization, or place",
+    "description": "A representation of a shop's inventory.",
     "type": "object",
     "properties": {
         "vegetables": {
             "type": "array",
+            "description": "List of available vegetables.",
             "items": {
                 "allOf": [{
                     "type": "object",

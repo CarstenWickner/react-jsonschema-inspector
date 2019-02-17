@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 
 import JsonSchemaPropType from './JsonSchemaPropType';
-import { getFieldValue, isDefined } from './utils';
+import { getFieldValue, getPropertyParentFieldValue, isDefined } from './utils';
 
 class InspectorDetails extends PureComponent {
     constructor(props) {
@@ -12,27 +12,38 @@ class InspectorDetails extends PureComponent {
 
     render() {
         const { columnData, refTargets, renderSelectionDetails, renderEmptyDetails } = this.props;
-        const trailingSelectionColumnIndex = columnData.length - (columnData[columnData.length - 1].trailingSelection ? 1 : 2);
-        const trailingSelectionColumn = trailingSelectionColumnIndex < 0 ? null : columnData[trailingSelectionColumnIndex];
-        const selectedItemSchema = trailingSelectionColumn ? trailingSelectionColumn.items[trailingSelectionColumn.selectedItem] : null;
+        const selectionColumnIndex = columnData.length - (columnData[columnData.length - 1].trailingSelection ? 1 : 2);
+        const trailingSelectionColumn = selectionColumnIndex < 0 ? null : columnData[selectionColumnIndex];
+        const itemSchema = trailingSelectionColumn ? trailingSelectionColumn.items[trailingSelectionColumn.selectedItem] : null;
         return (
             <div className="jsonschema-inspector-details">
-                {selectedItemSchema && (renderSelectionDetails || this.renderDefaultSelectionDetails)(selectedItemSchema, refTargets, columnData, trailingSelectionColumnIndex)}
-                {!selectedItemSchema && renderEmptyDetails && renderEmptyDetails(columnData[0].items, refTargets)}
+                {itemSchema
+                    && (renderSelectionDetails || this.renderDefaultSelectionDetails)({
+                        itemSchema,
+                        refTargets,
+                        columnData,
+                        selectionColumnIndex
+                    })}
+                {!itemSchema
+                    && renderEmptyDetails
+                    && renderEmptyDetails({
+                        rootColumnSchemas: columnData[0].items,
+                        refTargets
+                    })}
             </div>
         );
     }
 
-    renderDefaultSelectionDetails(itemSchema, refTargets, columnData, selectionColumnIndex) {
+    renderDefaultSelectionDetails(parameters) {
         return (
             <div className="jsonschema-inspector-details-content">
                 <h3 className="jsonschema-inspector-details-header">Details</h3>
-                {this.renderDetailsForm(itemSchema, refTargets, columnData, selectionColumnIndex)}
+                {this.renderDetailsForm(parameters)}
             </div>
         );
     }
 
-    renderDetailsForm(itemSchema, refTargets, columnData, selectionColumnIndex) {
+    renderDetailsForm({ itemSchema, refTargets, columnData, selectionColumnIndex }) {
         const isRequired = this.isSelectionRequiredInParent(columnData, selectionColumnIndex, refTargets);
 
         const title = getFieldValue(itemSchema, 'title', refTargets);
@@ -83,7 +94,7 @@ class InspectorDetails extends PureComponent {
                 </form>
                 {arrayItemSchema && <hr />}
                 {arrayItemSchema && <h4 className="jsonschema-inspector-details-header">Array Entry Details</h4>}
-                {arrayItemSchema && this.renderDetailsForm(arrayItemSchema, refTargets, columnData, -1)}
+                {arrayItemSchema && this.renderDetailsForm({ itemSchema: arrayItemSchema, refTargets, columnData, selectionColumnIndex: -1 })}
             </div>
         );
     }
@@ -101,15 +112,18 @@ class InspectorDetails extends PureComponent {
     }
 
     isSelectionRequiredInParent(columnData, selectionColumnIndex, refTargets) {
-        if (selectionColumnIndex < 1 || true) {
+        if (selectionColumnIndex < 1) {
             // no parent to define any required properties
             return false;
         }
         const parentColumn = columnData[selectionColumnIndex - 1];
         const parentSchema = parentColumn.items[parentColumn.selectedItem];
-        const requiredPropertiesInParent = getFieldValue(parentSchema, 'required', refTargets) || [];
-        const selectionName = columnData[selectionColumnIndex].selectedItem;
-        return requiredPropertiesInParent.includes(selectionName);
+        const requiredPropertiesInParent = getPropertyParentFieldValue(parentSchema, 'required', refTargets);
+        if (requiredPropertiesInParent) {
+            const selectionName = columnData[selectionColumnIndex].selectedItem;
+            return requiredPropertiesInParent.includes(selectionName);
+        }
+        return false;
     }
 }
 
@@ -119,8 +133,10 @@ InspectorDetails.propTypes = {
         selectedItem: PropTypes.string
     })).isRequired,
     refTargets: PropTypes.objectOf(JsonSchemaPropType),
-    renderSelectionDetails: PropTypes.func, // func(selectedItemSchema: JsonSchema, refTargets, columnData, selectionColumnIndex: number)
-    renderEmptyDetails: PropTypes.func // func(rootColumnData, refTargets)
+    /** func({ itemSchema: JsonSchema, columnData, refTargets, selectionColumnIndex: number }) */
+    renderSelectionDetails: PropTypes.func,
+    /** func({ rootColumnSchemas, refTargets }) */
+    renderEmptyDetails: PropTypes.func
 };
 
 export default InspectorDetails;
