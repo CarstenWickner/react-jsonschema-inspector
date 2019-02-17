@@ -1,15 +1,19 @@
 .jsonschema-inspector {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+            flex-direction: column;
     font-size: 13px;
     font-family: Arial, Helvetica, sans-serif;
 }
-
 .jsonschema-inspector-container {
     display: -webkit-flex;
     display: flex;
     -webkit-flex-direction: row;
             flex-direction: row;
-    border: 1px solid darkslategray;
+    border: 1px solid #cbcbcb;
     height: 25em;
+    border-radius: 0.25em;
 }
 .jsonschema-inspector-colview {
     -webkit-flex-grow: 1;
@@ -17,10 +21,7 @@
     display: -webkit-flex;
     display: flex;
     overflow-x: auto;
-}
-.jsonschema-inspector-colview,
-.jsonschema-inspector-details {
-    padding: 0.2em 0.1em;  
+    margin-right: -1px;
 }
 .jsonschema-inspector-column,
 .jsonschema-inspector-column-placeholder {
@@ -30,12 +31,8 @@
             flex-direction: column;
     width: 15em;
     min-width: 15em;
-    border: 0.2em inset;
+    border-right: 1px solid;
     overflow-y: scroll;
-    margin: 0 0 0 0.1em;
-}
-.jsonschema-inspector-column:first-child {
-    margin: 0;
 }
 .jsonschema-inspector-column-placeholder {
     opacity: 0;
@@ -44,19 +41,17 @@
     text-align: start;
     border: none;
     background: inherit;
+    color: inherit;
     font: inherit;
     padding: 0;
-}
-.jsonschema-inspector-item:hover {
-    background-color: #eceff1;
+    margin: 0;
 }
 .jsonschema-inspector-item.selected {
-    background-color: #cfd8dc;
-    color: black;
+    background-color: #dcdcdc;
 }
 .jsonschema-inspector-column.trailing-selection .jsonschema-inspector-item.selected {
-    background-color: #bbdefb;
-    color: black;
+    background-color: #276bd2;
+    color: white;
 }
 .jsonschema-inspector-item-content {
     display: -webkit-flex;
@@ -79,18 +74,24 @@
 .jsonschema-inspector-item-icon:after {
     content: '\25B6';
     font-size: 10px;
+    color: #7f7f7f;
+}
+.jsonschema-inspector-column.trailing-selection .jsonschema-inspector-item.selected .jsonschema-inspector-item-icon:after {
+    color: inherit;
 }
 .jsonschema-inspector-item.has-nested-items > .jsonschema-inspector-item-content > .jsonschema-inspector-item-icon {
     display: block;
 }
 .jsonschema-inspector-details {
-    -webkit-flex-grow: 0;
-            flex-grow: 0;
     width: 20em;
     min-width: 20em;
     overflow: auto;
-    border-left: 1px solid darkslategray;
-    margin-left: 0.1em;
+    border-left: 1px solid;
+}
+.jsonschema-inspector-column,
+.jsonschema-inspector-column-placeholder,
+.jsonschema-inspector-details {
+    border-color: #e0e0e0;
 }
 .jsonschema-inspector-details-content {
     padding: 1em;
