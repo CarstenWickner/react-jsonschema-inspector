@@ -1,30 +1,24 @@
 # React JSON Schema Inspector (react-jsonschema-inspector)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Introducing a component for viewing/traversing (complex) JSON Schemas for the sake of documentation and potentially assisting users of a DSL in finding particular information in a custom data model.
 
-## Available Scripts
+## Demo
 
-In the project directory, you can run:
+Check out the Storybook under: [https://carstenwickner.github.io/react-jsonschema-inspector](https://carstenwickner.github.io/react-jsonschema-inspector)
 
-### `npm start`
+## Work in Progress
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- [x] Allow traversing basic JSON Schema structure
+- [x] Display detail information about selected node
+- [x] Introduce demo/gh-pages (e.g. using storybook)
+- [x] Auto-scroll to right when new column is being displayed
+- [x] Avoid auto-scroll to left when last column is being hidden (e.g. when switching between items in one column where only one has children)
+- [x] Allow custom rendering of detail information
+- [x] Allow custom rendering of individual items
+- [x] Align default styles with macOS Finder
+- [ ] Expose onSelect function
+- [ ] Introduce unit tests
+- [ ] Cater for building component as library
+- [ ] Introduce search functionality in header (after determining how search results could be displayed)
+- [ ] Add breadcrumbs like summary in footer
+- [ ] Improve performance (e.g. by using lodash chaining)
