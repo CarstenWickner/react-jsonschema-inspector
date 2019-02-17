@@ -7,19 +7,19 @@
     display: flex;
     flex-direction: row;
     border: 1px solid darkslategray;
+    height: 25em;
 }
 .jsonschema-inspector-colview {
     flex-grow: 1;
     display: flex;
-    flex-direction: row;
     overflow-x: auto;
 }
 .jsonschema-inspector-colview,
 .jsonschema-inspector-details {
-    padding: 0.2em 0.1em;   
-    height: 25em;
+    padding: 0.2em 0.1em;  
 }
-.jsonschema-inspector-column {
+.jsonschema-inspector-column,
+.jsonschema-inspector-column-placeholder {
     display: flex;
     flex-direction: column;
     width: 15em;
@@ -30,6 +30,9 @@
 }
 .jsonschema-inspector-column:first-child {
     margin: 0;
+}
+.jsonschema-inspector-column-placeholder {
+    opacity: 0;
 }
 .jsonschema-inspector-item {
     text-align: start;

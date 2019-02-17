@@ -76,7 +76,7 @@ jsonSchemaShape.allOf = PropTypes.arrayOf(JsonSchemaPropType);
     jsonSchemaShape.anyOf = PropTypes.arrayOf(JsonSchemaPropType);
     jsonSchemaShape.oneOf = PropTypes.arrayOf(JsonSchemaPropType);
     jsonSchemaShape.not = JsonSchemaPropType;
-    // one property may only be required if another is also present
+    // some things may only apply if a particular property is present
     jsonSchemaShape.dependencies = PropTypes.objectOf(PropTypes.oneOfType([JsonSchemaPropType, PropTypes.arrayOf(PropTypes.string)]));
     // cater for conditional portions of the containing schema (e.g. additional properties)
     jsonSchemaShape.if = JsonSchemaPropType;

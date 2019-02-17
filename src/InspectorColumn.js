@@ -7,17 +7,19 @@ import InspectorItem from './InspectorItem';
 
 class InspectorColumn extends PureComponent {
     renderItem(name) {
-        const { items, selectedItem, refTargets, onSelect, renderItemContent } = this.props;
+        const { items, selectedItem, trailingSelection, refTargets, onSelect, renderItemContent } = this.props;
         const item = items[name];
+        const selected = name === selectedItem;
         return (
             <InspectorItem
                 key={name}
                 name={name}
                 schema={item}
-                selected={name === selectedItem}
+                selected={selected}
                 refTargets={refTargets}
                 onSelect={event => onSelect(event, name)}
                 renderContent={renderItemContent}
+                autoFocus={selected && trailingSelection}
             />
         );
     }
@@ -30,7 +32,7 @@ class InspectorColumn extends PureComponent {
             'trailing-selection': trailingSelection
         });
         return (
-            <div className={columnClassName} onClick={onSelect}>
+            <div className={columnClassName} onClick={onSelect} tabIndex={-1}>
                 {Object.keys(items).sort().map(this.renderItem.bind(this))}
             </div>
         );
@@ -39,9 +41,9 @@ class InspectorColumn extends PureComponent {
 
 InspectorColumn.propTypes = {
     items: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.bool, JsonSchemaPropType])).isRequired,
+    refTargets: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     selectedItem: PropTypes.string,
     trailingSelection: PropTypes.bool,
-    refTargets: PropTypes.objectOf(JsonSchemaPropType),
     onSelect: PropTypes.func.isRequired, // func(SyntheticEvent: event, string: name)
     renderItemContent: PropTypes.func // func(string: name, JsonSchema: schema, boolean: selected)
 };
