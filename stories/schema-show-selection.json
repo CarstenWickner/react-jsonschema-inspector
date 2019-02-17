@@ -1,0 +1,31 @@
+{
+    "description": "A representation of a person, company, organization, or place",
+    "type": "object",
+    "properties": {
+        "vegetables": {
+            "type": "array",
+            "items": {
+                "allOf": [{
+                    "type": "object",
+                    "required": ["veggieName"],
+                    "properties": {
+                        "veggieName": {
+                            "type": "string",
+                            "description": "The name of the vegetable."
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "required": ["veggieLike"],
+                    "properties": {
+                        "veggieLike": {
+                            "type": "boolean",
+                            "description": "Do I like this vegetable?"
+                        }
+                    }
+                }]
+            }
+        }
+    }
+}

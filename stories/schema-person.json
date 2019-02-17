@@ -1,0 +1,15 @@
+{
+    "title": "Person",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "The person's full name (i.e. including first and last name)."
+        },
+        "friends": {
+            "type": "array",
+            "description": "List of friends",
+            "items": { "$ref": "#" }
+        }
+    },
+    "required": ["name"]
+}

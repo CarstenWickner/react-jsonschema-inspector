@@ -2,6 +2,7 @@
     "name": "react-jsonschema-inspector",
     "version": "0.1.0",
     "description": "View component for traversing/searching in a JSON Schema",
+    "homepage": "https://CarstenWickner.github.io/react-jsonschema-inspector",
     "author": "Carsten Wickner",
     "license": "MIT",
     "repository": {
@@ -12,6 +13,9 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
+        "storybook": "start-storybook -p 9001 -c .storybook",
+        "predeploy": "build-storybook -c .storybook -o docs",
+        "deploy": "gh-pages -d docs",
         "eject": "react-scripts eject"
     },
     "eslintConfig": {
@@ -24,7 +28,10 @@
         "not op_mini all"
     ],
     "devDependencies": {
-        "react-scripts": "2.1.5"
+        "@storybook/addon-info": "^4.1.11",
+        "@storybook/react": "^4.1.11",
+        "gh-pages": "^2.0.1",
+        "react-scripts": "^2.1.5"
     },
     "dependencies": {
         "classnames": "^2.2.6",
