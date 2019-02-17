@@ -9,24 +9,21 @@
     -webkit-flex-direction: row;
             flex-direction: row;
     border: 1px solid darkslategray;
+    height: 25em;
 }
 .jsonschema-inspector-colview {
     -webkit-flex-grow: 1;
             flex-grow: 1;
     display: -webkit-flex;
     display: flex;
-    -webkit-flex-direction: row-reverse;
-            flex-direction: row-reverse;
-    -webkit-justify-content: flex-end;
-            justify-content: flex-end;
     overflow-x: auto;
 }
 .jsonschema-inspector-colview,
 .jsonschema-inspector-details {
-    height: 25em;
     padding: 0.2em 0.1em;  
 }
-.jsonschema-inspector-column {
+.jsonschema-inspector-column,
+.jsonschema-inspector-column-placeholder {
     display: -webkit-flex;
     display: flex;
     -webkit-flex-direction: column;
@@ -39,6 +36,9 @@
 }
 .jsonschema-inspector-column:first-child {
     margin: 0;
+}
+.jsonschema-inspector-column-placeholder {
+    opacity: 0;
 }
 .jsonschema-inspector-item {
     text-align: start;
