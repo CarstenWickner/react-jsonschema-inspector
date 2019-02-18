@@ -59,7 +59,7 @@ InspectorItem.propTypes = {
     autoFocus: PropTypes.bool,
     refTargets: PropTypes.objectOf(JsonSchemaPropType),
     onSelect: PropTypes.func.isRequired, // func(SyntheticEvent: event)
-    renderContent: PropTypes.func // func({string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refTargets})
+    renderContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refTargets })
 };
 InspectorItem.defaultProps = {
     selected: false

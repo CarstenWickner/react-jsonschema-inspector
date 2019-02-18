@@ -1,4 +1,4 @@
-# React JSON Schema Inspector (react-jsonschema-inspector)
+# React JSON Schema Inspector
 
 Introducing a component for viewing/traversing (complex) JSON Schemas for the sake of documentation and potentially assisting users of a DSL in finding particular information in a custom data model.
 
@@ -16,9 +16,10 @@ Check out the Storybook under: [https://carstenwickner.github.io/react-jsonschem
 - [x] Allow custom rendering of detail information
 - [x] Allow custom rendering of individual items
 - [x] Align default styles with macOS Finder
-- [ ] Expose onSelect function
-- [ ] Introduce unit tests
+- [x] Expose onSelect function
 - [ ] Cater for building component as library
+- [ ] Separate view component from JSON Schema related logic
+- [ ] Introduce unit tests
 - [ ] Introduce search functionality in header (after determining how search results could be displayed)
 - [ ] Add breadcrumbs like summary in footer
 - [ ] Improve performance (e.g. by using lodash chaining)

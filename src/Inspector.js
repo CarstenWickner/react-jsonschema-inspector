@@ -106,16 +106,16 @@ class Inspector extends Component {
         }
         // need to look-up the currently displayed number of content columns
         // thanks to 'memoize', we just look-up the result of the previous evaluation
-        const { schemas } = this.props;
+        const { schemas, onSelect } = this.props;
         const oldColumnCount = (appendEmptyColumn ? 1 : 0) + this.getRenderDataForSelection(schemas, selectedItems).columnData.length;
         // now we need to know what the number of content columns will be after changing the state
         // thanks to 'memoize', the subsequent render() call will just look-up the result of this evaluation
-        const newContentColumnCount = this.getRenderDataForSelection(schemas, newSelection).columnData.length;
+        const newRenderData = this.getRenderDataForSelection(schemas, newSelection);
         // update state to trigger rerendering of the whole component
         this.setState({
             selectedItems: newSelection,
-            appendEmptyColumn: newContentColumnCount < oldColumnCount
-        });
+            appendEmptyColumn: newRenderData.columnData.length < oldColumnCount
+        }, onSelect ? () => onSelect(event, newSelection, newRenderData) : null);
     };
 
     render() {
@@ -148,6 +148,8 @@ Inspector.propTypes = {
     schemas: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     /** default selection identified by names of object properties */
     defaultSelectedItems: PropTypes.arrayOf(PropTypes.string),
+    /** callback to invoke after the selection changed. func(event, newSelection, { columnData, refTargets }) */
+    onSelect: PropTypes.func,
     /** func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refTargets }) */
     renderItemContent: PropTypes.func,
     /** func({ itemSchema: JsonSchema, columnData, refTargets, selectionColumnIndex: number }) */
