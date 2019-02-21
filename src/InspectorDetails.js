@@ -1,17 +1,118 @@
-import PropTypes from 'prop-types';
-import React, { PureComponent } from 'react';
+/* eslint-disable quote-props */
+import PropTypes from "prop-types";
+import React, { PureComponent } from "react";
 
-import JsonSchemaPropType from './JsonSchemaPropType';
-import { getFieldValue, getPropertyParentFieldValue, isDefined } from './utils';
+import InspectorDetailsForm from "./InspectorDetailsForm";
+import JsonSchemaPropType from "./JsonSchemaPropType";
+import { getFieldValue, getPropertyParentFieldValue, isDefined } from "./utils";
 
 class InspectorDetails extends PureComponent {
+    static isSelectionRequiredInParent(columnData, selectionColumnIndex, refTargets) {
+        if (selectionColumnIndex < 1) {
+            // no parent to define any required properties
+            return false;
+        }
+        const parentColumn = columnData[selectionColumnIndex - 1];
+        const parentSchema = parentColumn.items[parentColumn.selectedItem];
+        const requiredPropertiesInParent = getPropertyParentFieldValue(parentSchema, "required", refTargets);
+        return requiredPropertiesInParent
+            && requiredPropertiesInParent.includes(columnData[selectionColumnIndex].selectedItem);
+    }
+
+    static collectFormFields(itemSchema, refTargets, columnData, selectionColumnIndex) {
+        const getValue = fieldName => getFieldValue(itemSchema, fieldName, refTargets);
+        const buildFormField = (labelText, rowValue) => ({
+            labelText,
+            rowValue
+        });
+        const formFields = [];
+        formFields.push(buildFormField("Title", getValue("title")));
+        formFields.push(buildFormField("Description", getValue("description")));
+        formFields.push(buildFormField("Required",
+            InspectorDetails.isSelectionRequiredInParent(columnData, selectionColumnIndex, refTargets) ? "Yes" : null));
+        formFields.push(buildFormField("Type", getValue("type")));
+        formFields.push(buildFormField("Constant Value", getValue("const")));
+        formFields.push(buildFormField("Possible Values", getValue("enum")));
+
+        const minimum = getValue("minimum", refTargets);
+        const exclusiveMinimum = getValue("exclusiveMinimum", refTargets);
+        let minValue;
+        if (isDefined(minimum)) {
+            minValue = exclusiveMinimum ? `${minimum} (exclusive)` : `${minimum} (inclusive)`;
+        } else {
+            minValue = isDefined(exclusiveMinimum) ? `${exclusiveMinimum} (exclusive)` : null;
+        }
+        formFields.push(buildFormField("Min Value", minValue));
+
+        const maximum = getValue("maximum", refTargets);
+        const exclusiveMaximum = getValue("exclusiveMaximum", refTargets);
+        let maxValue;
+        if (isDefined(maximum)) {
+            maxValue = exclusiveMaximum ? `${maximum} (exclusive)` : `${maximum} (inclusive)`;
+        } else {
+            maxValue = isDefined(exclusiveMaximum) ? `${exclusiveMaximum} (exclusive)` : null;
+        }
+        formFields.push(buildFormField("Max Value", maxValue));
+
+        const defaultValue = getValue("default", refTargets);
+        formFields.push(buildFormField("Default Value", typeof defaultValue === "object" ? JSON.stringify(defaultValue) : defaultValue));
+        const examples = getValue("examples", refTargets);
+        formFields.push(buildFormField("Example(s)",
+            (isDefined(examples) && examples.length && typeof examples[0] === "object") ? JSON.stringify(examples) : examples));
+        formFields.push(buildFormField("Value Pattern", getValue("pattern")));
+        formFields.push(buildFormField("Value Format", getValue("format")));
+        formFields.push(buildFormField("Min Length", getValue("minLength")));
+        formFields.push(buildFormField("Max Length", getValue("maxLength")));
+        formFields.push(buildFormField("Min Items", getValue("minItems")));
+        formFields.push(buildFormField("Max Items", getValue("maxItems")));
+        formFields.push(buildFormField("Items Unique", getValue("uniqueItems", refTargets) === true ? "Yes" : null));
+
+        return formFields;
+    }
+
     constructor(props) {
         super(props);
         this.renderDefaultSelectionDetails = this.renderDefaultSelectionDetails.bind(this);
     }
 
+    renderDefaultSelectionDetails(parameters) {
+        return (
+            <div className="jsonschema-inspector-details-content">
+                <h3 className="jsonschema-inspector-details-header">Details</h3>
+                {this.renderDetailsForm(parameters)}
+            </div>
+        );
+    }
+
+    renderDetailsForm({
+        itemSchema, refTargets, columnData, selectionColumnIndex
+    }) {
+        const formFields = InspectorDetails.collectFormFields(itemSchema, refTargets, columnData, selectionColumnIndex);
+
+        const arrayItems = getFieldValue(itemSchema, "items", refTargets);
+        // look-up the kind of value expected in the array (if the schema refers to an array)
+        const arrayItemSchema = (typeof arrayItems === "object" && arrayItems)
+            || (arrayItems === true && getFieldValue(itemSchema, "additionalItems", refTargets));
+
+        return (
+            <div>
+                <InspectorDetailsForm fields={formFields} />
+                {arrayItemSchema && <hr className="jsonschema-inspector-details-separator" />}
+                {arrayItemSchema && <h4 className="jsonschema-inspector-details-header">Array Entry Details</h4>}
+                {arrayItemSchema && this.renderDetailsForm({
+                    itemSchema: arrayItemSchema,
+                    refTargets,
+                    columnData,
+                    selectionColumnIndex: -1
+                })}
+            </div>
+        );
+    }
+
     render() {
-        const { columnData, refTargets, renderSelectionDetails, renderEmptyDetails } = this.props;
+        const {
+            columnData, refTargets, renderSelectionDetails, renderEmptyDetails
+        } = this.props;
         const selectionColumnIndex = columnData.length - (columnData[columnData.length - 1].trailingSelection ? 1 : 2);
         const trailingSelectionColumn = selectionColumnIndex < 0 ? null : columnData[selectionColumnIndex];
         const itemSchema = trailingSelectionColumn ? trailingSelectionColumn.items[trailingSelectionColumn.selectedItem] : null;
@@ -33,98 +134,6 @@ class InspectorDetails extends PureComponent {
             </div>
         );
     }
-
-    renderDefaultSelectionDetails(parameters) {
-        return (
-            <div className="jsonschema-inspector-details-content">
-                <h3 className="jsonschema-inspector-details-header">Details</h3>
-                {this.renderDetailsForm(parameters)}
-            </div>
-        );
-    }
-
-    renderDetailsForm({ itemSchema, refTargets, columnData, selectionColumnIndex }) {
-        const isRequired = this.isSelectionRequiredInParent(columnData, selectionColumnIndex, refTargets);
-
-        const title = getFieldValue(itemSchema, 'title', refTargets);
-        const description = getFieldValue(itemSchema, 'description', refTargets);
-        const type = getFieldValue(itemSchema, 'type', refTargets);
-        const constValue = getFieldValue(itemSchema, 'const', refTargets);
-        const enumValue = getFieldValue(itemSchema, 'enum', refTargets);
-        const defaultValue = getFieldValue(itemSchema, 'default', refTargets);
-        const examples = getFieldValue(itemSchema, 'examples', refTargets);
-        const pattern = getFieldValue(itemSchema, 'pattern', refTargets);
-        const format = getFieldValue(itemSchema, 'format', refTargets);
-        const minimum = getFieldValue(itemSchema, 'minimum', refTargets);
-        const exclusiveMinimum = getFieldValue(itemSchema, 'exclusiveMinimum', refTargets);
-        const maximum = getFieldValue(itemSchema, 'maximum', refTargets);
-        const exclusiveMaximum = getFieldValue(itemSchema, 'exclusiveMaximum', refTargets);
-        const minLength = getFieldValue(itemSchema, 'minLength', refTargets);
-        const maxLength = getFieldValue(itemSchema, 'maxLength', refTargets);
-        const minItems = getFieldValue(itemSchema, 'minItems', refTargets);
-        const maxItems = getFieldValue(itemSchema, 'maxItems', refTargets);
-        const uniqueItems = getFieldValue(itemSchema, 'uniqueItems', refTargets);
-
-        const arrayItems = getFieldValue(itemSchema, 'items', refTargets);
-        // look-up the kind of value expected in the array (if the schema refers to an array)
-        const arrayItemSchema = (typeof arrayItems === 'object' && arrayItems) || (typeof arrayItems === 'boolean' && getFieldValue(itemSchema, 'additionalItems', refTargets));
-
-        return (
-            <div>
-                <form className="jsonschema-inspector-details-form">
-                    {this.renderDetailsFormRow("Title", title)}
-                    {this.renderDetailsFormRow("Description", description)}
-                    {isRequired && this.renderDetailsFormRow("Required", "Yes")}
-                    {this.renderDetailsFormRow("Type", type)}
-                    {this.renderDetailsFormRow("Constant Value", constValue)}
-                    {this.renderDetailsFormRow("Possible Values", enumValue)}
-                    {isDefined(minimum) && this.renderDetailsFormRow("Min Value", minimum + (exclusiveMinimum ? " (exclusive)" : " (inclusive)"))}
-                    {!isDefined(minimum) && isDefined(exclusiveMinimum) && this.renderDetailsFormRow("Min Value", exclusiveMinimum + " (exclusive)")}
-                    {isDefined(maximum) && this.renderDetailsFormRow("Max Value", maximum + (exclusiveMaximum ? " (exclusive)" : " (inclusive)"))}
-                    {!isDefined(maximum) && isDefined(exclusiveMaximum) && this.renderDetailsFormRow("Max Value", exclusiveMaximum + " (exclusive)")}
-                    {this.renderDetailsFormRow("Default Value", typeof defaultValue === 'object' ? JSON.stringify(defaultValue) : defaultValue)}
-                    {isDefined(examples) && examples.length && this.renderDetailsFormRow("Example(s)", typeof examples[0] === 'object' ? JSON.stringify(examples) : examples)}
-                    {this.renderDetailsFormRow("Value Pattern", pattern)}
-                    {this.renderDetailsFormRow("Value Format", format)}
-                    {this.renderDetailsFormRow("Min Length", minLength)}
-                    {this.renderDetailsFormRow("Max Length", maxLength)}
-                    {this.renderDetailsFormRow("Min Items", minItems)}
-                    {this.renderDetailsFormRow("Max Items", maxItems)}
-                    {typeof uniqueItems === 'boolean' && this.renderDetailsFormRow("Items Unique", uniqueItems ? "Yes" : "No")}
-                </form>
-                {arrayItemSchema && <hr />}
-                {arrayItemSchema && <h4 className="jsonschema-inspector-details-header">Array Entry Details</h4>}
-                {arrayItemSchema && this.renderDetailsForm({ itemSchema: arrayItemSchema, refTargets, columnData, selectionColumnIndex: -1 })}
-            </div>
-        );
-    }
-
-    renderDetailsFormRow(labelText, rowValue) {
-        if (!isDefined(rowValue)) {
-            return null;
-        }
-        return (
-            <div className="jsonschema-inspector-details-form-row" key={labelText}>
-                <label className="jsonschema-inspector-details-form-label">{labelText}:</label>
-                <span className="jsonschema-inspector-details-form-value">{rowValue.toString()}</span>
-            </div>
-        );
-    }
-
-    isSelectionRequiredInParent(columnData, selectionColumnIndex, refTargets) {
-        if (selectionColumnIndex < 1) {
-            // no parent to define any required properties
-            return false;
-        }
-        const parentColumn = columnData[selectionColumnIndex - 1];
-        const parentSchema = parentColumn.items[parentColumn.selectedItem];
-        const requiredPropertiesInParent = getPropertyParentFieldValue(parentSchema, 'required', refTargets);
-        if (requiredPropertiesInParent) {
-            const selectionName = columnData[selectionColumnIndex].selectedItem;
-            return requiredPropertiesInParent.includes(selectionName);
-        }
-        return false;
-    }
 }
 
 InspectorDetails.propTypes = {
@@ -132,11 +141,16 @@ InspectorDetails.propTypes = {
         items: PropTypes.objectOf(JsonSchemaPropType).isRequired,
         selectedItem: PropTypes.string
     })).isRequired,
-    refTargets: PropTypes.objectOf(JsonSchemaPropType),
+    refTargets: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     /** func({ itemSchema: JsonSchema, columnData, refTargets, selectionColumnIndex: number }) */
     renderSelectionDetails: PropTypes.func,
     /** func({ rootColumnSchemas, refTargets }) */
     renderEmptyDetails: PropTypes.func
+};
+
+InspectorDetails.defaultProps = {
+    renderSelectionDetails: null,
+    renderEmptyDetails: null
 };
 
 export default InspectorDetails;

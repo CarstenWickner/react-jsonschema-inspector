@@ -17,9 +17,11 @@ Check out the Storybook under: [https://carstenwickner.github.io/react-jsonschem
 - [x] Allow custom rendering of individual items
 - [x] Align default styles with macOS Finder
 - [x] Expose onSelect function
-- [ ] Cater for building component as library
+- [x] Introduce eslint support
+- [x] Introduce scss support
+- [x] Cater for building component as library
 - [ ] Separate view component from JSON Schema related logic
 - [ ] Introduce unit tests
 - [ ] Introduce search functionality in header (after determining how search results could be displayed)
-- [ ] Add breadcrumbs like summary in footer
+- [ ] Add breadcrumbs like summary in footer
 - [ ] Improve performance (e.g. by using lodash chaining)

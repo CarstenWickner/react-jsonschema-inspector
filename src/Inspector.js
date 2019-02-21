@@ -1,16 +1,15 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import memoize from 'memoize-one';
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import memoize from "memoize-one";
 
-import './Inspector.css';
+import "./Inspector.scss";
 
-import InspectorColView from './InspectorColView';
-import InspectorDetails from './InspectorDetails';
-import JsonSchemaPropType from './JsonSchemaPropType';
-import { getPropertyParentFieldValue, isNonEmptyObject } from './utils';
+import InspectorColView from "./InspectorColView";
+import InspectorDetails from "./InspectorDetails";
+import JsonSchemaPropType from "./JsonSchemaPropType";
+import { getPropertyParentFieldValue, isNonEmptyObject } from "./utils";
 
 class Inspector extends Component {
-
     constructor(props) {
         super(props);
         const { defaultSelectedItems } = props;
@@ -35,15 +34,15 @@ class Inspector extends Component {
         const refTargets = {};
         if (selectedItems.length > 0) {
             const rootSchema = schemas[selectedItems[0]];
-            refTargets['#'] = rootSchema;
+            refTargets["#"] = rootSchema;
             const { $id, definitions } = rootSchema;
             if ($id) {
                 refTargets[$id] = rootSchema;
             }
             if (definitions) {
-                Object.keys(definitions).forEach(key => {
+                Object.keys(definitions).forEach((key) => {
                     const subSchema = definitions[key];
-                    refTargets['#/definitions/' + key] = subSchema;
+                    refTargets[`#/definitions/${key}`] = subSchema;
                     if (subSchema.$id) {
                         refTargets[subSchema.$id] = subSchema;
                     }
@@ -57,7 +56,7 @@ class Inspector extends Component {
         const columnData = selectedItems.map((selection, index) => {
             const currentColumnScope = nextColumnScope;
             if (currentColumnScope) {
-                nextColumnScope = getPropertyParentFieldValue(currentColumnScope[selection], 'properties', refTargets);
+                nextColumnScope = getPropertyParentFieldValue(currentColumnScope[selection], "properties", refTargets);
                 return {
                     items: currentColumnScope, // mapped JsonSchema definitions to select from in this column
                     selectedItem: selection, // name of the selected item (i.e. key in 'items')
@@ -67,11 +66,11 @@ class Inspector extends Component {
             }
             // the selection in the previous column refers to a schema that has no nested properties/items
             // throw new Error('invalid selection "' + selectedItems[index - 1] + '" in column at index ' + (index - 1));
-            throw new Error('invalid selection in column at index ' + (index - 1));
+            throw new Error(`invalid selection in column at index ${index - 1}`);
         });
         // avoid appending an empty column if the selected item in the last column has no nested items to offer
-        if (isNonEmptyObject(nextColumnScope)) {  
-            // include the next level of properties to select from     
+        if (isNonEmptyObject(nextColumnScope)) {
+            // include the next level of properties to select from
             columnData.push({
                 items: nextColumnScope,
                 selectedItem: null,
@@ -119,25 +118,29 @@ class Inspector extends Component {
     };
 
     render() {
-        const { schemas, renderItemContent, renderSelectionDetails, renderEmptyDetails } = this.props;
+        const {
+            schemas, renderItemContent, renderSelectionDetails, renderEmptyDetails
+        } = this.props;
         const { selectedItems, appendEmptyColumn } = this.state;
         const { columnData, refTargets } = this.getRenderDataForSelection(schemas, selectedItems);
         return (
             <div className="jsonschema-inspector jsonschema-inspector-container">
-                {columnData
-                    && <InspectorColView
+                {columnData && (
+                    <InspectorColView
                         columnData={columnData}
                         refTargets={refTargets}
                         appendEmptyColumn={appendEmptyColumn}
                         renderItemContent={renderItemContent}
-                    />}
-                {columnData
-                    && <InspectorDetails
+                    />
+                )}
+                {columnData && (
+                    <InspectorDetails
                         columnData={columnData}
                         refTargets={refTargets}
                         renderSelectionDetails={renderSelectionDetails}
                         renderEmptyDetails={renderEmptyDetails}
-                    />}
+                    />
+                )}
             </div>
         );
     }
@@ -159,7 +162,11 @@ Inspector.propTypes = {
 };
 
 Inspector.defaultProps = {
-    defaultSelectedItems: []
-}
+    defaultSelectedItems: [],
+    onSelect: null,
+    renderItemContent: null,
+    renderSelectionDetails: null,
+    renderEmptyDetails: null
+};
 
 export default Inspector;

@@ -1,0 +1,120 @@
+.jsonschema-inspector {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+
+    $columnWidth: 15em;
+    $detailsWidth: 20em;
+    $outerBorder: 1px solid #cbcbcb;
+    $innerBorder: 1px solid #e0e0e0;
+
+    &-container {
+        display: flex;
+        flex-direction: row;
+        border: $outerBorder;
+        height: 25em;
+        border-radius: 0.25em;
+    }
+    &-colview {
+        flex-grow: 1;
+        display: flex;
+        overflow-x: auto;
+        margin-right: -1px;
+    }
+    &-column {
+        &,
+        &-placeholder {
+            display: flex;
+            flex-direction: column;
+            width: $columnWidth;
+            min-width: $columnWidth;
+            border-right: $innerBorder;
+            overflow-y: auto;
+        }
+        &-placeholder {
+            opacity: 0;
+        }
+    }
+    &-item {
+        flex-shrink: 0;
+        text-align: start;
+        border: none;
+        background: inherit;
+        color: inherit;
+        font: inherit;
+        padding: 0;
+        margin: 0;
+
+        &.selected {
+            background-color: #dcdcdc;
+        }
+        &-content {
+            display: flex;
+            flex-direction: row;
+        }
+        &-name {
+            display: block;
+            flex-grow: 1;
+            padding: 0.25em 0.5em 0.25em 0.75em;
+        }
+        &-icon {
+            display: none;
+            flex-grow: 0;
+            padding: 0.25em 0.5em 0.25em 0;
+    
+            &:after {
+                content: '\25B6';
+                font-size: 10px;
+                color: #7f7f7f;
+            }
+        }
+        &.has-nested-items > &-content > &-icon {
+            display: block;
+        }
+    }
+    &-column.trailing-selection &-item.selected {
+        background-color: #276bd2;
+        color: white;
+    }
+    &-column.trailing-selection &-item.selected &-item-icon:after {
+        color: inherit;
+    }
+    &-details {
+        width: $detailsWidth;
+        min-width: $detailsWidth;
+        overflow: auto;
+        border-left: $innerBorder;
+
+        &-header:first-child {
+            margin-top: 0;
+        }
+        &-content {
+            padding: 1em;
+        }
+        &-form {
+            display: flex;
+            flex-direction: column;
+            $labelWidth: 30%;
+
+            &-row {
+                display: flex;
+                flex-direction: row;
+                margin-bottom: 0.5em;
+            }
+            &-label,
+            &-value {
+                display: inline-block;
+                vertical-align: top;
+                word-wrap: break-word;
+            }
+            &-label {
+                width: $labelWidth;
+                padding-right: 0.5em;
+            }
+            &-value {
+                width: 100% - $labelWidth;
+            }
+        }
+    }
+}

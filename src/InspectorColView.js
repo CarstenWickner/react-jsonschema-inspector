@@ -1,13 +1,13 @@
-import PropTypes from 'prop-types';
-import React, { PureComponent } from 'react';
+import PropTypes from "prop-types";
+import React, { PureComponent } from "react";
 
-import InspectorColumn from './InspectorColumn';
-import JsonSchemaPropType from './JsonSchemaPropType';
+import InspectorColumn from "./InspectorColumn";
+import JsonSchemaPropType from "./JsonSchemaPropType";
 
 class InspectorColView extends PureComponent {
-
     componentDidUpdate(prevProps) {
         const previousColumnCount = prevProps.columnData.length;
+        // eslint-disable-next-line react/destructuring-assignment
         const currentColumnCount = this.props.columnData.length;
         if (previousColumnCount < currentColumnCount) {
             // auto-scroll to the far right if an additional column was added
@@ -16,11 +16,14 @@ class InspectorColView extends PureComponent {
     }
 
     render() {
-        const { columnData, refTargets, appendEmptyColumn, renderItemContent } = this.props;
+        const {
+            columnData, refTargets, appendEmptyColumn, renderItemContent
+        } = this.props;
         return (
-            <div className="jsonschema-inspector-colview" ref={ref => this.colViewContainerRef = ref}>
+            <div className="jsonschema-inspector-colview" ref={(ref) => { this.colViewContainerRef = ref; }}>
                 {columnData.map((singleColumnData, index) => (
                     <InspectorColumn
+                        // eslint-disable-next-line react/no-array-index-key
                         key={index}
                         refTargets={refTargets}
                         renderItemContent={renderItemContent}
@@ -28,7 +31,7 @@ class InspectorColView extends PureComponent {
                     />
                 ))}
                 {appendEmptyColumn
-                    && <div className="jsonschema-inspector-column-placeholder"/>}
+                    && <div className="jsonschema-inspector-column-placeholder" />}
             </div>
         );
     }
@@ -39,10 +42,15 @@ InspectorColView.propTypes = {
         items: PropTypes.objectOf(JsonSchemaPropType).isRequired,
         selectedItem: PropTypes.string,
         trailingSelection: PropTypes.bool
-    })),
+    })).isRequired,
     refTargets: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     appendEmptyColumn: PropTypes.bool,
     renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refTargets })
-}
+};
+
+InspectorColView.defaultProps = {
+    appendEmptyColumn: false,
+    renderItemContent: null
+};
 
 export default InspectorColView;

@@ -1,26 +1,23 @@
 {
     "name": "react-jsonschema-inspector",
-    "version": "0.1.0",
+    "version": "0.2.0-SNAPSHOT",
     "description": "View component for traversing/searching in a JSON Schema",
     "homepage": "https://CarstenWickner.github.io/react-jsonschema-inspector",
     "author": "Carsten Wickner",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git@github.com:CarstenWickner/react-jsonschema-inspector.git"
+        "url": "git+ssh://git@github.com/CarstenWickner/react-jsonschema-inspector.git"
     },
     "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test",
-        "storybook": "start-storybook -p 9001 -c .storybook",
-        "predeploy": "build-storybook -c .storybook -o docs",
+        "start": "start-storybook -p 9001 -c .storybook",
+        "build": "webpack",
+        "lint": "eslint src stories",
+        "predeploy": "npm run lint && build-storybook -c .storybook -o docs",
         "deploy": "gh-pages -d docs",
-        "eject": "react-scripts eject"
+        "prepublishOnly": "npm run lint && npm run build"
     },
-    "eslintConfig": {
-        "extends": "react-app"
-    },
+    "main": "build/index.js",
     "browserslist": [
         ">0.2%",
         "not dead",
@@ -28,16 +25,45 @@
         "not op_mini all"
     ],
     "devDependencies": {
+        "@babel/cli": "^7.2.3",
+        "@babel/core": "^7.3.3",
+        "@babel/plugin-proposal-class-properties": "^7.3.3",
+        "@babel/preset-env": "^7.3.1",
+        "@babel/preset-react": "^7.0.0",
         "@storybook/addon-info": "^4.1.11",
         "@storybook/react": "^4.1.11",
+        "babel-eslint": "^10.0.1",
+        "babel-loader": "^8.0.5",
+        "css-loader": "^2.1.0",
+        "eslint": "^5.14.1",
+        "eslint-config-airbnb": "^17.1.0",
+        "eslint-plugin-babel": "^5.3.0",
+        "eslint-plugin-import": "^2.16.0",
+        "eslint-plugin-jsx-a11y": "^6.2.1",
+        "eslint-plugin-react": "^7.12.4",
         "gh-pages": "^2.0.1",
-        "react-scripts": "^2.1.5"
+        "node-sass": "^4.11.0",
+        "sass-loader": "^7.1.0",
+        "style-loader": "^0.23.1",
+        "webpack-cli": "^3.2.3"
     },
     "dependencies": {
         "classnames": "^2.2.6",
-        "memoize-one": "^5.0.0",
+        "memoize-one": "^5.0.0"
+    },
+    "peerDependencies": {
         "prop-types": "^15.5.7",
         "react": "^16.8.1",
         "react-dom": "^16.8.1"
-    }
+    },
+    "bugs": {
+        "url": "https://github.com/CarstenWickner/react-jsonschema-inspector/issues"
+    },
+    "keywords": [
+        "react",
+        "jsonschema",
+        "schema",
+        "viewer",
+        "inspector"
+    ]
 }

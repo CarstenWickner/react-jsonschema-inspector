@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 const simpleTypes = PropTypes.oneOf(["string", "integer", "number", "object", "array", "boolean", "null"]);
 const jsonSchemaShape = {
