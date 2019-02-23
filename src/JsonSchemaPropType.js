@@ -5,7 +5,10 @@ const jsonSchemaShape = {
     /* commented out: unsupported field (for now)
         $schema: PropTypes.string,
     */
+    // as of JSON Schema Draft 6, instead of "id"
     $id: PropTypes.string,
+    // in JSON Schema Draft 4, replaced by "$id" from Draft 6
+    id: PropTypes.string,
     $ref: PropTypes.string,
     // some generic keywords allow for documentation (not validation)
     title: PropTypes.string,
@@ -26,8 +29,10 @@ const jsonSchemaShape = {
     // the following options are only applicable if the "type" includes the value "number"
     multipleOf: PropTypes.number,
     minimum: PropTypes.number,
+    // as of JSON Schema Draft 6: number; before (Draft 4): boolean
     exclusiveMinimum: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
     maximum: PropTypes.number,
+    // as of JSON Schema Draft 6: number; before (Draft 4): boolean
     exclusiveMaximum: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
 
     // the following options are only applicable if the "type" includes the value "object"
@@ -60,7 +65,7 @@ jsonSchemaShape.properties = PropTypes.objectOf(PropTypes.oneOfType([PropTypes.b
 // cater for recursive structure of arrays containing JsonSchema - expecting only one kind of schema as type of "items"
 // "items" may also contain an array of schemas which then each refer to the values at the respective positions which is not supported (for now)
 jsonSchemaShape.items = PropTypes.oneOfType([PropTypes.bool, JsonSchemaPropType, PropTypes.array]);
-// "additionalItems" are ignored if "items" is a single JsonSchemaPropType (i.e. not an array)
+// "additionalItems" are ignored if "items" is a boolean or single JsonSchemaPropType (i.e. not an array)
 jsonSchemaShape.additionalItems = PropTypes.oneOfType([PropTypes.bool, JsonSchemaPropType]);
 /* commented out: unsupported fields (for now)
     // validation of at least one item in an array being of a certain type
@@ -73,8 +78,8 @@ jsonSchemaShape.definitions = PropTypes.objectOf(JsonSchemaPropType);
 jsonSchemaShape.allOf = PropTypes.arrayOf(JsonSchemaPropType);
 /* commented out: unsupported fields (for now)
     // cater for conditional recursive combined schemas
-    jsonSchemaShape.anyOf = PropTypes.arrayOf(JsonSchemaPropType);
-    jsonSchemaShape.oneOf = PropTypes.arrayOf(JsonSchemaPropType);
+    jsonSchemaShape.anyOf = PropTypes.arrayOf([PropTypes.bool, JsonSchemaPropType]);
+    jsonSchemaShape.oneOf = PropTypes.arrayOf([PropTypes.bool, JsonSchemaPropType]);
     jsonSchemaShape.not = JsonSchemaPropType;
     // some things may only apply if a particular property is present
     jsonSchemaShape.dependencies = PropTypes.objectOf(PropTypes.oneOfType([JsonSchemaPropType, PropTypes.arrayOf(PropTypes.string)]));
@@ -84,4 +89,8 @@ jsonSchemaShape.allOf = PropTypes.arrayOf(JsonSchemaPropType);
     jsonSchemaShape.else = JsonSchemaPropType;
 */
 
+/**
+ * PropType for describing fields expected as per JSON Schema Draft 7 (with backwards-compatibility down to Draft 4).
+ * Some dynamic fields/validations are not supported as they only make sense against an actual data instance and not when looking at the schema alone.
+ */
 export default JsonSchemaPropType;

@@ -35,16 +35,24 @@ class Inspector extends Component {
         if (selectedItems.length > 0) {
             const rootSchema = schemas[selectedItems[0]];
             refTargets["#"] = rootSchema;
-            const { $id, definitions } = rootSchema;
+            const { $id, id, definitions } = rootSchema;
             if ($id) {
+                // from JSON Schema Draft 6: "$id"
                 refTargets[$id] = rootSchema;
+            } else if (id) {
+                // in JSON Schema Draft 4, the "id" property had no "$" prefix
+                refTargets[id] = rootSchema;
             }
             if (definitions) {
                 Object.keys(definitions).forEach((key) => {
                     const subSchema = definitions[key];
                     refTargets[`#/definitions/${key}`] = subSchema;
                     if (subSchema.$id) {
+                        // from JSON Schema Draft 6: "$id"
                         refTargets[subSchema.$id] = subSchema;
+                    } else if (subSchema.id) {
+                        // in JSON Schema Draft 4, the "id" property had no "$" prefix
+                        refTargets[subSchema.id] = subSchema;
                     }
                 });
             }
@@ -157,7 +165,7 @@ Inspector.propTypes = {
     renderItemContent: PropTypes.func,
     /** func({ itemSchema: JsonSchema, columnData, refTargets, selectionColumnIndex: number }) */
     renderSelectionDetails: PropTypes.func,
-    /** func({ rootColumnSchemas, refTargets }) */
+    /** func({ rootColumnSchemas }) */
     renderEmptyDetails: PropTypes.func
 };
 

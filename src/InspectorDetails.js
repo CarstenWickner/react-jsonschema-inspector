@@ -38,8 +38,11 @@ class InspectorDetails extends PureComponent {
         const exclusiveMinimum = getValue("exclusiveMinimum", refTargets);
         let minValue;
         if (isDefined(minimum)) {
+            // according to JSON Schema Draft 4, "exclusiveMinimum" is a boolean and used in combination with "minimum"
+            // if "exclusiveMinimum" is not defined, is is treated as "false", i.e. "minimum" is inclusive by default
             minValue = exclusiveMinimum ? `${minimum} (exclusive)` : `${minimum} (inclusive)`;
         } else {
+            // according to JSON Schema Draft 6, "exclusiveMinimum" is a number and can be used instead of "minimum"
             minValue = isDefined(exclusiveMinimum) ? `${exclusiveMinimum} (exclusive)` : null;
         }
         formFields.push(buildFormField("Min Value", minValue));
@@ -48,8 +51,11 @@ class InspectorDetails extends PureComponent {
         const exclusiveMaximum = getValue("exclusiveMaximum", refTargets);
         let maxValue;
         if (isDefined(maximum)) {
+            // according to JSON Schema Draft 4, "exclusiveMaximum" is a boolean and used in combination with "maximum"
+            // if "exclusiveMaximum" is not defined, is is treated as "false", i.e. "maximum" is inclusive by default
             maxValue = exclusiveMaximum ? `${maximum} (exclusive)` : `${maximum} (inclusive)`;
         } else {
+            // according to JSON Schema Draft 6, "exclusiveMaximum" is a number and can be used instead of "maximum"
             maxValue = isDefined(exclusiveMaximum) ? `${exclusiveMaximum} (exclusive)` : null;
         }
         formFields.push(buildFormField("Max Value", maxValue));
@@ -91,8 +97,8 @@ class InspectorDetails extends PureComponent {
 
         const arrayItems = getFieldValue(itemSchema, "items", refTargets);
         // look-up the kind of value expected in the array (if the schema refers to an array)
-        const arrayItemSchema = (typeof arrayItems === "object" && arrayItems)
-            || (arrayItems === true && getFieldValue(itemSchema, "additionalItems", refTargets));
+        const arrayItemSchema = ((typeof arrayItems === "object") && arrayItems)
+            || ((arrayItems === true) && getFieldValue(itemSchema, "additionalItems", refTargets));
 
         return (
             <div>
@@ -128,8 +134,7 @@ class InspectorDetails extends PureComponent {
                 {!itemSchema
                     && renderEmptyDetails
                     && renderEmptyDetails({
-                        rootColumnSchemas: columnData[0].items,
-                        refTargets
+                        rootColumnSchemas: columnData[0].items
                     })}
             </div>
         );
@@ -144,7 +149,7 @@ InspectorDetails.propTypes = {
     refTargets: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     /** func({ itemSchema: JsonSchema, columnData, refTargets, selectionColumnIndex: number }) */
     renderSelectionDetails: PropTypes.func,
-    /** func({ rootColumnSchemas, refTargets }) */
+    /** func({ rootColumnSchemas }) */
     renderEmptyDetails: PropTypes.func
 };
 

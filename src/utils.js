@@ -21,25 +21,37 @@ export function isNonEmptyObject(target) {
 }
 
 /**
- * Reduce function
- * @param {Object.<string, JsonSchema>} refTargets re-usable sub-schemas
- * @returns {func} function for use in Array.reduce()
+ * Generic function to be used in Array.reduce().
+ * @param {*} combined temporary result of previous reduce steps
+ * @param {*} nextValue single value to merge with "combined"
+ * @returns {*} merged values
  */
 function mergeValues(combined, nextValue) {
+    let mergeResult;
     if (!isDefined(combined)) {
-        return nextValue;
+        mergeResult = nextValue;
+    } else if (!isDefined(nextValue)) {
+        mergeResult = combined;
+    } else if (combined === nextValue) {
+        mergeResult = combined;
+    } else if (Array.isArray(combined)) {
+        // unequal values cannot be merged easily, instead return array of collected values
+        if (Array.isArray(nextValue)) {
+            mergeResult = combined.concat(nextValue);
+        } else {
+            mergeResult = combined.slice();
+            mergeResult.push(nextValue);
+        }
+    } else if (Array.isArray(nextValue)) {
+        // unequal values cannot be merged easily, instead return array of collected values
+        mergeResult = [combined].concat(nextValue);
+    } else if (typeof combined === "object" && isNonEmptyObject(nextValue)) {
+        mergeResult = Object.assign({}, combined, nextValue);
+    } else {
+        // unequal values cannot be merged easily, instead return array of collected values
+        mergeResult = [combined, nextValue];
     }
-    if (!isDefined(nextValue)) {
-        return combined;
-    }
-    if (Array.isArray(combined) && Array.isArray(nextValue)) {
-        return combined.concat(nextValue);
-    }
-    if (typeof combined === "object" && isNonEmptyObject(nextValue)) {
-        return Object.assign({}, combined, nextValue);
-    }
-    // first actual value wins if no specific merge can be performed
-    return combined;
+    return mergeResult;
 }
 
 /**
