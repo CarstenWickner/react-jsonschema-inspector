@@ -1,0 +1,12 @@
+{
+    "rules": {
+        "import/no-extraneous-dependencies": "off",
+        "no-prototype-builtins": "off"
+    },
+    "globals": {
+        "beforeEach": "readable",
+        "expect": "readable",
+        "describe": "readable",
+        "it": "readable"
+    }
+}
