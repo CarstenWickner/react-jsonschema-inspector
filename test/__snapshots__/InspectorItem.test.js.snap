@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with minimal/default props 1`] = `"<button type=\\"button\\" class=\\"jsonschema-inspector-item\\"><div class=\\"jsonschema-inspector-item-content\\"><span class=\\"jsonschema-inspector-item-name\\">Item Name</span><span class=\\"jsonschema-inspector-item-icon\\"></span></div></button>"`;

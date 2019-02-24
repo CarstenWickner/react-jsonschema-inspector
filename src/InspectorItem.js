@@ -35,16 +35,20 @@ class InspectorItem extends PureComponent {
             onClick: onSelect,
             onFocus: onSelect
         };
-        if (autoFocus) {
+        const focused = selected && autoFocus;
+        if (focused) {
             buttonAttributes.ref = (ref) => {
                 this.buttonRef = ref;
             };
+        } else {
+            // clear reference in case props indicated autoFocus before
+            this.buttonRef = null;
         }
         const renderParameters = {
             name,
             hasNestedItems,
             selected,
-            focused: autoFocus,
+            focused,
             schema,
             refTargets
         };
