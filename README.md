@@ -1,5 +1,7 @@
 # React JSON Schema Inspector
 
+[![Build Status][travis-ci-image]][travis-ci-url]
+
 Introducing a component for viewing/traversing (complex) JSON Schemas for the sake of documentation and potentially assisting users of a DSL in finding particular information in a custom data model.
 
 ## Demo
@@ -93,3 +95,7 @@ npm i react-jsonschema-inspector
 - Introduce search functionality in header (after determining how search results could be displayed)
 - Add breadcrumbs-like summary in footer
 - Improve performance (e.g. by using lodash chaining)
+
+
+[travis-ci-image]: https://travis-ci.org/CarstenWickner/react-jsonschema-inspector.svg
+[travis-ci-url]: https://travis-ci.org/CarstenWickner/react-jsonschema-inspector
