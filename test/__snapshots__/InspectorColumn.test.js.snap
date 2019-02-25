@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with minimal/default props 1`] = `
+<div
+  className="jsonschema-inspector-column"
+  onClick={[Function]}
+  role="presentation"
+  tabIndex={-1}
+>
+  <InspectorItem
+    autoFocus={false}
+    key="Item One"
+    name="Item One"
+    onSelect={[Function]}
+    refTargets={
+      Object {
+        "Target": Object {},
+      }
+    }
+    renderContent={null}
+    schema={
+      Object {
+        "$id": "Schema One",
+      }
+    }
+    selected={false}
+  />
+  <InspectorItem
+    autoFocus={false}
+    key="Item Two"
+    name="Item Two"
+    onSelect={[Function]}
+    refTargets={
+      Object {
+        "Target": Object {},
+      }
+    }
+    renderContent={null}
+    schema={
+      Object {
+        "$id": "Schema Two",
+      }
+    }
+    selected={false}
+  />
+</div>
+`;
