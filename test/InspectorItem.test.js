@@ -9,10 +9,10 @@ describe("renders correctly", () => {
                 name="Item Name"
                 schema={{}}
                 refTargets={{}}
-                onSelect={() => {}}
+                onSelect={() => { }}
             />
         );
-        expect(component.html()).toMatchSnapshot();
+        expect(component).toMatchSnapshot();
     });
     it("with nested children", () => {
         const component = shallow(
@@ -24,7 +24,7 @@ describe("renders correctly", () => {
                     }
                 }}
                 refTargets={{}}
-                onSelect={() => {}}
+                onSelect={() => { }}
             />
         );
         expect(component.hasClass("has-nested-items")).toBe(true);
@@ -35,7 +35,7 @@ describe("renders correctly", () => {
                 name="Item Name"
                 schema={{}}
                 refTargets={{}}
-                onSelect={() => {}}
+                onSelect={() => { }}
                 selected
             />
         );
@@ -48,7 +48,7 @@ describe("renders correctly", () => {
                 name="Item Name"
                 schema={{}}
                 refTargets={{}}
-                onSelect={() => {}}
+                onSelect={() => { }}
                 selected
                 autoFocus
             />
@@ -57,34 +57,33 @@ describe("renders correctly", () => {
         const { buttonRef } = component.instance();
         expect(buttonRef).toBeTruthy();
     });
-    it("ignoring autoFocus if not selected", () => {
-        // need to mount() in order to get access to buttonRef field
-        const component = mount(
-            <InspectorItem
-                name="Item Name"
-                schema={{}}
-                refTargets={{}}
-                onSelect={() => {}}
-                autoFocus
-            />
-        );
-        expect(component.find("button").hasClass("selected")).toBe(false);
-        const { buttonRef } = component.instance();
-        expect(buttonRef).toBeFalsy();
-    });
     it("with custom rendered content", () => {
         const component = shallow(
             <InspectorItem
                 name="Item Name"
                 schema={{}}
                 refTargets={{}}
-                onSelect={() => {}}
+                onSelect={() => { }}
                 renderContent={() => (
-                    <span>Custom content</span>
+                    <span className="custom-content">Custom content</span>
                 )}
             />
         );
-        expect(component.find("span").text()).toEqual("Custom content");
+        expect(component.find(".custom-content").text()).toEqual("Custom content");
+    });
+});
+describe("failing PropType validation", () => {
+    it("for autoFocus if not selected", () => {
+        const component = () => (
+            <InspectorItem
+                name="Item Name"
+                schema={{}}
+                refTargets={{}}
+                onSelect={() => { }}
+                autoFocus
+            />
+        );
+        expect(component).toThrowError("Warning: Failed prop type: `autoFocus` is true while it is not `selected`\n    in InspectorItem");
     });
 });
 describe("calls onSelect", () => {

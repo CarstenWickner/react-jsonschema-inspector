@@ -35,8 +35,7 @@ class InspectorItem extends PureComponent {
             onClick: onSelect,
             onFocus: onSelect
         };
-        const focused = selected && autoFocus;
-        if (focused) {
+        if (autoFocus) {
             buttonAttributes.ref = (ref) => {
                 this.buttonRef = ref;
             };
@@ -48,7 +47,7 @@ class InspectorItem extends PureComponent {
             name,
             hasNestedItems,
             selected,
-            focused,
+            focused: autoFocus,
             schema,
             refTargets
         };
@@ -64,7 +63,12 @@ InspectorItem.propTypes = {
     name: PropTypes.string.isRequired,
     schema: PropTypes.oneOfType([PropTypes.bool, JsonSchemaPropType]).isRequired,
     selected: PropTypes.bool,
-    autoFocus: PropTypes.bool,
+    autoFocus: ({ selected, autoFocus }) => {
+        if (autoFocus && !selected) {
+            return new Error("`autoFocus` is true while it is not `selected`");
+        }
+        return null;
+    },
     refTargets: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     onSelect: PropTypes.func.isRequired, // func(SyntheticEvent: event)
     renderContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refTargets })

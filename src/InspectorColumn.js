@@ -51,8 +51,24 @@ class InspectorColumn extends PureComponent {
 InspectorColumn.propTypes = {
     items: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.bool, JsonSchemaPropType])).isRequired,
     refTargets: PropTypes.objectOf(JsonSchemaPropType).isRequired,
-    selectedItem: PropTypes.string,
-    trailingSelection: PropTypes.bool,
+    selectedItem: ({ items, selectedItem }) => {
+        if (selectedItem !== undefined && selectedItem !== null) {
+            if (typeof selectedItem !== "string") {
+                return new Error("`selectedItem` is not a `string`");
+            }
+            if (!items[selectedItem]) {
+                return new Error("`selectedItem` is not part of `items`");
+            }
+        }
+        // assume all ok
+        return null;
+    },
+    trailingSelection: ({ selectedItem, trailingSelection }) => {
+        if (trailingSelection && !selectedItem) {
+            return new Error("`trailingSelection` is true while there is no `selectedItem`");
+        }
+        return null;
+    },
     onSelect: PropTypes.func.isRequired, // func(SyntheticEvent: event, string: name)
     renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refTargets })
 };
