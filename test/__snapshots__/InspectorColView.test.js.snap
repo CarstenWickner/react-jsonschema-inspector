@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with minimal/default props 1`] = `
+<div
+  className="jsonschema-inspector-colview"
+  tabIndex={-1}
+>
+  <InspectorColumn
+    items={
+      Object {
+        "Item One": Object {},
+        "Item Two": Object {},
+      }
+    }
+    key="0"
+    onSelect={[Function]}
+    refTargets={Object {}}
+    renderItemContent={null}
+    selectedItem="Item One"
+    trailingSelection={false}
+  />
+  <InspectorColumn
+    items={
+      Object {
+        "Item One-One": Object {},
+        "Item One-Two": Object {},
+      }
+    }
+    key="1"
+    onSelect={[Function]}
+    refTargets={Object {}}
+    renderItemContent={null}
+    selectedItem="Item One-Two"
+    trailingSelection={true}
+  />
+  <InspectorColumn
+    items={
+      Object {
+        "Item One-Two-One": Object {},
+        "Item One-Two-Two": Object {},
+      }
+    }
+    key="2"
+    onSelect={[Function]}
+    refTargets={Object {}}
+    renderItemContent={null}
+    selectedItem={null}
+    trailingSelection={false}
+  />
+</div>
+`;

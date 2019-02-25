@@ -6,9 +6,9 @@ import JsonSchemaPropType from "./JsonSchemaPropType";
 
 class InspectorColView extends PureComponent {
     componentDidUpdate(prevProps) {
-        const previousColumnCount = prevProps.columnData.length;
-        // eslint-disable-next-line react/destructuring-assignment
-        const currentColumnCount = this.props.columnData.length;
+        const previousColumnCount = prevProps.columnData.length + (prevProps.appendEmptyColumn ? 1 : 0);
+        const { columnData, appendEmptyColumn } = this.props;
+        const currentColumnCount = columnData.length + (appendEmptyColumn ? 1 : 0);
         if (previousColumnCount < currentColumnCount) {
             // auto-scroll to the far right if an additional column was added
             this.colViewContainerRef.scrollLeft = this.colViewContainerRef.scrollWidth;
@@ -20,16 +20,28 @@ class InspectorColView extends PureComponent {
             columnData, refTargets, appendEmptyColumn, renderItemContent
         } = this.props;
         return (
-            <div className="jsonschema-inspector-colview" ref={(ref) => { this.colViewContainerRef = ref; }}>
-                {columnData.map((singleColumnData, index) => (
-                    <InspectorColumn
-                        // eslint-disable-next-line react/no-array-index-key
-                        key={index}
-                        refTargets={refTargets}
-                        renderItemContent={renderItemContent}
-                        {...singleColumnData}
-                    />
-                ))}
+            <div
+                className="jsonschema-inspector-colview"
+                ref={(ref) => { this.colViewContainerRef = ref; }}
+                tabIndex={-1}
+            >
+                {columnData.map((singleColumnData, index) => {
+                    const {
+                        items, selectedItem, trailingSelection, onSelect
+                    } = singleColumnData;
+                    return (
+                        <InspectorColumn
+                            // eslint-disable-next-line react/no-array-index-key
+                            key={index}
+                            refTargets={refTargets}
+                            renderItemContent={renderItemContent}
+                            items={items}
+                            selectedItem={selectedItem}
+                            trailingSelection={trailingSelection}
+                            onSelect={onSelect}
+                        />
+                    );
+                })}
                 {appendEmptyColumn
                     && <div className="jsonschema-inspector-column-placeholder" />}
             </div>
@@ -41,7 +53,8 @@ InspectorColView.propTypes = {
     columnData: PropTypes.arrayOf(PropTypes.shape({
         items: PropTypes.objectOf(JsonSchemaPropType).isRequired,
         selectedItem: PropTypes.string,
-        trailingSelection: PropTypes.bool
+        trailingSelection: PropTypes.bool,
+        onSelect: PropTypes.func.isRequired // func(SyntheticEvent: event, string: name)
     })).isRequired,
     refTargets: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     appendEmptyColumn: PropTypes.bool,
