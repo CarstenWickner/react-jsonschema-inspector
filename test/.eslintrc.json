@@ -7,6 +7,7 @@
         "beforeEach": "readable",
         "expect": "readable",
         "describe": "readable",
-        "it": "readable"
+        "it": "readable",
+        "jest": "readable"
     }
 }

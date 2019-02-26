@@ -87,7 +87,6 @@ npm i react-jsonschema-inspector
 
 ## TODOs (work in progress)
 
-- Separate view component from JSON Schema related logic
 - Introduce more unit tests
 - support `anyOf`
 - support `oneOf`

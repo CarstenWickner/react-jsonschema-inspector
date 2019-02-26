@@ -97,16 +97,19 @@ export function getPropertyParentSchemas(schema, refTargets) {
  * Look-up of any properties in the given JSON schema definition.
  *
  * @param {JsonSchema} schema definition of a JSON structure to traverse
+ * @param {String} fieldName name/key of the field to look-up
  * @param {Object.<String, JsonSchema>} refTargets re-usable schema definitions
+ * @param {*} defaultValue default value to return/merge encountered values with (falls-back to null)
+ * @param {Function} mergeFunction optional: how to combine two encountered values (starting with "defaultValue") into one
  * @returns {Object.<String, JsonSchema>} containing properties schemas as values with their names as keys
  */
-export function getPropertyParentFieldValue(schema, fieldName, refTargets) {
+export function getPropertyParentFieldValue(schema, fieldName, refTargets, defaultValue = null, mergeFunction = mergeValues) {
     const schemaList = getPropertyParentSchemas(schema, refTargets);
-    const mergedValue = schemaList.map(part => part[fieldName]).reduce(mergeValues, null);
+    const mergedValue = schemaList.map(part => part[fieldName]).reduce(mergeFunction, defaultValue);
     return mergedValue;
 }
 
-export function getFieldValue(schema, fieldName, refTargets) {
+export function getFieldValue(schema, fieldName, refTargets, mergeFunction = mergeValues) {
     if (schema.$ref) {
         if (!refTargets) {
             // if no refTargets were provided, just skip the reference
@@ -118,14 +121,48 @@ export function getFieldValue(schema, fieldName, refTargets) {
             throw new Error(`Cannot resolve $ref: "${schema.$ref}", only known references are: ${Object.keys(refTargets).join(", ")}`);
         }
         // by convention, if $ref is specified, all other properties in the schema are being ignored
-        return getFieldValue(referencedSchema, fieldName, refTargets);
+        return getFieldValue(referencedSchema, fieldName, refTargets, mergeFunction);
     }
     const value = schema[fieldName];
     if (schema.allOf) {
         // schema variable is supposed to be combined with a given list of sub-schemas
         return schema.allOf
-            .map(part => getFieldValue(part, fieldName, refTargets))
-            .reduce(mergeValues, value);
+            .map(part => getFieldValue(part, fieldName, refTargets, mergeFunction))
+            .reduce(mergeFunction, value);
     }
     return value;
+}
+
+/**
+ * Collect all re-usable sub-schemas that can be referenced via $ref.
+ * @param {JsonSchema} schema root schema for which to collect all allowed $ref values
+ * @returns {Object.<String, JsonSChema>} mapped $ref values to their corresponding schemas
+ */
+export function collectRefTargets(schema) {
+    const refTargets = {};
+    if (isNonEmptyObject(schema)) {
+        refTargets["#"] = schema;
+        const { $id, id, definitions } = schema;
+        if ($id) {
+            // from JSON Schema Draft 6: "$id"
+            refTargets[$id] = schema;
+        } else if (id) {
+            // in JSON Schema Draft 4, the "id" property had no "$" prefix
+            refTargets[id] = schema;
+        }
+        if (isNonEmptyObject(definitions)) {
+            Object.keys(definitions).forEach((key) => {
+                const subSchema = definitions[key];
+                refTargets[`#/definitions/${key}`] = subSchema;
+                if (subSchema.$id) {
+                    // from JSON Schema Draft 6: "$id"
+                    refTargets[subSchema.$id] = subSchema;
+                } else if (subSchema.id) {
+                    // in JSON Schema Draft 4, the "id" property had no "$" prefix
+                    refTargets[subSchema.id] = subSchema;
+                }
+            });
+        }
+    }
+    return refTargets;
 }

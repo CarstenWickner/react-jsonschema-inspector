@@ -32,8 +32,8 @@
         "@babel/plugin-proposal-class-properties": "^7.3.3",
         "@babel/preset-env": "^7.3.1",
         "@babel/preset-react": "^7.0.0",
-        "@storybook/addon-info": "^4.1.11",
-        "@storybook/react": "^4.1.11",
+        "@storybook/addon-info": "^4.1.13",
+        "@storybook/react": "^4.1.13",
         "babel-eslint": "^10.0.1",
         "babel-jest": "^24.1.0",
         "babel-loader": "^8.0.5",
@@ -48,6 +48,7 @@
         "eslint-plugin-jsx-a11y": "^6.2.1",
         "eslint-plugin-react": "^7.12.4",
         "gh-pages": "^2.0.1",
+        "identity-obj-proxy": "^3.0.0",
         "jest": "^24.1.0",
         "node-sass": "^4.11.0",
         "sass-loader": "^7.1.0",
@@ -56,6 +57,7 @@
     },
     "dependencies": {
         "classnames": "^2.2.6",
+        "lodash.isequal": "^4.5.0",
         "memoize-one": "^5.0.0"
     },
     "peerDependencies": {
@@ -68,7 +70,12 @@
         "setupFilesAfterEnv": [
             "<rootDir>/test/setupTests.js"
         ],
-        "snapshotSerializers": ["enzyme-to-json/serializer"]
+        "snapshotSerializers": [
+            "enzyme-to-json/serializer"
+        ],
+        "moduleNameMapper": {
+            "\\.(scss)$": "identity-obj-proxy"
+        }
     },
     "bugs": {
         "url": "https://github.com/CarstenWickner/react-jsonschema-inspector/issues"
