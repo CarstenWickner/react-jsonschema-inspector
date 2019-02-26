@@ -32,7 +32,7 @@ describe("renders correctly", () => {
         );
         const { columnData, refTargets } = component.find("InspectorColView").props();
         expect(refTargets).toEqual({});
-        expect(columnData.length).toBe(1);
+        expect(columnData).toHaveLength(1);
         expect(columnData[0].items).toEqual(schemas);
         expect(columnData[0].selectedItem).toBe(null);
         expect(columnData[0].trailingSelection).toBe(false);
@@ -50,7 +50,7 @@ describe("renders correctly", () => {
         expect(refTargets).toEqual({
             "#": schemas[selectedSchema]
         });
-        expect(columnData.length).toBe(2);
+        expect(columnData).toHaveLength(2);
         expect(columnData[0].items).toEqual(schemas);
         expect(columnData[0].selectedItem).toBe(selectedSchema);
         expect(columnData[0].trailingSelection).toBe(true);
@@ -80,7 +80,7 @@ describe("renders correctly", () => {
         expect(refTargets).toEqual({
             "#": schemas[selectedSchema]
         });
-        expect(columnData.length).toBe(2);
+        expect(columnData).toHaveLength(2);
         expect(columnData[0].items).toEqual(schemas);
         expect(columnData[0].selectedItem).toBe(selectedSchema);
         expect(columnData[0].trailingSelection).toBe(false);
@@ -110,7 +110,7 @@ describe("renders correctly", () => {
         expect(refTargets).toEqual({
             "#": schemas[selectedSchema]
         });
-        expect(columnData.length).toBe(3);
+        expect(columnData).toHaveLength(3);
         expect(columnData[1].items).toEqual({
             "Item One": {},
             "Item Two": {
@@ -177,7 +177,7 @@ describe("calls onSelect", () => {
         );
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, "Schema One");
-        expect(onSelect.mock.calls.length).toBe(1);
+        expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][1]).toEqual(["Schema One"]);
         expect(component.state("appendEmptyColumn")).toBe(false);
     });
@@ -191,7 +191,7 @@ describe("calls onSelect", () => {
         );
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, "Schema Two");
-        expect(onSelect.mock.calls.length).toBe(1);
+        expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][1]).toEqual(["Schema Two"]);
         // expect it to be true because "Schema Two" has no nested items, but "Schema One" has
         expect(component.state("appendEmptyColumn")).toBe(true);
@@ -206,7 +206,7 @@ describe("calls onSelect", () => {
         );
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, "Schema One");
-        expect(onSelect.mock.calls.length).toBe(0);
+        expect(onSelect.mock.calls).toHaveLength(0);
     });
     it("when clearing root selection", () => {
         const component = shallow(
@@ -218,7 +218,7 @@ describe("calls onSelect", () => {
         );
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, null);
-        expect(onSelect.mock.calls.length).toBe(1);
+        expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][1]).toEqual([]);
         expect(component.state("appendEmptyColumn")).toBe(true);
     });
@@ -231,7 +231,7 @@ describe("calls onSelect", () => {
         );
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, null);
-        expect(onSelect.mock.calls.length).toBe(0);
+        expect(onSelect.mock.calls).toHaveLength(0);
     });
     it("when setting non-root selection", () => {
         const component = shallow(
@@ -243,7 +243,7 @@ describe("calls onSelect", () => {
         );
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, "Item One");
-        expect(onSelect.mock.calls.length).toBe(1);
+        expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][1]).toEqual(["Schema One", "Item One"]);
         expect(component.state("appendEmptyColumn")).toBe(false);
     });
@@ -257,7 +257,7 @@ describe("calls onSelect", () => {
         );
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, "Item Two");
-        expect(onSelect.mock.calls.length).toBe(1);
+        expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][1]).toEqual(["Schema One", "Item Two"]);
         expect(component.state("appendEmptyColumn")).toBe(false);
     });
@@ -271,7 +271,7 @@ describe("calls onSelect", () => {
         );
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, "Item One");
-        expect(onSelect.mock.calls.length).toBe(0);
+        expect(onSelect.mock.calls).toHaveLength(0);
     });
     it("when clearing non-root selection", () => {
         const component = shallow(
@@ -283,7 +283,7 @@ describe("calls onSelect", () => {
         );
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, null);
-        expect(onSelect.mock.calls.length).toBe(1);
+        expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][1]).toEqual(["Schema One"]);
         // expect it to be false because "Item One" has no nested items
         expect(component.state("appendEmptyColumn")).toBe(false);
@@ -298,6 +298,6 @@ describe("calls onSelect", () => {
         );
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, null);
-        expect(onSelect.mock.calls.length).toBe(0);
+        expect(onSelect.mock.calls).toHaveLength(0);
     });
 });

@@ -38,7 +38,7 @@ describe("renders correctly", () => {
                 ]}
             />
         );
-        expect(component.find(".jsonschema-inspector-details-form-row").length).toBe(0);
+        expect(component.find(".jsonschema-inspector-details-form-row")).toHaveLength(0);
     });
     it("including other falsy rowValues", () => {
         const component = shallow(
@@ -59,6 +59,6 @@ describe("renders correctly", () => {
                 ]}
             />
         );
-        expect(component.find(".jsonschema-inspector-details-form-row").length).toBe(3);
+        expect(component.find(".jsonschema-inspector-details-form-row")).toHaveLength(3);
     });
 });
