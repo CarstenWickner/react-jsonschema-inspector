@@ -20,22 +20,24 @@ class InspectorDetails extends PureComponent {
     }
 
     static collectFormFields(itemSchema, refTargets, columnData, selectionColumnIndex) {
-        const getValue = fieldName => getFieldValue(itemSchema, fieldName, refTargets);
-        const buildFormField = (labelText, rowValue) => ({
-            labelText,
-            rowValue
-        });
         const formFields = [];
-        formFields.push(buildFormField("Title", getValue("title")));
-        formFields.push(buildFormField("Description", getValue("description")));
-        formFields.push(buildFormField("Required",
-            InspectorDetails.isSelectionRequiredInParent(columnData, selectionColumnIndex, refTargets) ? "Yes" : null));
-        formFields.push(buildFormField("Type", getValue("type")));
-        formFields.push(buildFormField("Constant Value", getValue("const")));
-        formFields.push(buildFormField("Possible Values", getValue("enum")));
+        const addFormField = (labelText, rowValue) => {
+            if (isDefined(rowValue)) {
+                formFields.push({ labelText, rowValue });
+            }
+        };
+        const getValue = fieldName => getFieldValue(itemSchema, fieldName, refTargets);
 
-        const minimum = getValue("minimum", refTargets);
-        const exclusiveMinimum = getValue("exclusiveMinimum", refTargets);
+        addFormField("Title", getValue("title"));
+        addFormField("Description", getValue("description"));
+        addFormField("Required",
+            InspectorDetails.isSelectionRequiredInParent(columnData, selectionColumnIndex, refTargets) ? "Yes" : null);
+        addFormField("Type", getValue("type"));
+        addFormField("Constant Value", getValue("const"));
+        addFormField("Possible Values", getValue("enum"));
+
+        const minimum = getValue("minimum");
+        const exclusiveMinimum = getValue("exclusiveMinimum");
         let minValue;
         if (isDefined(minimum)) {
             // according to JSON Schema Draft 4, "exclusiveMinimum" is a boolean and used in combination with "minimum"
@@ -45,10 +47,10 @@ class InspectorDetails extends PureComponent {
             // according to JSON Schema Draft 6, "exclusiveMinimum" is a number and can be used instead of "minimum"
             minValue = isDefined(exclusiveMinimum) ? `${exclusiveMinimum} (exclusive)` : null;
         }
-        formFields.push(buildFormField("Min Value", minValue));
+        addFormField("Min Value", minValue);
 
-        const maximum = getValue("maximum", refTargets);
-        const exclusiveMaximum = getValue("exclusiveMaximum", refTargets);
+        const maximum = getValue("maximum");
+        const exclusiveMaximum = getValue("exclusiveMaximum");
         let maxValue;
         if (isDefined(maximum)) {
             // according to JSON Schema Draft 4, "exclusiveMaximum" is a boolean and used in combination with "maximum"
@@ -58,20 +60,21 @@ class InspectorDetails extends PureComponent {
             // according to JSON Schema Draft 6, "exclusiveMaximum" is a number and can be used instead of "maximum"
             maxValue = isDefined(exclusiveMaximum) ? `${exclusiveMaximum} (exclusive)` : null;
         }
-        formFields.push(buildFormField("Max Value", maxValue));
+        addFormField("Max Value", maxValue);
 
-        const defaultValue = getValue("default", refTargets);
-        formFields.push(buildFormField("Default Value", typeof defaultValue === "object" ? JSON.stringify(defaultValue) : defaultValue));
-        const examples = getValue("examples", refTargets);
-        formFields.push(buildFormField("Example(s)",
-            (isDefined(examples) && examples.length && typeof examples[0] === "object") ? JSON.stringify(examples) : examples));
-        formFields.push(buildFormField("Value Pattern", getValue("pattern")));
-        formFields.push(buildFormField("Value Format", getValue("format")));
-        formFields.push(buildFormField("Min Length", getValue("minLength")));
-        formFields.push(buildFormField("Max Length", getValue("maxLength")));
-        formFields.push(buildFormField("Min Items", getValue("minItems")));
-        formFields.push(buildFormField("Max Items", getValue("maxItems")));
-        formFields.push(buildFormField("Items Unique", getValue("uniqueItems", refTargets) === true ? "Yes" : null));
+        const defaultValue = getValue("default");
+        addFormField("Default Value", typeof defaultValue === "object" ? JSON.stringify(defaultValue) : defaultValue);
+        let examples = getValue("examples");
+        examples = (isDefined(examples) && examples.length > 0) ? examples : null;
+        addFormField("Example(s)",
+            (examples && typeof examples[0] === "object") ? JSON.stringify(examples) : examples);
+        addFormField("Value Pattern", getValue("pattern"));
+        addFormField("Value Format", getValue("format"));
+        addFormField("Min Length", getValue("minLength"));
+        addFormField("Max Length", getValue("maxLength"));
+        addFormField("Min Items", getValue("minItems"));
+        addFormField("Max Items", getValue("maxItems"));
+        addFormField("Items Unique", getValue("uniqueItems") === true ? "Yes" : null);
 
         return formFields;
     }
@@ -119,7 +122,8 @@ class InspectorDetails extends PureComponent {
         const {
             columnData, refTargets, renderSelectionDetails, renderEmptyDetails
         } = this.props;
-        const selectionColumnIndex = columnData.length - (columnData[columnData.length - 1].trailingSelection ? 1 : 2);
+        const lastColumnContainsSelection = columnData.length && columnData[columnData.length - 1].trailingSelection;
+        const selectionColumnIndex = columnData.length - (lastColumnContainsSelection ? 1 : 2);
         const trailingSelectionColumn = selectionColumnIndex < 0 ? null : columnData[selectionColumnIndex];
         const itemSchema = trailingSelectionColumn ? trailingSelectionColumn.items[trailingSelectionColumn.selectedItem] : null;
         return (
@@ -134,7 +138,7 @@ class InspectorDetails extends PureComponent {
                 {!itemSchema
                     && renderEmptyDetails
                     && renderEmptyDetails({
-                        rootColumnSchemas: columnData[0].items
+                        rootColumnSchemas: columnData.length ? columnData[0].items : {}
                     })}
             </div>
         );
@@ -144,7 +148,8 @@ class InspectorDetails extends PureComponent {
 InspectorDetails.propTypes = {
     columnData: PropTypes.arrayOf(PropTypes.shape({
         items: PropTypes.objectOf(JsonSchemaPropType).isRequired,
-        selectedItem: PropTypes.string
+        selectedItem: PropTypes.string,
+        trailingSelection: PropTypes.bool
     })).isRequired,
     refTargets: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     /** func({ itemSchema: JsonSchema, columnData, refTargets, selectionColumnIndex: number }) */
