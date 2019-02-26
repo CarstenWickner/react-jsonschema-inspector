@@ -3,7 +3,7 @@ import React, { PureComponent } from "react";
 import classNames from "classnames";
 
 import JsonSchemaPropType from "./JsonSchemaPropType";
-import { getPropertyParentFieldValue, isNonEmptyObject } from "./utils";
+import { getPropertyParentSchemas, isNonEmptyObject } from "./utils";
 
 class InspectorItem extends PureComponent {
     static renderDefaultContent({ name }) {
@@ -25,7 +25,8 @@ class InspectorItem extends PureComponent {
         const {
             name, schema, selected, autoFocus, refTargets, onSelect, renderContent
         } = this.props;
-        const hasNestedItems = isNonEmptyObject(getPropertyParentFieldValue(schema, "properties", refTargets));
+        const schemaList = getPropertyParentSchemas(schema, refTargets);
+        const hasNestedItems = schemaList.some(part => isNonEmptyObject(part.properties));
         const buttonAttributes = {
             className: classNames({
                 "jsonschema-inspector-item": true,

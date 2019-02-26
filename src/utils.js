@@ -21,6 +21,72 @@ export function isNonEmptyObject(target) {
 }
 
 /**
+ * Look-up of any nested sub-schemas that may contain information about "properties" in the given JSON schema definition.
+ * If the given JSON schema definition refers is an array, it is assumed to not have relevant information.
+ * Instead, the referenced schemas of its "Items" will be returned.
+ *
+ * This method is intended to be used to look-up fields like "properties" or "required" which are not associated with arrays.
+ *
+ * BEWARE: if a schema consists of multiple sub-schemas and only one of them defines an "items" field, the other sibling schemas
+ * will still be included in the result list - they are just assumed to not have any relevant fields we are looking for.
+ *
+ * @param {JsonSchema} schema definition of a JSON structure to traverse
+ * @param {Object.<String, JsonSchema>} refTargets re-usable sub-schemas
+ * @returns {Array<JsonSchema>} array listing sub-schemas that may define properties about their children
+ */
+export function getPropertyParentSchemas(schema, refTargets) {
+    if (!isNonEmptyObject(schema) || (schema.$ref && !isDefined(refTargets))) {
+        return [];
+    }
+    if (schema.$ref) {
+        const referencedSchema = refTargets[schema.$ref];
+        if (!isDefined(referencedSchema)) {
+            throw new Error(`Cannot resolve $ref: "${schema.$ref}", only known references are: ${Object.keys(refTargets).join(", ")}`);
+        }
+        // the given schema is just a reference to another separately defined schema
+        return getPropertyParentSchemas(referencedSchema, refTargets);
+    }
+    if (schema.allOf) {
+        let returnedSchemas = [schema];
+        schema.allOf.forEach((part) => {
+            returnedSchemas = returnedSchemas.concat(getPropertyParentSchemas(part, refTargets));
+        });
+        return returnedSchemas;
+    }
+    if (isNonEmptyObject(schema.items)) {
+        // unsupported: specifying array of schemas refering to entries at respective positions in described array
+        // schema.items contains a single schema, that specifies the type of any value in the described array
+        return getPropertyParentSchemas(schema.items, refTargets);
+    }
+    if (isNonEmptyObject(schema.additionalItems)) {
+        // the given schema is an array which may specify its content type in "additionalItems"
+        return getPropertyParentSchemas(schema.additionalItems, refTargets);
+    }
+    // if there are no nested schemas, only the given one may contain properties
+    return [schema];
+}
+
+/**
+ * Generic function to be used in Array.reduce() - assuming objects are being merged.
+ * @param {*} combined temporary result of previous reduce steps
+ * @param {*} nextValue single value to merge with "combined"
+ * @returns {*} merged values
+ */
+export function mergeObjects(combined, nextValue) {
+    let mergeResult;
+    if (!isNonEmptyObject(combined)) {
+        mergeResult = nextValue;
+    } else if (!isNonEmptyObject(nextValue)) {
+        mergeResult = combined;
+    } else if (combined === nextValue) {
+        mergeResult = combined;
+    } else {
+        mergeResult = Object.assign({}, combined, nextValue);
+    }
+    return mergeResult;
+}
+
+/**
  * Generic function to be used in Array.reduce().
  * @param {*} combined temporary result of previous reduce steps
  * @param {*} nextValue single value to merge with "combined"
@@ -55,66 +121,19 @@ function mergeValues(combined, nextValue) {
 }
 
 /**
- * Look-up of any nested sub-schemas in the given JSON schema definition.
- *
- * @param {JsonSchema} schema definition of a JSON structure to traverse
- * @param {Object.<String, JsonSchema>} refTargets re-usable sub-schemas
- * @returns {Array<JsonSchema>} array listing sub-schemas that may define properties about their children
- */
-export function getPropertyParentSchemas(schema, refTargets) {
-    if (!isNonEmptyObject(schema)) {
-        return [];
-    }
-    if (schema.$ref) {
-        const referencedSchema = refTargets[schema.$ref];
-        if (!isDefined(referencedSchema)) {
-            throw new Error(`Cannot resolve $ref: "${schema.$ref}", only known references are: ${Object.keys(refTargets).join(", ")}`);
-        }
-        // the given schema is just a reference to another separately defined schema
-        return getPropertyParentSchemas(referencedSchema, refTargets);
-    }
-    if (schema.allOf) {
-        let returnedSchemas = [schema];
-        schema.allOf.forEach((part) => {
-            returnedSchemas = returnedSchemas.concat(getPropertyParentSchemas(part, refTargets));
-        });
-        return returnedSchemas;
-    }
-    if (isNonEmptyObject(schema.items)) {
-        // unsupported: specifying array of schemas refering to entries at respective positions in described array
-        // schema.items contains a single schema, that specifies the type of any value in the described array
-        return getPropertyParentSchemas(schema.items, refTargets);
-    }
-    if (isNonEmptyObject(schema.additionalItems)) {
-        // the given schema is an array which may specify its content type in "additionalItems"
-        return getPropertyParentSchemas(schema.additionalItems, refTargets);
-    }
-    // if there are no nested schemas, only the given one may contain properties
-    return [schema];
-}
-
-/**
- * Look-up of any properties in the given JSON schema definition.
+ * Look-up of values associated with a specific kind of field in the given JSON schema definition.
+ * If the targeted schema is an array, the sub-schemas of its "items" will be ignored.
  *
  * @param {JsonSchema} schema definition of a JSON structure to traverse
  * @param {String} fieldName name/key of the field to look-up
  * @param {Object.<String, JsonSchema>} refTargets re-usable schema definitions
- * @param {*} defaultValue default value to return/merge encountered values with (falls-back to null)
  * @param {Function} mergeFunction optional: how to combine two encountered values (starting with "defaultValue") into one
- * @returns {Object.<String, JsonSchema>} containing properties schemas as values with their names as keys
  */
-export function getPropertyParentFieldValue(schema, fieldName, refTargets, defaultValue = null, mergeFunction = mergeValues) {
-    const schemaList = getPropertyParentSchemas(schema, refTargets);
-    const mergedValue = schemaList.map(part => part[fieldName]).reduce(mergeFunction, defaultValue);
-    return mergedValue;
-}
-
-export function getFieldValue(schema, fieldName, refTargets, mergeFunction = mergeValues) {
+export function getFieldValue(schema, fieldName, refTargets = null, mergeFunction = mergeValues) {
+    if (!isNonEmptyObject(schema) || (schema.$ref && !isDefined(refTargets))) {
+        return undefined;
+    }
     if (schema.$ref) {
-        if (!refTargets) {
-            // if no refTargets were provided, just skip the reference
-            return null;
-        }
         // schema variable is merely a reference to a separately defined schema
         const referencedSchema = refTargets[schema.$ref];
         if (!isDefined(referencedSchema)) {
@@ -153,13 +172,15 @@ export function collectRefTargets(schema) {
         if (isNonEmptyObject(definitions)) {
             Object.keys(definitions).forEach((key) => {
                 const subSchema = definitions[key];
-                refTargets[`#/definitions/${key}`] = subSchema;
-                if (subSchema.$id) {
-                    // from JSON Schema Draft 6: "$id"
-                    refTargets[subSchema.$id] = subSchema;
-                } else if (subSchema.id) {
-                    // in JSON Schema Draft 4, the "id" property had no "$" prefix
-                    refTargets[subSchema.id] = subSchema;
+                if (isNonEmptyObject(subSchema)) {
+                    refTargets[`#/definitions/${key}`] = subSchema;
+                    if (subSchema.$id) {
+                        // from JSON Schema Draft 6: "$id"
+                        refTargets[subSchema.$id] = subSchema;
+                    } else if (subSchema.id) {
+                        // in JSON Schema Draft 4, the "id" property had no "$" prefix
+                        refTargets[subSchema.id] = subSchema;
+                    }
                 }
             });
         }

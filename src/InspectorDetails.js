@@ -4,7 +4,7 @@ import React, { PureComponent } from "react";
 
 import InspectorDetailsForm from "./InspectorDetailsForm";
 import JsonSchemaPropType from "./JsonSchemaPropType";
-import { getFieldValue, getPropertyParentFieldValue, isDefined } from "./utils";
+import { getFieldValue, getPropertyParentSchemas, isDefined } from "./utils";
 
 class InspectorDetails extends PureComponent {
     static isSelectionRequiredInParent(columnData, selectionColumnIndex, refTargets) {
@@ -14,9 +14,9 @@ class InspectorDetails extends PureComponent {
         }
         const parentColumn = columnData[selectionColumnIndex - 1];
         const parentSchema = parentColumn.items[parentColumn.selectedItem];
-        const requiredPropertiesInParent = getPropertyParentFieldValue(parentSchema, "required", refTargets);
-        return requiredPropertiesInParent
-            && requiredPropertiesInParent.includes(columnData[selectionColumnIndex].selectedItem);
+        const targetItem = columnData[selectionColumnIndex].selectedItem;
+        const schemaList = getPropertyParentSchemas(parentSchema, refTargets);
+        return schemaList.some(part => isDefined(part.required) && part.required.includes(targetItem));
     }
 
     static collectFormFields(itemSchema, refTargets, columnData, selectionColumnIndex) {

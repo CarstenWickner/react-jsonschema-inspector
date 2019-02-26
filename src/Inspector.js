@@ -8,7 +8,9 @@ import "./Inspector.scss";
 import InspectorColView from "./InspectorColView";
 import InspectorDetails from "./InspectorDetails";
 import JsonSchemaPropType from "./JsonSchemaPropType";
-import { getPropertyParentFieldValue, isNonEmptyObject, collectRefTargets } from "./utils";
+import {
+    collectRefTargets, getPropertyParentSchemas, isNonEmptyObject, mergeObjects
+} from "./utils";
 
 class Inspector extends Component {
     constructor(props) {
@@ -40,7 +42,8 @@ class Inspector extends Component {
         const columnData = selectedItems.map((selection, index) => {
             const currentColumnScope = nextColumnScope;
             if (currentColumnScope[selection]) {
-                nextColumnScope = getPropertyParentFieldValue(currentColumnScope[selection], "properties", refTargets);
+                const schemaList = getPropertyParentSchemas(currentColumnScope[selection], refTargets);
+                nextColumnScope = schemaList.map(part => part.properties).reduce(mergeObjects, undefined);
                 return {
                     items: currentColumnScope, // mapped JsonSchema definitions to select from in this column
                     selectedItem: selection, // name of the selected item (i.e. key in 'items')
