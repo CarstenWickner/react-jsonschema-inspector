@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with minimal/default props 1`] = `
+<form
+  className="jsonschema-inspector-details-form"
+>
+  <div
+    className="jsonschema-inspector-details-form-row"
+    key="Field One"
+  >
+    <span
+      className="jsonschema-inspector-details-form-label"
+    >
+      Field One:
+    </span>
+    <span
+      className="jsonschema-inspector-details-form-value"
+    >
+      1
+    </span>
+  </div>
+  <div
+    className="jsonschema-inspector-details-form-row"
+    key="Field Two"
+  >
+    <span
+      className="jsonschema-inspector-details-form-label"
+    >
+      Field Two:
+    </span>
+    <span
+      className="jsonschema-inspector-details-form-value"
+    >
+      text
+    </span>
+  </div>
+</form>
+`;
