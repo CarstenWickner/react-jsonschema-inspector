@@ -4,6 +4,8 @@
 
 Introducing a component for viewing/traversing (complex) JSON Schemas for the sake of documentation and potentially assisting users of a DSL in finding particular information in a custom data model.
 
+![Logo][main-logo-image]
+
 ## Demo
 
 Check out the Storybook under: [https://carstenwickner.github.io/react-jsonschema-inspector](https://carstenwickner.github.io/react-jsonschema-inspector)
@@ -87,14 +89,13 @@ npm i react-jsonschema-inspector
 
 ## TODOs (work in progress)
 
-- Introduce more unit tests
-- support `anyOf`
-- support `oneOf`
-- support `if`/`then`/`else`
 - Introduce search functionality in header (after determining how search results could be displayed)
-- Add breadcrumbs-like summary in footer
+- support `anyOf` (if there is a nice/consistent way to do so)
+- support `oneOf` (if there is a nice/consistent way to do so)
+- support `if`/`then`/`else` (if there is a nice/consistent way to do so)
 - Improve performance (e.g. by using lodash chaining)
 
 
+[main-logo-image]: https://raw.githubusercontent.com/CarstenWickner/react-jsonschema-inspector/master/logo.svg
 [travis-ci-image]: https://travis-ci.org/CarstenWickner/react-jsonschema-inspector.svg
 [travis-ci-url]: https://travis-ci.org/CarstenWickner/react-jsonschema-inspector
