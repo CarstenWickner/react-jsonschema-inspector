@@ -2,59 +2,95 @@
 
 exports[`renders correctly with minimal/default props 1`] = `
 <div
-  className="jsonschema-inspector jsonschema-inspector-container"
+  className="jsonschema-inspector"
 >
-  <InspectorColView
-    appendEmptyColumn={false}
-    columnData={
-      Array [
-        Object {
-          "items": Object {
-            "Schema One": Object {
-              "properties": Object {
-                "Item One": Object {},
-                "Item Two": Object {
-                  "properties": Object {
-                    "Property One": Object {},
+  <div
+    className="jsonschema-inspector-body"
+  >
+    <InspectorColView
+      appendEmptyColumn={false}
+      columnData={
+        Array [
+          Object {
+            "items": Object {
+              "Schema One": Object {
+                "properties": Object {
+                  "Item One": Object {},
+                  "Item Two": Object {
+                    "properties": Object {
+                      "Property One": Object {},
+                    },
                   },
                 },
               },
             },
+            "onSelect": [Function],
+            "selectedItem": null,
+            "trailingSelection": false,
           },
-          "onSelect": [Function],
-          "selectedItem": null,
-          "trailingSelection": false,
-        },
-      ]
-    }
-    refTargets={Object {}}
-    renderItemContent={null}
-  />
-  <InspectorDetails
-    columnData={
-      Array [
-        Object {
-          "items": Object {
-            "Schema One": Object {
-              "properties": Object {
-                "Item One": Object {},
-                "Item Two": Object {
-                  "properties": Object {
-                    "Property One": Object {},
+        ]
+      }
+      refTargets={Object {}}
+      renderItemContent={null}
+    />
+    <InspectorDetails
+      columnData={
+        Array [
+          Object {
+            "items": Object {
+              "Schema One": Object {
+                "properties": Object {
+                  "Item One": Object {},
+                  "Item Two": Object {
+                    "properties": Object {
+                      "Property One": Object {},
+                    },
                   },
                 },
               },
             },
+            "onSelect": [Function],
+            "selectedItem": null,
+            "trailingSelection": false,
           },
-          "onSelect": [Function],
-          "selectedItem": null,
-          "trailingSelection": false,
-        },
-      ]
-    }
-    refTargets={Object {}}
-    renderEmptyDetails={null}
-    renderSelectionDetails={null}
-  />
+        ]
+      }
+      refTargets={Object {}}
+      renderEmptyDetails={null}
+      renderSelectionDetails={null}
+    />
+  </div>
+  <div
+    className="jsonschema-inspector-footer"
+  >
+    <InspectorBreadcrumbs
+      arrayItemAccessor="[0]"
+      columnData={
+        Array [
+          Object {
+            "items": Object {
+              "Schema One": Object {
+                "properties": Object {
+                  "Item One": Object {},
+                  "Item Two": Object {
+                    "properties": Object {
+                      "Property One": Object {},
+                    },
+                  },
+                },
+              },
+            },
+            "onSelect": [Function],
+            "selectedItem": null,
+            "trailingSelection": false,
+          },
+        ]
+      }
+      prefix=""
+      preventNavigation={false}
+      refTargets={Object {}}
+      separator="."
+    />
+  </div>
 </div>
 `;

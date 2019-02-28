@@ -7,6 +7,7 @@ import "./Inspector.scss";
 
 import InspectorColView from "./InspectorColView";
 import InspectorDetails from "./InspectorDetails";
+import InspectorBreadcrumbs from "./InspectorBreadcrumbs";
 import JsonSchemaPropType from "./JsonSchemaPropType";
 import {
     collectRefTargets, getPropertyParentSchemas, isNonEmptyObject, mergeObjects
@@ -104,24 +105,35 @@ class Inspector extends Component {
 
     render() {
         const {
-            schemas, renderItemContent, renderSelectionDetails, renderEmptyDetails
+            schemas, renderItemContent, renderSelectionDetails, renderEmptyDetails, breadcrumbs
         } = this.props;
         const { selectedItems, appendEmptyColumn } = this.state;
         const { columnData, refTargets } = this.getRenderDataForSelection(schemas, selectedItems);
         return (
-            <div className="jsonschema-inspector jsonschema-inspector-container">
-                <InspectorColView
-                    columnData={columnData}
-                    refTargets={refTargets}
-                    appendEmptyColumn={appendEmptyColumn}
-                    renderItemContent={renderItemContent}
-                />
-                <InspectorDetails
-                    columnData={columnData}
-                    refTargets={refTargets}
-                    renderSelectionDetails={renderSelectionDetails}
-                    renderEmptyDetails={renderEmptyDetails}
-                />
+            <div className="jsonschema-inspector">
+                <div className="jsonschema-inspector-body">
+                    <InspectorColView
+                        columnData={columnData}
+                        refTargets={refTargets}
+                        appendEmptyColumn={appendEmptyColumn}
+                        renderItemContent={renderItemContent}
+                    />
+                    <InspectorDetails
+                        columnData={columnData}
+                        refTargets={refTargets}
+                        renderSelectionDetails={renderSelectionDetails}
+                        renderEmptyDetails={renderEmptyDetails}
+                    />
+                </div>
+                {breadcrumbs && (
+                    <div className="jsonschema-inspector-footer">
+                        <InspectorBreadcrumbs
+                            columnData={columnData}
+                            refTargets={refTargets}
+                            {...breadcrumbs}
+                        />
+                    </div>
+                )}
             </div>
         );
     }
@@ -132,6 +144,13 @@ Inspector.propTypes = {
     schemas: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     /** default selection identified by names of object properties */
     defaultSelectedItems: PropTypes.arrayOf(PropTypes.string),
+    /** options for the breadcrumbs shown in the footer, can be turned off by setting to null */
+    breadcrumbs: PropTypes.shape({
+        prefix: PropTypes.string, // e.g. "//" or "./"
+        separator: PropTypes.string, // e.g. "." or "/"
+        arrayItemAccessor: PropTypes.string, // e.g. "[0]" or ".get(0)"
+        preventNavigation: PropTypes.bool // whether double-clicking an item should preserve following selections, otherwise they are discarded
+    }),
     /** callback to invoke after the selection changed. func(event, newSelection, { columnData, refTargets }) */
     onSelect: PropTypes.func,
     /** func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refTargets }) */
@@ -144,6 +163,7 @@ Inspector.propTypes = {
 
 Inspector.defaultProps = {
     defaultSelectedItems: [],
+    breadcrumbs: {},
     onSelect: null,
     renderItemContent: null,
     renderSelectionDetails: null,

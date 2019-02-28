@@ -24,19 +24,14 @@ describe("renders correctly", () => {
         );
         expect(component).toMatchSnapshot();
     });
-    it("with no selection", () => {
+    it("without footer", () => {
         const component = shallow(
             <Inspector
                 schemas={schemas}
+                breadcrumbs={null}
             />
         );
-        const { columnData, refTargets } = component.find("InspectorColView").props();
-        expect(refTargets).toEqual({});
-        expect(columnData).toHaveLength(1);
-        expect(columnData[0].items).toEqual(schemas);
-        expect(columnData[0].selectedItem).toBe(null);
-        expect(columnData[0].trailingSelection).toBe(false);
-        expect(typeof columnData[0].onSelect).toBe("function");
+        expect(component.find(".jsonschema-inspector-footer").exists()).toBe(false);
     });
     it("with root selection", () => {
         const selectedSchema = "Schema One";

@@ -16,36 +16,38 @@ storiesOf("Inspector", module)
         maxPropArrayLength: 5,
         propTablesExclude: [Inspector]
     }))
-    .add("minimal", () => (
+    .add("show-case", () => (
         <Inspector
             schemas={{
-                Person: personSchema
+                "Meta Core JSON Schema": metaSchema,
+                Shop: shopSelectionSchema
             }}
-        />
-    ))
-    .add("with empty Details", () => (
-        <Inspector
-            schemas={{
-                "Meta JSON Schema": metaSchema
-            }}
+            defaultSelectedItems={["Meta Core JSON Schema", "allOf", "$schema"]}
             renderEmptyDetails={({ rootColumnSchemas }) => (
-                <div style={{ padding: "1em", backgroundColor: "#80cbc4" }}>
+                <div style={{ padding: "1em" }}>
                     <h3>JSON Schema Inspector</h3>
                     <p>
-                        {`Just click on "${Object.keys(rootColumnSchemas)}" on the left side
-                        in order to traverse its nested properties
-                        – but beware of its circular references.`}
+                        {`Just click on "${Object.keys(rootColumnSchemas)[0]}"
+                          on the left side in order to traverse its nested properties
+                          – but beware of its circular references.`}
                     </p>
+                    <img
+                        src="https://raw.githubusercontent.com/CarstenWickner/react-jsonschema-inspector/master/logo.svg"
+                        alt="JSON Schema Inspector Logo"
+                        style={{ width: "80%", margin: "0 10%" }}
+                    />
                 </div>
             )}
         />
     ))
-    .add("with custom Details", () => (
+    .add("with custom Details and no breadcrumbs", () => (
         <Inspector
             schemas={{
+                Person: personSchema,
                 Shop: shopSelectionSchema
             }}
             defaultSelectedItems={["Shop", "vegetables"]}
+            breadcrumbs={null}
             renderSelectionDetails={({ itemSchema, columnData, selectionColumnIndex }) => (
                 <div style={{ padding: "1em", backgroundColor: "#80cbc4" }}>
                     <h3>Custom Details</h3>
@@ -66,15 +68,15 @@ storiesOf("Inspector", module)
     .add("with custom Items", () => (
         <Inspector
             schemas={{
-                Shop: shopSelectionSchema,
-                "Meta JSON Schema": metaSchema
+                Person: personSchema,
+                Shop: shopSelectionSchema
             }}
-            defaultSelectedItems={["Meta JSON Schema"]}
+            defaultSelectedItems={["Person", "friends", "friends"]}
             renderItemContent={({
                 name, hasNestedItems, selected, focused
             }) => {
                 const styles = {
-                    backgroundColor: (focused ? "#005b4f" : (selected ? "#80cbc4" : "#80cbc4")),
+                    backgroundColor: (focused && "#005b4f") || (selected && "#a5d6a7") || "#e8f5e9",
                     color: (focused ? "white" : "black")
                 };
                 return (

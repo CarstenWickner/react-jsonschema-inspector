@@ -83,6 +83,11 @@ npm i react-jsonschema-inspector
 | `schemas` (required) | Object: keys will be displayed in the root column, the values are expected to be independent JSON Schema definitions (compatible to Draft 4, 6 or 7) |
 | `defaultSelectedItems` | Array of strings: each referring to the name of the selected item in the respective column (i.e. the first entry in this array should match one key in the `schemas` object) |
 | `onSelect` | Function: call-back being invoked after the selection changed. Receives three parameters: (1) the change event, (2) the selection - as per the `defaultSelectedItems`, (3) an object with two properties: "columnData" and "refTargets" |
+| `breadcrumbs` | Object: enabling the definition of options for the breadcrumbs feature in the footer (can be disabled by setting to `null`) |
+| `breadcrumbs.prefix` | String: to be shown in front of the root selection (e.g. "//" or "./") |
+| `breadcrumbs.separator` | String: to be shown in front of any non-root selection (e.g. "." or "/") |
+| `breadcrumbs.arrayItemAccessor` | String: to be appended for any non-trailing selection that is an array (e.g. "[0]" or ".get(0)") |
+| `breadcrumbs.preventNavigation` | Boolean: set to `true` in order to turn-off the default behaviour of discarding any following selections when double-clicking on a breadcrumbs item |
 | `renderItemContent` | Function: custom render function for name of single property/sub-schema in a column. Receives one parameter: object with the following properties: "name", "hasNestedItems", "selected", "schema", "refTargets" |
 | `renderSelectionDetails` | Function: custom render function for the "Details" block on the right for the single property/sub-schema being selected. Receives one parameter: object with the following properties: "itemSchema", "columnData", "refTargets", "selectionColumnIndex" |
 | `renderEmptyDetails` | Function: custom render function for the "Details" block on the right if nothing is selected yet. Receives one parameter: object with the following property: "rootColumnSchemas" (i.e. what was provided as `schemas` prop)
