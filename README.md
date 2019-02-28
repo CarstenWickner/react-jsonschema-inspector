@@ -101,6 +101,6 @@ npm i react-jsonschema-inspector
 - Improve performance (e.g. by using lodash chaining)
 
 
-[main-logo-image]: https://raw.githubusercontent.com/CarstenWickner/react-jsonschema-inspector/master/logo.svg
+[main-logo-image]: https://raw.githubusercontent.com/CarstenWickner/react-jsonschema-inspector/master/logo.svg?sanitize=true
 [travis-ci-image]: https://travis-ci.org/CarstenWickner/react-jsonschema-inspector.svg
 [travis-ci-url]: https://travis-ci.org/CarstenWickner/react-jsonschema-inspector
