@@ -17,6 +17,7 @@ export function isDefined(target) {
 export function isNonEmptyObject(target) {
     return isDefined(target)
         && typeof target === "object"
+        && !Array.isArray(target)
         && Object.keys(target).length > 0;
 }
 
@@ -153,9 +154,28 @@ export function getFieldValue(schema, fieldName, refTargets = null, mergeFunctio
 }
 
 /**
+ * Determine whether the given schema definition represents an array and if so, return the sub-schema describing its contents.
+ * @param {JsonSchema} schema definition of a JSON structure to traverse
+ * @param {Object.<String, JsonSchema>} refTargets re-usable schema definitions
+ * @returns {JsonSchema} type of array contents or null if it is not an array (with a sub-schema of its contents)
+ */
+export function getTypeOfArrayItems(schema, refTargets) {
+    // look-up the kind of value expected in the array (if the schema refers to an array)
+    const arrayItems = getFieldValue(schema, "items", refTargets);
+    if (isNonEmptyObject(arrayItems)) {
+        return arrayItems;
+    }
+    const additionalArrayItems = getFieldValue(schema, "additionalItems", refTargets);
+    if (isNonEmptyObject(additionalArrayItems)) {
+        return additionalArrayItems;
+    }
+    return null;
+}
+
+/**
  * Collect all re-usable sub-schemas that can be referenced via $ref.
  * @param {JsonSchema} schema root schema for which to collect all allowed $ref values
- * @returns {Object.<String, JsonSChema>} mapped $ref values to their corresponding schemas
+ * @returns {Object.<String, JsonSchema>} mapped $ref values to their corresponding schemas
  */
 export function collectRefTargets(schema) {
     const refTargets = {};

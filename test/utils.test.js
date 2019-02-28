@@ -1,5 +1,5 @@
 import {
-    isDefined, isNonEmptyObject, getPropertyParentSchemas, getFieldValue, collectRefTargets, mergeObjects
+    isDefined, isNonEmptyObject, getPropertyParentSchemas, mergeObjects, getFieldValue, getTypeOfArrayItems, collectRefTargets
 } from "../src/utils";
 
 describe("isDefined()", () => {
@@ -56,8 +56,11 @@ describe("isNonEmptyObject()", () => {
     it("rejects non-object: \"string\"", () => {
         expect(isNonEmptyObject("string")).toBe(false);
     });
-    it("rejects non-object: []", () => {
-        expect(isNonEmptyObject([])).toBe(false);
+    it("rejects empty array: []", () => {
+        expect(isNonEmptyObject(["value"])).toBe(false);
+    });
+    it("rejects non-empty array: [{key:\"value\"}]", () => {
+        expect(isNonEmptyObject([{ key: "value" }])).toBe(false);
     });
     it("rejects empty object: {}", () => {
         expect(isNonEmptyObject({})).toBe(false);
@@ -325,6 +328,65 @@ describe("getFieldValue()", () => {
             }
         };
         expect(getFieldValue(schema, "title")).toBe(undefined);
+    });
+});
+describe("getTypeOfArrayItems()", () => {
+    it("finds `items` in simple schema", () => {
+        const itemSchema = { title: "Test" };
+        const schema = {
+            items: itemSchema
+        };
+        expect(getTypeOfArrayItems(schema)).toEqual(itemSchema);
+    });
+    it("finds `additionalItems` in simple schema", () => {
+        const additionalItemSchema = { description: "Value" };
+        const schema = {
+            additionalItems: additionalItemSchema
+        };
+        expect(getTypeOfArrayItems(schema)).toEqual(additionalItemSchema);
+    });
+    it("ignores boolean `additionalItems`", () => {
+        const additionalItemSchema = true;
+        const schema = {
+            additionalItems: additionalItemSchema
+        };
+        expect(getTypeOfArrayItems(schema)).toBe(null);
+    });
+    it("prefers `items` over `additionalItems` in simple schema", () => {
+        const itemSchema = { title: "Test" };
+        const additionalItemSchema = { description: "Value" };
+        const schema = {
+            items: itemSchema,
+            additionalItems: additionalItemSchema
+        };
+        expect(getTypeOfArrayItems(schema)).toEqual(itemSchema);
+    });
+    it("ignores boolean `items`", () => {
+        const itemSchema = true;
+        const additionalItemSchema = { description: "Value" };
+        const schema = {
+            items: itemSchema,
+            additionalItems: additionalItemSchema
+        };
+        expect(getTypeOfArrayItems(schema)).toEqual(additionalItemSchema);
+    });
+    it("ignores array of `items`", () => {
+        const itemSchemaArray = [
+            { title: "Test" },
+            { type: "object" }
+        ];
+        const additionalItemSchema = { description: "Value" };
+        const schema = {
+            items: itemSchemaArray,
+            additionalItems: additionalItemSchema
+        };
+        expect(getTypeOfArrayItems(schema)).toEqual(additionalItemSchema);
+    });
+    it("returns null if neither `items` nor `additionalItems` are present", () => {
+        const schema = {
+            type: "array"
+        };
+        expect(getTypeOfArrayItems(schema)).toBe(null);
     });
 });
 describe("collectRefTargets()", () => {

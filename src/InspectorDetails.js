@@ -4,7 +4,9 @@ import React, { PureComponent } from "react";
 
 import InspectorDetailsForm from "./InspectorDetailsForm";
 import JsonSchemaPropType from "./JsonSchemaPropType";
-import { getFieldValue, getPropertyParentSchemas, isDefined } from "./utils";
+import {
+    getFieldValue, getPropertyParentSchemas, getTypeOfArrayItems, isDefined
+} from "./utils";
 
 class InspectorDetails extends PureComponent {
     static isSelectionRequiredInParent(columnData, selectionColumnIndex, refTargets) {
@@ -97,11 +99,8 @@ class InspectorDetails extends PureComponent {
         itemSchema, refTargets, columnData, selectionColumnIndex
     }) {
         const formFields = InspectorDetails.collectFormFields(itemSchema, refTargets, columnData, selectionColumnIndex);
-
-        const arrayItems = getFieldValue(itemSchema, "items", refTargets);
         // look-up the kind of value expected in the array (if the schema refers to an array)
-        const arrayItemSchema = ((typeof arrayItems === "object") && arrayItems)
-            || ((arrayItems === true) && getFieldValue(itemSchema, "additionalItems", refTargets));
+        const arrayItemSchema = getTypeOfArrayItems(itemSchema, refTargets);
 
         return (
             <div>
