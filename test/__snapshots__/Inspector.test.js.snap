@@ -13,24 +13,47 @@ exports[`renders correctly with minimal/default props 1`] = `
         Array [
           Object {
             "items": Object {
-              "Schema One": Object {
-                "properties": Object {
-                  "Item One": Object {},
-                  "Item Two": Object {
-                    "properties": Object {
-                      "Property One": Object {},
+              "Schema One": JsonSchema {
+                "getFieldValue": [Function],
+                "getProperties": [Function],
+                "getPropertyParentSchemas": [Function],
+                "getSchemaFieldValue": [Function],
+                "getTypeOfArrayItems": [Function],
+                "schema": Object {
+                  "properties": Object {
+                    "Item One": Object {},
+                    "Item Two": Object {
+                      "properties": Object {
+                        "Property One": Object {},
+                      },
                     },
                   },
+                },
+                "scope": RefScope {
+                  "addOtherScope": [Function],
+                  "externalRefs": Object {},
+                  "find": [Function],
+                  "findSchemaInThisScope": [Function],
+                  "internalRefs": Object {
+                    "#": Object {
+                      "properties": Object {
+                        "Item One": Object {},
+                        "Item Two": Object {
+                          "properties": Object {
+                            "Property One": Object {},
+                          },
+                        },
+                      },
+                    },
+                  },
+                  "otherScopes": Array [],
                 },
               },
             },
             "onSelect": [Function],
-            "selectedItem": null,
-            "trailingSelection": false,
           },
         ]
       }
-      refTargets={Object {}}
       renderItemContent={null}
     />
     <InspectorDetails
@@ -38,24 +61,47 @@ exports[`renders correctly with minimal/default props 1`] = `
         Array [
           Object {
             "items": Object {
-              "Schema One": Object {
-                "properties": Object {
-                  "Item One": Object {},
-                  "Item Two": Object {
-                    "properties": Object {
-                      "Property One": Object {},
+              "Schema One": JsonSchema {
+                "getFieldValue": [Function],
+                "getProperties": [Function],
+                "getPropertyParentSchemas": [Function],
+                "getSchemaFieldValue": [Function],
+                "getTypeOfArrayItems": [Function],
+                "schema": Object {
+                  "properties": Object {
+                    "Item One": Object {},
+                    "Item Two": Object {
+                      "properties": Object {
+                        "Property One": Object {},
+                      },
                     },
                   },
+                },
+                "scope": RefScope {
+                  "addOtherScope": [Function],
+                  "externalRefs": Object {},
+                  "find": [Function],
+                  "findSchemaInThisScope": [Function],
+                  "internalRefs": Object {
+                    "#": Object {
+                      "properties": Object {
+                        "Item One": Object {},
+                        "Item Two": Object {
+                          "properties": Object {
+                            "Property One": Object {},
+                          },
+                        },
+                      },
+                    },
+                  },
+                  "otherScopes": Array [],
                 },
               },
             },
             "onSelect": [Function],
-            "selectedItem": null,
-            "trailingSelection": false,
           },
         ]
       }
-      refTargets={Object {}}
       renderEmptyDetails={null}
       renderSelectionDetails={null}
     />
@@ -69,26 +115,49 @@ exports[`renders correctly with minimal/default props 1`] = `
         Array [
           Object {
             "items": Object {
-              "Schema One": Object {
-                "properties": Object {
-                  "Item One": Object {},
-                  "Item Two": Object {
-                    "properties": Object {
-                      "Property One": Object {},
+              "Schema One": JsonSchema {
+                "getFieldValue": [Function],
+                "getProperties": [Function],
+                "getPropertyParentSchemas": [Function],
+                "getSchemaFieldValue": [Function],
+                "getTypeOfArrayItems": [Function],
+                "schema": Object {
+                  "properties": Object {
+                    "Item One": Object {},
+                    "Item Two": Object {
+                      "properties": Object {
+                        "Property One": Object {},
+                      },
                     },
                   },
+                },
+                "scope": RefScope {
+                  "addOtherScope": [Function],
+                  "externalRefs": Object {},
+                  "find": [Function],
+                  "findSchemaInThisScope": [Function],
+                  "internalRefs": Object {
+                    "#": Object {
+                      "properties": Object {
+                        "Item One": Object {},
+                        "Item Two": Object {
+                          "properties": Object {
+                            "Property One": Object {},
+                          },
+                        },
+                      },
+                    },
+                  },
+                  "otherScopes": Array [],
                 },
               },
             },
             "onSelect": [Function],
-            "selectedItem": null,
-            "trailingSelection": false,
           },
         ]
       }
       prefix=""
       preventNavigation={false}
-      refTargets={Object {}}
       separator="."
     />
   </div>

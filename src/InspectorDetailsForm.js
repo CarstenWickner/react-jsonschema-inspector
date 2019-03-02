@@ -12,7 +12,9 @@ const InspectorDetailsForm = ({ fields }) => (
             return (
                 <div className="jsonschema-inspector-details-form-row" key={labelText}>
                     <span className="jsonschema-inspector-details-form-label">{`${labelText}:`}</span>
-                    <span className="jsonschema-inspector-details-form-value">{rowValue.toString()}</span>
+                    <span className="jsonschema-inspector-details-form-value">
+                        {Array.isArray(rowValue) ? rowValue.join(", ") : rowValue.toString()}
+                    </span>
                 </div>
             );
         })}

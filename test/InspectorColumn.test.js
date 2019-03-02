@@ -1,21 +1,24 @@
 import React from "react";
 import { shallow } from "enzyme";
+import RefScope from "../src/RefScope";
 import InspectorColumn from "../src/InspectorColumn";
+import JsonSchema from "../src/JsonSchema";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {
         const component = shallow(
             <InspectorColumn
                 items={{
-                    "Item One": {
+                    "Item One": new JsonSchema({
                         $id: "Schema One"
-                    },
-                    "Item Two": {
+                    }, new RefScope({
+                        definitions: { Target: {} }
+                    })),
+                    "Item Two": new JsonSchema({
                         $id: "Schema Two"
-                    }
-                }}
-                refTargets={{
-                    Target: {}
+                    }, new RefScope({
+                        definitions: { Target: {} }
+                    }))
                 }}
                 onSelect={() => { }}
             />
@@ -26,10 +29,9 @@ describe("renders correctly", () => {
         const component = shallow(
             <InspectorColumn
                 items={{
-                    "Item One": true,
-                    "Item Two": true
+                    "Item One": new JsonSchema(),
+                    "Item Two": new JsonSchema()
                 }}
-                refTargets={{}}
                 onSelect={() => { }}
                 selectedItem="Item Two"
             />
@@ -44,10 +46,9 @@ describe("renders correctly", () => {
         const component = shallow(
             <InspectorColumn
                 items={{
-                    "Item One": true,
-                    "Item Two": true
+                    "Item One": new JsonSchema(),
+                    "Item Two": new JsonSchema()
                 }}
-                refTargets={{}}
                 onSelect={() => { }}
                 selectedItem="Item Two"
                 trailingSelection
@@ -65,9 +66,8 @@ describe("failing PropType validation", () => {
         const component = () => (
             <InspectorColumn
                 items={{
-                    "Item One": {}
+                    "Item One": new JsonSchema()
                 }}
-                refTargets={{}}
                 onSelect={() => { }}
                 selectedItem={0}
             />
@@ -79,9 +79,8 @@ describe("failing PropType validation", () => {
         const component = () => (
             <InspectorColumn
                 items={{
-                    "Item One": {}
+                    "Item One": new JsonSchema()
                 }}
-                refTargets={{}}
                 onSelect={() => { }}
                 selectedItem="Item Two"
             />
@@ -93,9 +92,8 @@ describe("failing PropType validation", () => {
         const component = () => (
             <InspectorColumn
                 items={{
-                    "Item One": {}
+                    "Item One": new JsonSchema()
                 }}
-                refTargets={{}}
                 onSelect={() => { }}
                 trailingSelection
             />

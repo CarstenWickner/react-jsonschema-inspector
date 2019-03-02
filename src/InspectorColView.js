@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, { PureComponent } from "react";
 
 import InspectorColumn from "./InspectorColumn";
-import JsonSchemaPropType from "./JsonSchemaPropType";
+import JsonSchema from "./JsonSchema";
 
 class InspectorColView extends PureComponent {
     componentDidUpdate(prevProps) {
@@ -17,7 +17,7 @@ class InspectorColView extends PureComponent {
 
     render() {
         const {
-            columnData, refTargets, appendEmptyColumn, renderItemContent
+            columnData, appendEmptyColumn, renderItemContent
         } = this.props;
         return (
             <div
@@ -33,7 +33,6 @@ class InspectorColView extends PureComponent {
                         <InspectorColumn
                             // eslint-disable-next-line react/no-array-index-key
                             key={index}
-                            refTargets={refTargets}
                             renderItemContent={renderItemContent}
                             items={items}
                             selectedItem={selectedItem}
@@ -51,14 +50,13 @@ class InspectorColView extends PureComponent {
 
 InspectorColView.propTypes = {
     columnData: PropTypes.arrayOf(PropTypes.shape({
-        items: PropTypes.objectOf(JsonSchemaPropType).isRequired,
+        items: PropTypes.objectOf(PropTypes.instanceOf(JsonSchema)).isRequired,
         selectedItem: PropTypes.string,
         trailingSelection: PropTypes.bool,
         onSelect: PropTypes.func.isRequired // func(SyntheticEvent: event, string: name)
     })).isRequired,
-    refTargets: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     appendEmptyColumn: PropTypes.bool,
-    renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refTargets })
+    renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
 };
 
 InspectorColView.defaultProps = {

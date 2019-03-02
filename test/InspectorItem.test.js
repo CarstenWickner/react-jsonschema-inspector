@@ -1,14 +1,15 @@
 import React from "react";
 import { mount, shallow } from "enzyme";
 import InspectorItem from "../src/InspectorItem";
+import JsonSchema from "../src/JsonSchema";
+import RefScope from "../src/RefScope";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {
         const component = shallow(
             <InspectorItem
                 name="Item Name"
-                schema={{}}
-                refTargets={{}}
+                schema={new JsonSchema()}
                 onSelect={() => { }}
             />
         );
@@ -18,12 +19,11 @@ describe("renders correctly", () => {
         const component = shallow(
             <InspectorItem
                 name="Item Name"
-                schema={{
+                schema={new JsonSchema({
                     properties: {
                         "Child Item Name": true
                     }
-                }}
-                refTargets={{}}
+                }, new RefScope())}
                 onSelect={() => { }}
             />
         );
@@ -33,8 +33,7 @@ describe("renders correctly", () => {
         const component = shallow(
             <InspectorItem
                 name="Item Name"
-                schema={{}}
-                refTargets={{}}
+                schema={new JsonSchema()}
                 onSelect={() => { }}
                 selected
             />
@@ -46,8 +45,7 @@ describe("renders correctly", () => {
         const component = mount(
             <InspectorItem
                 name="Item Name"
-                schema={{}}
-                refTargets={{}}
+                schema={new JsonSchema()}
                 onSelect={() => { }}
                 selected
                 autoFocus
@@ -61,8 +59,7 @@ describe("renders correctly", () => {
         const component = shallow(
             <InspectorItem
                 name="Item Name"
-                schema={{}}
-                refTargets={{}}
+                schema={new JsonSchema()}
                 onSelect={() => { }}
                 renderContent={() => (
                     <span className="custom-content">Custom content</span>
@@ -77,8 +74,7 @@ describe("failing PropType validation", () => {
         const component = () => (
             <InspectorItem
                 name="Item Name"
-                schema={{}}
-                refTargets={{}}
+                schema={new JsonSchema()}
                 onSelect={() => { }}
                 autoFocus
             />
@@ -94,8 +90,7 @@ describe("calls onSelect", () => {
         component = shallow(
             <InspectorItem
                 name="Item Name"
-                schema={{}}
-                refTargets={{}}
+                schema={new JsonSchema()}
                 onSelect={() => {
                     onSelectCounter += 1;
                 }}

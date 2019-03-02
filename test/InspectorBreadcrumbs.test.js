@@ -1,6 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import InspectorBreadcrumbs from "../src/InspectorBreadcrumbs";
+import JsonSchema from "../src/JsonSchema";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {
@@ -14,19 +15,19 @@ describe("renders correctly", () => {
             <InspectorBreadcrumbs
                 columnData={[
                     {
-                        items: { "Schema One": schema },
+                        items: { "Schema One": new JsonSchema(schema) },
                         selectedItem: "Schema One",
                         trailingSelection: true,
                         onSelect: () => { }
                     },
                     {
-                        items: schema.properties,
-                        selectedItem: null,
-                        trailingSelection: false,
+                        items: {
+                            "Item One": new JsonSchema(),
+                            "Item Two": new JsonSchema()
+                        },
                         onSelect: () => { }
                     }
                 ]}
-                refTargets={{}}
             />
         );
         expect(component).toMatchSnapshot();
@@ -36,13 +37,10 @@ describe("renders correctly", () => {
             <InspectorBreadcrumbs
                 columnData={[
                     {
-                        items: { root: {} },
-                        selectedItem: null,
-                        trailingSelection: false,
+                        items: { root: new JsonSchema() },
                         onSelect: () => { }
                     }
                 ]}
-                refTargets={{}}
             />
         );
         expect(component.find(".jsonschema-inspector-breadcrumbs-icon").exists()).toBe(true);
@@ -54,13 +52,12 @@ describe("renders correctly", () => {
             <InspectorBreadcrumbs
                 columnData={[
                     {
-                        items: { root: {} },
+                        items: { root: new JsonSchema() },
                         selectedItem: "root",
                         trailingSelection: true,
                         onSelect: () => { }
                     }
                 ]}
-                refTargets={{}}
                 prefix="variableContext."
             />
         );
@@ -78,14 +75,19 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            root: { items: itemSchema }
+                            root: new JsonSchema({ items: itemSchema })
                         },
                         selectedItem: "root",
                         trailingSelection: true,
                         onSelect: () => { }
+                    },
+                    {
+                        items: {
+                            itemProperty: new JsonSchema({ title: "Property Title" })
+                        },
+                        onSelect: () => { }
                     }
                 ]}
-                refTargets={{}}
             />
         );
         expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(1);
@@ -102,20 +104,20 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            root: { items: itemSchema }
+                            root: new JsonSchema({ items: itemSchema })
                         },
                         selectedItem: "root",
-                        trailingSelection: false,
                         onSelect: () => { }
                     },
                     {
-                        items: itemSchema.properties,
+                        items: {
+                            itemProperty: new JsonSchema({ title: "Property Title" })
+                        },
                         selectedItem: "itemProperty",
                         trailingSelection: true,
                         onSelect: () => { }
                     }
                 ]}
-                refTargets={{}}
             />
         );
         expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
@@ -132,20 +134,20 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            root: { items: itemSchema }
+                            root: new JsonSchema({ items: itemSchema })
                         },
                         selectedItem: "root",
-                        trailingSelection: false,
                         onSelect: () => { }
                     },
                     {
-                        items: itemSchema.properties,
+                        items: {
+                            itemProperty: new JsonSchema({ title: "Property Title" })
+                        },
                         selectedItem: "itemProperty",
                         trailingSelection: true,
                         onSelect: () => { }
                     }
                 ]}
-                refTargets={{}}
                 arrayItemAccessor=".get(0)"
             />
         );
@@ -163,26 +165,26 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            root: {
+                            root: new JsonSchema({
                                 items: {
                                     items: {
                                         items: itemSchema
                                     }
                                 }
-                            }
+                            })
                         },
                         selectedItem: "root",
-                        trailingSelection: false,
                         onSelect: () => { }
                     },
                     {
-                        items: itemSchema.properties,
+                        items: {
+                            itemProperty: new JsonSchema({ title: "Property Title" })
+                        },
                         selectedItem: "itemProperty",
                         trailingSelection: true,
                         onSelect: () => { }
                     }
                 ]}
-                refTargets={{}}
             />
         );
         expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
@@ -199,32 +201,30 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            root: {
+                            root: new JsonSchema({
                                 properties: {
                                     item: itemSchema
                                 }
-                            }
+                            })
                         },
                         selectedItem: "root",
-                        trailingSelection: false,
                         onSelect: () => { }
                     },
                     {
                         items: {
-                            item: itemSchema
+                            item: new JsonSchema(itemSchema)
                         },
                         selectedItem: "item",
                         trailingSelection: true,
                         onSelect: () => { }
                     },
                     {
-                        items: itemSchema.properties,
-                        selectedItem: null,
-                        trailingSelection: false,
+                        items: {
+                            itemProperty: new JsonSchema({ title: "Property Title" })
+                        },
                         onSelect: () => { }
                     }
                 ]}
-                refTargets={{}}
                 prefix="$this->"
                 separator="->"
             />
@@ -237,13 +237,12 @@ describe("renders correctly", () => {
             <InspectorBreadcrumbs
                 columnData={[
                     {
-                        items: { root: {} },
+                        items: { root: new JsonSchema({}) },
                         selectedItem: "root",
                         trailingSelection: true,
                         onSelect: () => { }
                     }
                 ]}
-                refTargets={{}}
             />
         );
         const selectedRootItem = component.find(".jsonschema-inspector-breadcrumbs-item");
@@ -255,13 +254,12 @@ describe("renders correctly", () => {
             <InspectorBreadcrumbs
                 columnData={[
                     {
-                        items: { root: {} },
+                        items: { root: new JsonSchema({}) },
                         selectedItem: "root",
                         trailingSelection: true,
                         onSelect: () => { }
                     }
                 ]}
-                refTargets={{}}
                 preventNavigation
             />
         );

@@ -12,15 +12,31 @@ exports[`renders correctly with minimal/default props 1`] = `
     key="Item One"
     name="Item One"
     onSelect={[Function]}
-    refTargets={
-      Object {
-        "Target": Object {},
-      }
-    }
     renderContent={null}
     schema={
-      Object {
-        "$id": "Schema One",
+      JsonSchema {
+        "getFieldValue": [Function],
+        "getProperties": [Function],
+        "getPropertyParentSchemas": [Function],
+        "getSchemaFieldValue": [Function],
+        "getTypeOfArrayItems": [Function],
+        "schema": Object {
+          "$id": "Schema One",
+        },
+        "scope": RefScope {
+          "addOtherScope": [Function],
+          "externalRefs": Object {},
+          "find": [Function],
+          "findSchemaInThisScope": [Function],
+          "internalRefs": Object {
+            "#": Object {
+              "definitions": Object {
+                "Target": Object {},
+              },
+            },
+          },
+          "otherScopes": Array [],
+        },
       }
     }
     selected={false}
@@ -30,15 +46,31 @@ exports[`renders correctly with minimal/default props 1`] = `
     key="Item Two"
     name="Item Two"
     onSelect={[Function]}
-    refTargets={
-      Object {
-        "Target": Object {},
-      }
-    }
     renderContent={null}
     schema={
-      Object {
-        "$id": "Schema Two",
+      JsonSchema {
+        "getFieldValue": [Function],
+        "getProperties": [Function],
+        "getPropertyParentSchemas": [Function],
+        "getSchemaFieldValue": [Function],
+        "getTypeOfArrayItems": [Function],
+        "schema": Object {
+          "$id": "Schema Two",
+        },
+        "scope": RefScope {
+          "addOtherScope": [Function],
+          "externalRefs": Object {},
+          "find": [Function],
+          "findSchemaInThisScope": [Function],
+          "internalRefs": Object {
+            "#": Object {
+              "definitions": Object {
+                "Target": Object {},
+              },
+            },
+          },
+          "otherScopes": Array [],
+        },
       }
     }
     selected={false}

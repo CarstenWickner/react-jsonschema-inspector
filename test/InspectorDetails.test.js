@@ -1,6 +1,8 @@
 import React from "react";
 import { shallow } from "enzyme";
-import InspectorDetails from "../src/InspectorDetails";
+import InspectorDetails, { collectFormFields } from "../src/InspectorDetails";
+import JsonSchema from "../src/JsonSchema";
+import RefScope from "../src/RefScope";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {
@@ -9,16 +11,15 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            "Schema One": {
+                            "Schema One": new JsonSchema({
                                 title: "Schema Title",
                                 description: "Text"
-                            }
+                            }, new RefScope())
                         },
                         selectedItem: "Schema One",
                         trailingSelection: true
                     }
                 ]}
-                refTargets={{}}
             />
         );
         expect(component).toMatchSnapshot();
@@ -27,7 +28,6 @@ describe("renders correctly", () => {
         const component = shallow(
             <InspectorDetails
                 columnData={[]}
-                refTargets={{}}
             />
         );
         expect(component.children().exists()).toBe(false);
@@ -36,7 +36,6 @@ describe("renders correctly", () => {
         const component = shallow(
             <InspectorDetails
                 columnData={[]}
-                refTargets={{}}
                 renderEmptyDetails={({ rootColumnSchemas }) => (
                     <span className="custom-empty-details">{Object.keys(rootColumnSchemas).length}</span>
                 )}
@@ -50,14 +49,13 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            "Schema One": {
+                            "Schema One": new JsonSchema({
                                 title: "Schema Title",
                                 description: "Text"
-                            }
+                            })
                         }
                     }
                 ]}
-                refTargets={{}}
             />
         );
         expect(component.children().exists()).toBe(false);
@@ -68,14 +66,13 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            "Schema One": {
+                            "Schema One": new JsonSchema({
                                 title: "Schema Title",
                                 description: "Text"
-                            }
+                            })
                         }
                     }
                 ]}
-                refTargets={{}}
                 renderEmptyDetails={({ rootColumnSchemas }) => (
                     <span className="custom-empty-details">{Object.keys(rootColumnSchemas).length}</span>
                 )}
@@ -84,28 +81,28 @@ describe("renders correctly", () => {
         expect(component.find(".custom-empty-details").text()).toBe("1");
     });
     it("with root array selection", () => {
+        const schema = {
+            title: "Schema Title",
+            items: { $ref: "#/definitions/itemSchema" },
+            definitions: {
+                itemSchema: {
+                    description: "Array Item",
+                    type: "object"
+                }
+            }
+        };
         const columnData = [
             {
                 items: {
-                    "Schema One": {
-                        title: "Schema Title",
-                        items: { $ref: "itemSchema" }
-                    }
+                    "Schema One": new JsonSchema(schema, new RefScope(schema))
                 },
                 selectedItem: "Schema One",
                 trailingSelection: true
             }
         ];
-        const refTargets = {
-            itemSchema: {
-                description: "Array Item",
-                type: "object"
-            }
-        };
         const component = shallow(
             <InspectorDetails
                 columnData={columnData}
-                refTargets={refTargets}
             />
         );
         const forms = component.find("InspectorDetailsForm");
@@ -135,38 +132,36 @@ describe("renders correctly", () => {
     it("with root array selection and custom renderSelectionDetails", () => {
         const mainSchema = {
             title: "Schema Title",
-            items: { $ref: "itemSchema" }
+            items: { $ref: "#/definitions/itemSchema" },
+            definitions: {
+                itemSchema: {
+                    description: "Array Item",
+                    type: "object"
+                }
+            }
         };
         const columnDataProp = [
             {
                 items: {
-                    "Schema One": mainSchema
+                    "Schema One": new JsonSchema(mainSchema, new RefScope(mainSchema))
                 },
                 selectedItem: "Schema One",
                 trailingSelection: true
             }
         ];
-        const refTargetsProp = {
-            itemSchema: {
-                description: "Array Item",
-                type: "object"
-            }
-        };
         const renderSelectionDetails = jest.fn(() => (<span className="custom-selection-details" />));
         const component = shallow(
             <InspectorDetails
                 columnData={columnDataProp}
-                refTargets={refTargetsProp}
                 renderSelectionDetails={renderSelectionDetails}
             />
         );
         expect(component.exists(".custom-selection-details")).toBe(true);
         expect(renderSelectionDetails.mock.calls).toHaveLength(1);
         const {
-            itemSchema, refTargets, columnData, selectionColumnIndex
+            itemSchema, columnData, selectionColumnIndex
         } = renderSelectionDetails.mock.calls[0][0];
-        expect(itemSchema).toEqual(mainSchema);
-        expect(refTargets).toEqual(refTargetsProp);
+        expect(itemSchema).toEqual(columnDataProp[0].items["Schema One"]);
         expect(columnData).toEqual(columnDataProp);
         expect(selectionColumnIndex).toBe(0);
     });
@@ -174,7 +169,7 @@ describe("renders correctly", () => {
 describe("collectFormFields()", () => {
     it("includes `title`", () => {
         const schema = { title: "Title Value" };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Title",
                 rowValue: "Title Value"
@@ -182,11 +177,13 @@ describe("collectFormFields()", () => {
         ]);
     });
     it("includes `title` from $ref-erenced schema", () => {
-        const schema = { $ref: "A" };
-        const refTargets = {
-            A: { title: "Title Value" }
-        };
-        expect(InspectorDetails.collectFormFields(schema, refTargets, [{}], 0)).toEqual([
+        const schema = { $ref: "#/definitions/A" };
+        const scope = new RefScope({
+            definitions: {
+                A: { title: "Title Value" }
+            }
+        });
+        expect(collectFormFields(new JsonSchema(schema, scope), [{}], 0)).toEqual([
             {
                 labelText: "Title",
                 rowValue: "Title Value"
@@ -195,7 +192,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `description`", () => {
         const schema = { description: "Description Value" };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Description",
                 rowValue: "Description Value"
@@ -203,27 +200,32 @@ describe("collectFormFields()", () => {
         ]);
     });
     it("includes `required`", () => {
-        const schemaProperties = {
-            field: { title: "Required Property" }
-        };
         const columnData = [
             {
                 items: {
-                    "Schema One": {
+                    "Schema One": new JsonSchema({
                         required: ["field"],
-                        properties: schemaProperties
-                    }
+                        properties: {
+                            field: { title: "Required Property" }
+                        }
+                    })
                 },
                 selectedItem: "Schema One",
                 trailingSelection: false
             },
             {
-                items: schemaProperties,
+                items: {
+                    field: new JsonSchema({ title: "Required Property" })
+                },
                 selectedItem: "field",
                 trailingSelection: true
             }
         ];
-        expect(InspectorDetails.collectFormFields({}, {}, columnData, 1)).toEqual([
+        expect(collectFormFields(columnData[1].items.field, columnData, 1)).toEqual([
+            {
+                labelText: "Title",
+                rowValue: "Required Property"
+            },
             {
                 labelText: "Required",
                 rowValue: "Yes"
@@ -232,7 +234,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `type`", () => {
         const schema = { type: "object" };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Type",
                 rowValue: "object"
@@ -241,7 +243,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `const`", () => {
         const schema = { const: 42 };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Constant Value",
                 rowValue: 42
@@ -250,7 +252,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `enum`", () => {
         const schema = { enum: [42, 84] };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Possible Values",
                 rowValue: [42, 84]
@@ -259,7 +261,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `minimum` without exclusiveMinimum", () => {
         const schema = { minimum: 42 };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Min Value",
                 rowValue: "42 (inclusive)"
@@ -271,7 +273,7 @@ describe("collectFormFields()", () => {
             minimum: 42,
             exclusiveMinimum: true
         };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Min Value",
                 rowValue: "42 (exclusive)"
@@ -282,7 +284,7 @@ describe("collectFormFields()", () => {
         const schema = {
             exclusiveMinimum: 42
         };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Min Value",
                 rowValue: "42 (exclusive)"
@@ -291,7 +293,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `maximum` without `exclusiveMaximum`", () => {
         const schema = { maximum: 84 };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Max Value",
                 rowValue: "84 (inclusive)"
@@ -303,7 +305,7 @@ describe("collectFormFields()", () => {
             maximum: 84,
             exclusiveMaximum: true
         };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Max Value",
                 rowValue: "84 (exclusive)"
@@ -314,7 +316,7 @@ describe("collectFormFields()", () => {
         const schema = {
             exclusiveMaximum: 84
         };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Max Value",
                 rowValue: "84 (exclusive)"
@@ -323,7 +325,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `default` (object)", () => {
         const schema = { default: {} };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Default Value",
                 rowValue: "{}"
@@ -332,7 +334,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `default` (non-object)", () => {
         const schema = { default: false };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Default Value",
                 rowValue: false
@@ -347,7 +349,7 @@ describe("collectFormFields()", () => {
                 }
             ]
         };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Example(s)",
                 rowValue: "[{\"field\":\"value\"}]"
@@ -356,7 +358,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `examples` (non-objects)", () => {
         const schema = { examples: [42, 84] };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Example(s)",
                 rowValue: [42, 84]
@@ -365,11 +367,11 @@ describe("collectFormFields()", () => {
     });
     it("ignores empty `examples`", () => {
         const schema = { examples: [] };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([]);
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([]);
     });
     it("includes `pattern`", () => {
         const schema = { pattern: "[a-z]+" };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Value Pattern",
                 rowValue: "[a-z]+"
@@ -378,7 +380,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `format`", () => {
         const schema = { format: "iri" };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Value Format",
                 rowValue: "iri"
@@ -387,7 +389,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `minLength`", () => {
         const schema = { minLength: 1 };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Min Length",
                 rowValue: 1
@@ -396,7 +398,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `maxLength`", () => {
         const schema = { maxLength: 100 };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Max Length",
                 rowValue: 100
@@ -405,7 +407,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `minItems`", () => {
         const schema = { minItems: 1 };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Min Items",
                 rowValue: 1
@@ -414,7 +416,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `maxItems`", () => {
         const schema = { maxItems: 100 };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Max Items",
                 rowValue: 100
@@ -423,7 +425,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `uniqueItems`", () => {
         const schema = { uniqueItems: true };
-        expect(InspectorDetails.collectFormFields(schema, {}, [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
             {
                 labelText: "Items Unique",
                 rowValue: "Yes"

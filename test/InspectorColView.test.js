@@ -1,6 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import InspectorColView from "../src/InspectorColView";
+import JsonSchema from "../src/JsonSchema";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {
@@ -9,16 +10,16 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            "Item One": {},
-                            "Item Two": {}
+                            "Item One": new JsonSchema(),
+                            "Item Two": new JsonSchema()
                         },
                         selectedItem: "Item One",
                         onSelect: () => { }
                     },
                     {
                         items: {
-                            "Item One-One": {},
-                            "Item One-Two": {}
+                            "Item One-One": new JsonSchema(),
+                            "Item One-Two": new JsonSchema()
                         },
                         selectedItem: "Item One-Two",
                         trailingSelection: true,
@@ -26,13 +27,12 @@ describe("renders correctly", () => {
                     },
                     {
                         items: {
-                            "Item One-Two-One": {},
-                            "Item One-Two-Two": {}
+                            "Item One-Two-One": new JsonSchema(),
+                            "Item One-Two-Two": new JsonSchema()
                         },
                         onSelect: () => { }
                     }
                 ]}
-                refTargets={{}}
             />
         );
         expect(component).toMatchSnapshot();
@@ -43,15 +43,14 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            "Item One": {},
-                            "Item Two": {}
+                            "Item One": new JsonSchema(),
+                            "Item Two": new JsonSchema()
                         },
                         selectedItem: "Item Two",
                         trailingSelection: true,
                         onSelect: () => { }
                     }
                 ]}
-                refTargets={{}}
                 appendEmptyColumn
             />
         );

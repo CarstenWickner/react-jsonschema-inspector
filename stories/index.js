@@ -1,10 +1,16 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
 import { withInfo } from "@storybook/addon-info";
+import {
+    boolean, object, text, withKnobs
+} from "@storybook/addon-knobs";
 
 import Inspector from "../src/Inspector";
 
 import metaSchema from "./schema-meta.json";
+import hyperMetaSchema from "./schema-hyper-meta.json";
+import linksMetaSchema from "./schema-links-meta.json";
 import personSchema from "./schema-person.json";
 import shopSelectionSchema from "./schema-shop-selection.json";
 
@@ -16,36 +22,56 @@ storiesOf("Inspector", module)
         maxPropArrayLength: 5,
         propTablesExclude: [Inspector]
     }))
+    .addDecorator(withKnobs)
     .add("show-case", () => (
         <Inspector
             schemas={{
-                "Meta Core JSON Schema": metaSchema,
-                Shop: shopSelectionSchema
+                "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
+                "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
+                "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
             }}
-            defaultSelectedItems={["Meta Core JSON Schema", "allOf", "$schema"]}
+            referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
             renderEmptyDetails={({ rootColumnSchemas }) => (
-                <div style={{ padding: "1em" }}>
+                <div style={{ padding: "0.5em 1em 0 1em" }}>
                     <h3>JSON Schema Inspector</h3>
                     <p>
-                        {`Just click on "${Object.keys(rootColumnSchemas)[0]}"
-                          on the left side in order to traverse its nested properties
-                          – but beware of its circular references.`}
+                        {`Just click on one of the ${Object.keys(rootColumnSchemas).length} schema titles
+                          on the left side in order to traverse their nested properties
+                          – but don't get lost in the circular references.`}
                     </p>
                     <img
-                        src="https://raw.githubusercontent.com/CarstenWickner/react-jsonschema-inspector/master/logo.svg"
+                        src="https://raw.githubusercontent.com/CarstenWickner/react-jsonschema-inspector/master/logo.svg?sanitize=true"
                         alt="JSON Schema Inspector Logo"
-                        style={{ width: "80%", margin: "0 10%" }}
+                        style={{ width: "70%", margin: "0 15%" }}
                     />
                 </div>
             )}
+            onSelect={action("onSelect")}
+        />
+    ))
+    .add("with custom breadcrumbs", () => (
+        <Inspector
+            schemas={{
+                "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
+                "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
+                "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
+            }}
+            referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "allOf"]}
+            breadcrumbs={{
+                prefix: text("Prefix", "Selection: "),
+                separator: text("Separator", "/"),
+                arrayItemAccessor: text("Array Item Accessor", "[]"),
+                preventNavigation: boolean("Prevent Navigation (via double-click)", false)
+            }}
+            onSelect={action("onSelect")}
         />
     ))
     .add("with custom Details and no breadcrumbs", () => (
         <Inspector
-            schemas={{
-                Person: personSchema,
+            schemas={object("Schemas", {
                 Shop: shopSelectionSchema
-            }}
+            })}
             defaultSelectedItems={["Shop", "vegetables"]}
             breadcrumbs={null}
             renderSelectionDetails={({ itemSchema, columnData, selectionColumnIndex }) => (
@@ -63,6 +89,7 @@ storiesOf("Inspector", module)
                     </code>
                 </div>
             )}
+            onSelect={action("onSelect")}
         />
     ))
     .add("with custom Items", () => (
@@ -77,7 +104,7 @@ storiesOf("Inspector", module)
             }) => {
                 const styles = {
                     backgroundColor: (focused && "#005b4f") || (selected && "#a5d6a7") || "#e8f5e9",
-                    color: (focused ? "white" : "black")
+                    color: (focused && "white") || "black"
                 };
                 return (
                     <div className="jsonschema-inspector-item-content" style={styles}>
@@ -85,5 +112,6 @@ storiesOf("Inspector", module)
                     </div>
                 );
             }}
+            onSelect={action("onSelect")}
         />
     ));

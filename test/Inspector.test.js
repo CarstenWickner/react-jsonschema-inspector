@@ -41,25 +41,13 @@ describe("renders correctly", () => {
                 defaultSelectedItems={[selectedSchema]}
             />
         );
-        const { columnData, refTargets } = component.find("InspectorColView").props();
-        expect(refTargets).toEqual({
-            "#": schemas[selectedSchema]
-        });
+        const { columnData } = component.find("InspectorColView").props();
         expect(columnData).toHaveLength(2);
-        expect(columnData[0].items).toEqual(schemas);
+        expect(columnData[0].items[selectedSchema].schema).toEqual(schemas[selectedSchema]);
         expect(columnData[0].selectedItem).toBe(selectedSchema);
         expect(columnData[0].trailingSelection).toBe(true);
         expect(typeof columnData[0].onSelect).toBe("function");
-        expect(columnData[1].items).toEqual({
-            "Item One": {},
-            "Item Two": {
-                properties: {
-                    "Property One": {}
-                }
-            }
-        });
-        expect(columnData[1].selectedItem).toBe(null);
-        expect(columnData[1].trailingSelection).toBe(false);
+        expect(Object.keys(columnData[1].items)).toEqual(["Item One", "Item Two"]);
         expect(typeof columnData[1].onSelect).toBe("function");
     });
     it("with multi-column leaf selection", () => {
@@ -71,23 +59,12 @@ describe("renders correctly", () => {
                 defaultSelectedItems={[selectedSchema, selectedItem]}
             />
         );
-        const { columnData, refTargets } = component.find("InspectorColView").props();
-        expect(refTargets).toEqual({
-            "#": schemas[selectedSchema]
-        });
+        const { columnData } = component.find("InspectorColView").props();
         expect(columnData).toHaveLength(2);
-        expect(columnData[0].items).toEqual(schemas);
+        expect(columnData[0].items[selectedSchema].schema).toEqual(schemas[selectedSchema]);
         expect(columnData[0].selectedItem).toBe(selectedSchema);
-        expect(columnData[0].trailingSelection).toBe(false);
         expect(typeof columnData[0].onSelect).toBe("function");
-        expect(columnData[1].items).toEqual({
-            "Item One": {},
-            "Item Two": {
-                properties: {
-                    "Property One": {}
-                }
-            }
-        });
+        expect(Object.keys(columnData[1].items)).toEqual(["Item One", "Item Two"]);
         expect(columnData[1].selectedItem).toBe(selectedItem);
         expect(columnData[1].trailingSelection).toBe(true);
         expect(typeof columnData[1].onSelect).toBe("function");
@@ -101,44 +78,49 @@ describe("renders correctly", () => {
                 defaultSelectedItems={[selectedSchema, selectedItem]}
             />
         );
-        const { columnData, refTargets } = component.find("InspectorColView").props();
-        expect(refTargets).toEqual({
-            "#": schemas[selectedSchema]
-        });
+        const { columnData } = component.find("InspectorColView").props();
         expect(columnData).toHaveLength(3);
-        expect(columnData[1].items).toEqual({
-            "Item One": {},
-            "Item Two": {
-                properties: {
-                    "Property One": {}
-                }
-            }
-        });
+        expect(Object.keys(columnData[1].items)).toEqual(["Item One", "Item Two"]);
         expect(columnData[1].selectedItem).toBe(selectedItem);
         expect(columnData[1].trailingSelection).toBe(true);
         expect(typeof columnData[1].onSelect).toBe("function");
-        expect(columnData[2].items).toEqual({ "Property One": {} });
-        expect(columnData[2].selectedItem).toBe(null);
-        expect(columnData[2].trailingSelection).toBe(false);
+        expect(Object.keys(columnData[2].items)).toEqual(["Property One"]);
         expect(typeof columnData[2].onSelect).toBe("function");
     });
-    it("throwing error on invalid root selection", () => {
-        const component = () => shallow(
+    it("ignores invalid root selection", () => {
+        const component = shallow(
             <Inspector
                 schemas={schemas}
                 defaultSelectedItems={["Schema Two"]}
             />
         );
-        expect(component).toThrowError("invalid selection 'Schema Two' in column at index 0");
+        const { columnData } = component.find("InspectorColView").props();
+        expect(columnData).toHaveLength(1);
+        expect(columnData[0].selectedItem).toBe(null);
     });
-    it("throwing error on invalid non-root selection", () => {
-        const component = () => shallow(
+    it("ignores invalid trailing non-root selection", () => {
+        const component = shallow(
             <Inspector
                 schemas={schemas}
                 defaultSelectedItems={["Schema One", "Item Three"]}
             />
         );
-        expect(component).toThrowError("invalid selection 'Item Three' in column at index 1");
+        const { columnData } = component.find("InspectorColView").props();
+        expect(columnData).toHaveLength(2);
+        expect(columnData[0].trailingSelection).toBe(true);
+        expect(columnData[1].selectedItem).toBe(null);
+    });
+    it("ignores invalid intermediate non-root selection", () => {
+        const component = shallow(
+            <Inspector
+                schemas={schemas}
+                defaultSelectedItems={["Schema One", "Item Three", "Property X"]}
+            />
+        );
+        const { columnData } = component.find("InspectorColView").props();
+        expect(columnData).toHaveLength(2);
+        expect(columnData[0].trailingSelection).toBe(true);
+        expect(columnData[1].selectedItem).toBe(null);
     });
 });
 describe("calls onSelect", () => {

@@ -1,20 +1,11 @@
 import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 import classNames from "classnames";
 
-import JsonSchemaPropType from "./JsonSchemaPropType";
-import { getPropertyParentSchemas, isNonEmptyObject } from "./utils";
+import JsonSchema from "./JsonSchema";
+import { isNonEmptyObject } from "./utils";
 
-class InspectorItem extends PureComponent {
-    static renderDefaultContent({ name }) {
-        return (
-            <div className="jsonschema-inspector-item-content">
-                <span className="jsonschema-inspector-item-name">{name}</span>
-                <span className="jsonschema-inspector-item-icon" />
-            </div>
-        );
-    }
-
+class InspectorItem extends Component {
     componentDidUpdate() {
         if (this.buttonRef) {
             this.buttonRef.focus();
@@ -23,10 +14,9 @@ class InspectorItem extends PureComponent {
 
     render() {
         const {
-            name, schema, selected, autoFocus, refTargets, onSelect, renderContent
+            name, schema, selected, autoFocus, onSelect, renderContent
         } = this.props;
-        const schemaList = getPropertyParentSchemas(schema, refTargets);
-        const hasNestedItems = schemaList.some(part => isNonEmptyObject(part.properties));
+        const hasNestedItems = isNonEmptyObject(schema.getProperties());
         const buttonAttributes = {
             className: classNames({
                 "jsonschema-inspector-item": true,
@@ -44,17 +34,21 @@ class InspectorItem extends PureComponent {
             // clear reference in case props indicated autoFocus before
             this.buttonRef = null;
         }
-        const renderParameters = {
-            name,
-            hasNestedItems,
-            selected,
-            focused: autoFocus,
-            schema,
-            refTargets
-        };
         return (
             <button type="button" {...buttonAttributes}>
-                {(renderContent || InspectorItem.renderDefaultContent)(renderParameters)}
+                {renderContent && renderContent({
+                    name,
+                    hasNestedItems,
+                    selected,
+                    focused: autoFocus,
+                    schema
+                })}
+                {!renderContent && (
+                    <div className="jsonschema-inspector-item-content">
+                        <span className="jsonschema-inspector-item-name">{name}</span>
+                        <span className="jsonschema-inspector-item-icon" />
+                    </div>
+                )}
             </button>
         );
     }
@@ -62,7 +56,7 @@ class InspectorItem extends PureComponent {
 
 InspectorItem.propTypes = {
     name: PropTypes.string.isRequired,
-    schema: PropTypes.oneOfType([PropTypes.bool, JsonSchemaPropType]).isRequired,
+    schema: PropTypes.instanceOf(JsonSchema).isRequired,
     selected: PropTypes.bool,
     autoFocus: ({ selected, autoFocus }) => {
         if (autoFocus && !selected) {
@@ -70,9 +64,8 @@ InspectorItem.propTypes = {
         }
         return null;
     },
-    refTargets: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     onSelect: PropTypes.func.isRequired, // func(SyntheticEvent: event)
-    renderContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refTargets })
+    renderContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
 };
 InspectorItem.defaultProps = {
     selected: false,

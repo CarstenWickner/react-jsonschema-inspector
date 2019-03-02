@@ -9,9 +9,9 @@ import InspectorColView from "./InspectorColView";
 import InspectorDetails from "./InspectorDetails";
 import InspectorBreadcrumbs from "./InspectorBreadcrumbs";
 import JsonSchemaPropType from "./JsonSchemaPropType";
-import {
-    collectRefTargets, getPropertyParentSchemas, isNonEmptyObject, mergeObjects
-} from "./utils";
+import RefScope from "./RefScope";
+import JsonSchema from "./JsonSchema";
+import { isDefined, isNonEmptyObject, mapObjectValues } from "./utils";
 
 class Inspector extends Component {
     constructor(props) {
@@ -32,39 +32,42 @@ class Inspector extends Component {
      * Thanks to 'memoize', all this logic will only be executed again if the provided parameters changed.
      * @param schemas object containing the top-level JsonSchema definitions as values
      * @param selectedItems array of strings identifying the selected properties per column
-     * @return object containing a 'refTargets' object - containing re-usable sub-schemas;
+     * @return object containing a 'refScope' object - containing re-usable sub-schemas;
      *         and a 'columnData' array - each element being an object with the props expected by <InspectorColumn>
      */
-    getRenderDataForSelection = memoize((schemas, selectedItems) => {
-        const refTargets = selectedItems.length === 0 ? {} : collectRefTargets(schemas[selectedItems[0]]);
-        // the first column always lists all top-level schemas
-        let nextColumnScope = schemas;
-        const lastSelectionIndex = selectedItems.length - 1;
-        const columnData = selectedItems.map((selection, index) => {
-            const currentColumnScope = nextColumnScope;
-            if (currentColumnScope[selection]) {
-                const schemaList = getPropertyParentSchemas(currentColumnScope[selection], refTargets);
-                nextColumnScope = schemaList.map(part => part.properties).reduce(mergeObjects, undefined);
-                return {
-                    items: currentColumnScope, // mapped JsonSchema definitions to select from in this column
-                    selectedItem: selection, // name of the selected item (i.e. key in 'items')
-                    trailingSelection: lastSelectionIndex === index, // whether this is the last column with a selection
-                    onSelect: this.onSelect(index)
-                };
-            }
-            // the selection in the previous column refers to a schema that has no nested properties/items
-            throw new Error(`invalid selection '${selection}' in column at index ${index}`);
+    getRenderDataForSelection = memoize((schemas, referenceSchemas, selectedItems) => {
+        // first prepare those schemas that may be referenced by the displayed ones
+        const referenceScopes = [];
+        referenceSchemas.forEach((rawRefSchema) => {
+            const refScope = new RefScope(rawRefSchema, referenceScopes);
+            referenceScopes.forEach(otherScope => otherScope.addOtherScope(refScope));
+            referenceScopes.push(refScope);
         });
+        // the first column always lists all top-level schemas
+        let nextColumn = mapObjectValues(schemas, rawSchema => new JsonSchema(rawSchema, new RefScope(rawSchema, referenceScopes)));
+        const columnData = selectedItems.map((selection, index) => {
+            const currentColumn = nextColumn;
+            const isValidSelection = isDefined(currentColumn[selection]);
+            nextColumn = isValidSelection ? currentColumn[selection].getProperties() : {};
+            return {
+                items: currentColumn, // mapped JsonSchema definitions to select from in this column
+                selectedItem: isValidSelection ? selection : null, // name of the selected item (i.e. key in 'items')
+                onSelect: this.onSelect(index)
+            };
+        }).filter(({ items }) => isNonEmptyObject(items));
+        if (columnData.length > 0 && columnData[columnData.length - 1].selectedItem) {
+            columnData[columnData.length - 1].trailingSelection = true;
+        } else if (columnData.length > 1) {
+            columnData[columnData.length - 2].trailingSelection = true;
+        }
         // append last column where there is no selection yet, unless the last selected item has no nested items of its own
-        if (isNonEmptyObject(nextColumnScope)) {
+        if (isNonEmptyObject(nextColumn)) {
             columnData.push({
-                items: nextColumnScope,
-                selectedItem: null,
-                trailingSelection: false,
+                items: nextColumn,
                 onSelect: this.onSelect(selectedItems.length)
             });
         }
-        return { columnData, refTargets };
+        return { columnData };
     }, isDeepEqual);
 
     onSelect = columnIndex => (event, name) => {
@@ -91,36 +94,35 @@ class Inspector extends Component {
         }
         // need to look-up the currently displayed number of content columns
         // thanks to 'memoize', we just look-up the result of the previous evaluation
-        const { schemas, onSelect } = this.props;
-        const oldColumnCount = (appendEmptyColumn ? 1 : 0) + this.getRenderDataForSelection(schemas, selectedItems).columnData.length;
+        const { schemas, referenceSchemas, onSelect: onSelectProp } = this.props;
+        const oldColumnCount = (appendEmptyColumn ? 1 : 0)
+            + this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems).columnData.length;
         // now we need to know what the number of content columns will be after changing the state
         // thanks to 'memoize', the subsequent render() call will just look-up the result of this evaluation
-        const newRenderData = this.getRenderDataForSelection(schemas, newSelection);
+        const newRenderData = this.getRenderDataForSelection(schemas, referenceSchemas, newSelection);
         // update state to trigger rerendering of the whole component
         this.setState({
             selectedItems: newSelection,
             appendEmptyColumn: newRenderData.columnData.length < oldColumnCount
-        }, onSelect ? () => onSelect(event, newSelection, newRenderData) : null);
+        }, onSelectProp ? () => onSelectProp(event, newSelection, newRenderData) : null);
     };
 
     render() {
         const {
-            schemas, renderItemContent, renderSelectionDetails, renderEmptyDetails, breadcrumbs
+            schemas, referenceSchemas, renderItemContent, renderSelectionDetails, renderEmptyDetails, breadcrumbs
         } = this.props;
         const { selectedItems, appendEmptyColumn } = this.state;
-        const { columnData, refTargets } = this.getRenderDataForSelection(schemas, selectedItems);
+        const { columnData } = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems);
         return (
             <div className="jsonschema-inspector">
                 <div className="jsonschema-inspector-body">
                     <InspectorColView
                         columnData={columnData}
-                        refTargets={refTargets}
                         appendEmptyColumn={appendEmptyColumn}
                         renderItemContent={renderItemContent}
                     />
                     <InspectorDetails
                         columnData={columnData}
-                        refTargets={refTargets}
                         renderSelectionDetails={renderSelectionDetails}
                         renderEmptyDetails={renderEmptyDetails}
                     />
@@ -129,7 +131,6 @@ class Inspector extends Component {
                     <div className="jsonschema-inspector-footer">
                         <InspectorBreadcrumbs
                             columnData={columnData}
-                            refTargets={refTargets}
                             {...breadcrumbs}
                         />
                     </div>
@@ -142,6 +143,7 @@ class Inspector extends Component {
 Inspector.propTypes = {
     /** allow multiple independent root schemas to inspect */
     schemas: PropTypes.objectOf(JsonSchemaPropType).isRequired,
+    referenceSchemas: PropTypes.arrayOf(JsonSchemaPropType),
     /** default selection identified by names of object properties */
     defaultSelectedItems: PropTypes.arrayOf(PropTypes.string),
     /** options for the breadcrumbs shown in the footer, can be turned off by setting to null */
@@ -151,17 +153,18 @@ Inspector.propTypes = {
         arrayItemAccessor: PropTypes.string, // e.g. "[0]" or ".get(0)"
         preventNavigation: PropTypes.bool // whether double-clicking an item should preserve following selections, otherwise they are discarded
     }),
-    /** callback to invoke after the selection changed. func(event, newSelection, { columnData, refTargets }) */
+    /** callback to invoke after the selection changed. func(event, newSelection, { columnData, refScope }) */
     onSelect: PropTypes.func,
-    /** func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refTargets }) */
+    /** func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refScope }) */
     renderItemContent: PropTypes.func,
-    /** func({ itemSchema: JsonSchema, columnData, refTargets, selectionColumnIndex: number }) */
+    /** func({ itemSchema: JsonSchema, columnData, refScope, selectionColumnIndex: number }) */
     renderSelectionDetails: PropTypes.func,
     /** func({ rootColumnSchemas }) */
     renderEmptyDetails: PropTypes.func
 };
 
 Inspector.defaultProps = {
+    referenceSchemas: [],
     defaultSelectedItems: [],
     breadcrumbs: {},
     onSelect: null,

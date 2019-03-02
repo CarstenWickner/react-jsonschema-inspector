@@ -1,64 +1,56 @@
 import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
+import React from "react";
 import classNames from "classnames";
 
-import JsonSchemaPropType from "./JsonSchemaPropType";
-import { getTypeOfArrayItems, isDefined } from "./utils";
+import JsonSchema from "./JsonSchema";
+import { isDefined } from "./utils";
 
-class InspectorBreadcrumbs extends PureComponent {
-    renderSingleColumnSelection({
-        items, selectedItem, trailingSelection, onSelect
-    }, index, columnData) {
-        if (!selectedItem) {
-            // no selection: nothing to show in the breadcrumbs
-            return null;
-        }
-        const {
-            prefix, separator, arrayItemAccessor, refTargets, preventNavigation
-        } = this.props;
-        // if this is not the last selection, we need to add a (dummy) array item selector for each nested array
-        let suffix = "";
-        if (!trailingSelection) {
-            let itemSchema = getTypeOfArrayItems(items[selectedItem], refTargets);
-            while (isDefined(itemSchema)) {
-                suffix += arrayItemAccessor;
-                itemSchema = getTypeOfArrayItems(itemSchema, refTargets);
+const InspectorBreadcrumbs = ({
+    columnData, prefix, separator, arrayItemAccessor, preventNavigation
+}) => (
+    <div className="jsonschema-inspector-breadcrumbs">
+        <span className="jsonschema-inspector-breadcrumbs-icon" />
+        {columnData.map(({
+            items, selectedItem, trailingSelection, onSelect
+        }, index) => {
+            if (!selectedItem) {
+                // no selection: nothing to show in the breadcrumbs
+                return null;
             }
-        }
-        const className = classNames({
-            "jsonschema-inspector-breadcrumbs-item": true,
-            "has-nested-items": index < (columnData.length - 1)
-        });
-        return (
-            <span
-                key={index}
-                className={className}
-                onDoubleClick={preventNavigation ? undefined : event => onSelect(event, selectedItem)}
-            >
-                {(index === 0 ? prefix : separator) + selectedItem + suffix}
-            </span>
-        );
-    }
-
-    render() {
-        const { columnData } = this.props;
-        return (
-            <div className="jsonschema-inspector-breadcrumbs">
-                <span className="jsonschema-inspector-breadcrumbs-icon" />
-                {columnData.map(this.renderSingleColumnSelection.bind(this))}
-            </div>
-        );
-    }
-}
+            // if this is not the last selection, we need to add a (dummy) array item selector for each nested array
+            let suffix = "";
+            if (!trailingSelection) {
+                let itemSchema = items[selectedItem].getTypeOfArrayItems();
+                while (isDefined(itemSchema)) {
+                    suffix += arrayItemAccessor;
+                    itemSchema = itemSchema.getTypeOfArrayItems();
+                }
+            }
+            const className = classNames({
+                "jsonschema-inspector-breadcrumbs-item": true,
+                "has-nested-items": index < (columnData.length - 1)
+            });
+            return (
+                <span
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={index}
+                    className={className}
+                    onDoubleClick={preventNavigation ? undefined : event => onSelect(event, selectedItem)}
+                >
+                    {(index === 0 ? prefix : separator) + selectedItem + suffix}
+                </span>
+            );
+        })}
+    </div>
+);
 
 InspectorBreadcrumbs.propTypes = {
     columnData: PropTypes.arrayOf(PropTypes.shape({
-        items: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.bool, JsonSchemaPropType])).isRequired,
+        items: PropTypes.objectOf(PropTypes.instanceOf(JsonSchema)).isRequired,
         selectedItem: PropTypes.string,
         trailingSelection: PropTypes.bool,
         onSelect: PropTypes.func.isRequired
     })).isRequired,
-    refTargets: PropTypes.objectOf(JsonSchemaPropType).isRequired,
     prefix: PropTypes.string,
     separator: PropTypes.string,
     arrayItemAccessor: PropTypes.string,

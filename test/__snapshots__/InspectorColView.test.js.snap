@@ -8,13 +8,28 @@ exports[`renders correctly with minimal/default props 1`] = `
   <InspectorColumn
     items={
       Object {
-        "Item One": Object {},
-        "Item Two": Object {},
+        "Item One": JsonSchema {
+          "getFieldValue": [Function],
+          "getProperties": [Function],
+          "getPropertyParentSchemas": [Function],
+          "getSchemaFieldValue": [Function],
+          "getTypeOfArrayItems": [Function],
+          "schema": undefined,
+          "scope": undefined,
+        },
+        "Item Two": JsonSchema {
+          "getFieldValue": [Function],
+          "getProperties": [Function],
+          "getPropertyParentSchemas": [Function],
+          "getSchemaFieldValue": [Function],
+          "getTypeOfArrayItems": [Function],
+          "schema": undefined,
+          "scope": undefined,
+        },
       }
     }
     key="0"
     onSelect={[Function]}
-    refTargets={Object {}}
     renderItemContent={null}
     selectedItem="Item One"
     trailingSelection={false}
@@ -22,13 +37,28 @@ exports[`renders correctly with minimal/default props 1`] = `
   <InspectorColumn
     items={
       Object {
-        "Item One-One": Object {},
-        "Item One-Two": Object {},
+        "Item One-One": JsonSchema {
+          "getFieldValue": [Function],
+          "getProperties": [Function],
+          "getPropertyParentSchemas": [Function],
+          "getSchemaFieldValue": [Function],
+          "getTypeOfArrayItems": [Function],
+          "schema": undefined,
+          "scope": undefined,
+        },
+        "Item One-Two": JsonSchema {
+          "getFieldValue": [Function],
+          "getProperties": [Function],
+          "getPropertyParentSchemas": [Function],
+          "getSchemaFieldValue": [Function],
+          "getTypeOfArrayItems": [Function],
+          "schema": undefined,
+          "scope": undefined,
+        },
       }
     }
     key="1"
     onSelect={[Function]}
-    refTargets={Object {}}
     renderItemContent={null}
     selectedItem="Item One-Two"
     trailingSelection={true}
@@ -36,13 +66,28 @@ exports[`renders correctly with minimal/default props 1`] = `
   <InspectorColumn
     items={
       Object {
-        "Item One-Two-One": Object {},
-        "Item One-Two-Two": Object {},
+        "Item One-Two-One": JsonSchema {
+          "getFieldValue": [Function],
+          "getProperties": [Function],
+          "getPropertyParentSchemas": [Function],
+          "getSchemaFieldValue": [Function],
+          "getTypeOfArrayItems": [Function],
+          "schema": undefined,
+          "scope": undefined,
+        },
+        "Item One-Two-Two": JsonSchema {
+          "getFieldValue": [Function],
+          "getProperties": [Function],
+          "getPropertyParentSchemas": [Function],
+          "getSchemaFieldValue": [Function],
+          "getTypeOfArrayItems": [Function],
+          "schema": undefined,
+          "scope": undefined,
+        },
       }
     }
     key="2"
     onSelect={[Function]}
-    refTargets={Object {}}
     renderItemContent={null}
     selectedItem={null}
     trailingSelection={false}
