@@ -61,6 +61,35 @@ describe("renders correctly", () => {
         expect(component.find("InspectorItem").at(1).prop("autoFocus")).toBe(true);
     });
 });
+describe("calls onSelect", () => {
+    let onSelect;
+    let component;
+    beforeEach(() => {
+        onSelect = jest.fn(() => { });
+        component = shallow(
+            <InspectorColumn
+                items={{
+                    "Item One": new JsonSchema()
+                }}
+                onSelect={onSelect}
+            />
+        );
+    });
+
+    it("clearing selection when clicking on column", () => {
+        component.find(".jsonschema-inspector-column").prop("onClick")({});
+        expect(onSelect.mock.calls).toHaveLength(1);
+        // expect no second parameter indicating selected item
+        expect(onSelect.mock.calls[0]).toHaveLength(1);
+    });
+    it("setting selection when clicking on item", () => {
+        component.find("InspectorItem").prop("onSelect")({});
+        expect(onSelect.mock.calls).toHaveLength(1);
+        // expect no second parameter indicating selected item
+        expect(onSelect.mock.calls[0]).toHaveLength(2);
+        expect(onSelect.mock.calls[0][1]).toEqual("Item One");
+    });
+});
 describe("failing PropType validation", () => {
     it("for invalid selectedItem", () => {
         const component = () => (

@@ -249,22 +249,75 @@ describe("renders correctly", () => {
         expect(selectedRootItem).toHaveLength(1);
         expect(selectedRootItem.prop("onDoubleClick")).toBeDefined();
     });
-    it("when preventing navigation", () => {
+});
+describe("handles double-click navigation", () => {
+    let onSelectOne;
+    let onSelectTwo;
+    let columnData;
+    beforeEach(() => {
+        onSelectOne = jest.fn(() => { });
+        onSelectTwo = jest.fn(() => { });
+        columnData = [
+            {
+                items: {
+                    root: new JsonSchema({
+                        properties: {
+                            item: {}
+                        }
+                    })
+                },
+                selectedItem: "root",
+                onSelect: onSelectOne
+            },
+            {
+                items: {
+                    item: new JsonSchema({})
+                },
+                selectedItem: "item",
+                trailingSelection: true,
+                onSelect: onSelectTwo
+            }
+        ];
+    });
+
+    it("triggers onSelect on root selection", () => {
         const component = shallow(
             <InspectorBreadcrumbs
-                columnData={[
-                    {
-                        items: { root: new JsonSchema({}) },
-                        selectedItem: "root",
-                        trailingSelection: true,
-                        onSelect: () => { }
-                    }
-                ]}
+                columnData={columnData}
+            />
+        );
+        const selectedItems = component.find(".jsonschema-inspector-breadcrumbs-item");
+        expect(selectedItems).toHaveLength(2);
+
+        selectedItems.at(0).prop("onDoubleClick")({});
+        expect(onSelectOne.mock.calls).toHaveLength(1);
+        expect(onSelectOne.mock.calls[0][1]).toEqual("root");
+        expect(onSelectTwo.mock.calls).toHaveLength(0);
+    });
+    it("triggers onSelect on non-root selection", () => {
+        const component = shallow(
+            <InspectorBreadcrumbs
+                columnData={columnData}
+            />
+        );
+        const selectedItems = component.find(".jsonschema-inspector-breadcrumbs-item");
+        expect(selectedItems).toHaveLength(2);
+
+        selectedItems.at(1).prop("onDoubleClick")({});
+        expect(onSelectOne.mock.calls).toHaveLength(0);
+        expect(onSelectTwo.mock.calls).toHaveLength(1);
+        expect(onSelectTwo.mock.calls[0][1]).toEqual("item");
+    });
+    it("ignored when navigation is prevented", () => {
+        const component = shallow(
+            <InspectorBreadcrumbs
+                columnData={columnData}
                 preventNavigation
             />
         );
-        const selectedRootItem = component.find(".jsonschema-inspector-breadcrumbs-item");
-        expect(selectedRootItem).toHaveLength(1);
-        expect(selectedRootItem.prop("onDoubleClick")).not.toBeDefined();
+        const selectedItems = component.find(".jsonschema-inspector-breadcrumbs-item");
+        expect(selectedItems).toHaveLength(2);
+        expect(selectedItems.at(0).prop("onDoubleClick")).not.toBeDefined();
+        expect(selectedItems.at(1).prop("onDoubleClick")).not.toBeDefined();
     });
 });

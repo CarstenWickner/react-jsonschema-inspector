@@ -310,3 +310,66 @@ describe("getTypeOfArrayItems()", () => {
         expect(new JsonSchema(schema).getTypeOfArrayItems()).toBe(null);
     });
 });
+describe("getProperties()", () => {
+    it("returns empty object for empty schema", () => {
+        const emptySchema = new JsonSchema({}, new RefScope({}));
+        expect(emptySchema.getProperties()).toEqual({});
+    });
+    it("returns contained `properties` from simple schema", () => {
+        const itemOneSchema = { title: "Title" };
+        const itemTwoSchema = { description: "Description" };
+        const simpleSchema = new JsonSchema({
+            properties: {
+                "Item One": itemOneSchema,
+                "Item Two": itemTwoSchema
+            }
+        }, new RefScope({}));
+        const result = simpleSchema.getProperties();
+        expect(result["Item One"].schema).toEqual(itemOneSchema);
+        expect(result["Item Two"].schema).toEqual(itemTwoSchema);
+    });
+    it("returns `required` from simple schema", () => {
+        const simpleSchema = new JsonSchema({
+            required: ["Item One", "Item Two"]
+        }, new RefScope({}));
+        const result = simpleSchema.getProperties();
+        expect(result["Item One"].schema).toBe(true);
+        expect(result["Item Two"].schema).toBe(true);
+    });
+    it("returns combined `required` and `properties` from simple schema", () => {
+        const itemOneSchema = { title: "Title" };
+        const itemTwoSchema = { description: "Description" };
+        const simpleSchema = new JsonSchema({
+            required: ["Item One", "Item Three"],
+            properties: {
+                "Item One": itemOneSchema,
+                "Item Two": itemTwoSchema
+            }
+        }, new RefScope({}));
+        const result = simpleSchema.getProperties();
+        expect(result["Item One"].schema).toEqual(itemOneSchema);
+        expect(result["Item Two"].schema).toEqual(itemTwoSchema);
+        expect(result["Item Three"].schema).toBe(true);
+    });
+    it("returns combined `properties` from nested schemas", () => {
+        const itemOneSchema = { title: "Title" };
+        const itemTwoSchema = { description: "Description" };
+        const mainSchema = new JsonSchema({
+            allOf: [
+                {
+                    properties: {
+                        "Item One": itemOneSchema
+                    }
+                },
+                {
+                    properties: {
+                        "Item Two": itemTwoSchema
+                    }
+                }
+            ]
+        }, new RefScope({}));
+        const result = mainSchema.getProperties();
+        expect(result["Item One"].schema).toEqual(itemOneSchema);
+        expect(result["Item Two"].schema).toEqual(itemTwoSchema);
+    });
+});

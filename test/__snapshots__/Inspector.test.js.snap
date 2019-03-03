@@ -46,7 +46,119 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                     },
                   },
-                  "otherScopes": Array [],
+                  "otherScopes": Array [
+                    RefScope {
+                      "addOtherScope": [Function],
+                      "externalRefs": Object {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree": Object {
+                          "title": "Item Three Title",
+                        },
+                      },
+                      "find": [Function],
+                      "findSchemaInThisScope": [Function],
+                      "internalRefs": Object {
+                        "#": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "#/definitions/itemThree": Object {
+                          "title": "Item Three Title",
+                        },
+                      },
+                      "otherScopes": Array [],
+                    },
+                  ],
+                },
+              },
+              "Schema Two": JsonSchema {
+                "getFieldValue": [Function],
+                "getProperties": [Function],
+                "getPropertyParentSchemas": [Function],
+                "getSchemaFieldValue": [Function],
+                "getTypeOfArrayItems": [Function],
+                "schema": Object {
+                  "properties": Object {
+                    "Item Three": Object {
+                      "$ref": "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree",
+                    },
+                  },
+                },
+                "scope": RefScope {
+                  "addOtherScope": [Function],
+                  "externalRefs": Object {},
+                  "find": [Function],
+                  "findSchemaInThisScope": [Function],
+                  "internalRefs": Object {
+                    "#": Object {
+                      "properties": Object {
+                        "Item Three": Object {
+                          "$ref": "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree",
+                        },
+                      },
+                    },
+                  },
+                  "otherScopes": Array [
+                    RefScope {
+                      "addOtherScope": [Function],
+                      "externalRefs": Object {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree": Object {
+                          "title": "Item Three Title",
+                        },
+                      },
+                      "find": [Function],
+                      "findSchemaInThisScope": [Function],
+                      "internalRefs": Object {
+                        "#": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "#/definitions/itemThree": Object {
+                          "title": "Item Three Title",
+                        },
+                      },
+                      "otherScopes": Array [],
+                    },
+                  ],
                 },
               },
             },
@@ -94,7 +206,119 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                     },
                   },
-                  "otherScopes": Array [],
+                  "otherScopes": Array [
+                    RefScope {
+                      "addOtherScope": [Function],
+                      "externalRefs": Object {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree": Object {
+                          "title": "Item Three Title",
+                        },
+                      },
+                      "find": [Function],
+                      "findSchemaInThisScope": [Function],
+                      "internalRefs": Object {
+                        "#": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "#/definitions/itemThree": Object {
+                          "title": "Item Three Title",
+                        },
+                      },
+                      "otherScopes": Array [],
+                    },
+                  ],
+                },
+              },
+              "Schema Two": JsonSchema {
+                "getFieldValue": [Function],
+                "getProperties": [Function],
+                "getPropertyParentSchemas": [Function],
+                "getSchemaFieldValue": [Function],
+                "getTypeOfArrayItems": [Function],
+                "schema": Object {
+                  "properties": Object {
+                    "Item Three": Object {
+                      "$ref": "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree",
+                    },
+                  },
+                },
+                "scope": RefScope {
+                  "addOtherScope": [Function],
+                  "externalRefs": Object {},
+                  "find": [Function],
+                  "findSchemaInThisScope": [Function],
+                  "internalRefs": Object {
+                    "#": Object {
+                      "properties": Object {
+                        "Item Three": Object {
+                          "$ref": "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree",
+                        },
+                      },
+                    },
+                  },
+                  "otherScopes": Array [
+                    RefScope {
+                      "addOtherScope": [Function],
+                      "externalRefs": Object {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree": Object {
+                          "title": "Item Three Title",
+                        },
+                      },
+                      "find": [Function],
+                      "findSchemaInThisScope": [Function],
+                      "internalRefs": Object {
+                        "#": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "#/definitions/itemThree": Object {
+                          "title": "Item Three Title",
+                        },
+                      },
+                      "otherScopes": Array [],
+                    },
+                  ],
                 },
               },
             },
@@ -148,7 +372,119 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                     },
                   },
-                  "otherScopes": Array [],
+                  "otherScopes": Array [
+                    RefScope {
+                      "addOtherScope": [Function],
+                      "externalRefs": Object {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree": Object {
+                          "title": "Item Three Title",
+                        },
+                      },
+                      "find": [Function],
+                      "findSchemaInThisScope": [Function],
+                      "internalRefs": Object {
+                        "#": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "#/definitions/itemThree": Object {
+                          "title": "Item Three Title",
+                        },
+                      },
+                      "otherScopes": Array [],
+                    },
+                  ],
+                },
+              },
+              "Schema Two": JsonSchema {
+                "getFieldValue": [Function],
+                "getProperties": [Function],
+                "getPropertyParentSchemas": [Function],
+                "getSchemaFieldValue": [Function],
+                "getTypeOfArrayItems": [Function],
+                "schema": Object {
+                  "properties": Object {
+                    "Item Three": Object {
+                      "$ref": "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree",
+                    },
+                  },
+                },
+                "scope": RefScope {
+                  "addOtherScope": [Function],
+                  "externalRefs": Object {},
+                  "find": [Function],
+                  "findSchemaInThisScope": [Function],
+                  "internalRefs": Object {
+                    "#": Object {
+                      "properties": Object {
+                        "Item Three": Object {
+                          "$ref": "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree",
+                        },
+                      },
+                    },
+                  },
+                  "otherScopes": Array [
+                    RefScope {
+                      "addOtherScope": [Function],
+                      "externalRefs": Object {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree": Object {
+                          "title": "Item Three Title",
+                        },
+                      },
+                      "find": [Function],
+                      "findSchemaInThisScope": [Function],
+                      "internalRefs": Object {
+                        "#": Object {
+                          "$id": "https://carstenwickner.github.io/react-jsonschema-inspector",
+                          "definitions": Object {
+                            "itemThree": Object {
+                              "title": "Item Three Title",
+                            },
+                          },
+                        },
+                        "#/definitions/itemThree": Object {
+                          "title": "Item Three Title",
+                        },
+                      },
+                      "otherScopes": Array [],
+                    },
+                  ],
                 },
               },
             },
