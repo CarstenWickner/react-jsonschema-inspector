@@ -2,6 +2,7 @@
 /.npm
 
 /build
+/coverage
 /docs
 
 .vscode
