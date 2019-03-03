@@ -1,7 +1,11 @@
 # React JSON Schema Inspector
 
-[![Build Status][travis-ci-image]][travis-ci-url][![Coverage Status][coverage-image]][coverage-url]
-[![dependencies Status][david-dm-dep-image]][david-dm-dep-url][![devDependencies Status][david-dm-devDep-image]][david-dm-devDep.url][![peerDependencies Status][david-dm-peerDep-image]][david-dm-peerDep-url]
+[![Build Status][travis-ci-image]][travis-ci-url]
+[![Coverage Status][coverage-image]][coverage-url]
+
+[![dependencies Status][david-dm-dep-image]][david-dm-dep-url]
+[![devDependencies Status][david-dm-devDep-image]][david-dm-devDep-url]
+[![peerDependencies Status][david-dm-peerDep-image]][david-dm-peerDep-url]
 
 Introducing a component for viewing/traversing (complex) JSON Schemas for the sake of documentation and potentially assisting users of a DSL in finding particular information in a custom data model.
 
