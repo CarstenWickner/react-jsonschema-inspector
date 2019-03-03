@@ -1,6 +1,7 @@
 # React JSON Schema Inspector
 
-[![Build Status][travis-ci-image]][travis-ci-url]
+[![Build Status][travis-ci-image]][travis-ci-url][![Coverage Status][coverage-image]][coverage-url]
+[![dependencies Status][david-dm-dep-image]][david-dm-dep-url][![devDependencies Status][david-dm-devDep-image]][david-dm-devDep.url][![peerDependencies Status][david-dm-peerDep-image]][david-dm-peerDep-url]
 
 Introducing a component for viewing/traversing (complex) JSON Schemas for the sake of documentation and potentially assisting users of a DSL in finding particular information in a custom data model.
 
@@ -104,3 +105,11 @@ npm i react-jsonschema-inspector
 [main-logo-image]: https://raw.githubusercontent.com/CarstenWickner/react-jsonschema-inspector/master/logo.svg?sanitize=true
 [travis-ci-image]: https://travis-ci.org/CarstenWickner/react-jsonschema-inspector.svg
 [travis-ci-url]: https://travis-ci.org/CarstenWickner/react-jsonschema-inspector
+[coverage-image]: https://coveralls.io/repos/github/CarstenWickner/react-jsonschema-inspector/badge.svg?branch=master
+[coverage-url]: https://coveralls.io/github/CarstenWickner/react-jsonschema-inspector?branch=master
+[david-dm-dep-image]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector/status.svg
+[david-dm-dep-url]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector
+[david-dm-devDep-image]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector/dev-status.svg
+[david-dm-devDep-url]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector?type=dev
+[david-dm-peerDep-image]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector/peer-status.svg
+[david-dm-peerDep-url]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector?type=peer
