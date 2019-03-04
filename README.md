@@ -89,12 +89,14 @@ npm i react-jsonschema-inspector
 | `schemas` (required) | Object: keys will be displayed in the root column, the values are expected to be independent JSON Schema definitions (compatible to Draft 4, 6 or 7) |
 | `referenceSchemas` | Array of objects: the entries are expected to be JSON Schema definitions with an absolute URI as `$id`/`id` (compatible to Draft 4, 6 or 7). These schemas will not be shown on the root column, but are used to resolve URI `$ref`erences in any of the displayed `schemas` or in another entry of the `referenceSchemas` |
 | `defaultSelectedItems` | Array of strings: each referring to the name of the selected item in the respective column (i.e. the first entry in this array should match one key in the `schemas` object) |
-| `onSelect` | Function: call-back being invoked after the selection changed. Receives three parameters: (1) the change event, (2) the selection - as per the `defaultSelectedItems`, (3) an object containing the "columnData" - the full render information for all  |
+| `onSelect` | Function: call-back being invoked after the selection changed. Receives two parameters: (1) the selection - as per the `defaultSelectedItems`, (2) an object containing the "columnData" - the full render information for all visible columns |
 | `breadcrumbs` | Object: enabling the definition of options for the breadcrumbs feature in the footer (can be disabled by setting to `null`) |
 | `breadcrumbs.prefix` | String: to be shown in front of the root selection (e.g. "//" or "./") |
 | `breadcrumbs.separator` | String: to be shown in front of any non-root selection (e.g. "." or "/") |
 | `breadcrumbs.arrayItemAccessor` | String: to be appended for any non-trailing selection that is an array (e.g. "[0]" or ".get(0)") |
 | `breadcrumbs.preventNavigation` | Boolean: set to `true` in order to turn-off the default behaviour of discarding any following selections when double-clicking on a breadcrumbs item |
+| `search` | Object: enabling the definition of options for the search/filter feature in the header (is disabled by default) |
+| `search.fields`| Array of strings: each referring to the name of a text field in a JSON Schema (e.g. `["title", "description"]`) in which to search/filter |
 | `renderItemContent` | Function: custom render function for name of single property/sub-schema in a column. Receives one parameter: object with the following properties: "name", "hasNestedItems", "selected", "schema" |
 | `renderSelectionDetails` | Function: custom render function for the "Details" block on the right for the single property/sub-schema being selected. Receives one parameter: object with the following properties: "itemSchema", "columnData", "selectionColumnIndex" |
 | `renderEmptyDetails` | Function: custom render function for the "Details" block on the right if nothing is selected yet. Receives one parameter, which is an object with the "rootColumnSchemas" property, which holds the array of top-level schemas (as derived from the `schemas` prop and augmented by any given `referenceSchemas`)

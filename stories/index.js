@@ -31,6 +31,9 @@ storiesOf("Inspector", module)
                 "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
             }}
             referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+            search={{
+                fields: ["title", "description"]
+            }}
             renderEmptyDetails={({ rootColumnSchemas }) => (
                 <div style={{ padding: "0.5em 1em 0 1em" }}>
                     <h3>JSON Schema Inspector</h3>
@@ -111,6 +114,19 @@ storiesOf("Inspector", module)
                         <span className="jsonschema-inspector-item-name">{(hasNestedItems ? "\u25A0 " : "\u25A1 ") + name}</span>
                     </div>
                 );
+            }}
+            onSelect={action("onSelect")}
+        />
+    ))
+    .add("with search", () => (
+        <Inspector
+            schemas={{
+                Person: personSchema,
+                Shop: shopSelectionSchema
+            }}
+            defaultSelectedItems={["Person", "friends", "friends"]}
+            search={{
+                fields: ["title", "description"]
             }}
             onSelect={action("onSelect")}
         />
