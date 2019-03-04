@@ -8,34 +8,43 @@ import "./Inspector.scss";
 import InspectorColView from "./InspectorColView";
 import InspectorDetails from "./InspectorDetails";
 import InspectorBreadcrumbs from "./InspectorBreadcrumbs";
+import InspectorSearchField from "./InspectorSearchField";
 import JsonSchemaPropType from "./JsonSchemaPropType";
 import RefScope from "./RefScope";
 import JsonSchema from "./JsonSchema";
+import { createFilterFunction } from "./searchUtils";
 import { isDefined, isNonEmptyObject, mapObjectValues } from "./utils";
 
 class Inspector extends Component {
     constructor(props) {
         super(props);
         const { defaultSelectedItems } = props;
-        // the state should be kept minimal, i.e. only identifying the selected items
+        // the state should be kept minimal
         // the expensive logic is handled in getRenderDataForSelection()
         this.state = {
             selectedItems: defaultSelectedItems,
-            appendEmptyColumn: false
+            appendEmptyColumn: false,
+            searchFilter: null
         };
-
-        this.onSelect = this.onSelect.bind(this);
     }
 
     /**
      * Collect the data to provide as props to the sub components.
      * Thanks to 'memoize', all this logic will only be executed again if the provided parameters changed.
-     * @param schemas object containing the top-level JsonSchema definitions as values
-     * @param selectedItems array of strings identifying the selected properties per column
-     * @return object containing a 'refScope' object - containing re-usable sub-schemas;
-     *         and a 'columnData' array - each element being an object with the props expected by <InspectorColumn>
+     *
+     * @param {Object.<String, Object>} schemas object containing the top-level JsonSchema definitions as values
+     * @param {Array.<Object>} referenceSchemas
+     * @param {Array.<String>} selectedItems array of strings identifying the selected properties per column
+     * @param {Function} getFilteredItemsForColumn entered search filter text
+     * @return {Object}
+     * @return {Array.<Object>} return.columnData
+     * @return {Object.<String, JsonSchema>} return.columnData[].items named schemas to list in the respective column
+     * @return {String} return.columnData[].selectedItem name of the currently selected item (may be null)
+     * @return {Boolean} return.columnData[].trailingSelection flag indicating whether this column's selection is the last
+     * @return {Array.<String>} return.columnData[].filteredItems result of applying getFilteredItemsForColumn
+     * @return {Function} return.columnData[].onSelect callback expecting an event and the name of the selected item in that column as parameters
      */
-    getRenderDataForSelection = memoize((schemas, referenceSchemas, selectedItems) => {
+    getRenderDataForSelection = memoize((schemas, referenceSchemas, selectedItems, getFilteredItemsForColumn) => {
         // first prepare those schemas that may be referenced by the displayed ones
         const referenceScopes = [];
         referenceSchemas.forEach((rawRefSchema) => {
@@ -52,18 +61,19 @@ class Inspector extends Component {
             return {
                 items: currentColumn, // mapped JsonSchema definitions to select from in this column
                 selectedItem: isValidSelection ? selection : null, // name of the selected item (i.e. key in 'items')
+                filteredItems: getFilteredItemsForColumn(currentColumn),
                 onSelect: this.onSelect(index)
             };
         }).filter(({ items }) => isNonEmptyObject(items));
-        if (columnData.length > 0 && columnData[columnData.length - 1].selectedItem) {
-            columnData[columnData.length - 1].trailingSelection = true;
-        } else if (columnData.length > 1) {
-            columnData[columnData.length - 2].trailingSelection = true;
+        const trailingSelectionIndex = columnData.length ? (columnData.length - (columnData[columnData.length - 1].selectedItem ? 1 : 2)) : -1;
+        if (trailingSelectionIndex > -1) {
+            columnData[trailingSelectionIndex].trailingSelection = true;
         }
         // append last column where there is no selection yet, unless the last selected item has no nested items of its own
         if (isNonEmptyObject(nextColumn)) {
             columnData.push({
                 items: nextColumn,
+                filteredItems: getFilteredItemsForColumn(nextColumn),
                 onSelect: this.onSelect(selectedItems.length)
             });
         }
@@ -104,17 +114,30 @@ class Inspector extends Component {
         this.setState({
             selectedItems: newSelection,
             appendEmptyColumn: newRenderData.columnData.length < oldColumnCount
-        }, onSelectProp ? () => onSelectProp(event, newSelection, newRenderData) : null);
+        }, onSelectProp ? () => onSelectProp(newSelection, newRenderData) : null);
+    };
+
+    onSearchFilterChange = (searchFilter) => {
+        this.setState({ searchFilter });
     };
 
     render() {
         const {
-            schemas, referenceSchemas, renderItemContent, renderSelectionDetails, renderEmptyDetails, breadcrumbs
+            schemas, referenceSchemas, renderItemContent, renderSelectionDetails, renderEmptyDetails, search, breadcrumbs
         } = this.props;
-        const { selectedItems, appendEmptyColumn } = this.state;
-        const { columnData } = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems);
+        const { selectedItems, appendEmptyColumn, searchFilter } = this.state;
+        const getFilteredItemsForColumn = createFilterFunction(search && search.fields, searchFilter);
+        const { columnData } = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, getFilteredItemsForColumn);
         return (
             <div className="jsonschema-inspector">
+                {search && (
+                    <div className="jsonschema-inspector-header">
+                        <InspectorSearchField
+                            searchFilter={searchFilter}
+                            onSearchFilterChange={this.onSearchFilterChange}
+                        />
+                    </div>
+                )}
                 <div className="jsonschema-inspector-body">
                     <InspectorColView
                         columnData={columnData}
@@ -153,7 +176,11 @@ Inspector.propTypes = {
         arrayItemAccessor: PropTypes.string, // e.g. "[0]" or ".get(0)"
         preventNavigation: PropTypes.bool // whether double-clicking an item should preserve following selections, otherwise they are discarded
     }),
-    /** callback to invoke after the selection changed. func(event, newSelection, { columnData, refScope }) */
+    /** list of field names to consider when performing the search */
+    search: {
+        fields: PropTypes.arrayOf(PropTypes.string)
+    },
+    /** callback to invoke after the selection changed. func(newSelection, { columnData, refScope }) */
     onSelect: PropTypes.func,
     /** func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refScope }) */
     renderItemContent: PropTypes.func,
@@ -167,6 +194,7 @@ Inspector.defaultProps = {
     referenceSchemas: [],
     defaultSelectedItems: [],
     breadcrumbs: {},
+    search: {},
     onSelect: null,
     renderItemContent: null,
     renderSelectionDetails: null,
