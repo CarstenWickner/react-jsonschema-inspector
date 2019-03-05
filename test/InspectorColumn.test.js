@@ -40,7 +40,6 @@ describe("renders correctly", () => {
         expect(component.hasClass("trailing-selection")).toBe(false);
         expect(component.find("InspectorItem").at(0).prop("selected")).toBe(false);
         expect(component.find("InspectorItem").at(1).prop("selected")).toBe(true);
-        expect(component.find("InspectorItem").at(1).prop("autoFocus")).toBe(false);
     });
     it("with trailing selection", () => {
         const component = shallow(
@@ -58,7 +57,6 @@ describe("renders correctly", () => {
         expect(component.hasClass("trailing-selection")).toBe(true);
         expect(component.find("InspectorItem").at(0).prop("selected")).toBe(false);
         expect(component.find("InspectorItem").at(1).prop("selected")).toBe(true);
-        expect(component.find("InspectorItem").at(1).prop("autoFocus")).toBe(true);
     });
 });
 describe("calls onSelect", () => {

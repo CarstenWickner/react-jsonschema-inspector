@@ -6,6 +6,7 @@ exports[`renders correctly with minimal/default props 1`] = `
   tabIndex={-1}
 >
   <InspectorColumn
+    filteredItems={null}
     items={
       Object {
         "Item One": JsonSchema {
@@ -15,7 +16,15 @@ exports[`renders correctly with minimal/default props 1`] = `
           "getSchemaFieldValue": [Function],
           "getTypeOfArrayItems": [Function],
           "schema": undefined,
-          "scope": undefined,
+          "scope": RefScope {
+            "addOtherScope": [Function],
+            "addOtherScopes": [Function],
+            "externalRefs": Object {},
+            "find": [Function],
+            "findSchemaInThisScope": [Function],
+            "internalRefs": Object {},
+            "otherScopes": Array [],
+          },
         },
         "Item Two": JsonSchema {
           "getFieldValue": [Function],
@@ -24,7 +33,15 @@ exports[`renders correctly with minimal/default props 1`] = `
           "getSchemaFieldValue": [Function],
           "getTypeOfArrayItems": [Function],
           "schema": undefined,
-          "scope": undefined,
+          "scope": RefScope {
+            "addOtherScope": [Function],
+            "addOtherScopes": [Function],
+            "externalRefs": Object {},
+            "find": [Function],
+            "findSchemaInThisScope": [Function],
+            "internalRefs": Object {},
+            "otherScopes": Array [],
+          },
         },
       }
     }
@@ -35,6 +52,7 @@ exports[`renders correctly with minimal/default props 1`] = `
     trailingSelection={false}
   />
   <InspectorColumn
+    filteredItems={null}
     items={
       Object {
         "Item One-One": JsonSchema {
@@ -44,7 +62,15 @@ exports[`renders correctly with minimal/default props 1`] = `
           "getSchemaFieldValue": [Function],
           "getTypeOfArrayItems": [Function],
           "schema": undefined,
-          "scope": undefined,
+          "scope": RefScope {
+            "addOtherScope": [Function],
+            "addOtherScopes": [Function],
+            "externalRefs": Object {},
+            "find": [Function],
+            "findSchemaInThisScope": [Function],
+            "internalRefs": Object {},
+            "otherScopes": Array [],
+          },
         },
         "Item One-Two": JsonSchema {
           "getFieldValue": [Function],
@@ -53,7 +79,15 @@ exports[`renders correctly with minimal/default props 1`] = `
           "getSchemaFieldValue": [Function],
           "getTypeOfArrayItems": [Function],
           "schema": undefined,
-          "scope": undefined,
+          "scope": RefScope {
+            "addOtherScope": [Function],
+            "addOtherScopes": [Function],
+            "externalRefs": Object {},
+            "find": [Function],
+            "findSchemaInThisScope": [Function],
+            "internalRefs": Object {},
+            "otherScopes": Array [],
+          },
         },
       }
     }
@@ -64,6 +98,7 @@ exports[`renders correctly with minimal/default props 1`] = `
     trailingSelection={true}
   />
   <InspectorColumn
+    filteredItems={null}
     items={
       Object {
         "Item One-Two-One": JsonSchema {
@@ -73,7 +108,15 @@ exports[`renders correctly with minimal/default props 1`] = `
           "getSchemaFieldValue": [Function],
           "getTypeOfArrayItems": [Function],
           "schema": undefined,
-          "scope": undefined,
+          "scope": RefScope {
+            "addOtherScope": [Function],
+            "addOtherScopes": [Function],
+            "externalRefs": Object {},
+            "find": [Function],
+            "findSchemaInThisScope": [Function],
+            "internalRefs": Object {},
+            "otherScopes": Array [],
+          },
         },
         "Item One-Two-Two": JsonSchema {
           "getFieldValue": [Function],
@@ -82,7 +125,15 @@ exports[`renders correctly with minimal/default props 1`] = `
           "getSchemaFieldValue": [Function],
           "getTypeOfArrayItems": [Function],
           "schema": undefined,
-          "scope": undefined,
+          "scope": RefScope {
+            "addOtherScope": [Function],
+            "addOtherScopes": [Function],
+            "externalRefs": Object {},
+            "find": [Function],
+            "findSchemaInThisScope": [Function],
+            "internalRefs": Object {},
+            "otherScopes": Array [],
+          },
         },
       }
     }

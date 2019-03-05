@@ -1,5 +1,5 @@
-import { isNonEmptyObject } from "./utils";
 import JsonSchema from "./JsonSchema";
+import { isNonEmptyObject } from "./utils";
 
 /**
  * Helper class to faciliate looking-up re-usable sub-schemas via the "$ref" keyword. A single RefScope instance refers to one main schema
@@ -22,21 +22,21 @@ class RefScope {
      * Array.<RefScope>
      * Array of other scopes (e.g. in case of separate schemas being provided for that purpose).
      */
-    otherScopes;
+    otherScopes = [];
 
     /**
      * Constructor collecting all available references to contained re-usable (sub-) schemas.
+     *
      * @param {JsonSchema} schema to collect $ref-erence-able sub-schemas from
      */
-    constructor(schema, otherScopes = []) {
-        this.otherScopes = otherScopes.slice();
-        if (!isNonEmptyObject(schema)) {
+    constructor(schema) {
+        if (!schema || !isNonEmptyObject(schema.schema)) {
             return;
         }
         // can always self-reference via an empty fragment
         this.internalRefs["#"] = schema;
         // from JSON Schema Draft 6: "$id" replaces former "id"
-        const mainAlias = schema.$id || schema.id;
+        const mainAlias = schema.schema.$id || schema.schema.id;
         let externalRefBase;
         if (mainAlias && !mainAlias.startsWith("#")) {
             // an absolute URI can be used both within the schema itself but also from other schemas
@@ -50,13 +50,14 @@ class RefScope {
             // no valid alias provided
             externalRefBase = null;
         }
-        const { definitions } = schema;
+        const { definitions } = schema.schema;
         if (isNonEmptyObject(definitions)) {
             Object.keys(definitions).forEach((key) => {
-                const subSchema = definitions[key];
-                if (isNonEmptyObject(subSchema)) {
+                const definition = definitions[key];
+                if (isNonEmptyObject(definition)) {
+                    const subSchema = new JsonSchema(definition, this);
                     // from JSON Schema Draft 6: "$id" replaces former "id"
-                    const subAlias = subSchema.$id || subSchema.id;
+                    const subAlias = definition.$id || definition.id;
                     if (subAlias) {
                         // any alias provided within "definitions" will only be available as short-hand in this schema
                         this.internalRefs[subAlias] = subSchema;
@@ -74,12 +75,21 @@ class RefScope {
     }
 
     /**
-     * Add other available scopes.
+     * Add other available scope.
      *
-     * @param  {Array.<RefScope>} refScopes other reference scopes that are available (at least their external $ref-erences)
+     * @param {RefScope} refScope other reference scope that is available (at least its external $ref-erences)
      */
     addOtherScope = (refScope) => {
         this.otherScopes.push(refScope);
+    };
+
+    /**
+     * Add other available scopes.
+     *
+     * @param {Array.<RefScope>} refScopes other reference scopes that are available (at least their external $ref-erences)
+     */
+    addOtherScopes = (refScopes) => {
+        refScopes.forEach(this.addOtherScope);
     };
 
     /**
@@ -89,10 +99,9 @@ class RefScope {
      * @param {Boolean} includeInteralRefs whether the "$ref" value is from within the same main schema this RefScope belongs to
      * @returns {JsonSchema} the successfully looked-up reference (or null if no match was found)
      */
-    findSchemaInThisScope = (ref, includeInteralRefs = true) => {
-        const referencedSchema = (includeInteralRefs && this.internalRefs[ref]) || this.externalRefs[ref];
-        return referencedSchema ? new JsonSchema(referencedSchema, this) : null;
-    };
+    findSchemaInThisScope = (ref, includeInteralRefs = true) => (
+        (includeInteralRefs && this.internalRefs[ref]) || this.externalRefs[ref]
+    );
 
     /**
      * Look-up a re-usable schema by its $ref-erence.

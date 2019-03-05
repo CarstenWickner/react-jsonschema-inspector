@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with minimal/default props 1`] = `
+<div
+  className="jsonschema-inspector-search"
+>
+  <input
+    className="jsonschame-inspector-search-input"
+    onChange={[Function]}
+    type="search"
+    value={null}
+  />
+</div>
+`;

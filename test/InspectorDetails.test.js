@@ -2,7 +2,6 @@ import React from "react";
 import { shallow } from "enzyme";
 import InspectorDetails, { collectFormFields } from "../src/InspectorDetails";
 import JsonSchema from "../src/JsonSchema";
-import RefScope from "../src/RefScope";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {
@@ -14,7 +13,7 @@ describe("renders correctly", () => {
                             "Schema One": new JsonSchema({
                                 title: "Schema Title",
                                 description: "Text"
-                            }, new RefScope())
+                            })
                         },
                         selectedItem: "Schema One",
                         trailingSelection: true
@@ -94,7 +93,7 @@ describe("renders correctly", () => {
         const columnData = [
             {
                 items: {
-                    "Schema One": new JsonSchema(schema, new RefScope(schema))
+                    "Schema One": new JsonSchema(schema)
                 },
                 selectedItem: "Schema One",
                 trailingSelection: true
@@ -143,7 +142,7 @@ describe("renders correctly", () => {
         const columnDataProp = [
             {
                 items: {
-                    "Schema One": new JsonSchema(mainSchema, new RefScope(mainSchema))
+                    "Schema One": new JsonSchema(mainSchema)
                 },
                 selectedItem: "Schema One",
                 trailingSelection: true
@@ -178,7 +177,7 @@ describe("collectFormFields()", () => {
     });
     it("includes `title` from $ref-erenced schema", () => {
         const schema = { $ref: "#/definitions/A" };
-        const scope = new RefScope({
+        const { scope } = new JsonSchema({
             definitions: {
                 A: { title: "Title Value" }
             }

@@ -1,3 +1,4 @@
+import RefScope from "./RefScope";
 import {
     isNonEmptyObject, listValues, mapObjectValues, mergeObjects
 } from "./utils";
@@ -21,7 +22,7 @@ class JsonSchema {
      */
     constructor(schema, scope) {
         this.schema = schema;
-        this.scope = scope;
+        this.scope = scope || new RefScope(this);
     }
 
     /**

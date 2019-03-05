@@ -8,7 +8,6 @@ exports[`renders correctly with minimal/default props 1`] = `
   tabIndex={-1}
 >
   <InspectorItem
-    autoFocus={false}
     key="Item One"
     name="Item One"
     onSelect={[Function]}
@@ -25,16 +24,11 @@ exports[`renders correctly with minimal/default props 1`] = `
         },
         "scope": RefScope {
           "addOtherScope": [Function],
+          "addOtherScopes": [Function],
           "externalRefs": Object {},
           "find": [Function],
           "findSchemaInThisScope": [Function],
-          "internalRefs": Object {
-            "#": Object {
-              "definitions": Object {
-                "Target": Object {},
-              },
-            },
-          },
+          "internalRefs": Object {},
           "otherScopes": Array [],
         },
       }
@@ -42,7 +36,6 @@ exports[`renders correctly with minimal/default props 1`] = `
     selected={false}
   />
   <InspectorItem
-    autoFocus={false}
     key="Item Two"
     name="Item Two"
     onSelect={[Function]}
@@ -59,16 +52,11 @@ exports[`renders correctly with minimal/default props 1`] = `
         },
         "scope": RefScope {
           "addOtherScope": [Function],
+          "addOtherScopes": [Function],
           "externalRefs": Object {},
           "find": [Function],
           "findSchemaInThisScope": [Function],
-          "internalRefs": Object {
-            "#": Object {
-              "definitions": Object {
-                "Target": Object {},
-              },
-            },
-          },
+          "internalRefs": Object {},
           "otherScopes": Array [],
         },
       }
