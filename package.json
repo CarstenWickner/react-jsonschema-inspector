@@ -13,11 +13,10 @@
         "start": "start-storybook -p 9001 -c .storybook",
         "build": "webpack",
         "lint": "eslint src stories test",
-        "test-only": "jest --coverage",
-        "test": "npm run lint && jest --coverage --coverageReporters=text-lcov | coveralls",
-        "predeploy": "npm run lint && npm run test-only && build-storybook -c .storybook -o docs",
+        "test": "jest",
+        "predeploy": "npm run lint && npm run test --bail && build-storybook -c .storybook -o docs",
         "deploy": "gh-pages -d docs",
-        "prepublishOnly": "npm run lint && npm run test-only && npm run build"
+        "prepublishOnly": "npm run lint && npm run test --bail && npm run build"
     },
     "main": "build/index.js",
     "browserslist": [
