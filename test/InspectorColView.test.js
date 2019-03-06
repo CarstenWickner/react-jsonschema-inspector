@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { mount, shallow } from "enzyme";
 import InspectorColView from "../src/InspectorColView";
 import JsonSchema from "../src/JsonSchema";
 
@@ -55,5 +55,66 @@ describe("renders correctly", () => {
             />
         );
         expect(component.exists(".jsonschema-inspector-column-placeholder")).toBe(true);
+    });
+});
+describe("update according to prop changes", () => {
+    const singleColumnData = [
+        {
+            items: {
+                "Item One": new JsonSchema(),
+                "Item Two": new JsonSchema()
+            },
+            onSelect: () => { }
+        }
+    ];
+    const doubleColumnData = [
+        {
+            items: {
+                "Item One": new JsonSchema(),
+                "Item Two": new JsonSchema()
+            },
+            selectedItem: "Item Two",
+            trailingSelection: true,
+            onSelect: () => { }
+        },
+        {
+            items: {
+                "Item Two-One": new JsonSchema(),
+                "Item Two-Two": new JsonSchema()
+            },
+            onSelect: () => { }
+        }
+    ];
+
+    it("setting root selection (while no empty column was displayed)", () => {
+        const component = mount(
+            <InspectorColView columnData={singleColumnData} />
+        );
+        // simulate selection in root column
+        component.setProps({
+            columnData: doubleColumnData
+        });
+    });
+    it("setting root selection (while empty column was displayed)", () => {
+        const component = mount(
+            <InspectorColView
+                columnData={singleColumnData}
+                appendEmptyColumn
+            />
+        );
+        // simulate selection in root column
+        component.setProps({
+            columnData: doubleColumnData
+        });
+    });
+    it("clearing root selection", () => {
+        const component = mount(
+            <InspectorColView columnData={doubleColumnData} />
+        );
+        // simulate clearing the selection again (thereby adding an empty column)
+        component.setProps({
+            columnData: singleColumnData,
+            appendEmptyColumn: true
+        });
     });
 });

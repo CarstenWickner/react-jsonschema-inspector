@@ -61,7 +61,7 @@ InspectorColumn.propTypes = {
             if (!Array.isArray(filteredItems)) {
                 return new Error("`filteredItems` is not an `array`");
             }
-            if (filteredItems.some(singleItem => !items.includes(singleItem))) {
+            if (filteredItems.some(singleItem => !items[singleItem])) {
                 return new Error("`filteredItems` are not all part of `items`");
             }
         }
