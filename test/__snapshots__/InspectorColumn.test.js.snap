@@ -25,10 +25,10 @@ exports[`renders correctly with minimal/default props 1`] = `
         "scope": RefScope {
           "addOtherScope": [Function],
           "addOtherScopes": [Function],
-          "externalRefs": Object {},
+          "externalRefs": Map {},
           "find": [Function],
           "findSchemaInThisScope": [Function],
-          "internalRefs": Object {},
+          "internalRefs": Map {},
           "otherScopes": Array [],
         },
       }
@@ -53,10 +53,10 @@ exports[`renders correctly with minimal/default props 1`] = `
         "scope": RefScope {
           "addOtherScope": [Function],
           "addOtherScopes": [Function],
-          "externalRefs": Object {},
+          "externalRefs": Map {},
           "find": [Function],
           "findSchemaInThisScope": [Function],
-          "internalRefs": Object {},
+          "internalRefs": Map {},
           "otherScopes": Array [],
         },
       }

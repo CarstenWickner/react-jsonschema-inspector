@@ -6,6 +6,7 @@ describe("renders correctly", () => {
     it("with minimal/default props", () => {
         const component = shallow((
             <InspectorSearchField
+                searchFilter=""
                 onSearchFilterChange={() => { }}
             />
         ));

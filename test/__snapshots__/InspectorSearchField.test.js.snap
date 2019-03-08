@@ -8,7 +8,7 @@ exports[`renders correctly with minimal/default props 1`] = `
     className="jsonschame-inspector-search-input"
     onChange={[Function]}
     type="search"
-    value={null}
+    value=""
   />
 </div>
 `;

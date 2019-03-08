@@ -19,11 +19,8 @@ const InspectorSearchField = (props) => {
 };
 
 InspectorSearchField.propTypes = {
-    searchFilter: PropTypes.string,
+    searchFilter: PropTypes.string.isRequired,
     onSearchFilterChange: PropTypes.func.isRequired
-};
-InspectorSearchField.defaultProps = {
-    searchFilter: null
 };
 
 export default InspectorSearchField;

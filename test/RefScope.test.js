@@ -7,8 +7,9 @@ describe("constructed correctly()", () => {
             title: "Test"
         });
         const scope = new RefScope(schema);
-        expect(scope.internalRefs).toEqual({ "#": schema });
-        expect(scope.externalRefs).toEqual({});
+        expect(scope.internalRefs.size).toBe(1);
+        expect(scope.internalRefs.get("#")).toEqual(schema);
+        expect(scope.externalRefs).toEqual(new Map());
     });
     it("remembers single other scope", () => {
         const scope = new RefScope();
@@ -28,12 +29,12 @@ describe("constructed correctly()", () => {
             id: "http://valid-uri.com/$id"
         };
         const { scope } = new JsonSchema(schema);
-        expect(Object.keys(scope.internalRefs)).toHaveLength(1);
-        expect(scope.internalRefs["#"].schema).toEqual(schema);
+        expect(scope.internalRefs.size).toBe(1);
+        expect(scope.internalRefs.get("#").schema).toEqual(schema);
 
-        expect(Object.keys(scope.externalRefs)).toHaveLength(2);
-        expect(scope.externalRefs["http://valid-uri.com/$id"].schema).toEqual(schema);
-        expect(scope.externalRefs["http://valid-uri.com/$id#"].schema).toEqual(schema);
+        expect(scope.externalRefs.size).toBe(2);
+        expect(scope.externalRefs.get("http://valid-uri.com/$id").schema).toEqual(schema);
+        expect(scope.externalRefs.get("http://valid-uri.com/$id#").schema).toEqual(schema);
     });
     it("supports id on root schema (if no $id is present)", () => {
         // supporting "id" to be backwards-compatible with JSON Schema Draft 4
@@ -41,12 +42,12 @@ describe("constructed correctly()", () => {
             id: "http://valid-uri.com/id"
         };
         const { scope } = new JsonSchema(schema);
-        expect(Object.keys(scope.internalRefs)).toHaveLength(1);
-        expect(scope.internalRefs["#"].schema).toEqual(schema);
+        expect(scope.internalRefs.size).toBe(1);
+        expect(scope.internalRefs.get("#").schema).toEqual(schema);
 
-        expect(Object.keys(scope.externalRefs)).toHaveLength(2);
-        expect(scope.externalRefs["http://valid-uri.com/id"].schema).toEqual(schema);
-        expect(scope.externalRefs["http://valid-uri.com/id#"].schema).toEqual(schema);
+        expect(scope.externalRefs.size).toBe(2);
+        expect(scope.externalRefs.get("http://valid-uri.com/id").schema).toEqual(schema);
+        expect(scope.externalRefs.get("http://valid-uri.com/id#").schema).toEqual(schema);
     });
     it("ignores id on root schema (if $id is also present)", () => {
         // "id" was replaced by "$id" with JSON Schema Draft 6
@@ -55,12 +56,12 @@ describe("constructed correctly()", () => {
             id: "http://valid-uri.com/id"
         };
         const { scope } = new JsonSchema(schema);
-        expect(Object.keys(scope.internalRefs)).toHaveLength(1);
-        expect(scope.internalRefs["#"].schema).toEqual(schema);
+        expect(scope.internalRefs.size).toBe(1);
+        expect(scope.internalRefs.get("#").schema).toEqual(schema);
 
-        expect(Object.keys(scope.externalRefs)).toHaveLength(2);
-        expect(scope.externalRefs["http://valid-uri.com/$id"].schema).toEqual(schema);
-        expect(scope.externalRefs["http://valid-uri.com/$id#"].schema).toEqual(schema);
+        expect(scope.externalRefs.size).toBe(2);
+        expect(scope.externalRefs.get("http://valid-uri.com/$id").schema).toEqual(schema);
+        expect(scope.externalRefs.get("http://valid-uri.com/$id#").schema).toEqual(schema);
     });
     it("includes definitions", () => {
         const subSchema = { title: "Test" };
@@ -70,10 +71,10 @@ describe("constructed correctly()", () => {
             }
         };
         const { scope } = new JsonSchema(schema);
-        expect(Object.keys(scope.internalRefs)).toHaveLength(2);
-        expect(scope.internalRefs["#"].schema).toEqual(schema);
-        expect(scope.internalRefs["#/definitions/A"].schema).toEqual(subSchema);
-        expect(scope.externalRefs).toEqual({});
+        expect(scope.internalRefs.size).toBe(2);
+        expect(scope.internalRefs.get("#").schema).toEqual(schema);
+        expect(scope.internalRefs.get("#/definitions/A").schema).toEqual(subSchema);
+        expect(scope.externalRefs).toEqual(new Map());
     });
     it("includes definitions in external references", () => {
         const subSchema = { title: "Test" };
@@ -84,14 +85,14 @@ describe("constructed correctly()", () => {
             }
         };
         const { scope } = new JsonSchema(schema);
-        expect(Object.keys(scope.internalRefs)).toHaveLength(2);
-        expect(scope.internalRefs["#"].schema).toEqual(schema);
-        expect(scope.internalRefs["#/definitions/A"].schema).toEqual(subSchema);
+        expect(scope.internalRefs.size).toBe(2);
+        expect(scope.internalRefs.get("#").schema).toEqual(schema);
+        expect(scope.internalRefs.get("#/definitions/A").schema).toEqual(subSchema);
 
-        expect(Object.keys(scope.externalRefs)).toHaveLength(3);
-        expect(scope.externalRefs["http://valid-uri.com/$id"].schema).toEqual(schema);
-        expect(scope.externalRefs["http://valid-uri.com/$id#"].schema).toEqual(schema);
-        expect(scope.externalRefs["http://valid-uri.com/$id#/definitions/A"].schema).toEqual(subSchema);
+        expect(scope.externalRefs.size).toBe(3);
+        expect(scope.externalRefs.get("http://valid-uri.com/$id").schema).toEqual(schema);
+        expect(scope.externalRefs.get("http://valid-uri.com/$id#").schema).toEqual(schema);
+        expect(scope.externalRefs.get("http://valid-uri.com/$id#/definitions/A").schema).toEqual(subSchema);
     });
     it("ignores undefined/null/invalid/empty definitions", () => {
         const schema = new JsonSchema({
@@ -103,8 +104,9 @@ describe("constructed correctly()", () => {
             }
         });
         const scope = new RefScope(schema);
-        expect(scope.internalRefs).toEqual({ "#": schema });
-        expect(scope.externalRefs).toEqual({});
+        expect(scope.internalRefs.size).toBe(1);
+        expect(scope.internalRefs.get("#")).toEqual(schema);
+        expect(scope.externalRefs).toEqual(new Map());
     });
     it("supports $id over id on sub-schema", () => {
         const subSchemaA = { $id: "A-$id-value" };
@@ -123,16 +125,16 @@ describe("constructed correctly()", () => {
             }
         };
         const { scope } = new JsonSchema(schema);
-        expect(Object.keys(scope.internalRefs)).toHaveLength(7);
-        expect(scope.internalRefs["#"].schema).toEqual(schema);
-        expect(scope.internalRefs["#/definitions/A"].schema).toEqual(subSchemaA);
-        expect(scope.internalRefs["#/definitions/B"].schema).toEqual(subSchemaB);
-        expect(scope.internalRefs["#/definitions/C"].schema).toEqual(subSchemaC);
-        expect(scope.internalRefs["A-$id-value"].schema).toEqual(subSchemaA);
-        expect(scope.internalRefs["B-id-value"].schema).toEqual(subSchemaB);
-        expect(scope.internalRefs["C-$id-value"].schema).toEqual(subSchemaC);
+        expect(scope.internalRefs.size).toBe(7);
+        expect(scope.internalRefs.get("#").schema).toEqual(schema);
+        expect(scope.internalRefs.get("#/definitions/A").schema).toEqual(subSchemaA);
+        expect(scope.internalRefs.get("#/definitions/B").schema).toEqual(subSchemaB);
+        expect(scope.internalRefs.get("#/definitions/C").schema).toEqual(subSchemaC);
+        expect(scope.internalRefs.get("A-$id-value").schema).toEqual(subSchemaA);
+        expect(scope.internalRefs.get("B-id-value").schema).toEqual(subSchemaB);
+        expect(scope.internalRefs.get("C-$id-value").schema).toEqual(subSchemaC);
 
-        expect(scope.externalRefs).toEqual({});
+        expect(scope.externalRefs).toEqual(new Map());
     });
     it("ignores $id/id values on definitions in external references", () => {
         const subSchemaA = { $id: "A-$id-value" };
@@ -145,18 +147,18 @@ describe("constructed correctly()", () => {
             }
         };
         const { scope } = new JsonSchema(schema);
-        expect(Object.keys(scope.internalRefs)).toHaveLength(5);
-        expect(scope.internalRefs["#"].schema).toEqual(schema);
-        expect(scope.internalRefs["#/definitions/A"].schema).toEqual(subSchemaA);
-        expect(scope.internalRefs["#/definitions/B"].schema).toEqual(subSchemaB);
-        expect(scope.internalRefs["A-$id-value"].schema).toEqual(subSchemaA);
-        expect(scope.internalRefs["B-id-value"].schema).toEqual(subSchemaB);
+        expect(scope.internalRefs.size).toBe(5);
+        expect(scope.internalRefs.get("#").schema).toEqual(schema);
+        expect(scope.internalRefs.get("#/definitions/A").schema).toEqual(subSchemaA);
+        expect(scope.internalRefs.get("#/definitions/B").schema).toEqual(subSchemaB);
+        expect(scope.internalRefs.get("A-$id-value").schema).toEqual(subSchemaA);
+        expect(scope.internalRefs.get("B-id-value").schema).toEqual(subSchemaB);
 
-        expect(Object.keys(scope.externalRefs)).toHaveLength(4);
-        expect(scope.externalRefs["http://valid-uri.com/$id"].schema).toEqual(schema);
-        expect(scope.externalRefs["http://valid-uri.com/$id#"].schema).toEqual(schema);
-        expect(scope.externalRefs["http://valid-uri.com/$id#/definitions/A"].schema).toEqual(subSchemaA);
-        expect(scope.externalRefs["http://valid-uri.com/$id#/definitions/B"].schema).toEqual(subSchemaB);
+        expect(scope.externalRefs.size).toBe(4);
+        expect(scope.externalRefs.get("http://valid-uri.com/$id").schema).toEqual(schema);
+        expect(scope.externalRefs.get("http://valid-uri.com/$id#").schema).toEqual(schema);
+        expect(scope.externalRefs.get("http://valid-uri.com/$id#/definitions/A").schema).toEqual(subSchemaA);
+        expect(scope.externalRefs.get("http://valid-uri.com/$id#/definitions/B").schema).toEqual(subSchemaB);
     });
 });
 describe("findSchemaInThisScope()", () => {
@@ -206,7 +208,7 @@ describe("find()", () => {
                 A: { description: "Value" }
             }
         })));
-        expect(Object.keys(scope.otherScopes[0].internalRefs)).toEqual(["#", "#/definitions/A"]);
+        expect(Array.from(scope.otherScopes[0].internalRefs.keys())).toEqual(["#", "#/definitions/A"]);
         expect(() => scope.find("#/definitions/A")).toThrowError("Cannot resolve $ref: \"#/definitions/A\"");
     });
 });

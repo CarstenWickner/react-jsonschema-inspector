@@ -53,15 +53,16 @@ describe("renders correctly", () => {
         expect(header.exists()).toBe(true);
         const searchField = header.find("InspectorSearchField");
         expect(searchField.exists()).toBe(true);
-        expect(searchField.prop("searchFilter")).toBeNull();
+        expect(searchField.prop("searchFilter")).toEqual("");
         const onSearchFilterChange = searchField.prop("onSearchFilterChange");
         // trigger change of search filter
         onSearchFilterChange("Title");
+        component.instance().applySearchFilter.flush();
         expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("Title");
         const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
         expect(filteredItems).toBeDefined();
-        expect(filteredItems).toHaveLength(1);
-        expect(filteredItems[0]).toEqual("Schema One");
+        expect(filteredItems).toHaveLength(2);
+        expect(filteredItems[0]).toEqual("Schema One", "Schema Two");
     });
     it("without footer", () => {
         const component = shallow(

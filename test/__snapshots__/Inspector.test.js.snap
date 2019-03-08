@@ -33,18 +33,18 @@ exports[`renders correctly with minimal/default props 1`] = `
                 "scope": RefScope {
                   "addOtherScope": [Function],
                   "addOtherScopes": [Function],
-                  "externalRefs": Object {},
+                  "externalRefs": Map {},
                   "find": [Function],
                   "findSchemaInThisScope": [Function],
-                  "internalRefs": Object {
-                    "#": [Circular],
+                  "internalRefs": Map {
+                    "#" => [Circular],
                   },
                   "otherScopes": Array [
                     RefScope {
                       "addOtherScope": [Function],
                       "addOtherScopes": [Function],
-                      "externalRefs": Object {
-                        "https://carstenwickner.github.io/react-jsonschema-inspector": JsonSchema {
+                      "externalRefs": Map {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -60,7 +60,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "https://carstenwickner.github.io/react-jsonschema-inspector#": JsonSchema {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -76,7 +76,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree": JsonSchema {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -90,8 +90,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                       "find": [Function],
                       "findSchemaInThisScope": [Function],
-                      "internalRefs": Object {
-                        "#": JsonSchema {
+                      "internalRefs": Map {
+                        "#" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -107,7 +107,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "#/definitions/itemThree": JsonSchema {
+                        "#/definitions/itemThree" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -140,18 +140,18 @@ exports[`renders correctly with minimal/default props 1`] = `
                 "scope": RefScope {
                   "addOtherScope": [Function],
                   "addOtherScopes": [Function],
-                  "externalRefs": Object {},
+                  "externalRefs": Map {},
                   "find": [Function],
                   "findSchemaInThisScope": [Function],
-                  "internalRefs": Object {
-                    "#": [Circular],
+                  "internalRefs": Map {
+                    "#" => [Circular],
                   },
                   "otherScopes": Array [
                     RefScope {
                       "addOtherScope": [Function],
                       "addOtherScopes": [Function],
-                      "externalRefs": Object {
-                        "https://carstenwickner.github.io/react-jsonschema-inspector": JsonSchema {
+                      "externalRefs": Map {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -167,7 +167,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "https://carstenwickner.github.io/react-jsonschema-inspector#": JsonSchema {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -183,7 +183,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree": JsonSchema {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -197,8 +197,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                       "find": [Function],
                       "findSchemaInThisScope": [Function],
-                      "internalRefs": Object {
-                        "#": JsonSchema {
+                      "internalRefs": Map {
+                        "#" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -214,7 +214,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "#/definitions/itemThree": JsonSchema {
+                        "#/definitions/itemThree" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -263,18 +263,18 @@ exports[`renders correctly with minimal/default props 1`] = `
                 "scope": RefScope {
                   "addOtherScope": [Function],
                   "addOtherScopes": [Function],
-                  "externalRefs": Object {},
+                  "externalRefs": Map {},
                   "find": [Function],
                   "findSchemaInThisScope": [Function],
-                  "internalRefs": Object {
-                    "#": [Circular],
+                  "internalRefs": Map {
+                    "#" => [Circular],
                   },
                   "otherScopes": Array [
                     RefScope {
                       "addOtherScope": [Function],
                       "addOtherScopes": [Function],
-                      "externalRefs": Object {
-                        "https://carstenwickner.github.io/react-jsonschema-inspector": JsonSchema {
+                      "externalRefs": Map {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -290,7 +290,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "https://carstenwickner.github.io/react-jsonschema-inspector#": JsonSchema {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -306,7 +306,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree": JsonSchema {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -320,8 +320,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                       "find": [Function],
                       "findSchemaInThisScope": [Function],
-                      "internalRefs": Object {
-                        "#": JsonSchema {
+                      "internalRefs": Map {
+                        "#" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -337,7 +337,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "#/definitions/itemThree": JsonSchema {
+                        "#/definitions/itemThree" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -370,18 +370,18 @@ exports[`renders correctly with minimal/default props 1`] = `
                 "scope": RefScope {
                   "addOtherScope": [Function],
                   "addOtherScopes": [Function],
-                  "externalRefs": Object {},
+                  "externalRefs": Map {},
                   "find": [Function],
                   "findSchemaInThisScope": [Function],
-                  "internalRefs": Object {
-                    "#": [Circular],
+                  "internalRefs": Map {
+                    "#" => [Circular],
                   },
                   "otherScopes": Array [
                     RefScope {
                       "addOtherScope": [Function],
                       "addOtherScopes": [Function],
-                      "externalRefs": Object {
-                        "https://carstenwickner.github.io/react-jsonschema-inspector": JsonSchema {
+                      "externalRefs": Map {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -397,7 +397,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "https://carstenwickner.github.io/react-jsonschema-inspector#": JsonSchema {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -413,7 +413,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree": JsonSchema {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -427,8 +427,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                       "find": [Function],
                       "findSchemaInThisScope": [Function],
-                      "internalRefs": Object {
-                        "#": JsonSchema {
+                      "internalRefs": Map {
+                        "#" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -444,7 +444,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "#/definitions/itemThree": JsonSchema {
+                        "#/definitions/itemThree" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -499,18 +499,18 @@ exports[`renders correctly with minimal/default props 1`] = `
                 "scope": RefScope {
                   "addOtherScope": [Function],
                   "addOtherScopes": [Function],
-                  "externalRefs": Object {},
+                  "externalRefs": Map {},
                   "find": [Function],
                   "findSchemaInThisScope": [Function],
-                  "internalRefs": Object {
-                    "#": [Circular],
+                  "internalRefs": Map {
+                    "#" => [Circular],
                   },
                   "otherScopes": Array [
                     RefScope {
                       "addOtherScope": [Function],
                       "addOtherScopes": [Function],
-                      "externalRefs": Object {
-                        "https://carstenwickner.github.io/react-jsonschema-inspector": JsonSchema {
+                      "externalRefs": Map {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -526,7 +526,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "https://carstenwickner.github.io/react-jsonschema-inspector#": JsonSchema {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -542,7 +542,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree": JsonSchema {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -556,8 +556,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                       "find": [Function],
                       "findSchemaInThisScope": [Function],
-                      "internalRefs": Object {
-                        "#": JsonSchema {
+                      "internalRefs": Map {
+                        "#" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -573,7 +573,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "#/definitions/itemThree": JsonSchema {
+                        "#/definitions/itemThree" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -606,18 +606,18 @@ exports[`renders correctly with minimal/default props 1`] = `
                 "scope": RefScope {
                   "addOtherScope": [Function],
                   "addOtherScopes": [Function],
-                  "externalRefs": Object {},
+                  "externalRefs": Map {},
                   "find": [Function],
                   "findSchemaInThisScope": [Function],
-                  "internalRefs": Object {
-                    "#": [Circular],
+                  "internalRefs": Map {
+                    "#" => [Circular],
                   },
                   "otherScopes": Array [
                     RefScope {
                       "addOtherScope": [Function],
                       "addOtherScopes": [Function],
-                      "externalRefs": Object {
-                        "https://carstenwickner.github.io/react-jsonschema-inspector": JsonSchema {
+                      "externalRefs": Map {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -633,7 +633,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "https://carstenwickner.github.io/react-jsonschema-inspector#": JsonSchema {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -649,7 +649,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree": JsonSchema {
+                        "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -663,8 +663,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                       "find": [Function],
                       "findSchemaInThisScope": [Function],
-                      "internalRefs": Object {
-                        "#": JsonSchema {
+                      "internalRefs": Map {
+                        "#" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
@@ -680,7 +680,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "scope": [Circular],
                         },
-                        "#/definitions/itemThree": JsonSchema {
+                        "#/definitions/itemThree" => JsonSchema {
                           "getFieldValue": [Function],
                           "getProperties": [Function],
                           "getPropertyParentSchemas": [Function],
