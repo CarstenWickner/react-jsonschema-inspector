@@ -1,8 +1,7 @@
 import React from "react";
-import { mount, shallow } from "enzyme";
+import { shallow } from "enzyme";
 import InspectorItem from "../src/InspectorItem";
 import JsonSchema from "../src/JsonSchema";
-import RefScope from "../src/RefScope";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {
@@ -23,7 +22,7 @@ describe("renders correctly", () => {
                     properties: {
                         "Child Item Name": true
                     }
-                }, new RefScope())}
+                })}
                 onSelect={() => { }}
             />
         );
@@ -40,20 +39,29 @@ describe("renders correctly", () => {
         );
         expect(component.hasClass("selected")).toBe(true);
     });
-    it("while autoFocus and selected", () => {
-        // need to mount() in order to get access to buttonRef field
-        const component = mount(
+    it("while matching filter", () => {
+        const component = shallow(
             <InspectorItem
                 name="Item Name"
                 schema={new JsonSchema()}
                 onSelect={() => { }}
-                selected
-                autoFocus
+                matchesFilter
             />
         );
-        expect(component.find("button").hasClass("selected")).toBe(true);
-        const { buttonRef } = component.instance();
-        expect(buttonRef).toBeTruthy();
+        expect(component.find("button").hasClass("matching-filter")).toBe(true);
+        expect(component.find("button").hasClass("not-matching-filter")).toBe(false);
+    });
+    it("while not matching filter", () => {
+        const component = shallow(
+            <InspectorItem
+                name="Item Name"
+                schema={new JsonSchema()}
+                onSelect={() => { }}
+                matchesFilter={false}
+            />
+        );
+        expect(component.find("button").hasClass("matching-filter")).toBe(false);
+        expect(component.find("button").hasClass("not-matching-filter")).toBe(true);
     });
     it("with custom rendered content", () => {
         const component = shallow(
@@ -67,19 +75,6 @@ describe("renders correctly", () => {
             />
         );
         expect(component.find(".custom-content").text()).toEqual("Custom content");
-    });
-});
-describe("failing PropType validation", () => {
-    it("for autoFocus if not selected", () => {
-        const component = () => (
-            <InspectorItem
-                name="Item Name"
-                schema={new JsonSchema()}
-                onSelect={() => { }}
-                autoFocus
-            />
-        );
-        expect(component).toThrowError("Warning: Failed prop type: `autoFocus` is true while it is not `selected`\n    in InspectorItem");
     });
 });
 describe("calls onSelect", () => {

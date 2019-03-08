@@ -1,3 +1,4 @@
+import RefScope from "./RefScope";
 import {
     isNonEmptyObject, listValues, mapObjectValues, mergeObjects
 } from "./utils";
@@ -8,20 +9,31 @@ class JsonSchema {
      *
      * @param {Object} rawSchema the JSON Schema to represent
      * @param {RefScope} scope collection of available $ref targets
+     * @returns {JsonSchema|undefined}
      */
     static createIfNotEmpty(rawSchema, scope) {
         return isNonEmptyObject(rawSchema) ? new JsonSchema(rawSchema, scope) : undefined;
     }
 
     /**
+     * Raw JSON Schema
+     */
+    schema;
+
+    /**
+     * @type RefScope
+     */
+    scope;
+
+    /**
      * Constructor for a JsonSchema (wrapper).
      *
      * @param {Object} schema the JSON Schema to represent
-     * @param {RefScope} scope collection of available $ref targets
+     * @param {?RefScope} scope collection of available $ref targets
      */
     constructor(schema, scope) {
         this.schema = schema;
-        this.scope = scope;
+        this.scope = scope || new RefScope(this);
     }
 
     /**
@@ -29,7 +41,8 @@ class JsonSchema {
      * If the targeted schema is an array, the sub-schemas of its "items" will be ignored.
      *
      * @param {String} fieldName name/key of the field to look-up
-     * @param {Function} mergeFunction optional: how to combine two encountered values into one
+     * @param {?Function} mergeFunction optional: how to combine two encountered values into one
+     * @param {?Function} mappingFunction optional: converting the raw value before calling the mergeFunction
      * @return {*} result of the given mergeFunction over all encountered values of fields with the given name
      */
     getFieldValue = (fieldName, mergeFunction = listValues, mappingFunction) => {

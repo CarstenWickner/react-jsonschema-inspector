@@ -1,26 +1,25 @@
 import JsonSchema from "../src/JsonSchema";
-import RefScope from "../src/RefScope";
 import { isDefined } from "../src/utils";
 
 describe("getPropertyParentSchemas()", () => {
     it("returns given simple schema", () => {
-        const schema = new JsonSchema({ title: "Test" }, new RefScope());
+        const schema = new JsonSchema({ title: "Test" });
         expect(schema.getPropertyParentSchemas()).toEqual([schema]);
     });
     it("returns empty array for undefined schema", () => {
-        expect(new JsonSchema(undefined, new RefScope()).getPropertyParentSchemas()).toEqual([]);
+        expect(new JsonSchema(undefined).getPropertyParentSchemas()).toEqual([]);
     });
     it("returns empty array for null schema", () => {
-        expect(new JsonSchema(null, new RefScope()).getPropertyParentSchemas()).toEqual([]);
+        expect(new JsonSchema(null).getPropertyParentSchemas()).toEqual([]);
     });
     it("returns empty array for invalid schema", () => {
-        expect(new JsonSchema("not-a-schema", new RefScope()).getPropertyParentSchemas()).toEqual([]);
+        expect(new JsonSchema("not-a-schema").getPropertyParentSchemas()).toEqual([]);
     });
     it("returns empty array for empty schema", () => {
-        expect(new JsonSchema({}, new RefScope()).getPropertyParentSchemas()).toEqual([]);
+        expect(new JsonSchema({}).getPropertyParentSchemas()).toEqual([]);
     });
     it("returns $ref-erenced sub-schema", () => {
-        const scope = new RefScope({
+        const { scope } = new JsonSchema({
             definitions: {
                 A: { title: "Ref-Test" }
             }
@@ -30,7 +29,7 @@ describe("getPropertyParentSchemas()", () => {
         expect(result[0].schema).toEqual({ title: "Ref-Test" });
     });
     it("throws error if no refScope provided but $ref found", () => {
-        const schema = new JsonSchema({ $ref: "#/definitions/other" }, new RefScope());
+        const schema = new JsonSchema({ $ref: "#/definitions/other" });
         expect(() => schema.getPropertyParentSchemas())
             .toThrowError("Cannot resolve $ref: \"#/definitions/other\"");
     });
@@ -42,7 +41,7 @@ describe("getPropertyParentSchemas()", () => {
             ],
             $ref: "#/definitions/A"
         };
-        const scope = new RefScope({
+        const { scope } = new JsonSchema({
             definitions: {
                 A: { title: "Ref-Title" }
             }
@@ -54,8 +53,7 @@ describe("getPropertyParentSchemas()", () => {
     it("includes all from allOf", () => {
         const subSchema1 = { description: "Description Text" };
         const subSchema2 = { title: "Title Value" };
-        const scope = new RefScope();
-        const schema = new JsonSchema({ allOf: [subSchema1, subSchema2] }, scope);
+        const schema = new JsonSchema({ allOf: [subSchema1, subSchema2] });
         const result = schema.getPropertyParentSchemas();
         expect(result).toHaveLength(3);
         expect(result[0]).toEqual(schema);
@@ -68,7 +66,7 @@ describe("getPropertyParentSchemas()", () => {
         const subSchemaA22 = { type: "object" };
         const subSchemaA2 = { allOf: [subSchemaA21, subSchemaA22] };
         const subSchemaA = { allOf: [subSchemaA1, subSchemaA2] };
-        const scope = new RefScope({
+        const { scope } = new JsonSchema({
             definitions: { A: subSchemaA }
         });
         const result = new JsonSchema({ $ref: "#/definitions/A" }, scope).getPropertyParentSchemas();
@@ -81,17 +79,16 @@ describe("getPropertyParentSchemas()", () => {
     });
     it("returns type of items", () => {
         const subSchemaItems = { title: "Title Value" };
-        const schema = { items: subSchemaItems };
-        const scope = new RefScope();
-        const result = new JsonSchema(schema, scope).getPropertyParentSchemas();
+        const schema = new JsonSchema({ items: subSchemaItems });
+        const result = schema.getPropertyParentSchemas();
         expect(result).toHaveLength(1);
         expect(result[0].schema).toEqual(subSchemaItems);
-        expect(result[0].scope).toEqual(scope);
+        expect(result[0].scope).toEqual(schema.scope);
     });
     it("returns $ref-erenced type of items", () => {
         const schema = { items: { $ref: "#/definitions/A" } };
         const subSchemaItems = { title: "Title Value" };
-        const scope = new RefScope({
+        const { scope } = new JsonSchema({
             definitions: { A: subSchemaItems }
         });
         const result = new JsonSchema(schema, scope).getPropertyParentSchemas();
@@ -101,17 +98,16 @@ describe("getPropertyParentSchemas()", () => {
     });
     it("returns type of additionalItems", () => {
         const subSchemaItems = { title: "Title Value" };
-        const schema = { additionalItems: subSchemaItems };
-        const scope = new RefScope();
-        const result = new JsonSchema(schema, scope).getPropertyParentSchemas();
+        const schema = new JsonSchema({ additionalItems: subSchemaItems });
+        const result = schema.getPropertyParentSchemas();
         expect(result).toHaveLength(1);
         expect(result[0].schema).toEqual(subSchemaItems);
-        expect(result[0].scope).toEqual(scope);
+        expect(result[0].scope).toEqual(schema.scope);
     });
     it("returns $ref-erenced type of additionalItems", () => {
         const schema = { additionalItems: { $ref: "#/definitions/A" } };
         const subSchemaItems = { title: "Title Value" };
-        const scope = new RefScope({
+        const { scope } = new JsonSchema({
             definitions: { A: subSchemaItems }
         });
         const result = new JsonSchema(schema, scope).getPropertyParentSchemas();
@@ -143,7 +139,7 @@ describe("getFieldValue()", () => {
     });
     it("find single value in $ref-erenced sub-schema", () => {
         const schema = { $ref: "#/definitions/other" };
-        const scope = new RefScope({
+        const { scope } = new JsonSchema({
             definitions: {
                 other: { title: "Ref-Test" }
             }
@@ -155,7 +151,7 @@ describe("getFieldValue()", () => {
             title: "Main-Title",
             $ref: "#/definitions/other"
         };
-        const scope = new RefScope({
+        const { scope } = new JsonSchema({
             definitions: {
                 other: { title: "Ref-Title" }
             }
@@ -164,7 +160,7 @@ describe("getFieldValue()", () => {
     });
     it("throws error for invalid $ref if scope provided", () => {
         const schema = { $ref: "#/definitions/other" };
-        const scope = new RefScope({
+        const { scope } = new JsonSchema({
             definitions: {
                 third: { title: "yet another title" },
                 fourth: { title: "one more" }
@@ -185,7 +181,7 @@ describe("getFieldValue()", () => {
     });
     it("finds single value in $ref-erenced allOf", () => {
         const schema = { $ref: "#/definitions/A" };
-        const scope = new RefScope({
+        const { scope } = new JsonSchema({
             definitions: {
                 A: {
                     allOf: [
@@ -204,7 +200,7 @@ describe("getFieldValue()", () => {
     });
     it("lists multiple values by default", () => {
         const schema = { $ref: "#/definitions/A" };
-        const scope = new RefScope({
+        const { scope } = new JsonSchema({
             definitions: {
                 A: {
                     allOf: [
@@ -219,7 +215,7 @@ describe("getFieldValue()", () => {
     });
     it("supports custom mergeFunction for multiple values", () => {
         const schema = { $ref: "#/definitions/A" };
-        const scope = new RefScope({
+        const { scope } = new JsonSchema({
             definitions: {
                 A: {
                     allOf: [
@@ -312,7 +308,7 @@ describe("getTypeOfArrayItems()", () => {
 });
 describe("getProperties()", () => {
     it("returns empty object for empty schema", () => {
-        const emptySchema = new JsonSchema({}, new RefScope({}));
+        const emptySchema = new JsonSchema({});
         expect(emptySchema.getProperties()).toEqual({});
     });
     it("returns contained `properties` from simple schema", () => {
@@ -323,7 +319,7 @@ describe("getProperties()", () => {
                 "Item One": itemOneSchema,
                 "Item Two": itemTwoSchema
             }
-        }, new RefScope({}));
+        });
         const result = simpleSchema.getProperties();
         expect(result["Item One"].schema).toEqual(itemOneSchema);
         expect(result["Item Two"].schema).toEqual(itemTwoSchema);
@@ -331,7 +327,7 @@ describe("getProperties()", () => {
     it("returns `required` from simple schema", () => {
         const simpleSchema = new JsonSchema({
             required: ["Item One", "Item Two"]
-        }, new RefScope({}));
+        });
         const result = simpleSchema.getProperties();
         expect(result["Item One"].schema).toBe(true);
         expect(result["Item Two"].schema).toBe(true);
@@ -345,7 +341,7 @@ describe("getProperties()", () => {
                 "Item One": itemOneSchema,
                 "Item Two": itemTwoSchema
             }
-        }, new RefScope({}));
+        });
         const result = simpleSchema.getProperties();
         expect(result["Item One"].schema).toEqual(itemOneSchema);
         expect(result["Item Two"].schema).toEqual(itemTwoSchema);
@@ -367,7 +363,7 @@ describe("getProperties()", () => {
                     }
                 }
             ]
-        }, new RefScope({}));
+        });
         const result = mainSchema.getProperties();
         expect(result["Item One"].schema).toEqual(itemOneSchema);
         expect(result["Item Two"].schema).toEqual(itemTwoSchema);

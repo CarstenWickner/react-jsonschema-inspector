@@ -5,6 +5,7 @@ import Inspector from "../src/Inspector";
 describe("renders correctly", () => {
     const schemas = {
         "Schema One": {
+            title: "Main Schema One Title",
             properties: {
                 "Item One": {},
                 "Item Two": {
@@ -16,16 +17,20 @@ describe("renders correctly", () => {
         },
         "Schema Two": {
             properties: {
-                "Item Three": { $ref: "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree" }
+                "Item Three": { $ref: "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" }
             }
         }
     };
     const referenceSchemas = [
         {
-            $id: "https://carstenwickner.github.io/react-jsonschema-inspector",
+            $id: "https://carstenwickner.github.io/@jsonschema-inspector",
             definitions: {
-                itemThree: { title: "Item Three Title" }
+                "react-inspector": { $ref: "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" }
             }
+        },
+        {
+            $id: "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+            title: "Title: Main React Component"
         }
     ];
 
@@ -37,6 +42,74 @@ describe("renders correctly", () => {
             />
         );
         expect(component).toMatchSnapshot();
+    });
+    it("with search field in header (filtering by fields with non-default debounce times)", () => {
+        const component = shallow(
+            <Inspector
+                schemas={schemas}
+                referenceSchemas={referenceSchemas}
+                searchOptions={{
+                    fields: ["title"],
+                    debounceWait: 100,
+                    debounceMaxWait: 1000
+                }}
+            />
+        );
+        const header = component.find(".jsonschema-inspector-header");
+        expect(header.exists()).toBe(true);
+        const searchField = header.find("InspectorSearchField");
+        expect(searchField.exists()).toBe(true);
+        expect(searchField.prop("searchFilter")).toEqual("");
+        const onSearchFilterChange = searchField.prop("onSearchFilterChange");
+        // trigger change of search filter
+        onSearchFilterChange("Title");
+        component.instance().debouncedApplySearchFilter(100, 1000).flush();
+        expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("Title");
+        const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
+        expect(filteredItems).toBeDefined();
+        expect(filteredItems).toHaveLength(2);
+        expect(filteredItems[0]).toEqual("Schema One", "Schema Two");
+    });
+    it("with search field in header (filtering by fields with non-default debounce times)", () => {
+        const component = shallow(
+            <Inspector
+                schemas={schemas}
+                referenceSchemas={referenceSchemas}
+                searchOptions={{
+                    filterBy: searchFilter => rawSchema => !!rawSchema[searchFilter]
+                }}
+            />
+        );
+        const onSearchFilterChange = component.find("InspectorSearchField").prop("onSearchFilterChange");
+        // trigger change of search filter (looking for all schemas with a `properties` field)
+        onSearchFilterChange("properties");
+        // flush based on default debounce times
+        component.instance().debouncedApplySearchFilter(200, 500).flush();
+        expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("properties");
+        const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
+        expect(filteredItems).toBeDefined();
+        expect(filteredItems).toHaveLength(2);
+        expect(filteredItems[0]).toEqual("Schema One", "Schema Two");
+    });
+    it("with search field in header (filtering only when at least 3 characters were entered)", () => {
+        const component = shallow(
+            <Inspector
+                schemas={schemas}
+                referenceSchemas={referenceSchemas}
+                searchOptions={{
+                    filterBy: searchFilter => (searchFilter.length < 3 ? undefined : () => true),
+                    debounceWait: 100
+                }}
+            />
+        );
+        const onSearchFilterChange = component.find("InspectorSearchField").prop("onSearchFilterChange");
+        // trigger change of search filter (but without any filtering being applied since there are only two characters)
+        onSearchFilterChange("12");
+        // flush based on default debounce maxWait
+        component.instance().debouncedApplySearchFilter(100, 500).flush();
+        expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("12");
+        const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
+        expect(filteredItems).toBeUndefined();
     });
     it("without footer", () => {
         const component = shallow(
@@ -170,7 +243,7 @@ describe("calls onSelect", () => {
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, "Schema One");
         expect(onSelect.mock.calls).toHaveLength(1);
-        expect(onSelect.mock.calls[0][1]).toEqual(["Schema One"]);
+        expect(onSelect.mock.calls[0][0]).toEqual(["Schema One"]);
         expect(component.state("appendEmptyColumn")).toBe(false);
     });
     it("when setting root selection (without onSelect prop)", () => {
@@ -194,7 +267,7 @@ describe("calls onSelect", () => {
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, "Schema Two");
         expect(onSelect.mock.calls).toHaveLength(1);
-        expect(onSelect.mock.calls[0][1]).toEqual(["Schema Two"]);
+        expect(onSelect.mock.calls[0][0]).toEqual(["Schema Two"]);
         // expect it to be true because "Schema Two" has no nested items, but "Schema One" has
         expect(component.state("appendEmptyColumn")).toBe(true);
     });
@@ -222,7 +295,7 @@ describe("calls onSelect", () => {
         rootColumnSelect(mockEvent, "Schema One");
         expect(onSelect.mock.calls).toHaveLength(0);
     });
-    it("when clearing root selection", () => {
+    it("when clearing and reseting root selection", () => {
         const component = shallow(
             <Inspector
                 schemas={schemas}
@@ -230,11 +303,17 @@ describe("calls onSelect", () => {
                 onSelect={onSelect}
             />
         );
-        const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
-        rootColumnSelect(mockEvent, null);
+        const { onSelect: rootColumnSelectForClearing } = component.find("InspectorColView").prop("columnData")[0];
+        rootColumnSelectForClearing(mockEvent, null);
         expect(onSelect.mock.calls).toHaveLength(1);
-        expect(onSelect.mock.calls[0][1]).toEqual([]);
+        expect(onSelect.mock.calls[0][0]).toEqual([]);
         expect(component.state("appendEmptyColumn")).toBe(true);
+
+        const { onSelect: rootColumnSelectForReset } = component.find("InspectorColView").prop("columnData")[0];
+        rootColumnSelectForReset(mockEvent, "Schema One");
+        expect(onSelect.mock.calls).toHaveLength(2);
+        expect(onSelect.mock.calls[1][0]).toEqual(["Schema One"]);
+        expect(component.state("appendEmptyColumn")).toBe(false);
     });
     it("when clearing root selection (without onSelect prop)", () => {
         const component = shallow(
@@ -269,7 +348,7 @@ describe("calls onSelect", () => {
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, "Item One");
         expect(onSelect.mock.calls).toHaveLength(1);
-        expect(onSelect.mock.calls[0][1]).toEqual(["Schema One", "Item One"]);
+        expect(onSelect.mock.calls[0][0]).toEqual(["Schema One", "Item One"]);
         expect(component.state("appendEmptyColumn")).toBe(false);
     });
     it("when setting other non-root selection", () => {
@@ -283,7 +362,7 @@ describe("calls onSelect", () => {
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, "Item Two");
         expect(onSelect.mock.calls).toHaveLength(1);
-        expect(onSelect.mock.calls[0][1]).toEqual(["Schema One", "Item Two"]);
+        expect(onSelect.mock.calls[0][0]).toEqual(["Schema One", "Item Two"]);
         expect(component.state("appendEmptyColumn")).toBe(false);
     });
     it("not when setting same non-root selection", () => {
@@ -309,7 +388,7 @@ describe("calls onSelect", () => {
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, null);
         expect(onSelect.mock.calls).toHaveLength(1);
-        expect(onSelect.mock.calls[0][1]).toEqual(["Schema One"]);
+        expect(onSelect.mock.calls[0][0]).toEqual(["Schema One"]);
         // expect it to be false because "Item One" has no nested items
         expect(component.state("appendEmptyColumn")).toBe(false);
     });

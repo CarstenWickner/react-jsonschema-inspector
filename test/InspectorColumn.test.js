@@ -40,7 +40,8 @@ describe("renders correctly", () => {
         expect(component.hasClass("trailing-selection")).toBe(false);
         expect(component.find("InspectorItem").at(0).prop("selected")).toBe(false);
         expect(component.find("InspectorItem").at(1).prop("selected")).toBe(true);
-        expect(component.find("InspectorItem").at(1).prop("autoFocus")).toBe(false);
+        expect(component.find("InspectorItem").at(0).prop("matchesFilter")).toBeUndefined();
+        expect(component.find("InspectorItem").at(1).prop("matchesFilter")).toBeUndefined();
     });
     it("with trailing selection", () => {
         const component = shallow(
@@ -58,7 +59,24 @@ describe("renders correctly", () => {
         expect(component.hasClass("trailing-selection")).toBe(true);
         expect(component.find("InspectorItem").at(0).prop("selected")).toBe(false);
         expect(component.find("InspectorItem").at(1).prop("selected")).toBe(true);
-        expect(component.find("InspectorItem").at(1).prop("autoFocus")).toBe(true);
+        expect(component.find("InspectorItem").at(0).prop("matchesFilter")).toBeUndefined();
+        expect(component.find("InspectorItem").at(1).prop("matchesFilter")).toBeUndefined();
+    });
+    it("with filter", () => {
+        const component = shallow(
+            <InspectorColumn
+                items={{
+                    "Item One": new JsonSchema(),
+                    "Item Two": new JsonSchema()
+                }}
+                onSelect={() => { }}
+                filteredItems={["Item Two"]}
+            />
+        );
+        expect(component.hasClass("with-selection")).toBe(false);
+        expect(component.hasClass("trailing-selection")).toBe(false);
+        expect(component.find("InspectorItem").at(0).prop("matchesFilter")).toBe(false);
+        expect(component.find("InspectorItem").at(1).prop("matchesFilter")).toBe(true);
     });
 });
 describe("calls onSelect", () => {
@@ -128,6 +146,32 @@ describe("failing PropType validation", () => {
             />
         );
         expect(component).toThrowError("Warning: Failed prop type: `trailingSelection` is true while there is no `selectedItem`\n"
+            + "    in InspectorColumn");
+    });
+    it("for invalid filteredItems", () => {
+        const component = () => (
+            <InspectorColumn
+                items={{
+                    "Item One": new JsonSchema()
+                }}
+                onSelect={() => { }}
+                filteredItems={1}
+            />
+        );
+        expect(component).toThrowError("Warning: Failed prop type: `filteredItems` is not an `array`\n"
+            + "    in InspectorColumn");
+    });
+    it("for filteredItems not all being part of items", () => {
+        const component = () => (
+            <InspectorColumn
+                items={{
+                    "Item One": new JsonSchema()
+                }}
+                onSelect={() => { }}
+                filteredItems={["Item One", "Item Two"]}
+            />
+        );
+        expect(component).toThrowError("Warning: Failed prop type: `filteredItems` are not all part of `items`\n"
             + "    in InspectorColumn");
     });
 });

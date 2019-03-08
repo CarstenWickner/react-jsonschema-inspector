@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with minimal/default props 1`] = `
+<div
+  className="jsonschema-inspector-details-content"
+>
+  <h3
+    className="jsonschema-inspector-details-header"
+  >
+    Details
+  </h3>
+  <InspectorDetailsForm
+    fields={
+      Array [
+        Object {
+          "labelText": "Title",
+          "rowValue": "Schema Title",
+        },
+        Object {
+          "labelText": "Description",
+          "rowValue": "Text",
+        },
+      ]
+    }
+    key="main-form"
+  />
+</div>
+`;

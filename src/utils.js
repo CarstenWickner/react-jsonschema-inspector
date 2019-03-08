@@ -39,9 +39,9 @@ export function mapObjectValues(original, mappingFunction) {
 /**
  * Generic function to be used in Array.reduce() - assuming objects are being merged.
  *
- * @param {*} combined temporary result of previous reduce steps
- * @param {*} nextValue single value to merge with "combined"
- * @returns {*} merged values
+ * @param {?Object} combined temporary result of previous reduce steps
+ * @param {?Object} nextValue single value to merge with "combined"
+ * @returns {?Object} merged values
  */
 export function mergeObjects(combined, nextValue) {
     let mergeResult;

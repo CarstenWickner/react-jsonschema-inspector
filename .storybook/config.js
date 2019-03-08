@@ -2,8 +2,10 @@ import { addParameters, configure } from '@storybook/react';
 
 addParameters({
     options: {
-        name: "Inspector",
-        url: "https://github.com/CarstenWickner/react-jsonschema-inspector"
+        name: "JSON Schema Inspector",
+        url: "https://github.com/CarstenWickner/react-jsonschema-inspector",
+        showAddonPanel: false,
+        showSearchBox: false
     }
 });
 

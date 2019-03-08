@@ -13,7 +13,7 @@ describe("renders correctly", () => {
                     },
                     {
                         labelText: "Field Two",
-                        rowValue: "text"
+                        rowValue: ["mixed", "array", "text"]
                     }
                 ]}
             />

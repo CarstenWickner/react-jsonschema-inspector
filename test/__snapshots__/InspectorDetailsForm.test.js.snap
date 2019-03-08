@@ -31,7 +31,7 @@ exports[`renders correctly with minimal/default props 1`] = `
     <span
       className="jsonschema-inspector-details-form-value"
     >
-      text
+      mixed, array, text
     </span>
   </div>
 </form>

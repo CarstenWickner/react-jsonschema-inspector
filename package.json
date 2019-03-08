@@ -1,6 +1,6 @@
 {
     "name": "react-jsonschema-inspector",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "View component for traversing/searching in a JSON Schema",
     "homepage": "https://CarstenWickner.github.io/react-jsonschema-inspector",
     "author": "Carsten Wickner",
@@ -13,11 +13,10 @@
         "start": "start-storybook -p 9001 -c .storybook",
         "build": "webpack",
         "lint": "eslint src stories test",
-        "test-only": "jest --coverage",
-        "test": "npm run lint && jest --coverage --coverageReporters=text-lcov | coveralls",
-        "predeploy": "npm run lint && npm run test-only && build-storybook -c .storybook -o docs",
+        "test": "jest",
+        "predeploy": "npm run lint && npm run test --bail && build-storybook -c .storybook -o docs",
         "deploy": "gh-pages -d docs",
-        "prepublishOnly": "npm run lint && npm run test-only && npm run build"
+        "prepublishOnly": "npm run lint && npm run test --bail && npm run build"
     },
     "main": "build/index.js",
     "browserslist": [
@@ -32,11 +31,11 @@
         "@babel/plugin-proposal-class-properties": "^7.3.4",
         "@babel/preset-env": "^7.3.4",
         "@babel/preset-react": "^7.0.0",
-        "@storybook/addon-actions": "^4.1.13",
-        "@storybook/addon-info": "^4.1.13",
-        "@storybook/addon-knobs": "^4.1.13",
-        "@storybook/addon-options": "^4.1.13",
-        "@storybook/react": "^4.1.13",
+        "@storybook/addon-actions": "^5.0.0",
+        "@storybook/addon-info": "^5.0.0",
+        "@storybook/addon-knobs": "^5.0.0",
+        "@storybook/addon-options": "^5.0.0",
+        "@storybook/react": "^5.0.0",
         "babel-eslint": "^10.0.1",
         "babel-jest": "^24.1.0",
         "babel-loader": "^8.0.5",
@@ -61,6 +60,8 @@
     },
     "dependencies": {
         "classnames": "^2.2.6",
+        "lodash.debounce": "^4.0.8",
+        "lodash.escaperegexp": "^4.1.2",
         "lodash.isequal": "^4.5.0",
         "memoize-one": "^5.0.0"
     },

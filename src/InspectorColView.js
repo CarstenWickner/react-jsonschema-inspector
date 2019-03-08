@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 
 import InspectorColumn from "./InspectorColumn";
 import JsonSchema from "./JsonSchema";
 
-class InspectorColView extends PureComponent {
+class InspectorColView extends Component {
     componentDidUpdate(prevProps) {
         const previousColumnCount = prevProps.columnData.length + (prevProps.appendEmptyColumn ? 1 : 0);
         const { columnData, appendEmptyColumn } = this.props;
@@ -27,7 +27,7 @@ class InspectorColView extends PureComponent {
             >
                 {columnData.map((singleColumnData, index) => {
                     const {
-                        items, selectedItem, trailingSelection, onSelect
+                        items, selectedItem, trailingSelection, filteredItems, onSelect
                     } = singleColumnData;
                     return (
                         <InspectorColumn
@@ -37,6 +37,7 @@ class InspectorColView extends PureComponent {
                             items={items}
                             selectedItem={selectedItem}
                             trailingSelection={trailingSelection}
+                            filteredItems={filteredItems}
                             onSelect={onSelect}
                         />
                     );
@@ -53,6 +54,7 @@ InspectorColView.propTypes = {
         items: PropTypes.objectOf(PropTypes.instanceOf(JsonSchema)).isRequired,
         selectedItem: PropTypes.string,
         trailingSelection: PropTypes.bool,
+        filteredItems: PropTypes.arrayOf(PropTypes.string),
         onSelect: PropTypes.func.isRequired // func(SyntheticEvent: event, string: name)
     })).isRequired,
     appendEmptyColumn: PropTypes.bool,

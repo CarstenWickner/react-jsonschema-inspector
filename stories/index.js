@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 import { withInfo } from "@storybook/addon-info";
 import {
-    boolean, object, text, withKnobs
+    array as knobsArray, boolean as knobsBoolean, object as knobsObject, text as knobsText, withKnobs
 } from "@storybook/addon-knobs";
 
 import Inspector from "../src/Inspector";
@@ -31,6 +31,9 @@ storiesOf("Inspector", module)
                 "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
             }}
             referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+            searchOptions={{
+                fields: ["title", "description"]
+            }}
             renderEmptyDetails={({ rootColumnSchemas }) => (
                 <div style={{ padding: "0.5em 1em 0 1em" }}>
                     <h3>JSON Schema Inspector</h3>
@@ -59,17 +62,17 @@ storiesOf("Inspector", module)
             referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
             defaultSelectedItems={["Meta Hyper JSON Schema", "allOf"]}
             breadcrumbs={{
-                prefix: text("Prefix", "Selection: "),
-                separator: text("Separator", "/"),
-                arrayItemAccessor: text("Array Item Accessor", "[]"),
-                preventNavigation: boolean("Prevent Navigation (via double-click)", false)
+                prefix: knobsText("Prefix", "Selection: "),
+                separator: knobsText("Separator", "/"),
+                arrayItemAccessor: knobsText("Array Item Accessor", "[]"),
+                preventNavigation: knobsBoolean("Prevent Navigation (via double-click)", false)
             }}
             onSelect={action("onSelect")}
         />
     ))
     .add("with custom Details and no breadcrumbs", () => (
         <Inspector
-            schemas={object("Schemas", {
+            schemas={knobsObject("Schemas", {
                 Shop: shopSelectionSchema
             })}
             defaultSelectedItems={["Shop", "vegetables"]}
@@ -111,6 +114,20 @@ storiesOf("Inspector", module)
                         <span className="jsonschema-inspector-item-name">{(hasNestedItems ? "\u25A0 " : "\u25A1 ") + name}</span>
                     </div>
                 );
+            }}
+            onSelect={action("onSelect")}
+        />
+    ))
+    .add("with search", () => (
+        <Inspector
+            schemas={{
+                Person: personSchema,
+                Shop: shopSelectionSchema
+            }}
+            defaultSelectedItems={["Person", "friends", "friends"]}
+            searchOptions={{
+                fields: knobsArray("Search Fields", ["title", "description"]),
+                placeholder: knobsText("Placeholder", "Find in 'Title' or 'Description'…")
             }}
             onSelect={action("onSelect")}
         />
