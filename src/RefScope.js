@@ -7,16 +7,16 @@ import { isNonEmptyObject } from "./utils";
  */
 class RefScope {
     /**
-     * Object.<String, JsonSchema>
+     * Map.<String, JsonSchema>
      * collection of available sub-schema to be referenced via "$ref" within the originating schema.
      */
-    internalRefs = {};
+    internalRefs = new Map();
 
     /**
-     * Object.<String, JsonSchema>
+     * Map.<String, JsonSchema>
      * collection of available sub-schema to be referenced via "$ref" within the originating schema or from other schemas.
      */
-    externalRefs = {};
+    externalRefs = new Map();
 
     /**
      * Array.<RefScope>
@@ -34,7 +34,7 @@ class RefScope {
             return;
         }
         // can always self-reference via an empty fragment
-        this.internalRefs["#"] = schema;
+        this.internalRefs.set("#", schema);
         // from JSON Schema Draft 6: "$id" replaces former "id"
         const mainAlias = schema.schema.$id || schema.schema.id;
         let externalRefBase;
@@ -42,8 +42,8 @@ class RefScope {
             // an absolute URI can be used both within the schema itself but also from other schemas
             const mainAliasWithFragment = mainAlias.endsWith("#") ? mainAlias : (`${mainAlias}#`);
             const mainAliasWithoutFragment = mainAliasWithFragment.substring(0, mainAliasWithFragment.length - 1);
-            this.externalRefs[mainAliasWithFragment] = schema;
-            this.externalRefs[mainAliasWithoutFragment] = schema;
+            this.externalRefs.set(mainAliasWithFragment, schema);
+            this.externalRefs.set(mainAliasWithoutFragment, schema);
             // for definitions, there should always by the empty fragment between the URI and the definitions path
             externalRefBase = mainAliasWithFragment;
         } else {
@@ -60,14 +60,14 @@ class RefScope {
                     const subAlias = definition.$id || definition.id;
                     if (subAlias) {
                         // any alias provided within "definitions" will only be available as short-hand in this schema
-                        this.internalRefs[subAlias] = subSchema;
+                        this.internalRefs.set(subAlias, subSchema);
                     }
                     // can always reference schema in definitions by its path, starting from the empty fragment
-                    this.internalRefs[`#/definitions/${key}`] = subSchema;
+                    this.internalRefs.set(`#/definitions/${key}`, subSchema);
                     if (externalRefBase) {
                         // the convention was fulfilled and the top-level schema defined an absolute URI as its "$id"
                         // this allows referencing a schema in definitions by its path, starting from that URI
-                        this.externalRefs[`${externalRefBase}/definitions/${key}`] = subSchema;
+                        this.externalRefs.set(`${externalRefBase}/definitions/${key}`, subSchema);
                     }
                 }
             });
@@ -100,26 +100,28 @@ class RefScope {
      * @returns {JsonSchema} the successfully looked-up reference (or null if no match was found)
      */
     findSchemaInThisScope = (ref, includeInteralRefs = true) => (
-        (includeInteralRefs && this.internalRefs[ref]) || this.externalRefs[ref]
+        (includeInteralRefs && this.internalRefs.get(ref)) || this.externalRefs.get(ref)
     );
 
     /**
      * Look-up a re-usable schema by its $ref-erence.
      *
      * @param {String} ref the "$ref" value for which to look-up the associated (sub-)schema
-     * @returns {Object} the successfully looked-up reference; in case of a match containing two fields (otherwise empty):
-     *          1. "scope" (containing the RefScope the match was found in, which may be different from this RefScope)
-     *          2. "referencedSchema" (containing the specific (sub-)schema associated with the given "$ref" value)
+     * @returns {JsonSchema} the successfully looked-up reference
+     * @throws error if no match was found
      */
     find = (ref) => {
         let result = this.findSchemaInThisScope(ref);
-        if (!result && !this.otherScopes.some((otherScope) => {
-            result = otherScope.findSchemaInThisScope(ref, false);
-            return result;
-        })) {
-            throw new Error(`Cannot resolve $ref: "${ref}"`);
+        if (!result) {
+            this.otherScopes.some((otherScope) => {
+                result = otherScope.findSchemaInThisScope(ref, false);
+                return result;
+            });
         }
-        return result;
+        if (result) {
+            return result;
+        }
+        throw new Error(`Cannot resolve $ref: "${ref}"`);
     };
 }
 
