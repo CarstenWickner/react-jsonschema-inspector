@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import memoize from "memoize-one";
+import debounce from "lodash.debounce";
 import isDeepEqual from "lodash.isequal";
 
 import "./Inspector.scss";
@@ -15,6 +16,10 @@ import { createFilterFunction } from "./searchUtils";
 import { isDefined, isNonEmptyObject, mapObjectValues } from "./utils";
 
 class Inspector extends Component {
+    applySearchFilter = debounce((newSearchFilter) => {
+        this.setState({ appliedSearchFilter: newSearchFilter });
+    }, 200, { maxWait: 500 });
+
     constructor(props) {
         super(props);
         const { defaultSelectedItems } = props;
@@ -23,9 +28,15 @@ class Inspector extends Component {
         this.state = {
             selectedItems: defaultSelectedItems,
             appendEmptyColumn: false,
-            searchFilter: null
+            enteredSearchFilter: "",
+            appliedSearchFilter: ""
         };
     }
+
+    onSearchFilterChange = (enteredSearchFilter) => {
+        this.setState({ enteredSearchFilter });
+        this.applySearchFilter(enteredSearchFilter);
+    };
 
     /**
      * Collect the data to provide as props to the sub components.
@@ -84,6 +95,7 @@ class Inspector extends Component {
                 onSelect: this.onSelect(selectedItems.length)
             });
         }
+        // wrap the result into a new object in order to make this more easily extendable in the future
         return { columnData };
     }, isDeepEqual);
 
@@ -121,34 +133,44 @@ class Inspector extends Component {
         this.setState({
             selectedItems: newSelection,
             appendEmptyColumn: newRenderData.columnData.length < oldColumnCount
-        }, onSelectProp ? () => onSelectProp(newSelection, newRenderData) : null);
+        }, onSelectProp
+            // due to the two-step process, the newRenderData will NOT include the filteredItems
+            ? () => onSelectProp(newSelection, newRenderData)
+            // no call-back provided via props, nothing to do
+            : undefined);
     };
 
-    onSearchFilterChange = (searchFilter) => {
-        this.setState({ searchFilter });
-    };
+    setFilteredItemsForColumn = memoize((searchOptions, searchFilter) => {
+        const getFilteredItemsForColumn = searchOptions && searchOptions.fields
+            && createFilterFunction(searchOptions.fields, searchFilter);
+        if (getFilteredItemsForColumn) {
+            // if the search feature is being used, we should set the filteredItems accordingly
+            return (column) => {
+                // eslint-disable-next-line no-param-reassign
+                column.filteredItems = getFilteredItemsForColumn(column.items);
+            };
+        }
+        // if the search feature is disabled or currently unused, we should ensure that there are no left-over filterItems
+        // eslint-disable-next-line no-param-reassign
+        return column => delete column.filteredItems;
+    }, isDeepEqual);
 
     render() {
         const {
             schemas, referenceSchemas, renderItemContent, renderSelectionDetails, renderEmptyDetails, search, breadcrumbs
         } = this.props;
-        const { selectedItems, appendEmptyColumn, searchFilter } = this.state;
-        let { columnData } = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems);
-        const getFilteredItemsForColumn = search && createFilterFunction(search.fields, searchFilter);
-        if (getFilteredItemsForColumn) {
-            // preserve original columnData array to let memoize do its job for getRenderDataForSelection()
-            columnData = columnData.map(column => ({
-                ...column,
-                // apply search filter
-                filteredItems: getFilteredItemsForColumn(column.items)
-            }));
-        }
+        const {
+            selectedItems, appendEmptyColumn, enteredSearchFilter, appliedSearchFilter
+        } = this.state;
+        const { columnData } = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems);
+        // apply search filter if enabled or clear (potentially left-over) search results
+        columnData.forEach(this.setFilteredItemsForColumn(search, appliedSearchFilter));
         return (
             <div className="jsonschema-inspector">
-                {search && search.fields && (
+                {search && search.fields && search.fields.length && (
                     <div className="jsonschema-inspector-header">
                         <InspectorSearchField
-                            searchFilter={searchFilter}
+                            searchFilter={enteredSearchFilter}
                             onSearchFilterChange={this.onSearchFilterChange}
                         />
                     </div>
