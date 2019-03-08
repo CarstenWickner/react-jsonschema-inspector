@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 
 import InspectorColumn from "./InspectorColumn";
 import JsonSchema from "./JsonSchema";
 
-class InspectorColView extends PureComponent {
+class InspectorColView extends Component {
     componentDidUpdate(prevProps) {
         const previousColumnCount = prevProps.columnData.length + (prevProps.appendEmptyColumn ? 1 : 0);
         const { columnData, appendEmptyColumn } = this.props;
