@@ -242,33 +242,69 @@ class Inspector extends Component {
 }
 
 Inspector.propTypes = {
-    /** allow multiple independent root schemas to inspect */
+    /** Object containing names of root level items (as keys) each associated with their respective JSON Schema (as values). */
     schemas: PropTypes.objectOf(JsonSchemaPropType).isRequired,
+    /** Array of additional JSON Schemas that may be referenced by entries in `schemas` but are not shown (on the root level) themselves. */
     referenceSchemas: PropTypes.arrayOf(JsonSchemaPropType),
-    /** default selection identified by names of object properties */
+    /** Array of (default) selected items – each item representing the selection in one displayed column. */
     defaultSelectedItems: PropTypes.arrayOf(PropTypes.string),
-    /** options for the breadcrumbs shown in the footer, can be turned off by setting to null */
+    /**
+     * Options for the breadcrumbs feature shown in the footer – set to `null` to turn it off.
+     * - "prefix": Text to show in front of root level selection, e.g. "//" or "./"
+     * - "separator": Text to add between the selected item names from adjacent columns, e.g. "." or "/"
+     * - "arrayItemAccessor": Text to append to an intermediary array selection to indicate selecting one of its items, e.g. "[]", "[0]", or ".get(0)"
+     * - "preventNavigation": Flag indicating whether double-clicking an item should preserve subsequent selections, otherwise they are discarded
+     */
     breadcrumbs: PropTypes.shape({
-        prefix: PropTypes.string, // e.g. "//" or "./"
-        separator: PropTypes.string, // e.g. "." or "/"
-        arrayItemAccessor: PropTypes.string, // e.g. "[0]" or ".get(0)"
-        preventNavigation: PropTypes.bool // whether double-clicking an item should preserve following selections, otherwise they are discarded
+        prefix: PropTypes.string,
+        separator: PropTypes.string,
+        arrayItemAccessor: PropTypes.string,
+        preventNavigation: PropTypes.bool
     }),
-    /** list of field names to consider when performing the search */
+    /**
+     * Options for the search intput shown in the header and its impact on the displayed columns – set to `null` to turn it off.
+     * - "fields": Array of strings: each referring to a textual field in a JSON Schema (e.g. `["title", "description"]`) in which to search/filter
+     * - "filterBy": Custom search/filter logic, if present: overriding behaviour based on "fields" (either one must be set)
+     * - "inputPlaceholder": Hint text to display in the search input field (defaults to "Search")
+     * - "debounceWait": Number indicating the delay in milliseconds since the last change to the search term before applying it. Defaults to `200`.
+     * - "debounceMaxWait": Number indicating the maximum delay in milliseconds before a newly entered search is being applied. Defaults to `500`.
+     */
     searchOptions: PropTypes.shape({
         fields: PropTypes.arrayOf(PropTypes.string),
         filterBy: PropTypes.func,
+        inputPlaceholder: PropTypes.string,
         debounceWait: PropTypes.number,
-        debounceMaxWait: PropTypes.number,
-        inputPlaceholder: PropTypes.string
+        debounceMaxWait: PropTypes.number
     }),
-    /** callback to invoke after the selection changed. func(newSelection, { columnData, refScope }) */
+    /**
+     * Callback to invoke after the selection changed.
+     * Expects two inputs:
+     * 1. the string-array of selected items
+     * 2. object containing a "columnData" key, holding the full render information for all columns (except for currently applied search/filter)
+     */
     onSelect: PropTypes.func,
-    /** func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema, refScope }) */
+    /**
+     * Custom render function for the content of a single item in a column.
+     * Expects a single object as input with the following keys:
+     * - "name": providing the name of the respective item
+     * - "hasNestedItems": flag indicating whether selecting this item may display another column with further options to the right
+     * - "selected": flag indicating whether the item is currently selected
+     * - "schema": the full `JsonSchema` associated with the item
+     */
     renderItemContent: PropTypes.func,
-    /** func({ itemSchema: JsonSchema, columnData, refScope, selectionColumnIndex: number }) */
+    /**
+     * Custom render function for the details block on the right (only used if there is an actual selection).
+     * Expects a single object as input with the following keys:
+     * - "itemSchema": the full `JsonSchema` associated with the currently selected trailing item (i.e. right-most selection)
+     * - "columnData": the full render information for all columns
+     * - "selectionColumnIndex": indicating the index of the right-most column containing a selected item (for more convenient use of "columnData")
+     */
     renderSelectionDetails: PropTypes.func,
-    /** func({ rootColumnSchemas }) */
+    /**
+     * Custom render function for the details block on the right (only used if there is no selection).
+     * Expects a single object as input with the following key:
+     * - "rootColumnSchemas": the full render information for the root column (since there is no selection, there are no other columns)
+     */
     renderEmptyDetails: PropTypes.func
 };
 

@@ -19,8 +19,7 @@ storiesOf("Inspector", module)
         inline: true,
         header: false,
         maxPropsIntoLine: 1,
-        maxPropArrayLength: 5,
-        propTablesExclude: [Inspector]
+        maxPropArrayLength: 5
     }))
     .addDecorator(withKnobs)
     .add("show-case", () => (
