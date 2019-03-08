@@ -1,4 +1,4 @@
-import { createRecursiveFilterFunction, createFilterFunction } from "../src/searchUtils";
+import { createRecursiveFilterFunction, collectReferencedSubSchemas, createFilterFunction } from "../src/searchUtils";
 import JsonSchema from "../src/JsonSchema";
 
 describe("createRecursiveFilterFunction()", () => {
@@ -26,15 +26,17 @@ describe("createRecursiveFilterFunction()", () => {
             expect(recursiveFilterFunction(new JsonSchema())).toBe(false);
             expect(flatSearchFilter).not.toHaveBeenCalled();
         });
-        it("schema with $ref", () => {
-            expect(recursiveFilterFunction(new JsonSchema({ $ref: "something" }))).toBe(false);
-            expect(flatSearchFilter).not.toHaveBeenCalled();
-        });
     });
     describe("plain schema", () => {
         it("check once (match)", () => {
             const rawSchema = { default: true };
             expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
+            expect(flatSearchFilter).toHaveBeenCalledTimes(1);
+            expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
+        });
+        it("check once with $ref", () => {
+            const rawSchema = { $ref: "something" };
+            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(false);
             expect(flatSearchFilter).toHaveBeenCalledTimes(1);
             expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
         });
@@ -225,6 +227,43 @@ describe("createRecursiveFilterFunction()", () => {
         });
     });
 });
+describe("collectReferencedSubSchemas", () => {
+    it("returns empty Set for simple schema", () => {
+        const schema = new JsonSchema({ title: "No Reference" });
+        expect(collectReferencedSubSchemas(schema)).toEqual(new Set());
+    });
+    it("returns Set with a single referenced sub-schema", () => {
+        const rawSubSchema = {
+            title: "Reference Target"
+        };
+        const schema = new JsonSchema({
+            definitions: { Sub: rawSubSchema },
+            items: { $ref: "#/definitions/Sub" }
+        });
+        const result = collectReferencedSubSchemas(schema);
+        expect(result.size).toBe(1);
+        expect(Array.from(result.values())[0].schema).toEqual(rawSubSchema);
+    });
+    it("returns Set with multiple referenced sub-schemas", () => {
+        const schema = new JsonSchema({
+            definitions: {
+                Sub1: { title: "Reference Target" },
+                Sub2: { description: "Second Target" }
+            },
+            allOf: [
+                { $ref: "#/definitions/Sub1" },
+                { $ref: "#/definitions/Sub2" }
+            ]
+        });
+        expect(collectReferencedSubSchemas(schema).size).toBe(2);
+    });
+    it("ignores self-reference", () => {
+        const schema = new JsonSchema({
+            items: { $ref: "#" }
+        });
+        expect(collectReferencedSubSchemas(schema)).toEqual(new Set());
+    });
+});
 describe("createFilterFunction()", () => {
     describe("returning undefined", () => {
         it("for undefined searchFields parameter", () => {
@@ -249,7 +288,7 @@ describe("createFilterFunction()", () => {
             expect(createFilterFunction(["field-name"], "")).toBeUndefined();
         });
     });
-    describe("returning filter function", () => {
+    describe("returning filter function for simple schema", () => {
         it("finding exact match in specified field", () => {
             const filterFunction = createFilterFunction(["fieldName"], "fieldValue");
             const schema = new JsonSchema({ fieldName: "fieldValue" });
@@ -313,6 +352,49 @@ describe("createFilterFunction()", () => {
             const schema = new JsonSchema({ fieldName: "something else" });
             const columnInput = { root: schema };
             expect(filterFunction(columnInput)).toEqual([]);
+        });
+    });
+    describe("returning filter function for complex schema", () => {
+        it("finding match in referenced parent schema via multiple different references", () => {
+            const filterFunction = createFilterFunction(["title"], "Match");
+            const rawItemOneSchema = {
+                allOf: [
+                    { $ref: "#/definitions/Two" },
+                    { $ref: "#" }
+                ]
+            };
+            const rawItemTwoSchema = {
+                items: { title: "Nothing" }
+            };
+            const rawItemThreeSchema = {
+                allOf: [
+                    { $ref: "#/definitions/Two" },
+                    { $ref: "https://unique-schema-identifier#" }
+                ]
+            };
+            const schema = new JsonSchema({
+                $id: "https://unique-schema-identifier",
+                title: "Match",
+                properties: {
+                    "Item One": { $ref: "#/definitions/One" },
+                    "Item Two": { $ref: "#/definitions/Two" },
+                    "Item Three": { $ref: "#defintiions/Three" }
+                },
+                definitions: {
+                    One: rawItemOneSchema,
+                    Two: rawItemTwoSchema,
+                    Three: rawItemThreeSchema
+                }
+            });
+            const columnInput = {
+                "Item One": schema.scope.find("#/definitions/One"),
+                "Item Two": schema.scope.find("#/definitions/Two"),
+                "Item Three": schema.scope.find("#/definitions/Three")
+            };
+            expect(filterFunction(columnInput)).toEqual(["Item One", "Item Three"]);
+            // performing another search based on the same sub-schema instances again should re-use previous results
+            // unfortunately, it is unclear how to confirm that here (other than through coverage of the short-circuiting branch)
+            expect(filterFunction({ root: schema })).toEqual(["root"]);
         });
     });
 });
