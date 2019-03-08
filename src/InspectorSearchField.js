@@ -2,13 +2,14 @@ import PropTypes from "prop-types";
 import React from "react";
 
 const InspectorSearchField = (props) => {
-    const { searchFilter, onSearchFilterChange } = props;
+    const { searchFilter, onSearchFilterChange, placeholder } = props;
     return (
         <div className="jsonschema-inspector-search">
             <input
                 type="search"
-                className="jsonschame-inspector-search-input"
+                className="jsonschema-inspector-search-input"
                 value={searchFilter}
+                placeholder={placeholder}
                 onChange={(event) => {
                     event.stopPropagation();
                     onSearchFilterChange(event.target.value);
@@ -20,7 +21,12 @@ const InspectorSearchField = (props) => {
 
 InspectorSearchField.propTypes = {
     searchFilter: PropTypes.string.isRequired,
-    onSearchFilterChange: PropTypes.func.isRequired
+    onSearchFilterChange: PropTypes.func.isRequired,
+    placeholder: PropTypes.string
+};
+
+InspectorSearchField.defaultProps = {
+    placeholder: "Search"
 };
 
 export default InspectorSearchField;

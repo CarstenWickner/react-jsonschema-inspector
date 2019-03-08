@@ -5,8 +5,9 @@ exports[`renders correctly with minimal/default props 1`] = `
   className="jsonschema-inspector-search"
 >
   <input
-    className="jsonschame-inspector-search-input"
+    className="jsonschema-inspector-search-input"
     onChange={[Function]}
+    placeholder="Search"
     type="search"
     value=""
   />

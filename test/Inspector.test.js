@@ -17,16 +17,20 @@ describe("renders correctly", () => {
         },
         "Schema Two": {
             properties: {
-                "Item Three": { $ref: "https://carstenwickner.github.io/react-jsonschema-inspector#/definitions/itemThree" }
+                "Item Three": { $ref: "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" }
             }
         }
     };
     const referenceSchemas = [
         {
-            $id: "https://carstenwickner.github.io/react-jsonschema-inspector",
+            $id: "https://carstenwickner.github.io/@jsonschema-inspector",
             definitions: {
-                itemThree: { title: "Item Three Title" }
+                "react-inspector": { $ref: "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" }
             }
+        },
+        {
+            $id: "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+            title: "Title: Main React Component"
         }
     ];
 
@@ -39,13 +43,15 @@ describe("renders correctly", () => {
         );
         expect(component).toMatchSnapshot();
     });
-    it("with search field in header", () => {
+    it("with search field in header (filtering by fields with non-default debounce times)", () => {
         const component = shallow(
             <Inspector
                 schemas={schemas}
                 referenceSchemas={referenceSchemas}
-                search={{
-                    fields: ["title"]
+                searchOptions={{
+                    fields: ["title"],
+                    debounceWait: 100,
+                    debounceMaxWait: 1000
                 }}
             />
         );
@@ -57,12 +63,53 @@ describe("renders correctly", () => {
         const onSearchFilterChange = searchField.prop("onSearchFilterChange");
         // trigger change of search filter
         onSearchFilterChange("Title");
-        component.instance().applySearchFilter.flush();
+        component.instance().debouncedApplySearchFilter(100, 1000).flush();
         expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("Title");
         const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
         expect(filteredItems).toBeDefined();
         expect(filteredItems).toHaveLength(2);
         expect(filteredItems[0]).toEqual("Schema One", "Schema Two");
+    });
+    it("with search field in header (filtering by fields with non-default debounce times)", () => {
+        const component = shallow(
+            <Inspector
+                schemas={schemas}
+                referenceSchemas={referenceSchemas}
+                searchOptions={{
+                    filterBy: searchFilter => rawSchema => !!rawSchema[searchFilter]
+                }}
+            />
+        );
+        const onSearchFilterChange = component.find("InspectorSearchField").prop("onSearchFilterChange");
+        // trigger change of search filter (looking for all schemas with a `properties` field)
+        onSearchFilterChange("properties");
+        // flush based on default debounce times
+        component.instance().debouncedApplySearchFilter(200, 500).flush();
+        expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("properties");
+        const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
+        expect(filteredItems).toBeDefined();
+        expect(filteredItems).toHaveLength(2);
+        expect(filteredItems[0]).toEqual("Schema One", "Schema Two");
+    });
+    it("with search field in header (filtering only when at least 3 characters were entered)", () => {
+        const component = shallow(
+            <Inspector
+                schemas={schemas}
+                referenceSchemas={referenceSchemas}
+                searchOptions={{
+                    filterBy: searchFilter => (searchFilter.length < 3 ? undefined : () => true),
+                    debounceWait: 100
+                }}
+            />
+        );
+        const onSearchFilterChange = component.find("InspectorSearchField").prop("onSearchFilterChange");
+        // trigger change of search filter (but without any filtering being applied since there are only two characters)
+        onSearchFilterChange("12");
+        // flush based on default debounce maxWait
+        component.instance().debouncedApplySearchFilter(100, 500).flush();
+        expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("12");
+        const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
+        expect(filteredItems).toBeUndefined();
     });
     it("without footer", () => {
         const component = shallow(

@@ -1,4 +1,6 @@
-import { createRecursiveFilterFunction, collectReferencedSubSchemas, createFilterFunction } from "../src/searchUtils";
+import {
+    createRecursiveFilterFunction, collectReferencedSubSchemas, createFilterFunction, filteringByFields
+} from "../src/searchUtils";
 import JsonSchema from "../src/JsonSchema";
 
 describe("createRecursiveFilterFunction()", () => {
@@ -265,136 +267,133 @@ describe("collectReferencedSubSchemas", () => {
     });
 });
 describe("createFilterFunction()", () => {
-    describe("returning undefined", () => {
-        it("for undefined searchFields parameter", () => {
-            expect(createFilterFunction(undefined, "filter")).toBeUndefined();
-        });
-        it("for null searchFields parameter", () => {
-            expect(createFilterFunction(null, "filter")).toBeUndefined();
-        });
-        it("for empty string searchFields parameter", () => {
-            expect(createFilterFunction("", "filter")).toBeUndefined();
-        });
-        it("for empty array searchFields parameter", () => {
-            expect(createFilterFunction([], "filter")).toBeUndefined();
-        });
-        it("for undefined searchFilter parameter", () => {
-            expect(createFilterFunction(["field-name"], undefined)).toBeUndefined();
-        });
-        it("for null searchFilter parameter", () => {
-            expect(createFilterFunction(["field-name"], null)).toBeUndefined();
-        });
-        it("for empty searchFilter parameter", () => {
-            expect(createFilterFunction(["field-name"], "")).toBeUndefined();
-        });
-    });
     describe("returning filter function for simple schema", () => {
-        it("finding exact match in specified field", () => {
-            const filterFunction = createFilterFunction(["fieldName"], "fieldValue");
-            const schema = new JsonSchema({ fieldName: "fieldValue" });
-            const columnInput = { root: schema };
-            expect(filterFunction(columnInput)).toEqual(["root"]);
-        });
-        it("finding partial match in specified field", () => {
-            const filterFunction = createFilterFunction(["fieldName"], "Value");
-            const schema = new JsonSchema({ fieldName: "fieldValuePart" });
-            const columnInput = { root: schema };
-            expect(filterFunction(columnInput)).toEqual(["root"]);
-        });
-        it("finding case-insensitive match in specified field", () => {
-            const filterFunction = createFilterFunction(["fieldName"], "vALUEpART");
-            const schema = new JsonSchema({ fieldName: "fieldValuePart" });
-            const columnInput = { root: schema };
-            expect(filterFunction(columnInput)).toEqual(["root"]);
-        });
-        it("finding match in first specified field", () => {
-            const filterFunction = createFilterFunction(["fieldNameOne", "fieldNameTwo"], "value");
-            const schema = new JsonSchema({
-                fieldNameOne: "value",
-                fieldNameTwo: "something else"
-            });
-            const columnInput = { root: schema };
-            expect(filterFunction(columnInput)).toEqual(["root"]);
-        });
-        it("finding match in second specified field", () => {
-            const filterFunction = createFilterFunction(["fieldNameOne", "fieldNameTwo"], "value");
-            const schema = new JsonSchema({
-                fieldNameOne: "something else",
-                fieldNameTwo: "value"
-            });
-            const columnInput = { root: schema };
-            expect(filterFunction(columnInput)).toEqual(["root"]);
-        });
-        it("finding match in multiple column entries", () => {
-            const filterFunction = createFilterFunction(["fieldNameOne", "fieldNameTwo"], "value");
-            const schemaOne = new JsonSchema({
-                fieldNameOne: "something else",
-                fieldNameTwo: "value"
-            });
-            const schemaTwo = new JsonSchema({
-                fieldNameOne: "value",
-                fieldNameTwo: "something else"
-            });
+        it("finding match in all column entries", () => {
+            const filterFunction = createFilterFunction(() => true);
             const columnInput = {
-                root: schemaOne,
-                other: schemaTwo
+                one: new JsonSchema({ title: "value" }),
+                other: new JsonSchema({ description: "something else" })
             };
-            expect(filterFunction(columnInput)).toEqual(["root", "other"]);
+            expect(filterFunction(columnInput)).toEqual(["one", "other"]);
         });
-        it("no match if field not present", () => {
-            const filterFunction = createFilterFunction(["fieldName"], "value");
-            const schema = new JsonSchema({ otherField: "value" });
-            const columnInput = { root: schema };
-            expect(filterFunction(columnInput)).toEqual([]);
+        it("finding match in some column entries", () => {
+            const filterFunction = createFilterFunction(rawSchema => rawSchema.title === "value");
+            const columnInput = {
+                one: new JsonSchema({ description: "value" }),
+                other: new JsonSchema({ title: "value" })
+            };
+            expect(filterFunction(columnInput)).toEqual(["other"]);
         });
-        it("no match if field value different", () => {
-            const filterFunction = createFilterFunction(["fieldName"], "value");
-            const schema = new JsonSchema({ fieldName: "something else" });
-            const columnInput = { root: schema };
+        it("returning empty array if no match can be found", () => {
+            const filterFunction = createFilterFunction(() => false);
+            const columnInput = {
+                one: new JsonSchema({ description: "value" }),
+                other: new JsonSchema({ title: "value" })
+            };
             expect(filterFunction(columnInput)).toEqual([]);
         });
     });
     describe("returning filter function for complex schema", () => {
-        it("finding match in referenced parent schema via multiple different references", () => {
-            const filterFunction = createFilterFunction(["title"], "Match");
-            const rawItemOneSchema = {
-                allOf: [
-                    { $ref: "#/definitions/Two" },
-                    { $ref: "#" }
-                ]
-            };
-            const rawItemTwoSchema = {
-                items: { title: "Nothing" }
-            };
-            const rawItemThreeSchema = {
-                allOf: [
-                    { $ref: "#/definitions/Two" },
-                    { $ref: "https://unique-schema-identifier#" }
-                ]
-            };
-            const schema = new JsonSchema({
-                $id: "https://unique-schema-identifier",
-                title: "Match",
-                properties: {
-                    "Item One": { $ref: "#/definitions/One" },
-                    "Item Two": { $ref: "#/definitions/Two" },
-                    "Item Three": { $ref: "#defintiions/Three" }
+        const schema = new JsonSchema({
+            $id: "https://unique-schema-identifier",
+            title: "Match",
+            properties: {
+                "Item One": { $ref: "#/definitions/One" },
+                "Item Two": { $ref: "#/definitions/Two" },
+                "Item Three": { $ref: "#/definitions/Three" }
+            },
+            definitions: {
+                One: {
+                    items: { $ref: "#" }
                 },
-                definitions: {
-                    One: rawItemOneSchema,
-                    Two: rawItemTwoSchema,
-                    Three: rawItemThreeSchema
+                Two: {
+                    items: { title: "Nothing" }
+                },
+                Three: {
+                    allOf: [
+                        { $ref: "#/definitions/Two" },
+                        { $ref: "https://unique-schema-identifier#" }
+                    ]
                 }
-            });
-            const columnInput = {
-                "Item One": schema.scope.find("#/definitions/One"),
-                "Item Two": schema.scope.find("#/definitions/Two"),
-                "Item Three": schema.scope.find("#/definitions/Three")
-            };
+            }
+        });
+        const columnInput = {
+            "Item One": schema.scope.find("#/definitions/One"),
+            "Item Two": schema.scope.find("#/definitions/Two"),
+            "Item Three": schema.scope.find("#/definitions/Three")
+        };
+        it("finding match in via cicrular reference to parent schema", () => {
+            const filterFunction = createFilterFunction(rawSchema => rawSchema.title === "Match");
             expect(filterFunction(columnInput)).toEqual(["Item One", "Item Three"]);
-            // performing another search based on the same sub-schema instances again should re-use previous results
-            // unfortunately, it is unclear how to confirm that here (other than through coverage of the short-circuiting branch)
-            expect(filterFunction({ root: schema })).toEqual(["root"]);
+        });
+        it("avoiding endless loop even if no match can be found", () => {
+            const filterFunction = createFilterFunction(() => false);
+            expect(filterFunction(columnInput)).toEqual([]);
+        });
+    });
+});
+describe("filteringByFields()", () => {
+    describe("returning undefined", () => {
+        it("for undefined searchFields parameter", () => {
+            expect(filteringByFields(undefined, "filter")).toBeUndefined();
+        });
+        it("for null searchFields parameter", () => {
+            expect(filteringByFields(null, "filter")).toBeUndefined();
+        });
+        it("for empty string searchFields parameter", () => {
+            expect(filteringByFields("", "filter")).toBeUndefined();
+        });
+        it("for empty array searchFields parameter", () => {
+            expect(filteringByFields([], "filter")).toBeUndefined();
+        });
+        it("for undefined searchFilter parameter", () => {
+            expect(filteringByFields(["field-name"], undefined)).toBeUndefined();
+        });
+        it("for null searchFilter parameter", () => {
+            expect(filteringByFields(["field-name"], null)).toBeUndefined();
+        });
+        it("for empty searchFilter parameter", () => {
+            expect(filteringByFields(["field-name"], "")).toBeUndefined();
+        });
+    });
+    describe("finding", () => {
+        it("exact match in specified field", () => {
+            const filterFunction = filteringByFields(["fieldName"], "fieldValue");
+            expect(filterFunction({ fieldName: "fieldValue" })).toBe(true);
+        });
+        it("partial match in specified field", () => {
+            const filterFunction = filteringByFields(["fieldName"], "Value");
+            expect(filterFunction({ fieldName: "fieldValuePart" })).toBe(true);
+        });
+        it("case-insensitive match in specified field", () => {
+            const filterFunction = filteringByFields(["fieldName"], "vALUEpART");
+            expect(filterFunction({ fieldName: "fieldValuePart" })).toBe(true);
+        });
+        it("match in first specified field", () => {
+            const filterFunction = filteringByFields(["fieldNameOne", "fieldNameTwo"], "value");
+            const schema = {
+                fieldNameOne: "value",
+                fieldNameTwo: "something else"
+            };
+            expect(filterFunction(schema)).toBe(true);
+        });
+        it("match in second specified field", () => {
+            const filterFunction = filteringByFields(["fieldNameOne", "fieldNameTwo"], "value");
+            const schema = {
+                fieldNameOne: "something else",
+                fieldNameTwo: "value"
+            };
+            expect(filterFunction(schema)).toBe(true);
+        });
+        it("no match if field not present", () => {
+            const filterFunction = filteringByFields(["fieldName"], "value");
+            const schema = { otherField: "value" };
+            expect(filterFunction(schema)).toBe(false);
+        });
+        it("no match if field value different", () => {
+            const filterFunction = filteringByFields(["fieldName"], "value");
+            const schema = { fieldName: "something else" };
+            expect(filterFunction(schema)).toBe(false);
         });
     });
 });

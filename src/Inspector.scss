@@ -8,17 +8,23 @@
     $detailsWidth: 20em;
     $selectionColor: #dcdcdc;
     $trailingSelectionColor: #276bd2;
+    $backgroundColor: #fff;
     $innerBorderColor: #e0e0e0;
     $outerBorderColor: #cbcbcb;
     $innerBorder: 1px solid $innerBorderColor;
     $outerBorder: 1px solid $outerBorderColor;
 
+    $verticalSpacingOutside: 0.25em;
+    $spacingInside: 0.5em;
+    $borderRadius: 0.25em;
+
+    &-header,
     &-body,
     &-footer {
         display: flex;
-        flex-direction: row;
+        background-color: $backgroundColor;
         border: $outerBorder;
-        border-radius: 0.25em;
+        border-radius: $borderRadius;
     }
     &-body {
         height: 25em;
@@ -60,7 +66,7 @@
             font-weight: bold;
         }
         &.not-matching-filter {
-            opacity: 0.6;
+            opacity: 0.5;
         }
         &-content {
             display: flex;
@@ -129,34 +135,50 @@
             }
         }
     }
+    &-header {
+        flex-direction: row-reverse;
+        margin-bottom: $verticalSpacingOutside;
+    }
+    &-search {
+        padding: $spacingInside;
+
+        &-input {
+            font: inherit;
+            line-height: 2em;   
+            border: $innerBorder;
+            border-radius: $borderRadius;
+            padding: 0 $spacingInside;
+            min-width: ($detailsWidth - (2 * $spacingInside));
+        }
+    }
     &-footer {
-        margin-top: 0.25em;
+        margin-top: $verticalSpacingOutside;
     }
     &-breadcrumbs {
         display: flex;
         flex-flow: row wrap;
-        padding: 0.25em 0.75em 0.25em 2.5em;
-        min-height: 2.25em;
+        padding: $spacingInside 0.75em $spacingInside (5 * $spacingInside);
         font-family: 'Courier New', Courier, monospace;
 
         &-icon,
         &-item {
             display: block;
-            border-radius: 0.25em;
+            border-radius: $borderRadius;
         }
         &-icon {
             background-color: $trailingSelectionColor;
-            height: 1.75em;
-            width: 1em;
-            margin: 0.25em 0 0.25em -2em;
+            height: 1.5em;
+            width: 0.8em;
+            margin: 0.25em 0 0.25em (-4 * $spacingInside);
             -webkit-clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
             clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
         }
         &-item {
             background-color: $selectionColor;
-            margin: 0.25em -0.5em 0.25em 0;
+            margin-right: -0.5em;
             padding: 0 0.25em 0 1.25em;
-            line-height: 1.75em;
+            line-height: 2em;
+            text-overflow: ellipsis;
 
             &.has-nested-items {
                 padding-right: 1em;

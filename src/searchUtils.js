@@ -1,3 +1,5 @@
+import memoize from "memoize-one";
+import isDeepEqual from "lodash.isequal";
 import escapeRegExp from "lodash.escaperegexp";
 
 import JsonSchema from "./JsonSchema";
@@ -89,40 +91,56 @@ export function collectReferencedSubSchemas(jsonSchema) {
 /**
  * Build the function for determining the "filteredItems" for a given Object.<String, JsonSchema>.
  *
- * @param {Array.<String>} searchFields names of the fields in a schema to check for a (partial) match with the entered searchFilter text
- * @param {String} searchFilter entered search filter text
- * @return {Function|undefined} return producing either a function to apply for filtering or undefined if the search feature is turned off
+ * @param {Function} flatSearchFilter
+ * @param {Object} flatSearchFilter.value raw JSON schema to filter (without considering any sub-structures like `properties` or `allOf`)
+ * @param {Boolean} flatSearchFilter.return whether there is a direct match in the given schema (e.g. in its `title` or `description`)
+ * @return {Function} return producing a function to apply for filtering
  * @return {Object.<String, JsonSchema>} return.value expected input is an object representing a view column's items
  * @return {Array.<String>} return.return output is an array of "filteredItems"
  */
-export function createFilterFunction(searchFields, searchFilter) {
-    if (!searchFields || !searchFields.length || !searchFilter) {
-        return undefined;
-    }
-    // use case-insensetive flag "i" in regular expression for value matching
-    const regex = new RegExp(escapeRegExp(searchFilter), "i");
-    const flatSearchFilter = rawSchema => searchFields.some(fieldName => regex.test(rawSchema[fieldName]));
+export function createFilterFunction(flatSearchFilter) {
     const recursiveSearchFilter = createRecursiveFilterFunction(flatSearchFilter);
+    // cache definitive search results for the individual sub-schemas in a Map.<JsonSchema, boolean>
     const schemaMatchResults = new Map();
     const containsMatchingItems = (jsonSchema) => {
         if (schemaMatchResults.has(jsonSchema)) {
+            // short-circuit: return remembered filter result for this
             return schemaMatchResults.get(jsonSchema);
         }
         const subSchemasToVisit = new Set();
         subSchemasToVisit.add(jsonSchema);
+        const subSchemasAlreadyVisited = new Set();
         const checkSubSchema = (subSchema) => {
-            const result = recursiveSearchFilter(subSchema);
+            let result = recursiveSearchFilter(subSchema);
+            subSchemasToVisit.delete(subSchema);
+            subSchemasAlreadyVisited.add(subSchema);
             if (result) {
                 // remember the successfully matched schema
                 schemaMatchResults.set(subSchema, true);
             } else {
-                collectReferencedSubSchemas(subSchema).forEach(subSchemasToVisit.add.bind(subSchemasToVisit));
+                // no direct match in this sub-schema; need to determine the next level of sub-schemas in order to continue checking
+                const subSubSchemas = Array.from(collectReferencedSubSchemas(subSchema).values());
+                if (subSubSchemas.every(subSubSchema => schemaMatchResults.get(subSubSchema) === false)) {
+                    // there are no further references in here or all of them have been cleared as no-match already
+                    schemaMatchResults.set(subSchema, false);
+                } else if (subSubSchemas.some(subSubSchema => schemaMatchResults.get(subSubSchema))) {
+                    // there is at least one reference and that has already been confirmed as a match
+                    result = true;
+                    schemaMatchResults.set(subSchema, true);
+                } else {
+                    // there is at least one reference for which no result exists yet, need to continue checking
+                    subSubSchemas.forEach((subSubSchema) => {
+                        // in case of circular references without a match, this is where we prevent revisiting the same sub-schema over and over again
+                        if (!subSchemasAlreadyVisited.has(subSubSchema)) {
+                            // since it is a Set, we don't have to check for duplicates explicitly ourselves
+                            subSchemasToVisit.add(subSubSchema);
+                        }
+                    });
+                }
             }
             return result;
         };
-        let lastSubSchemaCount = 0;
-        while (lastSubSchemaCount < subSchemasToVisit.size) {
-            lastSubSchemaCount = subSchemasToVisit.size;
+        while (subSchemasToVisit.size) {
             if (Array.from(subSchemasToVisit).some(checkSubSchema)) {
                 // mark at least the originally targeted schema has having a match as well
                 schemaMatchResults.set(jsonSchema, true);
@@ -131,10 +149,28 @@ export function createFilterFunction(searchFields, searchFilter) {
             }
         }
         // since none of the sub-schemas (including the originally targeted schema) was a match, we can remember that for future reference
-        subSchemasToVisit.forEach((subSchema) => {
+        subSchemasAlreadyVisited.forEach((subSchema) => {
             schemaMatchResults.set(subSchema, false);
         });
         return false;
     };
     return columnItems => Object.keys(columnItems).filter(key => containsMatchingItems(columnItems[key]));
 }
+
+/**
+ * Build the function for determining the "filteredItems" for a given Object.<String, JsonSchema>.
+ *
+ * @param {Array.<String>} searchFields names of the fields in a schema to check for a (partial) match with the entered searchFilter text
+ * @param {String} searchFilter entered search filter text
+ * @return {Function|undefined} return producing either a function to apply for filtering or undefined if the search feature is turned off
+ * @return {Object.<String, JsonSchema>} return.value expected input is an object representing a view column's items
+ * @return {Array.<String>} return.return output is an array of "filteredItems"
+ */
+export const filteringByFields = memoize((searchFields, searchFilter) => {
+    if (searchFields && searchFields.length && searchFilter) {
+        // use case-insensetive flag "i" in regular expression for value matching
+        const regex = new RegExp(escapeRegExp(searchFilter), "i");
+        return rawSchema => searchFields.some(fieldName => regex.test(rawSchema[fieldName]));
+    }
+    return undefined;
+}, isDeepEqual);
