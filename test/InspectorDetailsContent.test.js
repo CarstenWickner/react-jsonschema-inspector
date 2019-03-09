@@ -79,14 +79,22 @@ describe("renders correctly", () => {
     });
 });
 describe("collectFormFields()", () => {
-    it("includes `title`", () => {
-        const schema = { title: "Title Value" };
-        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
-            {
-                labelText: "Title",
-                rowValue: "Title Value"
-            }
-        ]);
+    it.each`
+        field            | rowValue         | labelText
+        ${"title"}       | ${"Title Value"} | ${"Title"}
+        ${"description"} | ${"Desc. Value"} | ${"Description"}
+        ${"type"}        | ${"object"}      | ${"Type"}
+        ${"const"}       | ${42}            | ${"Constant Value"}
+        ${"enum"}        | ${[42, 84]}      | ${"Possible Values"}
+        ${"pattern"}     | ${"[a-z]+"}      | ${"Value Pattern"}
+        ${"format"}      | ${"iri"}         | ${"Value Format"}
+        ${"minLength"}   | ${1}             | ${"Min Length"}
+        ${"maxLength"}   | ${100}           | ${"Max Length"}
+        ${"minItems"}    | ${2}             | ${"Min Items"}
+        ${"maxItems"}    | ${8}             | ${"Max Items"}
+    `("includes `$field`", ({ field, rowValue, labelText }) => {
+        expect(collectFormFields(new JsonSchema({ [field]: rowValue }), [{}], 0))
+            .toEqual([{ labelText, rowValue }]);
     });
     it("includes `title` from $ref-erenced schema", () => {
         const schema = { $ref: "#/definitions/A" };
@@ -99,15 +107,6 @@ describe("collectFormFields()", () => {
             {
                 labelText: "Title",
                 rowValue: "Title Value"
-            }
-        ]);
-    });
-    it("includes `description`", () => {
-        const schema = { description: "Description Value" };
-        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
-            {
-                labelText: "Description",
-                rowValue: "Description Value"
             }
         ]);
     });
@@ -141,33 +140,6 @@ describe("collectFormFields()", () => {
             {
                 labelText: "Required",
                 rowValue: "Yes"
-            }
-        ]);
-    });
-    it("includes `type`", () => {
-        const schema = { type: "object" };
-        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
-            {
-                labelText: "Type",
-                rowValue: "object"
-            }
-        ]);
-    });
-    it("includes `const`", () => {
-        const schema = { const: 42 };
-        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
-            {
-                labelText: "Constant Value",
-                rowValue: 42
-            }
-        ]);
-    });
-    it("includes `enum`", () => {
-        const schema = { enum: [42, 84] };
-        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
-            {
-                labelText: "Possible Values",
-                rowValue: [42, 84]
             }
         ]);
     });
@@ -280,60 +252,6 @@ describe("collectFormFields()", () => {
     it("ignores empty `examples`", () => {
         const schema = { examples: [] };
         expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([]);
-    });
-    it("includes `pattern`", () => {
-        const schema = { pattern: "[a-z]+" };
-        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
-            {
-                labelText: "Value Pattern",
-                rowValue: "[a-z]+"
-            }
-        ]);
-    });
-    it("includes `format`", () => {
-        const schema = { format: "iri" };
-        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
-            {
-                labelText: "Value Format",
-                rowValue: "iri"
-            }
-        ]);
-    });
-    it("includes `minLength`", () => {
-        const schema = { minLength: 1 };
-        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
-            {
-                labelText: "Min Length",
-                rowValue: 1
-            }
-        ]);
-    });
-    it("includes `maxLength`", () => {
-        const schema = { maxLength: 100 };
-        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
-            {
-                labelText: "Max Length",
-                rowValue: 100
-            }
-        ]);
-    });
-    it("includes `minItems`", () => {
-        const schema = { minItems: 1 };
-        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
-            {
-                labelText: "Min Items",
-                rowValue: 1
-            }
-        ]);
-    });
-    it("includes `maxItems`", () => {
-        const schema = { maxItems: 100 };
-        expect(collectFormFields(new JsonSchema(schema), [{}], 0)).toEqual([
-            {
-                labelText: "Max Items",
-                rowValue: 100
-            }
-        ]);
     });
     it("includes `uniqueItems`", () => {
         const schema = { uniqueItems: true };

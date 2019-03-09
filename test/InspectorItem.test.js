@@ -78,11 +78,13 @@ describe("renders correctly", () => {
     });
 });
 describe("calls onSelect", () => {
-    let onSelectCounter;
-    let component;
-    beforeEach(() => {
-        onSelectCounter = 0;
-        component = shallow(
+    it.each`
+        event
+        ${"click"}
+        ${"focus"}
+    `("for $event event", ({ event }) => {
+        let onSelectCounter = 0;
+        const component = shallow(
             <InspectorItem
                 name="Item Name"
                 schema={new JsonSchema()}
@@ -91,17 +93,7 @@ describe("calls onSelect", () => {
                 }}
             />
         );
-    });
-
-    it("for click event", () => {
-        // trigger the onClick callback
-        component.simulate("click");
-        expect(onSelectCounter).toBe(1);
-    });
-
-    it("for focus event", () => {
-        // trigger the onFocus callback
-        component.simulate("focus");
+        component.simulate(event);
         expect(onSelectCounter).toBe(1);
     });
 });

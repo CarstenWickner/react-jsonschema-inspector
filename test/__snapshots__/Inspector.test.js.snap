@@ -1198,7 +1198,7 @@ exports[`renders correctly with minimal/default props 1`] = `
     className="jsonschema-inspector-footer"
   >
     <InspectorBreadcrumbs
-      arrayItemAccessor="[0]"
+      breadcrumbsOptions={Object {}}
       columnData={
         Array [
           Object {
@@ -1788,9 +1788,6 @@ exports[`renders correctly with minimal/default props 1`] = `
           },
         ]
       }
-      prefix=""
-      preventNavigation={false}
-      separator="."
     />
   </div>
 </div>

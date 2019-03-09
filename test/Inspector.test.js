@@ -51,20 +51,23 @@ describe("renders correctly", () => {
                 searchOptions={{
                     fields: ["title"],
                     debounceWait: 100,
-                    debounceMaxWait: 1000
+                    debounceMaxWait: 1000,
+                    inputPlaceholder: "Filter by Title"
                 }}
             />
         );
         const header = component.find(".jsonschema-inspector-header");
         expect(header.exists()).toBe(true);
-        const searchField = header.find("InspectorSearchField");
+        let searchField = header.find("InspectorSearchField");
         expect(searchField.exists()).toBe(true);
         expect(searchField.prop("searchFilter")).toEqual("");
         const onSearchFilterChange = searchField.prop("onSearchFilterChange");
         // trigger change of search filter
         onSearchFilterChange("Title");
         component.instance().debouncedApplySearchFilter(100, 1000).flush();
-        expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("Title");
+        searchField = component.find("InspectorSearchField");
+        expect(searchField.prop("searchFilter")).toEqual("Title");
+        expect(searchField.prop("placeholder")).toEqual("Filter by Title");
         const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
         expect(filteredItems).toBeDefined();
         expect(filteredItems).toHaveLength(2);
@@ -228,9 +231,10 @@ describe("calls onSelect", () => {
     const mockEvent = {
         stopPropagation: () => { }
     };
-    let onSelect;
+    const onSelect = jest.fn(() => { });
+
     beforeEach(() => {
-        onSelect = jest.fn(() => { });
+        onSelect.mockReset();
     });
 
     it("when setting root selection", () => {
@@ -403,5 +407,54 @@ describe("calls onSelect", () => {
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, null);
         expect(onSelect.mock.calls).toHaveLength(0);
+    });
+    it("with extra information (excluding breadcrumbs)", () => {
+        const component = shallow(
+            <Inspector
+                schemas={schemas}
+                breadcrumbs={null}
+                onSelect={onSelect}
+            />
+        );
+        const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
+        rootColumnSelect(mockEvent, "Schema One");
+        expect(onSelect.mock.calls).toHaveLength(1);
+        expect(onSelect.mock.calls[0][0]).toEqual(["Schema One"]);
+        expect(onSelect.mock.calls[0][1].columnData).toHaveLength(2);
+        expect(onSelect.mock.calls[0][2]).toBe(null);
+    });
+    it("with extra information (including breadcrumbs)", () => {
+        const breadcrumbs = {
+            prefix: "this.",
+            mutateName: selectedItem => selectedItem && selectedItem.replace(/\s/g, "")
+        };
+        const component = shallow(
+            <Inspector
+                schemas={schemas}
+                defaultSelectedItems={["Schema One"]}
+                breadcrumbs={breadcrumbs}
+                onSelect={onSelect}
+            />
+        );
+        const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
+        secondColumnSelect(mockEvent, "Item One");
+        expect(onSelect.mock.calls).toHaveLength(1);
+        expect(onSelect.mock.calls[0][0]).toEqual(["Schema One", "Item One"]);
+        expect(onSelect.mock.calls[0][1].columnData).toHaveLength(2);
+        expect(onSelect.mock.calls[0][2]).toEqual(["this.SchemaOne", ".ItemOne"]);
+    });
+    it("with extra information in case of empty selection", () => {
+        const component = shallow(
+            <Inspector
+                schemas={schemas}
+                defaultSelectedItems={["Schema One"]}
+                onSelect={onSelect}
+            />
+        );
+        const { onSelect: rootColumnSelectForClearing } = component.find("InspectorColView").prop("columnData")[0];
+        rootColumnSelectForClearing(mockEvent, null);
+        expect(onSelect.mock.calls).toHaveLength(1);
+        expect(onSelect.mock.calls[0][0]).toEqual([]);
+        expect(onSelect.mock.calls[0][2]).toEqual([]);
     });
 });

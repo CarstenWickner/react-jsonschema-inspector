@@ -1,13 +1,14 @@
 {
     "rules": {
         "import/no-extraneous-dependencies": "off",
-        "no-prototype-builtins": "off"
+        "no-prototype-builtins": "off",
+        "indent": ["error", 4, { "ignoredNodes": ["TemplateLiteral"] }]
     },
     "globals": {
-        "beforeEach": "readable",
-        "expect": "readable",
-        "describe": "readable",
-        "it": "readable",
-        "jest": "readable"
+        "beforeEach": "readonly",
+        "expect": "readonly",
+        "describe": "readonly",
+        "it": "readonly",
+        "jest": "readonly"
     }
 }

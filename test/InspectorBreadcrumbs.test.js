@@ -28,6 +28,7 @@ describe("renders correctly", () => {
                         onSelect: () => { }
                     }
                 ]}
+                breadcrumbsOptions={{}}
             />
         );
         expect(component).toMatchSnapshot();
@@ -41,6 +42,7 @@ describe("renders correctly", () => {
                         onSelect: () => { }
                     }
                 ]}
+                breadcrumbsOptions={{}}
             />
         );
         expect(component.find(".jsonschema-inspector-breadcrumbs-icon").exists()).toBe(true);
@@ -58,7 +60,9 @@ describe("renders correctly", () => {
                         onSelect: () => { }
                     }
                 ]}
-                prefix="variableContext."
+                breadcrumbsOptions={{
+                    prefix: "variableContext."
+                }}
             />
         );
         expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(1);
@@ -88,6 +92,7 @@ describe("renders correctly", () => {
                         onSelect: () => { }
                     }
                 ]}
+                breadcrumbsOptions={{}}
             />
         );
         expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(1);
@@ -118,6 +123,7 @@ describe("renders correctly", () => {
                         onSelect: () => { }
                     }
                 ]}
+                breadcrumbsOptions={{}}
             />
         );
         expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
@@ -148,7 +154,9 @@ describe("renders correctly", () => {
                         onSelect: () => { }
                     }
                 ]}
-                arrayItemAccessor=".get(0)"
+                breadcrumbsOptions={{
+                    arrayItemAccessor: ".get(0)"
+                }}
             />
         );
         expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
@@ -185,6 +193,7 @@ describe("renders correctly", () => {
                         onSelect: () => { }
                     }
                 ]}
+                breadcrumbsOptions={{}}
             />
         );
         expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
@@ -225,8 +234,10 @@ describe("renders correctly", () => {
                         onSelect: () => { }
                     }
                 ]}
-                prefix="$this->"
-                separator="->"
+                breadcrumbsOptions={{
+                    prefix: "$this->",
+                    separator: "->"
+                }}
             />
         );
         expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
@@ -243,6 +254,7 @@ describe("renders correctly", () => {
                         onSelect: () => { }
                     }
                 ]}
+                breadcrumbsOptions={{}}
             />
         );
         const selectedRootItem = component.find(".jsonschema-inspector-breadcrumbs-item");
@@ -284,6 +296,7 @@ describe("handles double-click navigation", () => {
         const component = shallow(
             <InspectorBreadcrumbs
                 columnData={columnData}
+                breadcrumbsOptions={{}}
             />
         );
         const selectedItems = component.find(".jsonschema-inspector-breadcrumbs-item");
@@ -298,6 +311,7 @@ describe("handles double-click navigation", () => {
         const component = shallow(
             <InspectorBreadcrumbs
                 columnData={columnData}
+                breadcrumbsOptions={{}}
             />
         );
         const selectedItems = component.find(".jsonschema-inspector-breadcrumbs-item");
@@ -312,7 +326,9 @@ describe("handles double-click navigation", () => {
         const component = shallow(
             <InspectorBreadcrumbs
                 columnData={columnData}
-                preventNavigation
+                breadcrumbsOptions={{
+                    preventNavigation: true
+                }}
             />
         );
         const selectedItems = component.find(".jsonschema-inspector-breadcrumbs-item");
