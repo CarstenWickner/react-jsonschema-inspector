@@ -126,7 +126,7 @@ storiesOf("Inspector", module)
             defaultSelectedItems={["Person", "friends", "friends"]}
             searchOptions={{
                 fields: knobsArray("Search Fields", ["title", "description"]),
-                placeholder: knobsText("Placeholder", "Find in 'Title' or 'Description'…")
+                inputPlaceholder: knobsText("Input Placeholder", "Find in 'Title' or 'Description'…")
             }}
             onSelect={action("onSelect")}
         />
