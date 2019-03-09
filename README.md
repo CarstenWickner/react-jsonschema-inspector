@@ -2,9 +2,7 @@
 
 [![Build Status][travis-ci-image]][travis-ci-url]
 [![Coverage Status][coverage-image]][coverage-url]
-
 [![dependencies Status][david-dm-dep-image]][david-dm-dep-url]
-[![devDependencies Status][david-dm-devDep-image]][david-dm-devDep-url]
 [![peerDependencies Status][david-dm-peerDep-image]][david-dm-peerDep-url]
 
 Introducing a component for viewing/traversing (complex) JSON Schemas for the sake of documentation and potentially assisting users of a DSL in finding particular information in a custom data model.
@@ -41,7 +39,7 @@ npm i react-jsonschema-inspector
 | `searchOptions` | Object: enabling the definition of options for the search/filter feature in the header (is disabled by default) – either `searchOptions.fields` or `searchOptions.filterBy` needs to be specified to enable it. the component itself will take care of looking-up sub-schemas (e.g. in `properties`) and also respects `$ref`-erences and has no problem with circular references. |
 | `searchOptions.fields`| Array of strings: each referring to the name of a text field in a JSON Schema (e.g. `["title", "description"]`) in which to search/filter – this applies a case-insensitive contains() check on each of the given fields |
 | `searchOptions.filterBy` | Function: overrides the default search logic based on `searchOptions.fields`. Input is a raw JSON Schema (i.e. as plain object), output is expected to be a `boolean` indicating whether an immediate match was found |
-| `searchOptions.inputPlaceholder` | String: for setting the input hint the search fields. This defaults to `"Search"`. |
+| `searchOptions.inputPlaceholder` | String: for setting the input hint in the search field. This defaults to `"Search"`. |
 | `searchOptions.debounceWait` | Number indicating the delay in milliseconds between the last change to the search term being entered and it actually being applied. This defaults to `200` but may be increased when used with exceptionally large schemas and you experience performance issues. Please refer to the documentation on [`lodash.debounce`](https://lodash.com/docs/4.17.11#debounce). |
 | `searchOptions.debounceMaxWait` | Number indicating the maximum delay in milliseconds after the search term was changed. This defaults to `500`. Please refer to the documentation on [`lodash.debounce`](https://lodash.com/docs/4.17.11#debounce). |
 | `renderItemContent` | Function: custom render function for name of single property/sub-schema in a column. Receives one parameter: object with the following properties: "name", "hasNestedItems", "selected", "schema" |
@@ -61,7 +59,7 @@ It is also backwards-compatible with Drafts 4 and 6.
 | `$schema` | - | *ignored* (assumed to be compatible to JSON Schema Draft 4, 6 or 7) |
 | `$id` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 6 and 7), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `definitions` |
 | `id` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 4), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `definitions` or if `$id` is present |
-| `$ref` | Yes | used to look-up re-usable sub-schemas transparently (i.e. not displayed), supporting:<ul><li>`#` or the root `$id`/`id` value as root schema references,</li><li>`#/definitions/<name-of-definition>` or the respective `$id`/`id` value from within the `definitions` for sub-schemas,</li><li>absolute URIs are supported as long as those separate schemas are provided via the `referenceSchemas` prop (and their repesitve root `$id`/`id` matches the given `$ref`)</li><li>absolute URIs ending with `#/definitions/<name-of-definition>` are also provided via the `referenceSchemas` prop</li></ul> |
+| `$ref` | Yes | used to look-up re-usable sub-schemas transparently (i.e. not displayed), supporting:<ul><li>`#` or the root `$id`/`id` value as root schema references,</li><li>`#/definitions/<name-of-definition>` or the respective `$id`/`id` value from within the `definitions` for sub-schemas,</li><li>absolute URIs are supported as long as those separate schemas are provided via the `referenceSchemas` prop (and their respective root `$id`/`id` matches the given `$ref`)</li><li>absolute URIs ending with `#/definitions/<name-of-definition>` are also supported via the `referenceSchemas` prop</li></ul> |
 | `definitions`| Yes | used to provide re-usable sub-schemas that are being referenced via `$ref` (only in the respective root schemas) |
 | `properties`| Yes | used to populate the whole structure to be traversed |
 | `required` | Yes | used to add empty `properties` to structure if they are not also mentioned in `properties` directly |
@@ -121,8 +119,6 @@ It is also backwards-compatible with Drafts 4 and 6.
 [coverage-url]: https://coveralls.io/github/CarstenWickner/react-jsonschema-inspector?branch=master
 [david-dm-dep-image]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector/status.svg
 [david-dm-dep-url]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector
-[david-dm-devDep-image]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector/dev-status.svg
-[david-dm-devDep-url]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector?type=dev
 [david-dm-peerDep-image]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector/peer-status.svg
 [david-dm-peerDep-url]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector?type=peer
 [storybook-image]: https://raw.githubusercontent.com/storybooks/storybook/next/docs/src/design/homepage/storybook-logo.svg?sanitize=true
