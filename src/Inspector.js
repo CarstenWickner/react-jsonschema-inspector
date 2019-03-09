@@ -12,6 +12,7 @@ import InspectorBreadcrumbs from "./InspectorBreadcrumbs";
 import InspectorSearchField from "./InspectorSearchField";
 import JsonSchemaPropType from "./JsonSchemaPropType";
 import JsonSchema from "./JsonSchema";
+import createBreadcrumbBuilder from "./breadcrumbsUtils";
 import { createFilterFunction, filteringByFields } from "./searchUtils";
 import { isDefined, isNonEmptyObject, mapObjectValues } from "./utils";
 
@@ -154,21 +155,25 @@ class Inspector extends Component {
         }
         // need to look-up the currently displayed number of content columns
         // thanks to 'memoize', we just look-up the result of the previous evaluation
-        const { schemas, referenceSchemas, onSelect: onSelectProp } = this.props;
+        const {
+            schemas, referenceSchemas, onSelect: onSelectProp, breadcrumbs: breadcrumbsOptions
+        } = this.props;
         const oldColumnCount = (appendEmptyColumn ? 1 : 0)
             + this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems).columnData.length;
         // now we need to know what the number of content columns will be after changing the state
         // thanks to 'memoize', the subsequent render() call will just look-up the result of this evaluation
         const newRenderData = this.getRenderDataForSelection(schemas, referenceSchemas, newSelection);
+        const { columnData } = newRenderData;
         // update state to trigger rerendering of the whole component
         this.setState(
             {
                 selectedItems: newSelection,
-                appendEmptyColumn: newRenderData.columnData.length < oldColumnCount
+                appendEmptyColumn: columnData.length < oldColumnCount
             },
             onSelectProp
                 // due to the two-step process, the newRenderData will NOT include the filteredItems
-                ? () => onSelectProp(newSelection, newRenderData)
+                ? () => onSelectProp(newSelection, newRenderData,
+                    breadcrumbsOptions && columnData.map(createBreadcrumbBuilder(breadcrumbsOptions)).filter(value => value))
                 // no call-back provided via props, nothing to do
                 : undefined
         );
@@ -232,7 +237,7 @@ class Inspector extends Component {
                     <div className="jsonschema-inspector-footer">
                         <InspectorBreadcrumbs
                             columnData={columnData}
-                            {...breadcrumbs}
+                            breadcrumbsOptions={breadcrumbs}
                         />
                     </div>
                 )}
@@ -253,12 +258,14 @@ Inspector.propTypes = {
      * - "prefix": Text to show in front of root level selection, e.g. "//" or "./"
      * - "separator": Text to add between the selected item names from adjacent columns, e.g. "." or "/"
      * - "arrayItemAccessor": Text to append to an intermediary array selection to indicate selecting one of its items, e.g. "[]", "[0]", or ".get(0)"
+     * - "mutateName": Function to derive the selected item's representation in the breadcrumbs from their name
      * - "preventNavigation": Flag indicating whether double-clicking an item should preserve subsequent selections, otherwise they are discarded
      */
     breadcrumbs: PropTypes.shape({
         prefix: PropTypes.string,
         separator: PropTypes.string,
         arrayItemAccessor: PropTypes.string,
+        mutateName: PropTypes.func,
         preventNavigation: PropTypes.bool
     }),
     /**

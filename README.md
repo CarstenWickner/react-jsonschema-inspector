@@ -32,9 +32,10 @@ npm i react-jsonschema-inspector
 | `defaultSelectedItems` | Array of strings: each referring to the name of the selected item in the respective column (i.e. the first entry in this array should match one key in the `schemas` object) |
 | `onSelect` | Function: call-back being invoked after the selection changed. Receives two parameters: (1) the selection - as per the `defaultSelectedItems`, (2) an object containing the "columnData" - the full render information for all visible columns |
 | `breadcrumbs` | Object: enabling the definition of options for the breadcrumbs feature in the footer (can be disabled by setting to `null`) |
-| `breadcrumbs.prefix` | String: to be shown in front of the root selection (e.g. "//" or "./") |
-| `breadcrumbs.separator` | String: to be shown in front of any non-root selection (e.g. "." or "/") |
-| `breadcrumbs.arrayItemAccessor` | String: to be appended for any non-trailing selection that is an array (e.g. "[0]" or ".get(0)") |
+| `breadcrumbs.prefix` | String: to be shown in front of the root selection (e.g. "//" or "./") – defaults to `""` |
+| `breadcrumbs.separator` | String: to be shown in front of any non-root selection (e.g. "/") – defaults to `"."` |
+| `breadcrumbs.arrayItemAccessor` | String: to be appended for any non-trailing selection that is an array (e.g. ".get(0)") – defaults to `"[0]"` |
+| `breadcrumbs.mutateName` | Function: expecting two inputs: (1) the selected item's name, (2) the full information for the respective column and (3) the index of the respective column; a column's breadcrumb can be skipped by returning `null` |
 | `breadcrumbs.preventNavigation` | Boolean: set to `true` in order to turn-off the default behaviour of discarding any following selections when double-clicking on a breadcrumbs item |
 | `searchOptions` | Object: enabling the definition of options for the search/filter feature in the header (is disabled by default) – either `searchOptions.fields` or `searchOptions.filterBy` needs to be specified to enable it. the component itself will take care of looking-up sub-schemas (e.g. in `properties`) and also respects `$ref`-erences and has no problem with circular references. |
 | `searchOptions.fields`| Array of strings: each referring to the name of a text field in a JSON Schema (e.g. `["title", "description"]`) in which to search/filter – this applies a case-insensitive contains() check on each of the given fields |
