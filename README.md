@@ -5,13 +5,13 @@
 [![dependencies Status][david-dm-dep-image]][david-dm-dep-url]
 [![peerDependencies Status][david-dm-peerDep-image]][david-dm-peerDep-url]
 
+![Logo][main-logo-image]
+
 Introducing a component for viewing/traversing (complex) JSON Schemas for the sake of documentation and potentially assisting users of a domain-specific model in finding a particular piece of information.
 
-The component is expressly not intended for visualising the whole of a JSON Schema (there are already quite a few JSON Schema Viewer components out there doing a great job at that). A possible use-case is inside an application that allows its users to define business rules or other kinds of expressions (e.g. within decision tables) while providing rather complex data structures as input which may also be subject to frequent changes – both good reasons why you wouldn't want to maintain a separate documentation of the all of the available fields.
+The component is expressly not intended for visualising the whole of a JSON Schema (there are already quite a few JSON Schema Viewer components out there doing a great job at that). A possible use-case is inside an application that allows its users to define business rules or other kinds of expressions (e.g. within decision tables) while providing rather complex data structures as input which may also be subject to frequent changes – both good reasons why you wouldn't want to maintain a separate documentation of the all of the available fields. And the majority of generated forms of documentation (e.g. JSDoc, JavaDoc, etc.) may be too big/technical for your users.
 
 At the same time, there are a number of tools that automatically generate schema definitions from your code. Taking these automatically generated schemas, the JSON Schema Inspector component allows your users to iterate through the data structure (if they know roughly where to look) or even search through the whole structure to find the particular piece of information they are looking for. All the while showing the path to the selected field as breadcrumbs underneath, allowing your users to simply copy-paste it into their business rule/expression.
-
-![Logo][main-logo-image]
 
 ## Demo
 
