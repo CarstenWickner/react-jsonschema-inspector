@@ -322,7 +322,7 @@ describe("createFilterFunction()", () => {
             "Item Two": schema.scope.find("#/definitions/Two"),
             "Item Three": schema.scope.find("#/definitions/Three")
         };
-        it("finding match in via cicrular reference to parent schema", () => {
+        it("finding match in via circular reference to parent schema", () => {
             const filterFunction = createFilterFunction(rawSchema => rawSchema.title === "Match");
             expect(filterFunction(columnInput)).toEqual(["Item One", "Item Three"]);
         });

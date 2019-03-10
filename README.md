@@ -5,7 +5,11 @@
 [![dependencies Status][david-dm-dep-image]][david-dm-dep-url]
 [![peerDependencies Status][david-dm-peerDep-image]][david-dm-peerDep-url]
 
-Introducing a component for viewing/traversing (complex) JSON Schemas for the sake of documentation and potentially assisting users of a DSL in finding particular information in a custom data model.
+Introducing a component for viewing/traversing (complex) JSON Schemas for the sake of documentation and potentially assisting users of a domain-specific model in finding a particular piece of information.
+
+The component is expressly not intended for visualising the whole of a JSON Schema (there are already quite a few JSON Schema Viewer components out there doing a great job at that). A possible use-case is inside an application that allows its users to define business rules or other kinds of expressions (e.g. within decision tables) while providing rather complex data structures as input which may also be subject to frequent changes – both good reasons why you wouldn't want to maintain a separate documentation of the all of the available fields.
+
+At the same time, there are a number of tools that automatically generate schema definitions from your code. Taking these automatically generated schemas, the JSON Schema Inspector component allows your users to iterate through the data structure (if they know roughly where to look) or even search through the whole structure to find the particular piece of information they are looking for. All the while showing the path to the selected field as breadcrumbs underneath, allowing your users to simply copy-paste it into their business rule/expression.
 
 ![Logo][main-logo-image]
 
@@ -28,7 +32,7 @@ npm i react-jsonschema-inspector
 | Prop | Description |
 | --- | --- |
 | `schemas` (required) | Object: keys will be displayed in the root column, the values are expected to be independent JSON Schema definitions (compatible to Draft 4, 6 or 7) |
-| `referenceSchemas` | Array of objects: the entries are expected to be JSON Schema definitions with an absolute URI as `$id`/`id` (compatible to Draft 4, 6 or 7). These schemas will not be shown on the root column, but are used to resolve URI `$ref`erences in any of the displayed `schemas` or in another entry of the `referenceSchemas` |
+| `referenceSchemas` | Array of objects: the entries are expected to be JSON Schema definitions with an absolute URI as `$id`/`id` (compatible to Draft 4, 6 or 7). These schemas will not be shown on the root column, but are used to resolve URI `$ref`-erences in any of the displayed `schemas` or in another entry of the `referenceSchemas` |
 | `defaultSelectedItems` | Array of strings: each referring to the name of the selected item in the respective column (i.e. the first entry in this array should match one key in the `schemas` object) |
 | `onSelect` | Function: call-back being invoked after the selection changed. Receives two parameters: (1) the selection - as per the `defaultSelectedItems`, (2) an object containing the "columnData" - the full render information for all visible columns |
 | `breadcrumbs` | Object: enabling the definition of options for the breadcrumbs feature in the footer (can be disabled by setting to `null`) |
@@ -67,7 +71,7 @@ It is also backwards-compatible with Drafts 4 and 6.
 | `additionalProperties` | - | *ignored* |
 | `patternProperties` | - | *ignored* |
 | `items`| Partially | used to look-up `properties` of single kind of items in an array; however if `items` is an array of multiple sub-schemas they are being *ignored* |
-| `additionalItems`| Yes | used to look-up `properties` of kind of items in an array if `ìtems` is not present or defined as an array (which is not supported itself), otherwise `additionalItems` are being *ignored* |
+| `additionalItems`| Yes | used to look-up `properties` of kind of items in an array if `items` is not present or defined as an array (which is not supported itself), otherwise `additionalItems` are being *ignored* |
 | `allOf` | Yes | used to combine sub-schemas transparently |
 | `anyOf` | - | *ignored* |
 | `oneOf` | - | *ignored* |
@@ -107,7 +111,7 @@ It is also backwards-compatible with Drafts 4 and 6.
 | `maxProperties` | - | *ignored* |
 
 
-## Ideas
+## Ideas Needed
 
 - support `oneOf` (if there is a nice/consistent way to do so)
 - support `anyOf` (if there is a nice/consistent way to do so)

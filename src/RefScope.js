@@ -2,8 +2,8 @@ import JsonSchema from "./JsonSchema";
 import { isNonEmptyObject } from "./utils";
 
 /**
- * Helper class to faciliate looking-up re-usable sub-schemas via the "$ref" keyword. A single RefScope instance refers to one main schema
- * and its contained "definitions". Other main schemas maybe used by additing their respective RefScope instances via .addOtherRefScopes().
+ * Helper class to facilitate looking-up re-usable sub-schemas via the "$ref" keyword. A single RefScope instance refers to one main schema
+ * and its contained "definitions". Other main schemas maybe used by adding their respective RefScope instances via .addOtherRefScopes().
  */
 class RefScope {
     /**
@@ -96,11 +96,11 @@ class RefScope {
      * Look-up a re-usable schema by its $ref-erence.
      *
      * @param {String} ref the "$ref" value for which to look-up the associated (sub-)schema
-     * @param {Boolean} includeInteralRefs whether the "$ref" value is from within the same main schema this RefScope belongs to
+     * @param {Boolean} includeInternalRefs whether the "$ref" value is from within the same main schema this RefScope belongs to
      * @returns {JsonSchema} the successfully looked-up reference (or null if no match was found)
      */
-    findSchemaInThisScope = (ref, includeInteralRefs = true) => (
-        (includeInteralRefs && this.internalRefs.get(ref)) || this.externalRefs.get(ref)
+    findSchemaInThisScope = (ref, includeInternalRefs = true) => (
+        (includeInternalRefs && this.internalRefs.get(ref)) || this.externalRefs.get(ref)
     );
 
     /**

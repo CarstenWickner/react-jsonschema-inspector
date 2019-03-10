@@ -5,7 +5,7 @@ import {
 
 class JsonSchema {
     /**
-     * Alternative factory method to the constructur, returning "undefined" if the given schema is not a non-empty object.
+     * Alternative factory method to the constructor, returning "undefined" if the given schema is not a non-empty object.
      *
      * @param {Object} rawSchema the JSON Schema to represent
      * @param {RefScope} scope collection of available $ref targets
@@ -117,7 +117,7 @@ class JsonSchema {
             return returnedSchemas;
         }
         if (isNonEmptyObject(this.schema.items)) {
-            // unsupported: specifying array of schemas refering to entries at respective positions in described array
+            // unsupported: specifying array of schemas referring to entries at respective positions in described array
             // schema.items contains a single schema, that specifies the type of any value in the described array
             return new JsonSchema(this.schema.items, this.scope).getPropertyParentSchemas();
         }

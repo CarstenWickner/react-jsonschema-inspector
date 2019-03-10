@@ -299,7 +299,7 @@ describe("calls onSelect", () => {
         rootColumnSelect(mockEvent, "Schema One");
         expect(onSelect.mock.calls).toHaveLength(0);
     });
-    it("when clearing and reseting root selection", () => {
+    it("when clearing and resetting root selection", () => {
         const component = shallow(
             <Inspector
                 schemas={schemas}

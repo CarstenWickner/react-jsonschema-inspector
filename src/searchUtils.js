@@ -168,7 +168,7 @@ export function createFilterFunction(flatSearchFilter) {
  */
 export const filteringByFields = memoize((searchFields, searchFilter) => {
     if (searchFields && searchFields.length && searchFilter) {
-        // use case-insensetive flag "i" in regular expression for value matching
+        // use case-insensitive flag "i" in regular expression for value matching
         const regex = new RegExp(escapeRegExp(searchFilter), "i");
         return rawSchema => searchFields.some(fieldName => regex.test(rawSchema[fieldName]));
     }

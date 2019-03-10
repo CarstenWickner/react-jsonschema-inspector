@@ -7,7 +7,7 @@ import { isDefined } from "./utils";
  * @param {String} breadcrumbsOptions.prefix text to prepend on the very first element
  * @param {String} breadcrumbsOptions.separator text to prepend on all but the very first element
  * @param {String} breadcrumbsOptions.arrayItemAccessor text to append if an element (which is not the trailing selection) is an array
- * @param {Function} breadcrumbsOptions.mutateName mutates name of selected item (e.g. for removing/replacing whitespaces)
+ * @param {Function} breadcrumbsOptions.mutateName mutates name of selected item (e.g. for removing/replacing white-spaces)
  * @returns {Function} return function extracting breadcrumb text for one column
  * @returns {Object} return.column single item from the standard `columnData` array
  * @returns {Object.<String, JsonSchema>} return.column.items all displayed entries in the given column

@@ -18,7 +18,7 @@ import { isDefined, isNonEmptyObject, mapObjectValues } from "./utils";
 
 class Inspector extends Component {
     /**
-     * Avoid constant/immediate rerendering while the search filter is being entered by using debounce.
+     * Avoid constant/immediate re-rendering while the search filter is being entered by using debounce.
      * This is wrapped into memoize() to allow setting the wait times via props.
      *
      * @param {Number} debounceWait the number of milliseconds to delay before applying the new filter value
@@ -164,7 +164,7 @@ class Inspector extends Component {
         // thanks to 'memoize', the subsequent render() call will just look-up the result of this evaluation
         const newRenderData = this.getRenderDataForSelection(schemas, referenceSchemas, newSelection);
         const { columnData } = newRenderData;
-        // update state to trigger rerendering of the whole component
+        // update state to trigger re-rendering of the whole component
         this.setState(
             {
                 selectedItems: newSelection,
@@ -269,7 +269,7 @@ Inspector.propTypes = {
         preventNavigation: PropTypes.bool
     }),
     /**
-     * Options for the search intput shown in the header and its impact on the displayed columns – set to `null` to turn it off.
+     * Options for the search input shown in the header and its impact on the displayed columns – set to `null` to turn it off.
      * - "fields": Array of strings: each referring to a textual field in a JSON Schema (e.g. `["title", "description"]`) in which to search/filter
      * - "filterBy": Custom search/filter logic, if present: overriding behaviour based on "fields" (either one must be set)
      * - "inputPlaceholder": Hint text to display in the search input field (defaults to "Search")
