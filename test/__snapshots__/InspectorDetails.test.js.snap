@@ -10,11 +10,6 @@ exports[`renders correctly with minimal/default props 1`] = `
         Object {
           "items": Object {
             "Schema One": JsonSchema {
-              "getFieldValue": [Function],
-              "getProperties": [Function],
-              "getPropertyParentSchemas": [Function],
-              "getSchemaFieldValue": [Function],
-              "getTypeOfArrayItems": [Function],
               "parserConfig": undefined,
               "schema": Object {
                 "description": "Text",
@@ -22,10 +17,7 @@ exports[`renders correctly with minimal/default props 1`] = `
               },
               "scope": RefScope {
                 "addOtherScope": [Function],
-                "addOtherScopes": [Function],
                 "externalRefs": Map {},
-                "find": [Function],
-                "findSchemaInThisScope": [Function],
                 "internalRefs": Map {
                   "#" => [Circular],
                 },
@@ -40,11 +32,6 @@ exports[`renders correctly with minimal/default props 1`] = `
     }
     itemSchema={
       JsonSchema {
-        "getFieldValue": [Function],
-        "getProperties": [Function],
-        "getPropertyParentSchemas": [Function],
-        "getSchemaFieldValue": [Function],
-        "getTypeOfArrayItems": [Function],
         "parserConfig": undefined,
         "schema": Object {
           "description": "Text",
@@ -52,10 +39,7 @@ exports[`renders correctly with minimal/default props 1`] = `
         },
         "scope": RefScope {
           "addOtherScope": [Function],
-          "addOtherScopes": [Function],
           "externalRefs": Map {},
-          "find": [Function],
-          "findSchemaInThisScope": [Function],
           "internalRefs": Map {
             "#" => [Circular],
           },

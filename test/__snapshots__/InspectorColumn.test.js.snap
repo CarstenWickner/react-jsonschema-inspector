@@ -14,21 +14,13 @@ exports[`renders correctly with minimal/default props 1`] = `
     renderContent={null}
     schema={
       JsonSchema {
-        "getFieldValue": [Function],
-        "getProperties": [Function],
-        "getPropertyParentSchemas": [Function],
-        "getSchemaFieldValue": [Function],
-        "getTypeOfArrayItems": [Function],
         "parserConfig": Object {},
         "schema": Object {
           "$id": "Schema One",
         },
         "scope": RefScope {
           "addOtherScope": [Function],
-          "addOtherScopes": [Function],
           "externalRefs": Map {},
-          "find": [Function],
-          "findSchemaInThisScope": [Function],
           "internalRefs": Map {},
           "otherScopes": Array [],
         },
@@ -43,21 +35,13 @@ exports[`renders correctly with minimal/default props 1`] = `
     renderContent={null}
     schema={
       JsonSchema {
-        "getFieldValue": [Function],
-        "getProperties": [Function],
-        "getPropertyParentSchemas": [Function],
-        "getSchemaFieldValue": [Function],
-        "getTypeOfArrayItems": [Function],
         "parserConfig": Object {},
         "schema": Object {
           "$id": "Schema Two",
         },
         "scope": RefScope {
           "addOtherScope": [Function],
-          "addOtherScopes": [Function],
           "externalRefs": Map {},
-          "find": [Function],
-          "findSchemaInThisScope": [Function],
           "internalRefs": Map {},
           "otherScopes": Array [],
         },

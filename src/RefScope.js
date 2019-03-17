@@ -88,9 +88,9 @@ class RefScope {
      *
      * @param {Array.<RefScope>} refScopes other reference scopes that are available (at least their external $ref-erences)
      */
-    addOtherScopes = (refScopes) => {
+    addOtherScopes(refScopes) {
         refScopes.forEach(this.addOtherScope);
-    };
+    }
 
     /**
      * Look-up a re-usable schema by its $ref-erence.
@@ -99,9 +99,9 @@ class RefScope {
      * @param {Boolean} includeInternalRefs whether the "$ref" value is from within the same main schema this RefScope belongs to
      * @returns {JsonSchema} the successfully looked-up reference (or null if no match was found)
      */
-    findSchemaInThisScope = (ref, includeInternalRefs = true) => (
-        (includeInternalRefs && this.internalRefs.get(ref)) || this.externalRefs.get(ref)
-    );
+    findSchemaInThisScope(ref, includeInternalRefs = true) {
+        return (includeInternalRefs && this.internalRefs.get(ref)) || this.externalRefs.get(ref);
+    }
 
     /**
      * Look-up a re-usable schema by its $ref-erence.
@@ -110,7 +110,7 @@ class RefScope {
      * @returns {JsonSchema} the successfully looked-up reference
      * @throws error if no match was found
      */
-    find = (ref) => {
+    find(ref) {
         let result = this.findSchemaInThisScope(ref);
         if (!result) {
             this.otherScopes.some((otherScope) => {
@@ -122,7 +122,7 @@ class RefScope {
             return result;
         }
         throw new Error(`Cannot resolve $ref: "${ref}"`);
-    };
+    }
 }
 
 export default RefScope;

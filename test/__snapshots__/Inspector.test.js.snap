@@ -14,11 +14,6 @@ exports[`renders correctly with minimal/default props 1`] = `
           Object {
             "items": Object {
               "Schema One": JsonSchema {
-                "getFieldValue": [Function],
-                "getProperties": [Function],
-                "getPropertyParentSchemas": [Function],
-                "getSchemaFieldValue": [Function],
-                "getTypeOfArrayItems": [Function],
                 "parserConfig": Object {
                   "anyOf": "ignore",
                   "oneOf": "ignore",
@@ -36,24 +31,15 @@ exports[`renders correctly with minimal/default props 1`] = `
                 },
                 "scope": RefScope {
                   "addOtherScope": [Function],
-                  "addOtherScopes": [Function],
                   "externalRefs": Map {},
-                  "find": [Function],
-                  "findSchemaInThisScope": [Function],
                   "internalRefs": Map {
                     "#" => [Circular],
                   },
                   "otherScopes": Array [
                     RefScope {
                       "addOtherScope": [Function],
-                      "addOtherScopes": [Function],
                       "externalRefs": Map {
                         "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -69,11 +55,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -89,11 +70,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -104,15 +80,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                       },
-                      "find": [Function],
-                      "findSchemaInThisScope": [Function],
                       "internalRefs": Map {
                         "#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -128,11 +97,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "#/definitions/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -146,14 +110,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "otherScopes": Array [
                         RefScope {
                           "addOtherScope": [Function],
-                          "addOtherScopes": [Function],
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -165,11 +123,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -181,15 +134,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                           },
-                          "find": [Function],
-                          "findSchemaInThisScope": [Function],
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -209,14 +155,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                     },
                     RefScope {
                       "addOtherScope": [Function],
-                      "addOtherScopes": [Function],
                       "externalRefs": Map {
                         "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -228,11 +168,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -244,15 +179,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                       },
-                      "find": [Function],
-                      "findSchemaInThisScope": [Function],
                       "internalRefs": Map {
                         "#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -267,14 +195,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "otherScopes": Array [
                         RefScope {
                           "addOtherScope": [Function],
-                          "addOtherScopes": [Function],
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -290,11 +212,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -310,11 +227,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -325,15 +237,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                           },
-                          "find": [Function],
-                          "findSchemaInThisScope": [Function],
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -349,11 +254,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "#/definitions/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -374,11 +274,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                 },
               },
               "Schema Two": JsonSchema {
-                "getFieldValue": [Function],
-                "getProperties": [Function],
-                "getPropertyParentSchemas": [Function],
-                "getSchemaFieldValue": [Function],
-                "getTypeOfArrayItems": [Function],
                 "parserConfig": Object {
                   "anyOf": "ignore",
                   "oneOf": "ignore",
@@ -392,24 +287,15 @@ exports[`renders correctly with minimal/default props 1`] = `
                 },
                 "scope": RefScope {
                   "addOtherScope": [Function],
-                  "addOtherScopes": [Function],
                   "externalRefs": Map {},
-                  "find": [Function],
-                  "findSchemaInThisScope": [Function],
                   "internalRefs": Map {
                     "#" => [Circular],
                   },
                   "otherScopes": Array [
                     RefScope {
                       "addOtherScope": [Function],
-                      "addOtherScopes": [Function],
                       "externalRefs": Map {
                         "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -425,11 +311,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -445,11 +326,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -460,15 +336,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                       },
-                      "find": [Function],
-                      "findSchemaInThisScope": [Function],
                       "internalRefs": Map {
                         "#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -484,11 +353,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "#/definitions/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -502,14 +366,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "otherScopes": Array [
                         RefScope {
                           "addOtherScope": [Function],
-                          "addOtherScopes": [Function],
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -521,11 +379,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -537,15 +390,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                           },
-                          "find": [Function],
-                          "findSchemaInThisScope": [Function],
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -565,14 +411,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                     },
                     RefScope {
                       "addOtherScope": [Function],
-                      "addOtherScopes": [Function],
                       "externalRefs": Map {
                         "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -584,11 +424,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -600,15 +435,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                       },
-                      "find": [Function],
-                      "findSchemaInThisScope": [Function],
                       "internalRefs": Map {
                         "#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -623,14 +451,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "otherScopes": Array [
                         RefScope {
                           "addOtherScope": [Function],
-                          "addOtherScopes": [Function],
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -646,11 +468,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -666,11 +483,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -681,15 +493,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                           },
-                          "find": [Function],
-                          "findSchemaInThisScope": [Function],
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -705,11 +510,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "#/definitions/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -742,11 +542,6 @@ exports[`renders correctly with minimal/default props 1`] = `
           Object {
             "items": Object {
               "Schema One": JsonSchema {
-                "getFieldValue": [Function],
-                "getProperties": [Function],
-                "getPropertyParentSchemas": [Function],
-                "getSchemaFieldValue": [Function],
-                "getTypeOfArrayItems": [Function],
                 "parserConfig": Object {
                   "anyOf": "ignore",
                   "oneOf": "ignore",
@@ -764,24 +559,15 @@ exports[`renders correctly with minimal/default props 1`] = `
                 },
                 "scope": RefScope {
                   "addOtherScope": [Function],
-                  "addOtherScopes": [Function],
                   "externalRefs": Map {},
-                  "find": [Function],
-                  "findSchemaInThisScope": [Function],
                   "internalRefs": Map {
                     "#" => [Circular],
                   },
                   "otherScopes": Array [
                     RefScope {
                       "addOtherScope": [Function],
-                      "addOtherScopes": [Function],
                       "externalRefs": Map {
                         "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -797,11 +583,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -817,11 +598,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -832,15 +608,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                       },
-                      "find": [Function],
-                      "findSchemaInThisScope": [Function],
                       "internalRefs": Map {
                         "#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -856,11 +625,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "#/definitions/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -874,14 +638,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "otherScopes": Array [
                         RefScope {
                           "addOtherScope": [Function],
-                          "addOtherScopes": [Function],
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -893,11 +651,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -909,15 +662,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                           },
-                          "find": [Function],
-                          "findSchemaInThisScope": [Function],
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -937,14 +683,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                     },
                     RefScope {
                       "addOtherScope": [Function],
-                      "addOtherScopes": [Function],
                       "externalRefs": Map {
                         "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -956,11 +696,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -972,15 +707,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                       },
-                      "find": [Function],
-                      "findSchemaInThisScope": [Function],
                       "internalRefs": Map {
                         "#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -995,14 +723,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "otherScopes": Array [
                         RefScope {
                           "addOtherScope": [Function],
-                          "addOtherScopes": [Function],
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1018,11 +740,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1038,11 +755,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1053,15 +765,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                           },
-                          "find": [Function],
-                          "findSchemaInThisScope": [Function],
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1077,11 +782,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "#/definitions/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1102,11 +802,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                 },
               },
               "Schema Two": JsonSchema {
-                "getFieldValue": [Function],
-                "getProperties": [Function],
-                "getPropertyParentSchemas": [Function],
-                "getSchemaFieldValue": [Function],
-                "getTypeOfArrayItems": [Function],
                 "parserConfig": Object {
                   "anyOf": "ignore",
                   "oneOf": "ignore",
@@ -1120,24 +815,15 @@ exports[`renders correctly with minimal/default props 1`] = `
                 },
                 "scope": RefScope {
                   "addOtherScope": [Function],
-                  "addOtherScopes": [Function],
                   "externalRefs": Map {},
-                  "find": [Function],
-                  "findSchemaInThisScope": [Function],
                   "internalRefs": Map {
                     "#" => [Circular],
                   },
                   "otherScopes": Array [
                     RefScope {
                       "addOtherScope": [Function],
-                      "addOtherScopes": [Function],
                       "externalRefs": Map {
                         "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1153,11 +839,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1173,11 +854,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1188,15 +864,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                       },
-                      "find": [Function],
-                      "findSchemaInThisScope": [Function],
                       "internalRefs": Map {
                         "#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1212,11 +881,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "#/definitions/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1230,14 +894,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "otherScopes": Array [
                         RefScope {
                           "addOtherScope": [Function],
-                          "addOtherScopes": [Function],
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1249,11 +907,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1265,15 +918,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                           },
-                          "find": [Function],
-                          "findSchemaInThisScope": [Function],
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1293,14 +939,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                     },
                     RefScope {
                       "addOtherScope": [Function],
-                      "addOtherScopes": [Function],
                       "externalRefs": Map {
                         "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1312,11 +952,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1328,15 +963,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                       },
-                      "find": [Function],
-                      "findSchemaInThisScope": [Function],
                       "internalRefs": Map {
                         "#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1351,14 +979,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "otherScopes": Array [
                         RefScope {
                           "addOtherScope": [Function],
-                          "addOtherScopes": [Function],
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1374,11 +996,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1394,11 +1011,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1409,15 +1021,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                           },
-                          "find": [Function],
-                          "findSchemaInThisScope": [Function],
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1433,11 +1038,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "#/definitions/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1476,11 +1076,6 @@ exports[`renders correctly with minimal/default props 1`] = `
           Object {
             "items": Object {
               "Schema One": JsonSchema {
-                "getFieldValue": [Function],
-                "getProperties": [Function],
-                "getPropertyParentSchemas": [Function],
-                "getSchemaFieldValue": [Function],
-                "getTypeOfArrayItems": [Function],
                 "parserConfig": Object {
                   "anyOf": "ignore",
                   "oneOf": "ignore",
@@ -1498,24 +1093,15 @@ exports[`renders correctly with minimal/default props 1`] = `
                 },
                 "scope": RefScope {
                   "addOtherScope": [Function],
-                  "addOtherScopes": [Function],
                   "externalRefs": Map {},
-                  "find": [Function],
-                  "findSchemaInThisScope": [Function],
                   "internalRefs": Map {
                     "#" => [Circular],
                   },
                   "otherScopes": Array [
                     RefScope {
                       "addOtherScope": [Function],
-                      "addOtherScopes": [Function],
                       "externalRefs": Map {
                         "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1531,11 +1117,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1551,11 +1132,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1566,15 +1142,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                       },
-                      "find": [Function],
-                      "findSchemaInThisScope": [Function],
                       "internalRefs": Map {
                         "#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1590,11 +1159,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "#/definitions/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1608,14 +1172,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "otherScopes": Array [
                         RefScope {
                           "addOtherScope": [Function],
-                          "addOtherScopes": [Function],
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1627,11 +1185,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1643,15 +1196,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                           },
-                          "find": [Function],
-                          "findSchemaInThisScope": [Function],
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1671,14 +1217,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                     },
                     RefScope {
                       "addOtherScope": [Function],
-                      "addOtherScopes": [Function],
                       "externalRefs": Map {
                         "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1690,11 +1230,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1706,15 +1241,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                       },
-                      "find": [Function],
-                      "findSchemaInThisScope": [Function],
                       "internalRefs": Map {
                         "#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1729,14 +1257,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "otherScopes": Array [
                         RefScope {
                           "addOtherScope": [Function],
-                          "addOtherScopes": [Function],
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1752,11 +1274,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1772,11 +1289,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1787,15 +1299,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                           },
-                          "find": [Function],
-                          "findSchemaInThisScope": [Function],
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1811,11 +1316,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "#/definitions/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1836,11 +1336,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                 },
               },
               "Schema Two": JsonSchema {
-                "getFieldValue": [Function],
-                "getProperties": [Function],
-                "getPropertyParentSchemas": [Function],
-                "getSchemaFieldValue": [Function],
-                "getTypeOfArrayItems": [Function],
                 "parserConfig": Object {
                   "anyOf": "ignore",
                   "oneOf": "ignore",
@@ -1854,24 +1349,15 @@ exports[`renders correctly with minimal/default props 1`] = `
                 },
                 "scope": RefScope {
                   "addOtherScope": [Function],
-                  "addOtherScopes": [Function],
                   "externalRefs": Map {},
-                  "find": [Function],
-                  "findSchemaInThisScope": [Function],
                   "internalRefs": Map {
                     "#" => [Circular],
                   },
                   "otherScopes": Array [
                     RefScope {
                       "addOtherScope": [Function],
-                      "addOtherScopes": [Function],
                       "externalRefs": Map {
                         "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1887,11 +1373,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1907,11 +1388,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1922,15 +1398,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                       },
-                      "find": [Function],
-                      "findSchemaInThisScope": [Function],
                       "internalRefs": Map {
                         "#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1946,11 +1415,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "#/definitions/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -1964,14 +1428,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "otherScopes": Array [
                         RefScope {
                           "addOtherScope": [Function],
-                          "addOtherScopes": [Function],
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1983,11 +1441,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -1999,15 +1452,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                           },
-                          "find": [Function],
-                          "findSchemaInThisScope": [Function],
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -2027,14 +1473,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                     },
                     RefScope {
                       "addOtherScope": [Function],
-                      "addOtherScopes": [Function],
                       "externalRefs": Map {
                         "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -2046,11 +1486,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                         "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -2062,15 +1497,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "scope": [Circular],
                         },
                       },
-                      "find": [Function],
-                      "findSchemaInThisScope": [Function],
                       "internalRefs": Map {
                         "#" => JsonSchema {
-                          "getFieldValue": [Function],
-                          "getProperties": [Function],
-                          "getPropertyParentSchemas": [Function],
-                          "getSchemaFieldValue": [Function],
-                          "getTypeOfArrayItems": [Function],
                           "parserConfig": Object {
                             "anyOf": "ignore",
                             "oneOf": "ignore",
@@ -2085,14 +1513,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "otherScopes": Array [
                         RefScope {
                           "addOtherScope": [Function],
-                          "addOtherScopes": [Function],
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -2108,11 +1530,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -2128,11 +1545,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -2143,15 +1555,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                           },
-                          "find": [Function],
-                          "findSchemaInThisScope": [Function],
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",
@@ -2167,11 +1572,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "#/definitions/react-inspector" => JsonSchema {
-                              "getFieldValue": [Function],
-                              "getProperties": [Function],
-                              "getPropertyParentSchemas": [Function],
-                              "getSchemaFieldValue": [Function],
-                              "getTypeOfArrayItems": [Function],
                               "parserConfig": Object {
                                 "anyOf": "ignore",
                                 "oneOf": "ignore",

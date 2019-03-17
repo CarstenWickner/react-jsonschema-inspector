@@ -70,7 +70,7 @@ class JsonSchema {
      * @param {?Function} mappingFunction optional: converting the raw value before calling the mergeFunction
      * @return {*} result of the given mergeFunction over all encountered values of fields with the given name
      */
-    getFieldValue = (fieldName, mergeFunction = listValues, mappingFunction) => {
+    getFieldValue(fieldName, mergeFunction = listValues, mappingFunction) {
         if (!isNonEmptyObject(this.schema)) {
             return undefined;
         }
@@ -90,7 +90,7 @@ class JsonSchema {
                 .reduce(mergeFunction, value);
         }
         return value;
-    };
+    }
 
     /**
      * Version of the getFieldValue() function to look-up of nested JSON schema definitions (while preserving the appropriate reference scope).
@@ -101,18 +101,18 @@ class JsonSchema {
      * @param {Function} mergeFunction optional: how to combine two encountered values into one
      * @return {*} result of the given mergeFunction over all encountered values of fields with the given name
      */
-    getSchemaFieldValue = (fieldName, mergeFunction = listValues) => (
-        this.getFieldValue(fieldName, mergeFunction, JsonSchema.createIfNotEmpty)
-    );
+    getSchemaFieldValue(fieldName, mergeFunction = listValues) {
+        return this.getFieldValue(fieldName, mergeFunction, JsonSchema.createIfNotEmpty);
+    }
 
     /**
      * Determine whether this schema represents an array and if so, return the sub-schema describing its contents.
      *
      * @returns {JsonSchema} type of array contents or null if it is not an array or its content type could not be determined
      */
-    getTypeOfArrayItems = () => (
-        this.getSchemaFieldValue("items") || this.getSchemaFieldValue("additionalItems") || null
-    );
+    getTypeOfArrayItems() {
+        return this.getSchemaFieldValue("items") || this.getSchemaFieldValue("additionalItems") || null;
+    }
 
     /**
      * Look-up of any nested sub-schemas that may contain information about "properties" in the given JSON schema definition.
@@ -126,7 +126,7 @@ class JsonSchema {
      *
      * @returns {Array<JsonSchema>} array listing sub-schemas that may define properties about their children
      */
-    getPropertyParentSchemas = () => {
+    getPropertyParentSchemas() {
         if (!isNonEmptyObject(this.schema)) {
             return [];
         }
@@ -154,15 +154,15 @@ class JsonSchema {
         }
         // if there are no nested schemas, only this schema itself may contain properties
         return [this];
-    };
+    }
 
     /**
      * Extract the properties mentioned in this schema – also considering all nested sub-schema by using getPropertyParentSchemas().
      *
      * @returns {Object.<String, JsonSchema>} collection of all properties mentioned in this schema
      */
-    getProperties = () => (
-        this.getPropertyParentSchemas().map(({ schema, scope }) => {
+    getProperties() {
+        return this.getPropertyParentSchemas().map(({ schema, scope }) => {
             // properties is an Object.<String, raw-json-schema>
             const { properties, required = [] } = schema;
             const rawProperties = Object.assign(
@@ -171,8 +171,8 @@ class JsonSchema {
                 isNonEmptyObject(properties) ? properties : {}
             );
             return mapObjectValues(rawProperties, rawSchema => new JsonSchema(rawSchema, this.parserConfig, scope));
-        }).reduce(mergeObjects, {})
-    );
+        }).reduce(mergeObjects, {});
+    }
 }
 
 export default JsonSchema;
