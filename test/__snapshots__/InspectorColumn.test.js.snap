@@ -19,6 +19,7 @@ exports[`renders correctly with minimal/default props 1`] = `
         "getPropertyParentSchemas": [Function],
         "getSchemaFieldValue": [Function],
         "getTypeOfArrayItems": [Function],
+        "parserConfig": Object {},
         "schema": Object {
           "$id": "Schema One",
         },
@@ -47,6 +48,7 @@ exports[`renders correctly with minimal/default props 1`] = `
         "getPropertyParentSchemas": [Function],
         "getSchemaFieldValue": [Function],
         "getTypeOfArrayItems": [Function],
+        "parserConfig": Object {},
         "schema": Object {
           "$id": "Schema Two",
         },

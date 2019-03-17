@@ -94,6 +94,59 @@ describe("createRecursiveFilterFunction()", () => {
             expect(flatSearchFilter).toHaveBeenCalledWith(subSchemaTwo);
         });
     });
+    describe.each`
+        groupName
+        ${"anyOf"}
+        ${"oneOf"}
+    `("$groupName:", ({ groupName }) => {
+        it("short-circuit on success (match in main schema)", () => {
+            const subSchemaOne = { enum: ["value one"] };
+            const subSchemaTwo = { enum: ["value two", "value three"] };
+            const rawSchema = {
+                [groupName]: [subSchemaOne, subSchemaTwo],
+                default: true
+            };
+            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
+            expect(flatSearchFilter).toHaveBeenCalledTimes(1);
+            expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
+        });
+        describe("match in first part", () => {
+            const subSchemaOne = {
+                default: true,
+                enum: ["value one"]
+            };
+            const subSchemaTwo = { enum: ["value two", "value three"] };
+            const rawSchema = { [groupName]: [subSchemaOne, subSchemaTwo] };
+
+            it("ignored if no parserConfig present", () => {
+                expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(false);
+                expect(flatSearchFilter).toHaveBeenCalledTimes(1);
+                expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
+            });
+            it("ignored if specifically ignored in parserConfig present", () => {
+                expect(recursiveFilterFunction(new JsonSchema(rawSchema, { [groupName]: "ignore" }))).toBe(false);
+                expect(flatSearchFilter).toHaveBeenCalledTimes(1);
+                expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
+            });
+            it("short-circuiting on success (with enabled option in parserConfig)", () => {
+                expect(recursiveFilterFunction(new JsonSchema(rawSchema, { [groupName]: "likeAllOf" }))).toBe(true);
+                expect(flatSearchFilter).toHaveBeenCalledTimes(2);
+                expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
+                expect(flatSearchFilter).toHaveBeenCalledWith(subSchemaOne);
+            });
+        });
+        it("check each part (no match but with enabled option in parserConfig)", () => {
+            const subSchemaOne = { enum: ["value one"] };
+            const subSchemaTwo = { enum: ["value two", "value three"] };
+            const rawSchema = { [groupName]: [subSchemaOne, subSchemaTwo] };
+
+            expect(recursiveFilterFunction(new JsonSchema(rawSchema, { [groupName]: "likeAllOf" }))).toBe(false);
+            expect(flatSearchFilter).toHaveBeenCalledTimes(3);
+            expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
+            expect(flatSearchFilter).toHaveBeenCalledWith(subSchemaOne);
+            expect(flatSearchFilter).toHaveBeenCalledWith(subSchemaTwo);
+        });
+    });
     describe("properties:", () => {
         it("short-circuit on success (match in allOf)", () => {
             const allOfPart = { default: true };

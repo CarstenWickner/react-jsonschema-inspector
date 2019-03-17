@@ -103,7 +103,7 @@ describe("collectFormFields()", () => {
                 A: { title: "Title Value" }
             }
         });
-        expect(collectFormFields(new JsonSchema(schema, scope), [{}], 0)).toEqual([
+        expect(collectFormFields(new JsonSchema(schema, {}, scope), [{}], 0)).toEqual([
             {
                 labelText: "Title",
                 rowValue: "Title Value"

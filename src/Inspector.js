@@ -69,25 +69,26 @@ class Inspector extends Component {
      * @param {Object.<String, Object>} schemas object containing the top-level JsonSchema definitions as values
      * @param {Array.<Object>} referenceSchemas
      * @param {Array.<String>} selectedItems array of strings identifying the selected properties per column
-     * @return {Object}
+     * @param {Object} parserConfig configuration affecting how the JSON schemas are being traversed/parsed
+     * @return {Object} return
      * @return {Array.<Object>} return.columnData
      * @return {Object.<String, JsonSchema>} return.columnData[].items named schemas to list in the respective column
      * @return {String} return.columnData[].selectedItem name of the currently selected item (may be null)
      * @return {Boolean} return.columnData[].trailingSelection flag indicating whether this column's selection is the last
      * @return {Function} return.columnData[].onSelect callback expecting an event and the name of the selected item in that column as parameters
      */
-    getRenderDataForSelection = memoize((schemas, referenceSchemas, selectedItems) => {
+    getRenderDataForSelection = memoize((schemas, referenceSchemas, selectedItems, parserConfig) => {
         // first prepare those schemas that may be referenced by the displayed ones
         const referenceScopes = [];
         referenceSchemas.forEach((rawRefSchema) => {
-            const refScope = new JsonSchema(rawRefSchema).scope;
+            const refScope = new JsonSchema(rawRefSchema, parserConfig).scope;
             refScope.addOtherScopes(referenceScopes);
             referenceScopes.forEach(otherScope => otherScope.addOtherScope(refScope));
             referenceScopes.push(refScope);
         });
         // the first column always lists all top-level schemas
         let nextColumn = mapObjectValues(schemas, (rawSchema) => {
-            const schema = new JsonSchema(rawSchema);
+            const schema = new JsonSchema(rawSchema, parserConfig);
             schema.scope.addOtherScopes(referenceScopes);
             return schema;
         });
@@ -156,13 +157,13 @@ class Inspector extends Component {
         // need to look-up the currently displayed number of content columns
         // thanks to 'memoize', we just look-up the result of the previous evaluation
         const {
-            schemas, referenceSchemas, onSelect: onSelectProp, breadcrumbs: breadcrumbsOptions
+            schemas, referenceSchemas, onSelect: onSelectProp, parserConfig, breadcrumbs: breadcrumbsOptions
         } = this.props;
         const oldColumnCount = (appendEmptyColumn ? 1 : 0)
-            + this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems).columnData.length;
+            + this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig).columnData.length;
         // now we need to know what the number of content columns will be after changing the state
         // thanks to 'memoize', the subsequent render() call will just look-up the result of this evaluation
-        const newRenderData = this.getRenderDataForSelection(schemas, referenceSchemas, newSelection);
+        const newRenderData = this.getRenderDataForSelection(schemas, referenceSchemas, newSelection, parserConfig);
         const { columnData } = newRenderData;
         // update state to trigger re-rendering of the whole component
         this.setState(
@@ -201,12 +202,12 @@ class Inspector extends Component {
 
     render() {
         const {
-            schemas, referenceSchemas, renderItemContent, renderSelectionDetails, renderEmptyDetails, searchOptions, breadcrumbs
+            schemas, referenceSchemas, renderItemContent, renderSelectionDetails, renderEmptyDetails, parserConfig, searchOptions, breadcrumbs
         } = this.props;
         const {
             selectedItems, appendEmptyColumn, enteredSearchFilter, appliedSearchFilter
         } = this.state;
-        const { columnData } = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems);
+        const { columnData } = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig);
         // apply search filter if enabled or clear (potentially left-over) search results
         columnData.forEach(this.setFilteredItemsForColumn(searchOptions, appliedSearchFilter));
         const searchFeatureEnabled = searchOptions && ((searchOptions.fields && searchOptions.fields.length) || searchOptions.filterBy);
@@ -253,6 +254,13 @@ Inspector.propTypes = {
     referenceSchemas: PropTypes.arrayOf(JsonSchemaPropType),
     /** Array of (default) selected items – each item representing the selection in one displayed column. */
     defaultSelectedItems: PropTypes.arrayOf(PropTypes.string),
+    /** Options for the traversing/parsing of JSON schemas. Enabling the inclusion of optional part of a schema. */
+    parserConfig: PropTypes.shape({
+        /** Setting indicating whether to include schemas parts wrapped in "anyOf". */
+        anyOf: PropTypes.oneOf(["ignore", "likeAllOf"]),
+        /** Setting indicating whether to include schemas parts wrapped in "oneOf". */
+        oneOf: PropTypes.oneOf(["ignore", "likeAllOf"])
+    }),
     /**
      * Options for the breadcrumbs feature shown in the footer – set to `null` to turn it off.
      * - "prefix": Text to show in front of root level selection, e.g. "//" or "./"
@@ -318,6 +326,10 @@ Inspector.propTypes = {
 Inspector.defaultProps = {
     referenceSchemas: [],
     defaultSelectedItems: [],
+    parserConfig: {
+        anyOf: "ignore",
+        oneOf: "ignore"
+    },
     breadcrumbs: {},
     searchOptions: undefined,
     onSelect: undefined,

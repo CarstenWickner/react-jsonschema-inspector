@@ -33,6 +33,10 @@ storiesOf("Inspector", module)
             searchOptions={{
                 fields: ["title", "description"]
             }}
+            parserConfig={{
+                anyOf: "likeAllOf",
+                oneOf: "likeAllOf"
+            }}
             renderEmptyDetails={({ rootColumnSchemas }) => (
                 <div style={{ padding: "0.5em 1em 0 1em" }}>
                     <h3>JSON Schema Inspector</h3>

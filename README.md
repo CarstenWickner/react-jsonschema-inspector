@@ -47,6 +47,9 @@ npm i react-jsonschema-inspector
 | `searchOptions.inputPlaceholder` | String: for setting the input hint in the search field. This defaults to `"Search"`. |
 | `searchOptions.debounceWait` | Number indicating the delay in milliseconds between the last change to the search term being entered and it actually being applied. This defaults to `200` but may be increased when used with exceptionally large schemas and you experience performance issues. Please refer to the documentation on [`lodash.debounce`](https://lodash.com/docs/4.17.11#debounce). |
 | `searchOptions.debounceMaxWait` | Number indicating the maximum delay in milliseconds after the search term was changed. This defaults to `500`. Please refer to the documentation on [`lodash.debounce`](https://lodash.com/docs/4.17.11#debounce). |
+| `parserConfig` | Object: enabling the inclusion/exclusion of optional parts of a JSON Schema |
+| `parserConfig.anyOf` | String: can be `"ignore"` (default behaviour) or `"likeAllOf"`, the latter resulting in `anyOf` being treated like `allOf – both for the inclusion of properties and their attributes as well as in the search. |
+| `parserConfig.oneOf` | String: can be `"ignore"` (default behaviour) or `"likeAllOf"`, the latter resulting in `oneOf` being treated like `allOf – both for the inclusion of properties and their attributes as well as in the search. |
 | `renderItemContent` | Function: custom render function for name of single property/sub-schema in a column. Receives one parameter: object with the following properties: "name", "hasNestedItems", "selected", "schema" |
 | `renderSelectionDetails` | Function: custom render function for the "Details" block on the right for the single property/sub-schema being selected. Receives one parameter: object with the following properties: "itemSchema", "columnData", "selectionColumnIndex" |
 | `renderEmptyDetails` | Function: custom render function for the "Details" block on the right if nothing is selected yet. Receives one parameter, which is an object with the "rootColumnSchemas" property, which holds the array of top-level schemas (as derived from the `schemas` prop and augmented by any given `referenceSchemas`)
@@ -73,8 +76,8 @@ It is also backwards-compatible with Drafts 4 and 6.
 | `items`| Partially | used to look-up `properties` of single kind of items in an array; however if `items` is an array of multiple sub-schemas they are being *ignored* |
 | `additionalItems`| Yes | used to look-up `properties` of kind of items in an array if `items` is not present or defined as an array (which is not supported itself), otherwise `additionalItems` are being *ignored* |
 | `allOf` | Yes | used to combine sub-schemas transparently |
-| `anyOf` | - | *ignored* |
-| `oneOf` | - | *ignored* |
+| `anyOf` | Partially | used to combine sub-schemas transparently (only when `parserConfig.anyOf === "likeAllOf"`) |
+| `oneOf` | Partially | used to combine sub-schemas transparently (only when `parserConfig.oneOf === "likeAllOf"`) |
 | `not` | - | *ignored* |
 | `contains` | - | *ignored* |
 | `dependencies` | - | *ignored* |
@@ -113,8 +116,8 @@ It is also backwards-compatible with Drafts 4 and 6.
 
 ## Ideas Needed
 
-- support `oneOf` (if there is a nice/consistent way to do so)
-- support `anyOf` (if there is a nice/consistent way to do so)
+- differentiate between `anyOf` options (in addition to the transparent inclusion via `parserConfig = { anyOf: "likeAllOf" }`)
+- differentiate between `oneOf` options (in addition to the transparent inclusion via `parserConfig = { oneOf: "likeAllOf" }`)
 
 
 [main-logo-image]: https://raw.githubusercontent.com/CarstenWickner/react-jsonschema-inspector/master/logo.svg?sanitize=true

@@ -21,7 +21,7 @@ export function createRecursiveFilterFunction(flatSearchFilter) {
         if (!jsonSchema) {
             return false;
         }
-        const { schema: rawSchema, scope } = jsonSchema;
+        const { schema: rawSchema, parserConfig, scope } = jsonSchema;
         if (!isNonEmptyObject(rawSchema)) {
             // empty schema can be ignored
             return false;
@@ -34,10 +34,26 @@ export function createRecursiveFilterFunction(flatSearchFilter) {
             // if there is a $ref, no other fields are being expected to be present - and the referenced sub-schema is checked separately
             return false;
         }
-        const mapRawSubSchema = rawSubSchema => new JsonSchema(rawSubSchema, scope);
+        const mapRawSubSchema = rawSubSchema => new JsonSchema(rawSubSchema, parserConfig, scope);
         // if the given schema is a composite of multiple sub-schemas, check each of its parts
         if (rawSchema.allOf
             && rawSchema.allOf
+                .map(mapRawSubSchema)
+                .some(recursiveFilterFunction)) {
+            return true;
+        }
+        if (rawSchema.anyOf
+            && parserConfig
+            && parserConfig.anyOf === "likeAllOf"
+            && rawSchema.anyOf
+                .map(mapRawSubSchema)
+                .some(recursiveFilterFunction)) {
+            return true;
+        }
+        if (rawSchema.oneOf
+            && parserConfig
+            && parserConfig.oneOf === "likeAllOf"
+            && rawSchema.oneOf
                 .map(mapRawSubSchema)
                 .some(recursiveFilterFunction)) {
             return true;
@@ -92,10 +108,10 @@ export function collectReferencedSubSchemas(jsonSchema) {
  * Build the function for determining the "filteredItems" for a given Object.<String, JsonSchema>.
  *
  * @param {Function} flatSearchFilter
- * @param {Object} flatSearchFilter.value raw JSON schema to filter (without considering any sub-structures like `properties` or `allOf`)
+ * @param {Object} flatSearchFilter.param0 raw JSON schema to filter (without considering any sub-structures like `properties` or `allOf`)
  * @param {Boolean} flatSearchFilter.return whether there is a direct match in the given schema (e.g. in its `title` or `description`)
  * @return {Function} return producing a function to apply for filtering
- * @return {Object.<String, JsonSchema>} return.value expected input is an object representing a view column's items
+ * @return {Object.<String, JsonSchema>} return.param0 expected input is an object representing a view column's items
  * @return {Array.<String>} return.return output is an array of "filteredItems"
  */
 export function createFilterFunction(flatSearchFilter) {

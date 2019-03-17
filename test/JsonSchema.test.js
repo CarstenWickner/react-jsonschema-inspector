@@ -24,7 +24,7 @@ describe("getPropertyParentSchemas()", () => {
                 A: { title: "Ref-Test" }
             }
         });
-        const result = new JsonSchema({ $ref: "#/definitions/A" }, scope).getPropertyParentSchemas();
+        const result = new JsonSchema({ $ref: "#/definitions/A" }, {}, scope).getPropertyParentSchemas();
         expect(result).toHaveLength(1);
         expect(result[0].schema).toEqual({ title: "Ref-Test" });
     });
@@ -46,7 +46,7 @@ describe("getPropertyParentSchemas()", () => {
                 A: { title: "Ref-Title" }
             }
         });
-        const result = new JsonSchema(schema, scope).getPropertyParentSchemas();
+        const result = new JsonSchema(schema, {}, scope).getPropertyParentSchemas();
         expect(result).toHaveLength(1);
         expect(result[0].schema).toEqual({ title: "Ref-Title" });
     });
@@ -69,13 +69,75 @@ describe("getPropertyParentSchemas()", () => {
         const { scope } = new JsonSchema({
             definitions: { A: subSchemaA }
         });
-        const result = new JsonSchema({ $ref: "#/definitions/A" }, scope).getPropertyParentSchemas();
+        const result = new JsonSchema({ $ref: "#/definitions/A" }, {}, scope).getPropertyParentSchemas();
         expect(result).toHaveLength(5);
         expect(result[0].schema).toEqual(subSchemaA);
         expect(result[1].schema).toEqual(subSchemaA1);
         expect(result[2].schema).toEqual(subSchemaA2);
         expect(result[3].schema).toEqual(subSchemaA21);
         expect(result[4].schema).toEqual(subSchemaA22);
+    });
+    describe.each`
+        groupName
+        ${"anyOf"}
+        ${"oneOf"}
+    `("$groupName:", ({ groupName }) => {
+        const parserConfig = { [groupName]: "likeAllOf" };
+
+        it("ignored if parserConfig not set", () => {
+            const subSchema1 = { description: "Description Text" };
+            const subSchema2 = { title: "Title Value" };
+            const schema = new JsonSchema({ [groupName]: [subSchema1, subSchema2] });
+            const result = schema.getPropertyParentSchemas();
+            expect(result).toHaveLength(1);
+            expect(result[0]).toEqual(schema);
+        });
+        it("included if parserConfig set", () => {
+            const subSchema1 = { description: "Description Text" };
+            const subSchema2 = { title: "Title Value" };
+            const schema = new JsonSchema({ [groupName]: [subSchema1, subSchema2] }, parserConfig);
+            const result = schema.getPropertyParentSchemas();
+            expect(result).toHaveLength(3);
+            expect(result[0]).toEqual(schema);
+            expect(result[1].schema).toEqual(subSchema1);
+            expect(result[2].schema).toEqual(subSchema2);
+        });
+        it("includes all $ref-erenced if parserConfig set", () => {
+            const subSchemaA1 = { description: "Description Text" };
+            const subSchemaA21 = { title: "Title Value" };
+            const subSchemaA22 = { type: "object" };
+            const subSchemaA2 = { [groupName]: [subSchemaA21, subSchemaA22] };
+            const subSchemaA = { [groupName]: [subSchemaA1, subSchemaA2] };
+            const { scope } = new JsonSchema({
+                definitions: { A: subSchemaA }
+            }, parserConfig);
+            const result = new JsonSchema({ $ref: "#/definitions/A" }, parserConfig, scope).getPropertyParentSchemas();
+            expect(result).toHaveLength(5);
+            expect(result[0].schema).toEqual(subSchemaA);
+            expect(result[1].schema).toEqual(subSchemaA1);
+            expect(result[2].schema).toEqual(subSchemaA2);
+            expect(result[3].schema).toEqual(subSchemaA21);
+            expect(result[4].schema).toEqual(subSchemaA22);
+        });
+        it("combined with allOf if parserConfig set", () => {
+            const subSchema1 = { description: "Description Text" };
+            const subSchema2 = { title: "Title Value" };
+            const subSchema3 = { default: true };
+            const subSchema4 = { type: "boolean" };
+            const schema = new JsonSchema({
+                [groupName]: [subSchema1, subSchema2],
+                allOf: [subSchema3, subSchema4]
+            }, parserConfig);
+            const result = schema.getPropertyParentSchemas();
+            expect(result).toHaveLength(5);
+            expect(result[0]).toEqual(schema);
+            // allOf is included first
+            expect(result[1].schema).toEqual(subSchema3);
+            expect(result[2].schema).toEqual(subSchema4);
+            // sub schemas from anyOf/oneOf
+            expect(result[3].schema).toEqual(subSchema1);
+            expect(result[4].schema).toEqual(subSchema2);
+        });
     });
     it("returns type of items", () => {
         const subSchemaItems = { title: "Title Value" };
@@ -91,7 +153,7 @@ describe("getPropertyParentSchemas()", () => {
         const { scope } = new JsonSchema({
             definitions: { A: subSchemaItems }
         });
-        const result = new JsonSchema(schema, scope).getPropertyParentSchemas();
+        const result = new JsonSchema(schema, {}, scope).getPropertyParentSchemas();
         expect(result).toHaveLength(1);
         expect(result[0].schema).toEqual(subSchemaItems);
         expect(result[0].scope).toEqual(scope);
@@ -110,7 +172,7 @@ describe("getPropertyParentSchemas()", () => {
         const { scope } = new JsonSchema({
             definitions: { A: subSchemaItems }
         });
-        const result = new JsonSchema(schema, scope).getPropertyParentSchemas();
+        const result = new JsonSchema(schema, {}, scope).getPropertyParentSchemas();
         expect(result).toHaveLength(1);
         expect(result[0].schema).toEqual(subSchemaItems);
         expect(result[0].scope).toEqual(scope);
@@ -144,7 +206,7 @@ describe("getFieldValue()", () => {
                 other: { title: "Ref-Test" }
             }
         });
-        expect(new JsonSchema(schema, scope).getFieldValue("title")).toEqual("Ref-Test");
+        expect(new JsonSchema(schema, {}, scope).getFieldValue("title")).toEqual("Ref-Test");
     });
     it("ignores other fields if $ref found", () => {
         const schema = {
@@ -156,7 +218,7 @@ describe("getFieldValue()", () => {
                 other: { title: "Ref-Title" }
             }
         });
-        expect(new JsonSchema(schema, scope).getFieldValue("title")).toBe("Ref-Title");
+        expect(new JsonSchema(schema, {}, scope).getFieldValue("title")).toBe("Ref-Title");
     });
     it("throws error for invalid $ref if scope provided", () => {
         const schema = { $ref: "#/definitions/other" };
@@ -166,69 +228,143 @@ describe("getFieldValue()", () => {
                 fourth: { title: "one more" }
             }
         });
-        expect(() => new JsonSchema(schema, scope).getFieldValue("title"))
+        expect(() => new JsonSchema(schema, {}, scope).getFieldValue("title"))
             .toThrowError("Cannot resolve $ref: \"#/definitions/other\"");
     });
-    it("finds single value in allOf", () => {
-        const schema = {
-            allOf: [
-                { description: "Description Text" },
-                { title: "Title Value" },
-                { type: "object" }
-            ]
-        };
-        expect(new JsonSchema(schema).getFieldValue("title")).toEqual("Title Value");
-    });
-    it("finds single value in $ref-erenced allOf", () => {
-        const schema = { $ref: "#/definitions/A" };
-        const { scope } = new JsonSchema({
-            definitions: {
-                A: {
-                    allOf: [
-                        { description: "Description Text" },
-                        {
-                            allOf: [
-                                { title: "Title Value" },
-                                { type: "object" }
-                            ]
-                        }
-                    ]
+    describe("allOf:", () => {
+        it("finds single value", () => {
+            const schema = {
+                allOf: [
+                    { description: "Description Text" },
+                    { title: "Title Value" },
+                    { type: "object" }
+                ]
+            };
+            expect(new JsonSchema(schema).getFieldValue("title")).toEqual("Title Value");
+        });
+        it("finds single value in $ref-erenced group", () => {
+            const schema = { $ref: "#/definitions/A" };
+            const { scope } = new JsonSchema({
+                definitions: {
+                    A: {
+                        allOf: [
+                            { description: "Description Text" },
+                            {
+                                allOf: [
+                                    { title: "Title Value" },
+                                    { type: "object" }
+                                ]
+                            }
+                        ]
+                    }
                 }
-            }
+            });
+            expect(new JsonSchema(schema, {}, scope).getFieldValue("title")).toEqual("Title Value");
         });
-        expect(new JsonSchema(schema, scope).getFieldValue("title")).toEqual("Title Value");
+        it("lists multiple values by default", () => {
+            const schema = { $ref: "#/definitions/A" };
+            const { scope } = new JsonSchema({
+                definitions: {
+                    A: {
+                        allOf: [
+                            { $ref: "#/definitions/B" },
+                            { title: "Specific Title" }
+                        ]
+                    },
+                    B: { title: "Generic Title" }
+                }
+            });
+            expect(new JsonSchema(schema, {}, scope).getFieldValue("title")).toEqual(["Generic Title", "Specific Title"]);
+        });
+        it("supports custom mergeFunction for multiple values", () => {
+            const schema = { $ref: "#/definitions/A" };
+            const { scope } = new JsonSchema({
+                definitions: {
+                    A: {
+                        allOf: [
+                            { $ref: "#/definitions/B" },
+                            { title: "Specific Title" }
+                        ]
+                    },
+                    B: { title: "Generic Title" }
+                }
+            });
+            // custom merge function always overrides result with last encountered value
+            const mergeFunction = (first, second) => (isDefined(second) ? second : first);
+            expect(new JsonSchema(schema, {}, scope).getFieldValue("title", mergeFunction)).toEqual("Specific Title");
+        });
     });
-    it("lists multiple values by default", () => {
-        const schema = { $ref: "#/definitions/A" };
-        const { scope } = new JsonSchema({
-            definitions: {
-                A: {
-                    allOf: [
-                        { $ref: "#/definitions/B" },
-                        { title: "Specific Title" }
-                    ]
-                },
-                B: { title: "Generic Title" }
-            }
+    describe.each`
+        groupName
+        ${"anyOf"}
+        ${"oneOf"}
+    `("$groupName:", ({ groupName }) => {
+        const parserConfig = { [groupName]: "likeAllOf" };
+        it("finds single value", () => {
+            const schema = {
+                [groupName]: [
+                    { description: "Description Text" },
+                    { title: "Title Value" },
+                    { type: "object" }
+                ]
+            };
+            expect(new JsonSchema(schema, parserConfig).getFieldValue("title"))
+                .toEqual("Title Value");
         });
-        expect(new JsonSchema(schema, scope).getFieldValue("title")).toEqual(["Generic Title", "Specific Title"]);
-    });
-    it("supports custom mergeFunction for multiple values", () => {
-        const schema = { $ref: "#/definitions/A" };
-        const { scope } = new JsonSchema({
-            definitions: {
-                A: {
-                    allOf: [
-                        { $ref: "#/definitions/B" },
-                        { title: "Specific Title" }
-                    ]
-                },
-                B: { title: "Generic Title" }
-            }
+        it("finds single value in $ref-erenced group", () => {
+            const schema = { $ref: "#/definitions/A" };
+            const { scope } = new JsonSchema({
+                definitions: {
+                    A: {
+                        [groupName]: [
+                            { description: "Description Text" },
+                            {
+                                [groupName]: [
+                                    { title: "Title Value" },
+                                    { type: "object" }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }, parserConfig);
+            expect(new JsonSchema(schema, parserConfig, scope).getFieldValue("title"))
+                .toEqual("Title Value");
         });
-        // custom merge function always overrides result with last encountered value
-        const mergeFunction = (first, second) => (isDefined(second) ? second : first);
-        expect(new JsonSchema(schema, scope).getFieldValue("title", mergeFunction)).toEqual("Specific Title");
+        it("lists multiple values by default", () => {
+            const schema = { $ref: "#/definitions/A" };
+            const { scope } = new JsonSchema({
+                definitions: {
+                    A: {
+                        [groupName]: [
+                            { $ref: "#/definitions/B" },
+                            { title: "Specific Title" }
+                        ]
+                    },
+                    B: { title: "Generic Title" }
+                }
+            }, parserConfig);
+            expect(new JsonSchema(schema, parserConfig, scope).getFieldValue("title"))
+                .toEqual(["Generic Title", "Specific Title"]);
+        });
+        it("supports custom mergeFunction for multiple values", () => {
+            const schema = { $ref: "#/definitions/A" };
+            const { scope } = new JsonSchema({
+                definitions: {
+                    A: {
+                        [groupName]: [
+                            { $ref: "#/definitions/B" },
+                            { title: "Specific Title" }
+                        ]
+                    },
+                    B: { title: "Generic Title" }
+                }
+            }, parserConfig);
+            // custom merge function always overrides result with last encountered value
+            const mergeFunction = (first, second) => (isDefined(second) ? second : first);
+            expect(new JsonSchema(schema, parserConfig, scope).getFieldValue("title", mergeFunction))
+                .toEqual("Specific Title");
+        });
     });
     it("ignores items", () => {
         const schema = {

@@ -19,6 +19,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                 "getPropertyParentSchemas": [Function],
                 "getSchemaFieldValue": [Function],
                 "getTypeOfArrayItems": [Function],
+                "parserConfig": Object {
+                  "anyOf": "ignore",
+                  "oneOf": "ignore",
+                },
                 "schema": Object {
                   "properties": Object {
                     "Item One": Object {},
@@ -50,6 +54,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -66,6 +74,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -82,6 +94,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                           },
@@ -97,6 +113,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -113,6 +133,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                           },
@@ -130,6 +154,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -142,6 +170,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -158,6 +190,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -181,6 +217,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -193,6 +233,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -209,6 +253,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -227,6 +275,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -243,6 +295,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -259,6 +315,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -274,6 +334,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -290,6 +354,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -311,6 +379,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                 "getPropertyParentSchemas": [Function],
                 "getSchemaFieldValue": [Function],
                 "getTypeOfArrayItems": [Function],
+                "parserConfig": Object {
+                  "anyOf": "ignore",
+                  "oneOf": "ignore",
+                },
                 "schema": Object {
                   "properties": Object {
                     "Item Three": Object {
@@ -338,6 +410,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -354,6 +430,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -370,6 +450,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                           },
@@ -385,6 +469,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -401,6 +489,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                           },
@@ -418,6 +510,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -430,6 +526,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -446,6 +546,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -469,6 +573,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -481,6 +589,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -497,6 +609,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -515,6 +631,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -531,6 +651,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -547,6 +671,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -562,6 +690,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -578,6 +710,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -611,6 +747,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                 "getPropertyParentSchemas": [Function],
                 "getSchemaFieldValue": [Function],
                 "getTypeOfArrayItems": [Function],
+                "parserConfig": Object {
+                  "anyOf": "ignore",
+                  "oneOf": "ignore",
+                },
                 "schema": Object {
                   "properties": Object {
                     "Item One": Object {},
@@ -642,6 +782,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -658,6 +802,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -674,6 +822,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                           },
@@ -689,6 +841,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -705,6 +861,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                           },
@@ -722,6 +882,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -734,6 +898,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -750,6 +918,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -773,6 +945,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -785,6 +961,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -801,6 +981,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -819,6 +1003,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -835,6 +1023,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -851,6 +1043,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -866,6 +1062,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -882,6 +1082,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -903,6 +1107,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                 "getPropertyParentSchemas": [Function],
                 "getSchemaFieldValue": [Function],
                 "getTypeOfArrayItems": [Function],
+                "parserConfig": Object {
+                  "anyOf": "ignore",
+                  "oneOf": "ignore",
+                },
                 "schema": Object {
                   "properties": Object {
                     "Item Three": Object {
@@ -930,6 +1138,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -946,6 +1158,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -962,6 +1178,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                           },
@@ -977,6 +1197,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -993,6 +1217,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                           },
@@ -1010,6 +1238,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1022,6 +1254,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1038,6 +1274,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1061,6 +1301,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -1073,6 +1317,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -1089,6 +1337,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -1107,6 +1359,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1123,6 +1379,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1139,6 +1399,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -1154,6 +1418,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1170,6 +1438,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -1209,6 +1481,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                 "getPropertyParentSchemas": [Function],
                 "getSchemaFieldValue": [Function],
                 "getTypeOfArrayItems": [Function],
+                "parserConfig": Object {
+                  "anyOf": "ignore",
+                  "oneOf": "ignore",
+                },
                 "schema": Object {
                   "properties": Object {
                     "Item One": Object {},
@@ -1240,6 +1516,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -1256,6 +1536,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -1272,6 +1556,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                           },
@@ -1287,6 +1575,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -1303,6 +1595,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                           },
@@ -1320,6 +1616,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1332,6 +1632,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1348,6 +1652,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1371,6 +1679,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -1383,6 +1695,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -1399,6 +1715,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -1417,6 +1737,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1433,6 +1757,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1449,6 +1777,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -1464,6 +1796,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1480,6 +1816,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -1501,6 +1841,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                 "getPropertyParentSchemas": [Function],
                 "getSchemaFieldValue": [Function],
                 "getTypeOfArrayItems": [Function],
+                "parserConfig": Object {
+                  "anyOf": "ignore",
+                  "oneOf": "ignore",
+                },
                 "schema": Object {
                   "properties": Object {
                     "Item Three": Object {
@@ -1528,6 +1872,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -1544,6 +1892,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -1560,6 +1912,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                           },
@@ -1575,6 +1931,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                             "definitions": Object {
@@ -1591,6 +1951,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                           },
@@ -1608,6 +1972,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1620,6 +1988,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1636,6 +2008,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1659,6 +2035,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -1671,6 +2051,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -1687,6 +2071,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "getPropertyParentSchemas": [Function],
                           "getSchemaFieldValue": [Function],
                           "getTypeOfArrayItems": [Function],
+                          "parserConfig": Object {
+                            "anyOf": "ignore",
+                            "oneOf": "ignore",
+                          },
                           "schema": Object {
                             "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                             "title": "Title: Main React Component",
@@ -1705,6 +2093,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1721,6 +2113,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1737,6 +2133,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -1752,6 +2152,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1768,6 +2172,10 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "getPropertyParentSchemas": [Function],
                               "getSchemaFieldValue": [Function],
                               "getTypeOfArrayItems": [Function],
+                              "parserConfig": Object {
+                                "anyOf": "ignore",
+                                "oneOf": "ignore",
+                              },
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },

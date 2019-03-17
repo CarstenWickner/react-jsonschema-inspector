@@ -55,7 +55,7 @@ class RefScope {
             Object.keys(definitions).forEach((key) => {
                 const definition = definitions[key];
                 if (isNonEmptyObject(definition)) {
-                    const subSchema = new JsonSchema(definition, this);
+                    const subSchema = new JsonSchema(definition, schema.parserConfig, this);
                     // from JSON Schema Draft 6: "$id" replaces former "id"
                     const subAlias = definition.$id || definition.id;
                     if (subAlias) {

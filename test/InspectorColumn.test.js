@@ -11,12 +11,12 @@ describe("renders correctly", () => {
                 items={{
                     "Item One": new JsonSchema({
                         $id: "Schema One"
-                    }, new RefScope({
+                    }, {}, new RefScope({
                         definitions: { Target: {} }
                     })),
                     "Item Two": new JsonSchema({
                         $id: "Schema Two"
-                    }, new RefScope({
+                    }, {}, new RefScope({
                         definitions: { Target: {} }
                     }))
                 }}
