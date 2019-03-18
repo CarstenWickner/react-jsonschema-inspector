@@ -119,7 +119,7 @@ describe("getPropertyParentSchemas()", () => {
             expect(result[3].schema).toEqual(subSchemaA21);
             expect(result[4].schema).toEqual(subSchemaA22);
         });
-        it("combined with allOf if parserConfig set", () => {
+        it("ignored if allOf is present", () => {
             const subSchema1 = { description: "Description Text" };
             const subSchema2 = { title: "Title Value" };
             const subSchema3 = { default: true };
@@ -129,15 +129,52 @@ describe("getPropertyParentSchemas()", () => {
                 allOf: [subSchema3, subSchema4]
             }, parserConfig);
             const result = schema.getPropertyParentSchemas();
-            expect(result).toHaveLength(5);
+            expect(result).toHaveLength(3);
             expect(result[0]).toEqual(schema);
-            // allOf is included first
+            // allOf is included if present
             expect(result[1].schema).toEqual(subSchema3);
             expect(result[2].schema).toEqual(subSchema4);
-            // sub schemas from anyOf/oneOf
-            expect(result[3].schema).toEqual(subSchema1);
-            expect(result[4].schema).toEqual(subSchema2);
+            // sub schemas from anyOf/oneOf are ignored
         });
+    });
+    it("oneOf ignored if anyOf is present and configured to be included", () => {
+        const subSchema1 = { description: "Description Text" };
+        const subSchema2 = { title: "Title Value" };
+        const subSchema3 = { default: true };
+        const subSchema4 = { type: "boolean" };
+        const parserConfig = {
+            anyOf: "likeAllOf",
+            oneOf: "likeAllOf"
+        };
+        const schema = new JsonSchema({
+            oneOf: [subSchema1, subSchema2],
+            anyOf: [subSchema3, subSchema4]
+        }, parserConfig);
+        const result = schema.getPropertyParentSchemas();
+        expect(result).toHaveLength(3);
+        expect(result[0]).toEqual(schema);
+        // anyOf is included if present
+        expect(result[1].schema).toEqual(subSchema3);
+        expect(result[2].schema).toEqual(subSchema4);
+        // sub schemas from oneOf are ignored
+    });
+    it("oneOf returned if anyOf is present but not configured to be included", () => {
+        const subSchema1 = { description: "Description Text" };
+        const subSchema2 = { title: "Title Value" };
+        const subSchema3 = { default: true };
+        const subSchema4 = { type: "boolean" };
+        const parserConfig = { oneOf: "likeAllOf" };
+        const schema = new JsonSchema({
+            oneOf: [subSchema1, subSchema2],
+            anyOf: [subSchema3, subSchema4]
+        }, parserConfig);
+        const result = schema.getPropertyParentSchemas();
+        expect(result).toHaveLength(3);
+        expect(result[0]).toEqual(schema);
+        // oneOf is included
+        expect(result[1].schema).toEqual(subSchema1);
+        expect(result[2].schema).toEqual(subSchema2);
+        // sub schemas from anyOf are ignored since they are not mentioned in the parserConfig
     });
     it("returns type of items", () => {
         const subSchemaItems = { title: "Title Value" };
@@ -311,6 +348,20 @@ describe("getFieldValue()", () => {
             expect(new JsonSchema(schema, parserConfig).getFieldValue("title"))
                 .toEqual("Title Value");
         });
+        it("ignores value if allOf is present", () => {
+            const schema = {
+                [groupName]: [
+                    { description: "Description Text" },
+                    { title: "Title Value" }
+                ],
+                allOf: [
+                    { title: "Title in allOf" },
+                    { type: "object" }
+                ]
+            };
+            expect(new JsonSchema(schema, parserConfig).getFieldValue("title"))
+                .toEqual("Title in allOf");
+        });
         it("finds single value in $ref-erenced group", () => {
             const schema = { $ref: "#/definitions/A" };
             const { scope } = new JsonSchema({
@@ -365,6 +416,43 @@ describe("getFieldValue()", () => {
             expect(new JsonSchema(schema, parserConfig, scope).getFieldValue("title", mergeFunction))
                 .toEqual("Specific Title");
         });
+    });
+    it("oneOf ignored if anyOf is present and configured to be included", () => {
+        const schema = {
+            oneOf: [
+                { description: "Description Text" },
+                { title: "Title Value" },
+                { type: "object" }
+            ],
+            anyOf: [
+                { title: "Title in anyOf" },
+                { type: "object" }
+            ]
+        };
+        const parserConfig = {
+            anyOf: "likeAllOf",
+            oneOf: "likeAllOf"
+        };
+        expect(new JsonSchema(schema, parserConfig).getFieldValue("title"))
+            .toEqual("Title in anyOf");
+    });
+    it("oneOf returned if anyOf is present but not configured to be included", () => {
+        const schema = {
+            oneOf: [
+                { description: "Description Text" },
+                { title: "Title Value" },
+                { type: "object" }
+            ],
+            anyOf: [
+                { title: "Title in anyOf" },
+                { type: "object" }
+            ]
+        };
+        const parserConfig = {
+            oneOf: "likeAllOf"
+        };
+        expect(new JsonSchema(schema, parserConfig).getFieldValue("title"))
+            .toEqual("Title Value");
     });
     it("ignores items", () => {
         const schema = {

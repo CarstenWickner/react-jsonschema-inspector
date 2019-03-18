@@ -44,19 +44,20 @@ class JsonSchema {
         this.scope = scope || new RefScope(this);
     }
 
+    /**
+     * Look-up the list of schema parts in allOf/anyOf/oneOf (in that order and if enabled in the parserConfig).
+     *
+     * @returns {Array.<Object>|undefined}
+     */
     getRelevantSchemaParts() {
-        const { allOf, anyOf, oneOf } = this.schema;
-        const includeAnyOf = anyOf && this.parserConfig && this.parserConfig.anyOf === "likeAllOf";
-        const includeOneOf = oneOf && this.parserConfig && this.parserConfig.oneOf === "likeAllOf";
-        if (allOf || includeAnyOf || includeOneOf) {
-            let result = allOf;
-            if (includeAnyOf) {
-                result = result ? result.concat(anyOf) : anyOf;
-            }
-            if (includeOneOf) {
-                result = result ? result.concat(oneOf) : oneOf;
-            }
-            return result;
+        if (this.schema.allOf) {
+            return this.schema.allOf;
+        }
+        if (this.schema.anyOf && this.parserConfig && this.parserConfig.anyOf === "likeAllOf") {
+            return this.schema.anyOf;
+        }
+        if (this.schema.oneOf && this.parserConfig && this.parserConfig.oneOf === "likeAllOf") {
+            return this.schema.oneOf;
         }
         return undefined;
     }
