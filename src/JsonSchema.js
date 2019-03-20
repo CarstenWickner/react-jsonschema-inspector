@@ -53,10 +53,10 @@ class JsonSchema {
         if (this.schema.allOf) {
             return this.schema.allOf;
         }
-        if (this.schema.anyOf && this.parserConfig && this.parserConfig.anyOf === "likeAllOf") {
+        if (this.schema.anyOf && this.parserConfig && this.parserConfig.anyOf && this.parserConfig.anyOf.type === "likeAllOf") {
             return this.schema.anyOf;
         }
-        if (this.schema.oneOf && this.parserConfig && this.parserConfig.oneOf === "likeAllOf") {
+        if (this.schema.oneOf && this.parserConfig && this.parserConfig.oneOf && this.parserConfig.oneOf.type === "likeAllOf") {
             return this.schema.oneOf;
         }
         return undefined;

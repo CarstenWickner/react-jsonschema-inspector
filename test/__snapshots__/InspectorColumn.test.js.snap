@@ -19,7 +19,6 @@ exports[`renders correctly with minimal/default props 1`] = `
           "$id": "Schema One",
         },
         "scope": RefScope {
-          "addOtherScope": [Function],
           "externalRefs": Map {},
           "internalRefs": Map {},
           "otherScopes": Array [],
@@ -40,7 +39,6 @@ exports[`renders correctly with minimal/default props 1`] = `
           "$id": "Schema Two",
         },
         "scope": RefScope {
-          "addOtherScope": [Function],
           "externalRefs": Map {},
           "internalRefs": Map {},
           "otherScopes": Array [],

@@ -16,7 +16,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                 "title": "Schema Title",
               },
               "scope": RefScope {
-                "addOtherScope": [Function],
                 "externalRefs": Map {},
                 "internalRefs": Map {
                   "#" => [Circular],
@@ -38,7 +37,6 @@ exports[`renders correctly with minimal/default props 1`] = `
           "title": "Schema Title",
         },
         "scope": RefScope {
-          "addOtherScope": [Function],
           "externalRefs": Map {},
           "internalRefs": Map {
             "#" => [Circular],

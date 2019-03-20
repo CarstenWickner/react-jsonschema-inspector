@@ -11,17 +11,10 @@ describe("constructed correctly()", () => {
         expect(scope.internalRefs.get("#")).toEqual(schema);
         expect(scope.externalRefs).toEqual(new Map());
     });
-    it("remembers single other scope", () => {
+    it("remembers other scopes", () => {
         const scope = new RefScope();
         scope.addOtherScope(new RefScope());
-        expect(scope.otherScopes).toHaveLength(1);
-    });
-    it("remembers multiple other scopes", () => {
-        const scope = new RefScope();
-        scope.addOtherScopes([
-            new RefScope(),
-            new RefScope()
-        ]);
+        scope.addOtherScope(new RefScope());
         expect(scope.otherScopes).toHaveLength(2);
     });
     it("supports $id on root schema", () => {

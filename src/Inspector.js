@@ -82,14 +82,16 @@ class Inspector extends Component {
         const referenceScopes = [];
         referenceSchemas.forEach((rawRefSchema) => {
             const refScope = new JsonSchema(rawRefSchema, parserConfig).scope;
-            refScope.addOtherScopes(referenceScopes);
-            referenceScopes.forEach(otherScope => otherScope.addOtherScope(refScope));
+            referenceScopes.forEach((otherScope) => {
+                refScope.addOtherScope(otherScope);
+                otherScope.addOtherScope(refScope);
+            });
             referenceScopes.push(refScope);
         });
         // the first column always lists all top-level schemas
         let nextColumn = mapObjectValues(schemas, (rawSchema) => {
             const schema = new JsonSchema(rawSchema, parserConfig);
-            schema.scope.addOtherScopes(referenceScopes);
+            referenceScopes.forEach(otherScope => schema.scope.addOtherScope(otherScope));
             return schema;
         });
         const columnData = selectedItems.map((selection, index) => {
@@ -256,10 +258,14 @@ Inspector.propTypes = {
     defaultSelectedItems: PropTypes.arrayOf(PropTypes.string),
     /** Options for the traversing/parsing of JSON schemas. Enabling the inclusion of optional part of a schema. */
     parserConfig: PropTypes.shape({
-        /** Setting indicating whether to include schemas parts wrapped in "anyOf". */
-        anyOf: PropTypes.oneOf(["ignore", "likeAllOf"]),
-        /** Setting indicating whether to include schemas parts wrapped in "oneOf". */
-        oneOf: PropTypes.oneOf(["ignore", "likeAllOf"])
+        /** Setting indicating whether to include schema parts wrapped in "anyOf". */
+        anyOf: PropTypes.shape({
+            type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"])
+        }),
+        /** Setting indicating whether to include schema parts wrapped in "oneOf". */
+        oneOf: PropTypes.shape({
+            type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"])
+        })
     }),
     /**
      * Options for the breadcrumbs feature shown in the footer – set to `null` to turn it off.
@@ -326,10 +332,7 @@ Inspector.propTypes = {
 Inspector.defaultProps = {
     referenceSchemas: [],
     defaultSelectedItems: [],
-    parserConfig: {
-        anyOf: "ignore",
-        oneOf: "ignore"
-    },
+    parserConfig: {},
     breadcrumbs: {},
     searchOptions: undefined,
     onSelect: undefined,

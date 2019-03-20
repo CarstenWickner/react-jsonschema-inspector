@@ -79,17 +79,8 @@ class RefScope {
      *
      * @param {RefScope} refScope other reference scope that is available (at least its external $ref-erences)
      */
-    addOtherScope = (refScope) => {
+    addOtherScope(refScope) {
         this.otherScopes.push(refScope);
-    };
-
-    /**
-     * Add other available scopes.
-     *
-     * @param {Array.<RefScope>} refScopes other reference scopes that are available (at least their external $ref-erences)
-     */
-    addOtherScopes(refScopes) {
-        refScopes.forEach(this.addOtherScope);
     }
 
     /**

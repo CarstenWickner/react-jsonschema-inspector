@@ -13,7 +13,6 @@ exports[`renders correctly with minimal/default props 1`] = `
           "parserConfig": undefined,
           "schema": undefined,
           "scope": RefScope {
-            "addOtherScope": [Function],
             "externalRefs": Map {},
             "internalRefs": Map {},
             "otherScopes": Array [],
@@ -23,7 +22,6 @@ exports[`renders correctly with minimal/default props 1`] = `
           "parserConfig": undefined,
           "schema": undefined,
           "scope": RefScope {
-            "addOtherScope": [Function],
             "externalRefs": Map {},
             "internalRefs": Map {},
             "otherScopes": Array [],
@@ -45,7 +43,6 @@ exports[`renders correctly with minimal/default props 1`] = `
           "parserConfig": undefined,
           "schema": undefined,
           "scope": RefScope {
-            "addOtherScope": [Function],
             "externalRefs": Map {},
             "internalRefs": Map {},
             "otherScopes": Array [],
@@ -55,7 +52,6 @@ exports[`renders correctly with minimal/default props 1`] = `
           "parserConfig": undefined,
           "schema": undefined,
           "scope": RefScope {
-            "addOtherScope": [Function],
             "externalRefs": Map {},
             "internalRefs": Map {},
             "otherScopes": Array [],
@@ -77,7 +73,6 @@ exports[`renders correctly with minimal/default props 1`] = `
           "parserConfig": undefined,
           "schema": undefined,
           "scope": RefScope {
-            "addOtherScope": [Function],
             "externalRefs": Map {},
             "internalRefs": Map {},
             "otherScopes": Array [],
@@ -87,7 +82,6 @@ exports[`renders correctly with minimal/default props 1`] = `
           "parserConfig": undefined,
           "schema": undefined,
           "scope": RefScope {
-            "addOtherScope": [Function],
             "externalRefs": Map {},
             "internalRefs": Map {},
             "otherScopes": Array [],

@@ -82,7 +82,9 @@ describe("getPropertyParentSchemas()", () => {
         ${"anyOf"}
         ${"oneOf"}
     `("$groupName:", ({ groupName }) => {
-        const parserConfig = { [groupName]: "likeAllOf" };
+        const parserConfig = {
+            [groupName]: { type: "likeAllOf" }
+        };
 
         it("ignored if parserConfig not set", () => {
             const subSchema1 = { description: "Description Text" };
@@ -143,8 +145,8 @@ describe("getPropertyParentSchemas()", () => {
         const subSchema3 = { default: true };
         const subSchema4 = { type: "boolean" };
         const parserConfig = {
-            anyOf: "likeAllOf",
-            oneOf: "likeAllOf"
+            anyOf: { type: "likeAllOf" },
+            oneOf: { type: "likeAllOf" }
         };
         const schema = new JsonSchema({
             oneOf: [subSchema1, subSchema2],
@@ -163,7 +165,7 @@ describe("getPropertyParentSchemas()", () => {
         const subSchema2 = { title: "Title Value" };
         const subSchema3 = { default: true };
         const subSchema4 = { type: "boolean" };
-        const parserConfig = { oneOf: "likeAllOf" };
+        const parserConfig = { oneOf: { type: "likeAllOf" } };
         const schema = new JsonSchema({
             oneOf: [subSchema1, subSchema2],
             anyOf: [subSchema3, subSchema4]
@@ -336,7 +338,9 @@ describe("getFieldValue()", () => {
         ${"anyOf"}
         ${"oneOf"}
     `("$groupName:", ({ groupName }) => {
-        const parserConfig = { [groupName]: "likeAllOf" };
+        const parserConfig = {
+            [groupName]: { type: "likeAllOf" }
+        };
         it("finds single value", () => {
             const schema = {
                 [groupName]: [
@@ -430,8 +434,8 @@ describe("getFieldValue()", () => {
             ]
         };
         const parserConfig = {
-            anyOf: "likeAllOf",
-            oneOf: "likeAllOf"
+            anyOf: { type: "likeAllOf" },
+            oneOf: { type: "likeAllOf" }
         };
         expect(new JsonSchema(schema, parserConfig).getFieldValue("title"))
             .toEqual("Title in anyOf");
@@ -449,7 +453,7 @@ describe("getFieldValue()", () => {
             ]
         };
         const parserConfig = {
-            oneOf: "likeAllOf"
+            oneOf: { type: "likeAllOf" }
         };
         expect(new JsonSchema(schema, parserConfig).getFieldValue("title"))
             .toEqual("Title Value");
