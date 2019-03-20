@@ -1,8 +1,9 @@
 import React from "react";
 import { shallow } from "enzyme";
-import RefScope from "../src/RefScope";
-import InspectorColumn from "../src/InspectorColumn";
-import JsonSchema from "../src/JsonSchema";
+
+import InspectorColumn from "../../src/component/InspectorColumn";
+import JsonSchema from "../../src/model/JsonSchema";
+import RefScope from "../../src/model/RefScope";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {

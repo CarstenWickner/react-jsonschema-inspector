@@ -1,5 +1,5 @@
-import RefScope from "../src/RefScope";
-import JsonSchema from "../src/JsonSchema";
+import RefScope from "../../src/model/RefScope";
+import JsonSchema from "../../src/model/JsonSchema";
 
 describe("constructed correctly()", () => {
     it("includes only self-reference for simple schema", () => {

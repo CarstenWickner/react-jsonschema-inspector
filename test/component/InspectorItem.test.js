@@ -1,7 +1,8 @@
 import React from "react";
 import { shallow } from "enzyme";
-import InspectorItem from "../src/InspectorItem";
-import JsonSchema from "../src/JsonSchema";
+
+import InspectorItem from "../../src/component/InspectorItem";
+import JsonSchema from "../../src/model/JsonSchema";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {

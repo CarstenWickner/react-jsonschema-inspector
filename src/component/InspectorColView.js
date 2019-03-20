@@ -2,7 +2,8 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 
 import InspectorColumn from "./InspectorColumn";
-import JsonSchema from "./JsonSchema";
+
+import JsonSchema from "../model/JsonSchema";
 
 class InspectorColView extends Component {
     componentDidUpdate(prevProps) {

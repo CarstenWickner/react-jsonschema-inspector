@@ -1,6 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
-import Inspector from "../src/Inspector";
+
+import Inspector from "../../src/component/Inspector";
 
 describe("renders correctly", () => {
     const schemas = {

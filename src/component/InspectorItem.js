@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import React from "react";
 import classNames from "classnames";
 
-import JsonSchema from "./JsonSchema";
-import { isDefined, isNonEmptyObject } from "./utils";
+import JsonSchema from "../model/JsonSchema";
+import { isDefined, isNonEmptyObject } from "../model/utils";
 
 const InspectorItem = ({
     name, schema, selected, matchesFilter, onSelect, renderContent

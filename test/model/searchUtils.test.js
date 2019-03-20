@@ -1,7 +1,7 @@
 import {
     createRecursiveFilterFunction, collectReferencedSubSchemas, createFilterFunction, filteringByFields
-} from "../src/searchUtils";
-import JsonSchema from "../src/JsonSchema";
+} from "../../src/model/searchUtils";
+import JsonSchema from "../../src/model/JsonSchema";
 
 describe("createRecursiveFilterFunction()", () => {
     let flatSearchFilter;

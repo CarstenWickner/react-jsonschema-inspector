@@ -1,6 +1,6 @@
 import {
     isDefined, isNonEmptyObject, mapObjectValues, mergeObjects, listValues
-} from "../src/utils";
+} from "../../src/model/utils";
 
 describe("isDefined()", () => {
     it("rejects undefined", () => {

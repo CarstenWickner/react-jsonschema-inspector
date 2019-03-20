@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import React from "react";
 import classNames from "classnames";
 
-import JsonSchema from "./JsonSchema";
-import createBreadcrumbBuilder from "./breadcrumbsUtils";
+import JsonSchema from "../model/JsonSchema";
+import createBreadcrumbBuilder from "../model/breadcrumbsUtils";
 
 const InspectorBreadcrumbs = ({ columnData, breadcrumbsOptions }) => {
     const buildBreadcrumb = createBreadcrumbBuilder(breadcrumbsOptions);

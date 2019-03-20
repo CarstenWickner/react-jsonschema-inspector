@@ -2,9 +2,10 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-import JsonSchema from "./JsonSchema";
 import InspectorDetailsForm from "./InspectorDetailsForm";
-import { isDefined } from "./utils";
+
+import JsonSchema from "../model/JsonSchema";
+import { isDefined } from "../model/utils";
 
 export const collectFormFields = (itemSchema, columnData, selectionColumnIndex) => {
     const formFields = [];

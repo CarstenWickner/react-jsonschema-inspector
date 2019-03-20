@@ -2,8 +2,9 @@ import PropTypes from "prop-types";
 import React from "react";
 import classNames from "classnames";
 
-import JsonSchema from "./JsonSchema";
 import InspectorItem from "./InspectorItem";
+
+import JsonSchema from "../model/JsonSchema";
 
 const InspectorColumn = ({
     items, selectedItem, trailingSelection, filteredItems, onSelect, renderItemContent

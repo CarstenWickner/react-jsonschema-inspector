@@ -1,5 +1,5 @@
-import JsonSchema from "../src/JsonSchema";
-import { isDefined } from "../src/utils";
+import JsonSchema from "../../src/model/JsonSchema";
+import { isDefined } from "../../src/model/utils";
 
 describe("getPropertyParentSchemas()", () => {
     it("returns given simple schema", () => {

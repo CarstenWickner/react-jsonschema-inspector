@@ -1,6 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
-import InspectorDetailsForm from "../src/InspectorDetailsForm";
+
+import InspectorDetailsForm from "../../src/component/InspectorDetailsForm";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {

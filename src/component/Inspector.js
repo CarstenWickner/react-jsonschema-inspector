@@ -11,10 +11,11 @@ import InspectorDetails from "./InspectorDetails";
 import InspectorBreadcrumbs from "./InspectorBreadcrumbs";
 import InspectorSearchField from "./InspectorSearchField";
 import JsonSchemaPropType from "./JsonSchemaPropType";
-import JsonSchema from "./JsonSchema";
-import createBreadcrumbBuilder from "./breadcrumbsUtils";
-import { createFilterFunction, filteringByFields } from "./searchUtils";
-import { isDefined, isNonEmptyObject, mapObjectValues } from "./utils";
+
+import JsonSchema from "../model/JsonSchema";
+import createBreadcrumbBuilder from "../model/breadcrumbsUtils";
+import { createFilterFunction, filteringByFields } from "../model/searchUtils";
+import { isDefined, isNonEmptyObject, mapObjectValues } from "../model/utils";
 
 class Inspector extends Component {
     /**

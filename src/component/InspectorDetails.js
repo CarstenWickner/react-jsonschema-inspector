@@ -1,8 +1,9 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-import JsonSchema from "./JsonSchema";
 import InspectorDetailsContent from "./InspectorDetailsContent";
+
+import JsonSchema from "../model/JsonSchema";
 
 const InspectorDetails = ({
     columnData, renderSelectionDetails, renderEmptyDetails

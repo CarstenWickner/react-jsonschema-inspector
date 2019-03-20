@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-import { isDefined } from "./utils";
+import { isDefined } from "../model/utils";
 
 const InspectorDetailsForm = ({ fields }) => (
     <form className="jsonschema-inspector-details-form">

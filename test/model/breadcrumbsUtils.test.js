@@ -1,5 +1,5 @@
-import createBreadcrumbBuilder from "../src/breadcrumbsUtils";
-import JsonSchema from "../src/JsonSchema";
+import createBreadcrumbBuilder from "../../src/model/breadcrumbsUtils";
+import JsonSchema from "../../src/model/JsonSchema";
 
 describe("createBreadcrumbBuilder()", () => {
     const simpleSchema = new JsonSchema({ title: "value" });
