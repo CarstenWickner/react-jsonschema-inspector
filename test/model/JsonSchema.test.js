@@ -4,19 +4,19 @@ import { isDefined } from "../../src/model/utils";
 describe("getPropertyParentSchemas()", () => {
     it("returns given simple schema", () => {
         const schema = new JsonSchema({ title: "Test" });
-        expect(schema.getPropertyParentSchemas()).toEqual([schema]);
+        expect(schema.getPropertyParentSchemas().entries).toEqual([schema]);
     });
     it("returns empty array for undefined schema", () => {
-        expect(new JsonSchema(undefined).getPropertyParentSchemas()).toEqual([]);
+        expect(new JsonSchema(undefined).getPropertyParentSchemas().entries).toEqual([]);
     });
     it("returns empty array for null schema", () => {
-        expect(new JsonSchema(null).getPropertyParentSchemas()).toEqual([]);
+        expect(new JsonSchema(null).getPropertyParentSchemas().entries).toEqual([]);
     });
     it("returns empty array for invalid schema", () => {
-        expect(new JsonSchema("not-a-schema").getPropertyParentSchemas()).toEqual([]);
+        expect(new JsonSchema("not-a-schema").getPropertyParentSchemas().entries).toEqual([]);
     });
     it("returns empty array for empty schema", () => {
-        expect(new JsonSchema({}).getPropertyParentSchemas()).toEqual([]);
+        expect(new JsonSchema({}).getPropertyParentSchemas().entries).toEqual([]);
     });
     it("returns $ref-erenced sub-schema", () => {
         const { scope } = new JsonSchema({
@@ -24,9 +24,9 @@ describe("getPropertyParentSchemas()", () => {
                 A: { title: "Ref-Test" }
             }
         });
-        const result = new JsonSchema({ $ref: "#/definitions/A" }, {}, scope).getPropertyParentSchemas();
-        expect(result).toHaveLength(1);
-        expect(result[0].schema).toEqual({ title: "Ref-Test" });
+        const { entries } = new JsonSchema({ $ref: "#/definitions/A" }, {}, scope).getPropertyParentSchemas();
+        expect(entries).toHaveLength(1);
+        expect(entries[0].schema).toEqual({ title: "Ref-Test" });
     });
     it("throws error if no refScope provided but $ref found", () => {
         const schema = new JsonSchema({ $ref: "#/definitions/other" });
@@ -46,19 +46,19 @@ describe("getPropertyParentSchemas()", () => {
                 A: { title: "Ref-Title" }
             }
         });
-        const result = new JsonSchema(schema, {}, scope).getPropertyParentSchemas();
-        expect(result).toHaveLength(1);
-        expect(result[0].schema).toEqual({ title: "Ref-Title" });
+        const { entries } = new JsonSchema(schema, {}, scope).getPropertyParentSchemas();
+        expect(entries).toHaveLength(1);
+        expect(entries[0].schema).toEqual({ title: "Ref-Title" });
     });
     it("includes all from allOf", () => {
         const subSchema1 = { description: "Description Text" };
         const subSchema2 = { title: "Title Value" };
         const schema = new JsonSchema({ allOf: [subSchema1, subSchema2] });
-        const result = schema.getPropertyParentSchemas();
-        expect(result).toHaveLength(3);
-        expect(result[0]).toEqual(schema);
-        expect(result[1].schema).toEqual(subSchema1);
-        expect(result[2].schema).toEqual(subSchema2);
+        const { entries } = schema.getPropertyParentSchemas();
+        expect(entries).toHaveLength(3);
+        expect(entries[0]).toEqual(schema);
+        expect(entries[1].schema).toEqual(subSchema1);
+        expect(entries[2].schema).toEqual(subSchema2);
     });
     it("includes all from $ref-erenced allOf", () => {
         const subSchemaA1 = { description: "Description Text" };
@@ -69,13 +69,13 @@ describe("getPropertyParentSchemas()", () => {
         const { scope } = new JsonSchema({
             definitions: { A: subSchemaA }
         });
-        const result = new JsonSchema({ $ref: "#/definitions/A" }, {}, scope).getPropertyParentSchemas();
-        expect(result).toHaveLength(5);
-        expect(result[0].schema).toEqual(subSchemaA);
-        expect(result[1].schema).toEqual(subSchemaA1);
-        expect(result[2].schema).toEqual(subSchemaA2);
-        expect(result[3].schema).toEqual(subSchemaA21);
-        expect(result[4].schema).toEqual(subSchemaA22);
+        const { entries } = new JsonSchema({ $ref: "#/definitions/A" }, {}, scope).getPropertyParentSchemas();
+        expect(entries).toHaveLength(5);
+        expect(entries[0].schema).toEqual(subSchemaA);
+        expect(entries[1].schema).toEqual(subSchemaA1);
+        expect(entries[2].schema).toEqual(subSchemaA2);
+        expect(entries[3].schema).toEqual(subSchemaA21);
+        expect(entries[4].schema).toEqual(subSchemaA22);
     });
     describe.each`
         groupName
@@ -90,19 +90,19 @@ describe("getPropertyParentSchemas()", () => {
             const subSchema1 = { description: "Description Text" };
             const subSchema2 = { title: "Title Value" };
             const schema = new JsonSchema({ [groupName]: [subSchema1, subSchema2] });
-            const result = schema.getPropertyParentSchemas();
-            expect(result).toHaveLength(1);
-            expect(result[0]).toEqual(schema);
+            const { entries } = schema.getPropertyParentSchemas();
+            expect(entries).toHaveLength(1);
+            expect(entries[0]).toEqual(schema);
         });
         it("included if parserConfig set", () => {
             const subSchema1 = { description: "Description Text" };
             const subSchema2 = { title: "Title Value" };
             const schema = new JsonSchema({ [groupName]: [subSchema1, subSchema2] }, parserConfig);
-            const result = schema.getPropertyParentSchemas();
-            expect(result).toHaveLength(3);
-            expect(result[0]).toEqual(schema);
-            expect(result[1].schema).toEqual(subSchema1);
-            expect(result[2].schema).toEqual(subSchema2);
+            const { entries } = schema.getPropertyParentSchemas();
+            expect(entries).toHaveLength(3);
+            expect(entries[0]).toEqual(schema);
+            expect(entries[1].schema).toEqual(subSchema1);
+            expect(entries[2].schema).toEqual(subSchema2);
         });
         it("includes all $ref-erenced if parserConfig set", () => {
             const subSchemaA1 = { description: "Description Text" };
@@ -113,13 +113,13 @@ describe("getPropertyParentSchemas()", () => {
             const { scope } = new JsonSchema({
                 definitions: { A: subSchemaA }
             }, parserConfig);
-            const result = new JsonSchema({ $ref: "#/definitions/A" }, parserConfig, scope).getPropertyParentSchemas();
-            expect(result).toHaveLength(5);
-            expect(result[0].schema).toEqual(subSchemaA);
-            expect(result[1].schema).toEqual(subSchemaA1);
-            expect(result[2].schema).toEqual(subSchemaA2);
-            expect(result[3].schema).toEqual(subSchemaA21);
-            expect(result[4].schema).toEqual(subSchemaA22);
+            const { entries } = new JsonSchema({ $ref: "#/definitions/A" }, parserConfig, scope).getPropertyParentSchemas();
+            expect(entries).toHaveLength(5);
+            expect(entries[0].schema).toEqual(subSchemaA);
+            expect(entries[1].schema).toEqual(subSchemaA1);
+            expect(entries[2].schema).toEqual(subSchemaA2);
+            expect(entries[3].schema).toEqual(subSchemaA21);
+            expect(entries[4].schema).toEqual(subSchemaA22);
         });
         it("ignored if allOf is present", () => {
             const subSchema1 = { description: "Description Text" };
@@ -130,12 +130,12 @@ describe("getPropertyParentSchemas()", () => {
                 [groupName]: [subSchema1, subSchema2],
                 allOf: [subSchema3, subSchema4]
             }, parserConfig);
-            const result = schema.getPropertyParentSchemas();
-            expect(result).toHaveLength(3);
-            expect(result[0]).toEqual(schema);
+            const { entries } = schema.getPropertyParentSchemas();
+            expect(entries).toHaveLength(3);
+            expect(entries[0]).toEqual(schema);
             // allOf is included if present
-            expect(result[1].schema).toEqual(subSchema3);
-            expect(result[2].schema).toEqual(subSchema4);
+            expect(entries[1].schema).toEqual(subSchema3);
+            expect(entries[2].schema).toEqual(subSchema4);
             // sub schemas from anyOf/oneOf are ignored
         });
     });
@@ -152,12 +152,12 @@ describe("getPropertyParentSchemas()", () => {
             oneOf: [subSchema1, subSchema2],
             anyOf: [subSchema3, subSchema4]
         }, parserConfig);
-        const result = schema.getPropertyParentSchemas();
-        expect(result).toHaveLength(3);
-        expect(result[0]).toEqual(schema);
+        const { entries } = schema.getPropertyParentSchemas();
+        expect(entries).toHaveLength(3);
+        expect(entries[0]).toEqual(schema);
         // anyOf is included if present
-        expect(result[1].schema).toEqual(subSchema3);
-        expect(result[2].schema).toEqual(subSchema4);
+        expect(entries[1].schema).toEqual(subSchema3);
+        expect(entries[2].schema).toEqual(subSchema4);
         // sub schemas from oneOf are ignored
     });
     it("oneOf returned if anyOf is present but not configured to be included", () => {
@@ -170,21 +170,21 @@ describe("getPropertyParentSchemas()", () => {
             oneOf: [subSchema1, subSchema2],
             anyOf: [subSchema3, subSchema4]
         }, parserConfig);
-        const result = schema.getPropertyParentSchemas();
-        expect(result).toHaveLength(3);
-        expect(result[0]).toEqual(schema);
+        const { entries } = schema.getPropertyParentSchemas();
+        expect(entries).toHaveLength(3);
+        expect(entries[0]).toEqual(schema);
         // oneOf is included
-        expect(result[1].schema).toEqual(subSchema1);
-        expect(result[2].schema).toEqual(subSchema2);
+        expect(entries[1].schema).toEqual(subSchema1);
+        expect(entries[2].schema).toEqual(subSchema2);
         // sub schemas from anyOf are ignored since they are not mentioned in the parserConfig
     });
     it("returns type of items", () => {
         const subSchemaItems = { title: "Title Value" };
         const schema = new JsonSchema({ items: subSchemaItems });
-        const result = schema.getPropertyParentSchemas();
-        expect(result).toHaveLength(1);
-        expect(result[0].schema).toEqual(subSchemaItems);
-        expect(result[0].scope).toEqual(schema.scope);
+        const { entries } = schema.getPropertyParentSchemas();
+        expect(entries).toHaveLength(1);
+        expect(entries[0].schema).toEqual(subSchemaItems);
+        expect(entries[0].scope).toEqual(schema.scope);
     });
     it("returns $ref-erenced type of items", () => {
         const schema = { items: { $ref: "#/definitions/A" } };
@@ -192,18 +192,18 @@ describe("getPropertyParentSchemas()", () => {
         const { scope } = new JsonSchema({
             definitions: { A: subSchemaItems }
         });
-        const result = new JsonSchema(schema, {}, scope).getPropertyParentSchemas();
-        expect(result).toHaveLength(1);
-        expect(result[0].schema).toEqual(subSchemaItems);
-        expect(result[0].scope).toEqual(scope);
+        const { entries } = new JsonSchema(schema, {}, scope).getPropertyParentSchemas();
+        expect(entries).toHaveLength(1);
+        expect(entries[0].schema).toEqual(subSchemaItems);
+        expect(entries[0].scope).toEqual(scope);
     });
     it("returns type of additionalItems", () => {
         const subSchemaItems = { title: "Title Value" };
         const schema = new JsonSchema({ additionalItems: subSchemaItems });
-        const result = schema.getPropertyParentSchemas();
-        expect(result).toHaveLength(1);
-        expect(result[0].schema).toEqual(subSchemaItems);
-        expect(result[0].scope).toEqual(schema.scope);
+        const { entries } = schema.getPropertyParentSchemas();
+        expect(entries).toHaveLength(1);
+        expect(entries[0].schema).toEqual(subSchemaItems);
+        expect(entries[0].scope).toEqual(schema.scope);
     });
     it("returns $ref-erenced type of additionalItems", () => {
         const schema = { additionalItems: { $ref: "#/definitions/A" } };
@@ -211,10 +211,10 @@ describe("getPropertyParentSchemas()", () => {
         const { scope } = new JsonSchema({
             definitions: { A: subSchemaItems }
         });
-        const result = new JsonSchema(schema, {}, scope).getPropertyParentSchemas();
-        expect(result).toHaveLength(1);
-        expect(result[0].schema).toEqual(subSchemaItems);
-        expect(result[0].scope).toEqual(scope);
+        const { entries } = new JsonSchema(schema, {}, scope).getPropertyParentSchemas();
+        expect(entries).toHaveLength(1);
+        expect(entries[0].schema).toEqual(subSchemaItems);
+        expect(entries[0].scope).toEqual(scope);
     });
 });
 describe("getFieldValue()", () => {

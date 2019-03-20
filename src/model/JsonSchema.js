@@ -1,9 +1,12 @@
+import JsonSchemaAllOfGroup from "./JsonSchemaAllOfGroup";
+import JsonSchemaAnyOfGroup from "./JsonSchemaAnyOfGroup";
+import JsonSchemaOneOfGroup from "./JsonSchemaOneOfGroup";
 import RefScope from "./RefScope";
 import {
     isNonEmptyObject, listValues, mapObjectValues, mergeObjects
 } from "./utils";
 
-class JsonSchema {
+export default class JsonSchema {
     /**
      * Alternative factory method to the constructor, returning "undefined" if the given schema is not a non-empty object.
      *
@@ -125,36 +128,55 @@ class JsonSchema {
      * BEWARE: if a schema consists of multiple sub-schemas and only one of them defines an "items" field, the other sibling schemas
      * will still be included in the result list - they are just assumed to not have any relevant fields we are looking for.
      *
-     * @returns {Array<JsonSchema>} array listing sub-schemas that may define properties about their children
+     * @returns {JsonSchemaGroup} group of sub-schemas that may define properties about their children
      */
     getPropertyParentSchemas() {
         if (!isNonEmptyObject(this.schema)) {
-            return [];
+            return new JsonSchemaAllOfGroup();
         }
         if (this.schema.$ref) {
             const referencedSchema = this.scope.find(this.schema.$ref);
             // this schema is just a reference to another separately defined schema
             return referencedSchema.getPropertyParentSchemas();
         }
-        const schemaParts = this.getRelevantSchemaParts();
-        if (schemaParts) {
-            let returnedSchemas = [this];
-            schemaParts.forEach((rawSchemaPart) => {
-                returnedSchemas = returnedSchemas.concat(new JsonSchema(rawSchemaPart, this.parserConfig, this.scope).getPropertyParentSchemas());
+        const result = new JsonSchemaAllOfGroup();
+        if (this.schema.allOf) {
+            result.with(this);
+            this.schema.allOf.forEach((rawSchemaPart) => {
+                result.with(new JsonSchema(rawSchemaPart, this.parserConfig, this.scope).getPropertyParentSchemas());
             });
-            return returnedSchemas;
-        }
-        if (isNonEmptyObject(this.schema.items)) {
+        } else if (this.schema.anyOf && this.parserConfig && this.parserConfig.anyOf) {
+            result.with(this);
+            const anyOfParts = this.schema.anyOf.map(rawSchemaPart => (new JsonSchema(rawSchemaPart, this.parserConfig, this.scope).getPropertyParentSchemas()));
+            if (this.parserConfig.anyOf.type === "likeAllOf") {
+                anyOfParts.forEach(result.with.bind(result));
+            } else {
+                const anyOfGroup = new JsonSchemaAnyOfGroup();
+                anyOfParts.forEach(anyOfGroup.with.bind(anyOfGroup));
+                result.with(anyOfGroup);
+            }
+        } else if (this.schema.oneOf && this.parserConfig && this.parserConfig.oneOf) {
+            result.with(this);
+            const oneOfParts = this.schema.oneOf.map(rawSchemaPart => (new JsonSchema(rawSchemaPart, this.parserConfig, this.scope).getPropertyParentSchemas()));
+            if (this.parserConfig.oneOf.type === "likeAllOf") {
+                oneOfParts.forEach(result.with.bind(result));
+            } else {
+                const oneOfGroup = new JsonSchemaOneOfGroup();
+                oneOfParts.forEach(oneOfGroup.with.bind(oneOfGroup));
+                result.with(oneOfGroup);
+            }
+        } else if (isNonEmptyObject(this.schema.items)) {
             // unsupported: specifying array of schemas referring to entries at respective positions in described array
             // schema.items contains a single schema, that specifies the type of any value in the described array
-            return new JsonSchema(this.schema.items, this.parserConfig, this.scope).getPropertyParentSchemas();
-        }
-        if (isNonEmptyObject(this.schema.additionalItems)) {
+            result.with(new JsonSchema(this.schema.items, this.parserConfig, this.scope).getPropertyParentSchemas());
+        } else if (isNonEmptyObject(this.schema.additionalItems)) {
             // the given schema is an array which may specify its content type in "additionalItems"
-            return new JsonSchema(this.schema.additionalItems, this.parserConfig, this.scope).getPropertyParentSchemas();
+            result.with(new JsonSchema(this.schema.additionalItems, this.parserConfig, this.scope).getPropertyParentSchemas());
+        } else {
+            // if there are no nested schemas, only this schema itself may contain properties
+            result.with(this);
         }
-        // if there are no nested schemas, only this schema itself may contain properties
-        return [this];
+        return result;
     }
 
     /**
@@ -175,5 +197,3 @@ class JsonSchema {
         }).reduce(mergeObjects, {});
     }
 }
-
-export default JsonSchema;
