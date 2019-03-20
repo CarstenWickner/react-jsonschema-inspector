@@ -5,7 +5,7 @@ import { isNonEmptyObject } from "./utils";
  * Helper class to facilitate looking-up re-usable sub-schemas via the "$ref" keyword. A single RefScope instance refers to one main schema
  * and its contained "definitions". Other main schemas maybe used by adding their respective RefScope instances via .addOtherRefScopes().
  */
-class RefScope {
+export default class RefScope {
     /**
      * Map.<String, JsonSchema>
      * collection of available sub-schema to be referenced via "$ref" within the originating schema.
@@ -115,5 +115,3 @@ class RefScope {
         throw new Error(`Cannot resolve $ref: "${ref}"`);
     }
 }
-
-export default RefScope;
