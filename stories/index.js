@@ -6,7 +6,7 @@ import {
     array as knobsArray, boolean as knobsBoolean, object as knobsObject, text as knobsText, withKnobs
 } from "@storybook/addon-knobs";
 
-import Inspector from "../src/Inspector";
+import Inspector from "../src/component/Inspector";
 
 import metaSchema from "./schema-meta.json";
 import hyperMetaSchema from "./schema-hyper-meta.json";
