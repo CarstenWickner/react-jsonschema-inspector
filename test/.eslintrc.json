@@ -1,15 +1,17 @@
 {
     "rules": {
+        "class-methods-use-this": "off",
         "import/no-extraneous-dependencies": "off",
-        "no-prototype-builtins": "off",
-        "indent": ["error", 4, { "ignoredNodes": ["TemplateLiteral"] }]
+        "indent": ["error", 4, { "ignoredNodes": ["TemplateLiteral"] }],
+        "lines-between-class-members": "off",
+        "no-prototype-builtins": "off"
     },
     "globals": {
-        "beforeAll": "readonly",
         "afterAll": "readonly",
+        "beforeAll": "readonly",
         "beforeEach": "readonly",
-        "expect": "readonly",
         "describe": "readonly",
+        "expect": "readonly",
         "it": "readonly",
         "jest": "readonly"
     }
