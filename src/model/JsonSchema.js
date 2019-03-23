@@ -2,8 +2,11 @@ import JsonSchemaAllOfGroup from "./JsonSchemaAllOfGroup";
 import JsonSchemaAnyOfGroup from "./JsonSchemaAnyOfGroup";
 import JsonSchemaOneOfGroup from "./JsonSchemaOneOfGroup";
 import RefScope from "./RefScope";
-import { isDefined, isNonEmptyObject, listValues } from "./utils";
+import { isNonEmptyObject, listValues } from "./utils";
 
+/**
+ * Representation of a Json Schema, offering a number of convenient functions for traversing and extracting information.
+ */
 export default class JsonSchema {
     /**
      * Alternative factory method to the constructor, returning "undefined" if the given schema is not a non-empty object.
@@ -148,22 +151,33 @@ export default class JsonSchema {
         } else {
             result.with(this);
             if (this.schema.allOf) {
-                const allOfGroup = new JsonSchemaAllOfGroup(JsonSchema);
-                result.with(this.fillGroupFromRawSchemaArray(allOfGroup, this.schema.allOf));
+                result.with(this.createGroupFromRawSchemaArray(JsonSchemaAllOfGroup, this.schema.allOf));
             } else if (this.schema.anyOf && this.parserConfig && this.parserConfig.anyOf) {
-                const anyOfGroup = new JsonSchemaAnyOfGroup(JsonSchema, this.parserConfig);
-                result.with(this.fillGroupFromRawSchemaArray(anyOfGroup, this.schema.anyOf));
+                result.with(this.createGroupFromRawSchemaArray(JsonSchemaAnyOfGroup, this.schema.anyOf));
             } else if (this.schema.oneOf && this.parserConfig && this.parserConfig.oneOf) {
-                const oneOfGroup = new JsonSchemaOneOfGroup(JsonSchema, this.parserConfig);
-                result.with(this.fillGroupFromRawSchemaArray(oneOfGroup, this.schema.oneOf));
+                result.with(this.createGroupFromRawSchemaArray(JsonSchemaOneOfGroup, this.schema.oneOf));
             }
         }
         return result;
     }
 
-    fillGroupFromRawSchemaArray(group, rawSchemaArray) {
+    /**
+     * Helper function to create a group class for the respective raw grouping in this schema.
+     *
+     * @param {Function} GroupClass constructor reference to the group to create
+     * @param {Function} GroupClass.param0 constructor reference to JsonSchema (to avoid circular dependencies)
+     * @param {?Object} GroupClass.param1 parserConfig object being forwarded to group (not necessarily expected by all groups)
+     * @param {Array.<JsonSchema>} rawSchemaArray grouped raw schema definitions to represent
+     */
+    createGroupFromRawSchemaArray(GroupClass, rawSchemaArray) {
+        // create group representation
+        const group = new GroupClass(JsonSchema, this.parserConfig);
         rawSchemaArray
-            .map(rawSchemaPart => (new JsonSchema(rawSchemaPart, this.parserConfig, this.scope).getPropertyParentSchemas()))
+            // convert each part in the group to a JsonSchema instance
+            .map(rawSchemaPart => (new JsonSchema(rawSchemaPart, this.parserConfig, this.scope)
+                // (recursively) extract group information for that schema
+                .getPropertyParentSchemas()))
+            // add group info from each schema part to the created group representation
             .forEach(group.with.bind(group));
         return group;
     }
@@ -171,10 +185,11 @@ export default class JsonSchema {
     /**
      * Extract the properties mentioned in this schema – also considering all nested sub-schema by using getPropertyParentSchemas().
      *
+     * @param {Array.<Number>} optionIndexes array of non-negative integers indicating the selected option(s)
      * @returns {Object.<String, JsonSchema>} collection of all properties mentioned in this schema
      */
-    getProperties(optionIndex) {
-        const optionTarget = isDefined(optionIndex) ? { index: optionIndex } : undefined;
+    getProperties(optionIndexes = []) {
+        const optionTarget = optionIndexes.map(index => ({ index }));
         return this.getPropertyParentSchemas().getProperties(optionTarget);
     }
 }

@@ -1,5 +1,8 @@
 import { isNonEmptyObject, mapObjectValues, mergeSchemas } from "./utils";
 
+/**
+ * Representation of an array of schemas (e.g. "allOf", "anyOf", "oneOf"), offering a number of convenient functions for extracting information.
+ */
 export default class JsonSchemaGroup {
     /**
      * Array of JsonSchema and/or JsonSchemaGroup instances.
@@ -24,13 +27,16 @@ export default class JsonSchemaGroup {
             if (typeof this.shouldBeTreatedLikeAllOf !== "function") {
                 throw new Error("JsonSchemaGroup is abstract and expects shouldBeTreatedLikeAllOf() to be implemented by the instantiated sub-class");
             }
-            if (typeof this.getOptions !== "function") {
-                throw new Error("JsonSchemaGroup is abstract and expects getOptions() to be implemented by the instantiated sub-class");
-            }
         }
         this.JsonSchema = JsonSchema;
     }
 
+    /**
+     * Adding the given Json Schema or group to this group.
+     *
+     * @param {JsonSchema|JsonSchemaGroup} schemaOrGroup entry to add to this group
+     * @returns {JsonSchemaGroup} this (i.e. self-reference for chaining)
+     */
     with(schemaOrGroup) {
         if (schemaOrGroup instanceof JsonSchemaGroup && schemaOrGroup.entries.length === 1) {
             // unwrap a group containing only a single entry
@@ -44,8 +50,8 @@ export default class JsonSchemaGroup {
     /**
      * Extract the properties mentioned in this schema group.
      *
-     * @param {?Object} optionTarget mutable object containing the selected optional sub-schema's index (from the current traversing position)
-     * @param {Number} optionTarget.index counter that should be decreased for each passed optional sub-schema; the option at 0 is deemed selected
+     * @param {?Array.<Object>} optionTarget array of mutable objects containing the selected optional sub-schema's (relative) index
+     * @param {Number} optionTarget[].index counter that should be decreased for each passed optional sub-schema; the option at 0 is deemed selected
      * @returns {Object.<String, JsonSchema>} collection of all properties mentioned in this schema
      */
     getProperties(optionTarget) {
@@ -63,12 +69,25 @@ export default class JsonSchemaGroup {
      * Extract a single entry's properties.
      *
      * @param {JsonSchema|JsonSchemaGroup} entry schema or group of schemas to extract properties from
-     * @param {?Object} optionTarget mutable object containing the selected optional sub-schema's index (from the current traversing position)
-     * @param {Number} optionTarget.index counter that should be decreased for each passed optional sub-schema; the option at 0 is deemed selected
+     * @param {?Array.<Object>} optionTarget array of mutable objects containing the selected optional sub-schema's (relative) index
+     * @param {Number} optionTarget[].index counter that should be decreased for each passed optional sub-schema; the option at 0 is deemed selected
      */
     getPropertiesFromEntry(entry, optionTarget) {
+        const treatLikeAllOf = this.shouldBeTreatedLikeAllOf();
+        if (!treatLikeAllOf) {
+            // an optional entry should be kept if it is not the specifically selected one
+            const isSelectedEntry = optionTarget && optionTarget.length && optionTarget[0].index === 0;
+            if (optionTarget && optionTarget.length) {
+                // eslint-disable-next-line no-param-reassign
+                optionTarget[0].index -= 1;
+            }
+            if (!isSelectedEntry) {
+                // ignore unselected option
+                return {};
+            }
+        }
         if (entry instanceof JsonSchemaGroup) {
-            return entry.getProperties(optionTarget);
+            return entry.getProperties(treatLikeAllOf ? optionTarget : optionTarget.slice(1));
         }
         // entry is a single JsonSchema
         const { schema: rawSchema, parserConfig, scope } = entry;
@@ -87,6 +106,62 @@ export default class JsonSchemaGroup {
             ));
     }
 
+    /**
+     * Determines optional paths in this schema group.
+     *
+     * @returns {Object} return representation of the available options on this group's top level
+     * @returns {?String} return.groupTitle optional title text to be displayed for this group's options
+     * @returns {?Array<Object>} return.options list of option representations (may contain representation of nested options)
+     */
+    getOptions() {
+        let containedOptions;
+        if (this.shouldBeTreatedLikeAllOf()) {
+            containedOptions = this.entries
+                // simple schemas can be ignored: no options to differentiate between there
+                .filter(entry => entry instanceof JsonSchemaGroup)
+                // for all groups: look-up their nested options recursively
+                .map(nestedGroup => nestedGroup.getOptions())
+                // if a nested group has no options to differentiate (i.e. also has shouldBeTreatedLikeAllOf() === true), we can ignore it as well
+                .filter(nestedOptions => nestedOptions.options);
+        } else {
+            containedOptions = this.entries.map(entry => (
+                // each entry is considered an option, groups may have some more nested options
+                entry instanceof JsonSchemaGroup ? entry.getOptions() : {}
+            ));
+        }
+        return this.createOptionsRepresentation(containedOptions);
+    }
+
+    /**
+     * Create representation of this group's given options.
+     *
+     * @param {Array.<Object>} containedOptions list of (this kind of) option representations
+     * @returns {Object} return representation of the available options on this group's top level
+     * @returns {?String} return.groupTitle optional title text to be displayed for this group's options
+     * @returns {?Array<Object>} return.options list of option representations (may contain representation of nested options)
+     */
+    // eslint-disable-next-line class-methods-use-this
+    createOptionsRepresentation(containedOptions) {
+        let result;
+        if (containedOptions.length === 0) {
+            result = {};
+        } else if (containedOptions.length === 1) {
+            // remove unnecessary hierarchy level by simply returning the single option from the array directly
+            [result] = containedOptions;
+        } else {
+            result = {
+                options: containedOptions
+            };
+        }
+        return result;
+    }
+
+    /**
+     * Workaround to be (kinda) backwards-compatible with pre-groups API.
+     *
+     * @param {Function} func function to execute for all contained entries
+     * @deprecated temporary workaround until migration to groups API is completed
+     */
     some(func) {
         return this.entries.some(func);
     }

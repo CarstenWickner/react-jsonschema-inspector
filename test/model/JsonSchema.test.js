@@ -371,13 +371,13 @@ describe("getProperties()", () => {
             expect(result).toEqual({});
         });
         it("returns first of two options", () => {
-            const result = schema.getProperties(0);
+            const result = schema.getProperties([0]);
             expect(Object.keys(result)).toHaveLength(1);
             expect(result.foo).toBeInstanceOf(JsonSchema);
             expect(result.foo.schema).toEqual(rawFooSchema);
         });
         it("returns second of two options", () => {
-            const result = schema.getProperties(1);
+            const result = schema.getProperties([1]);
             expect(Object.keys(result)).toHaveLength(1);
             expect(result.bar).toBeInstanceOf(JsonSchema);
             expect(result.bar.schema).toEqual(rawBarSchema);

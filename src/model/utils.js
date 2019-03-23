@@ -56,9 +56,7 @@ export function mergeSchemas(combined, nextValue) {
             {},
             combined,
             ...Object.keys(nextValue)
-                .filter(key => !isDefined(combined[key])
-                    || typeof combined[key] === "boolean"
-                    || isNonEmptyObject(nextValue[key]))
+                .filter(key => !isNonEmptyObject(combined[key]) || isNonEmptyObject(nextValue[key]))
                 .map(key => ({ [key]: nextValue[key] }))
         );
     }
