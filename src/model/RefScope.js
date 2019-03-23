@@ -27,10 +27,8 @@ export default class RefScope {
      * Constructor collecting all available references to contained re-usable (sub-) schemas.
      *
      * @param {JsonSchema} schema to collect $ref-erence-able sub-schemas from
-     * @param {Function} JsonSchema run-time reference to JsonSchema constructor to avoid circular dependencies at load-time
-     *                   (required if there are "definitions")
      */
-    constructor(schema, JsonSchema) {
+    constructor(schema) {
         if (!schema || !isNonEmptyObject(schema.schema)) {
             return;
         }
@@ -53,6 +51,8 @@ export default class RefScope {
         }
         const { definitions } = schema.schema;
         if (isNonEmptyObject(definitions)) {
+            // look-up constructor for JsonSchema at run-time to avoid circular dependencies at load-time
+            const { constructor: JsonSchema } = schema;
             Object.keys(definitions).forEach((key) => {
                 const definition = definitions[key];
                 if (isNonEmptyObject(definition)) {
