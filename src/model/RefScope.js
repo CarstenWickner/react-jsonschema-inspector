@@ -1,4 +1,3 @@
-import JsonSchema from "./JsonSchema";
 import { isNonEmptyObject } from "./utils";
 
 /**
@@ -28,8 +27,10 @@ export default class RefScope {
      * Constructor collecting all available references to contained re-usable (sub-) schemas.
      *
      * @param {JsonSchema} schema to collect $ref-erence-able sub-schemas from
+     * @param {Function} JsonSchema run-time reference to JsonSchema constructor to avoid circular dependencies at load-time
+     *                   (required if there are "definitions")
      */
-    constructor(schema) {
+    constructor(schema, JsonSchema) {
         if (!schema || !isNonEmptyObject(schema.schema)) {
             return;
         }

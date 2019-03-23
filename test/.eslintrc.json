@@ -5,6 +5,8 @@
         "indent": ["error", 4, { "ignoredNodes": ["TemplateLiteral"] }]
     },
     "globals": {
+        "beforeAll": "readonly",
+        "afterAll": "readonly",
         "beforeEach": "readonly",
         "expect": "readonly",
         "describe": "readonly",

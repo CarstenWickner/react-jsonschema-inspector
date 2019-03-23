@@ -81,12 +81,74 @@ describe("getPropertyParentSchemas()", () => {
         expect(entries[4].schema).toEqual(subSchemaA22);
     });
     describe.each`
+        groupName
+        ${"anyOf"}
+        ${"oneOf"}
+    `("$groupName with 'likeAllOf' setting:", ({ groupName }) => {
+        const parserConfig = {
+            [groupName]: { type: "likeAllOf" }
+        };
+
+        it("ignored if parserConfig not set", () => {
+            const subSchema1 = { description: "Description Text" };
+            const subSchema2 = { title: "Title Value" };
+            const schema = new JsonSchema({ [groupName]: [subSchema1, subSchema2] });
+            const { entries } = schema.getPropertyParentSchemas();
+            expect(entries).toHaveLength(1);
+            expect(entries[0]).toEqual(schema);
+        });
+        it("included if parserConfig set", () => {
+            const subSchema1 = { description: "Description Text" };
+            const subSchema2 = { title: "Title Value" };
+            const schema = new JsonSchema({ [groupName]: [subSchema1, subSchema2] }, parserConfig);
+            const { entries } = schema.getPropertyParentSchemas();
+            expect(entries).toHaveLength(3);
+            expect(entries[0]).toEqual(schema);
+            expect(entries[1].schema).toEqual(subSchema1);
+            expect(entries[2].schema).toEqual(subSchema2);
+        });
+        it("includes all $ref-erenced if parserConfig set", () => {
+            const subSchemaA1 = { description: "Description Text" };
+            const subSchemaA21 = { title: "Title Value" };
+            const subSchemaA22 = { type: "object" };
+            const subSchemaA2 = { [groupName]: [subSchemaA21, subSchemaA22] };
+            const subSchemaA = { [groupName]: [subSchemaA1, subSchemaA2] };
+            const { scope } = new JsonSchema({
+                definitions: { A: subSchemaA }
+            }, parserConfig);
+            const { entries } = new JsonSchema({ $ref: "#/definitions/A" }, parserConfig, scope).getPropertyParentSchemas();
+            expect(entries).toHaveLength(5);
+            expect(entries[0].schema).toEqual(subSchemaA);
+            expect(entries[1].schema).toEqual(subSchemaA1);
+            expect(entries[2].schema).toEqual(subSchemaA2);
+            expect(entries[3].schema).toEqual(subSchemaA21);
+            expect(entries[4].schema).toEqual(subSchemaA22);
+        });
+        it("ignored if allOf is present", () => {
+            const subSchema1 = { description: "Description Text" };
+            const subSchema2 = { title: "Title Value" };
+            const subSchema3 = { default: true };
+            const subSchema4 = { type: "boolean" };
+            const schema = new JsonSchema({
+                [groupName]: [subSchema1, subSchema2],
+                allOf: [subSchema3, subSchema4]
+            }, parserConfig);
+            const { entries } = schema.getPropertyParentSchemas();
+            expect(entries).toHaveLength(3);
+            expect(entries[0]).toEqual(schema);
+            // allOf is included if present
+            expect(entries[1].schema).toEqual(subSchema3);
+            expect(entries[2].schema).toEqual(subSchema4);
+            // sub schemas from anyOf/oneOf are ignored
+        });
+    });
+    describe.each`
         groupName  | groupClass
         ${"anyOf"} | ${JsonSchemaAnyOfGroup}
         ${"oneOf"} | ${JsonSchemaOneOfGroup}
-    `("$groupName:", ({ groupName, groupClass }) => {
+    `("$groupName with 'asAdditionalColumn' setting:", ({ groupName, groupClass }) => {
         const parserConfig = {
-            [groupName]: { type: "likeAllOf" }
+            [groupName]: { type: "asAdditionalColumn" }
         };
 
         it("ignored if parserConfig not set", () => {
@@ -150,48 +212,83 @@ describe("getPropertyParentSchemas()", () => {
             // sub schemas from anyOf/oneOf are ignored
         });
     });
-    it("oneOf ignored if anyOf is present and configured to be included", () => {
+    describe("oneOf ignored if anyOf is present and configured to be included", () => {
         const subSchema1 = { description: "Description Text" };
         const subSchema2 = { title: "Title Value" };
         const subSchema3 = { default: true };
         const subSchema4 = { type: "boolean" };
-        const parserConfig = {
-            anyOf: { type: "likeAllOf" },
-            oneOf: { type: "likeAllOf" }
-        };
-        const schema = new JsonSchema({
-            oneOf: [subSchema1, subSchema2],
-            anyOf: [subSchema3, subSchema4]
-        }, parserConfig);
-        const { entries } = schema.getPropertyParentSchemas();
-        expect(entries).toHaveLength(2);
-        expect(entries[0]).toEqual(schema);
-        // anyOf is included
-        expect(entries[1]).toBeInstanceOf(JsonSchemaAnyOfGroup);
-        expect(entries[1].entries).toHaveLength(2);
-        expect(entries[1].entries[0].schema).toEqual(subSchema3);
-        expect(entries[1].entries[1].schema).toEqual(subSchema4);
-        // sub schemas from oneOf are ignored
+        it("anyOf: likeAllOf", () => {
+            const parserConfig = {
+                anyOf: { type: "likeAllOf" },
+                oneOf: { type: "likeAllOf" }
+            };
+            const schema = new JsonSchema({
+                oneOf: [subSchema1, subSchema2],
+                anyOf: [subSchema3, subSchema4]
+            }, parserConfig);
+            const { entries } = schema.getPropertyParentSchemas();
+            expect(entries).toHaveLength(3);
+            expect(entries[0]).toEqual(schema);
+            // anyOf is included
+            expect(entries[1].schema).toEqual(subSchema3);
+            expect(entries[2].schema).toEqual(subSchema4);
+            // sub schemas from oneOf are ignored
+        });
+        it("anyOf: asAdditionalColumn", () => {
+            const parserConfig = {
+                anyOf: { type: "asAdditionalColumn" },
+                oneOf: { type: "asAdditionalColumn" }
+            };
+            const schema = new JsonSchema({
+                oneOf: [subSchema1, subSchema2],
+                anyOf: [subSchema3, subSchema4]
+            }, parserConfig);
+            const { entries } = schema.getPropertyParentSchemas();
+            expect(entries).toHaveLength(2);
+            expect(entries[0]).toEqual(schema);
+            // anyOf is included
+            expect(entries[1]).toBeInstanceOf(JsonSchemaAnyOfGroup);
+            expect(entries[1].entries).toHaveLength(2);
+            expect(entries[1].entries[0].schema).toEqual(subSchema3);
+            expect(entries[1].entries[1].schema).toEqual(subSchema4);
+            // sub schemas from oneOf are ignored
+        });
     });
-    it("oneOf returned if anyOf is present but not configured to be included", () => {
+    describe("oneOf returned if anyOf is present but not configured to be included", () => {
         const subSchema1 = { description: "Description Text" };
         const subSchema2 = { title: "Title Value" };
         const subSchema3 = { default: true };
         const subSchema4 = { type: "boolean" };
-        const parserConfig = { oneOf: { type: "likeAllOf" } };
-        const schema = new JsonSchema({
-            oneOf: [subSchema1, subSchema2],
-            anyOf: [subSchema3, subSchema4]
-        }, parserConfig);
-        const { entries } = schema.getPropertyParentSchemas();
-        expect(entries).toHaveLength(2);
-        expect(entries[0]).toEqual(schema);
-        // oneOf is included
-        expect(entries[1]).toBeInstanceOf(JsonSchemaOneOfGroup);
-        expect(entries[1].entries).toHaveLength(2);
-        expect(entries[1].entries[0].schema).toEqual(subSchema1);
-        expect(entries[1].entries[1].schema).toEqual(subSchema2);
-        // sub schemas from anyOf are ignored since they are not mentioned in the parserConfig
+        it("oneOf: likeAllOf", () => {
+            const parserConfig = { oneOf: { type: "likeAllOf" } };
+            const schema = new JsonSchema({
+                oneOf: [subSchema1, subSchema2],
+                anyOf: [subSchema3, subSchema4]
+            }, parserConfig);
+            const { entries } = schema.getPropertyParentSchemas();
+            expect(entries).toHaveLength(3);
+            expect(entries[0]).toEqual(schema);
+            // oneOf is included
+            expect(entries[1].schema).toEqual(subSchema1);
+            expect(entries[2].schema).toEqual(subSchema2);
+            // sub schemas from anyOf are ignored since they are not mentioned in the parserConfig
+        });
+        it("oneOF: asAdditionalColumn", () => {
+            const parserConfig = { oneOf: { type: "asAdditionalColumn" } };
+            const schema = new JsonSchema({
+                oneOf: [subSchema1, subSchema2],
+                anyOf: [subSchema3, subSchema4]
+            }, parserConfig);
+            const { entries } = schema.getPropertyParentSchemas();
+            expect(entries).toHaveLength(2);
+            expect(entries[0]).toEqual(schema);
+            // oneOf is included
+            expect(entries[1]).toBeInstanceOf(JsonSchemaOneOfGroup);
+            expect(entries[1].entries).toHaveLength(2);
+            expect(entries[1].entries[0].schema).toEqual(subSchema1);
+            expect(entries[1].entries[1].schema).toEqual(subSchema2);
+            // sub schemas from anyOf are ignored since they are not mentioned in the parserConfig
+        });
     });
     it("returns type of items", () => {
         const subSchemaItems = { title: "Title Value" };
@@ -230,6 +327,61 @@ describe("getPropertyParentSchemas()", () => {
         expect(entries).toHaveLength(1);
         expect(entries[0].schema).toEqual(subSchemaItems);
         expect(entries[0].scope).toEqual(scope);
+    });
+});
+describe("getProperties()", () => {
+    it("returns properties from simple schema", () => {
+        const rawFooSchema = { type: "string" };
+        const rawBarSchema = { type: "number" };
+        const schema = new JsonSchema({
+            properties: {
+                foo: rawFooSchema,
+                bar: rawBarSchema
+            }
+        });
+        const result = schema.getProperties();
+        expect(Object.keys(result)).toHaveLength(2);
+        expect(result.foo).toBeInstanceOf(JsonSchema);
+        expect(result.foo.schema).toEqual(rawFooSchema);
+        expect(result.bar).toBeInstanceOf(JsonSchema);
+        expect(result.bar.schema).toEqual(rawBarSchema);
+    });
+    describe.each`
+        groupName
+        ${"anyOf"}
+        ${"oneOf"}
+    `("$groupName with 'asAdditionalColumn' setting:", ({ groupName }) => {
+        const parserConfig = {
+            [groupName]: { type: "asAdditionalColumn" }
+        };
+        const rawFooSchema = { description: "Description Text" };
+        const rawBarSchema = { title: "Title Value" };
+        const schema = new JsonSchema({
+            [groupName]: [
+                {
+                    properties: { foo: rawFooSchema }
+                },
+                {
+                    properties: { bar: rawBarSchema }
+                }
+            ]
+        }, parserConfig);
+        it("ignored if no optionIndex provided", () => {
+            const result = schema.getProperties();
+            expect(result).toEqual({});
+        });
+        it("returns first of two options", () => {
+            const result = schema.getProperties(0);
+            expect(Object.keys(result)).toHaveLength(1);
+            expect(result.foo).toBeInstanceOf(JsonSchema);
+            expect(result.foo.schema).toEqual(rawFooSchema);
+        });
+        it("returns second of two options", () => {
+            const result = schema.getProperties(1);
+            expect(Object.keys(result)).toHaveLength(1);
+            expect(result.bar).toBeInstanceOf(JsonSchema);
+            expect(result.bar.schema).toEqual(rawBarSchema);
+        });
     });
 });
 describe("getFieldValue()", () => {

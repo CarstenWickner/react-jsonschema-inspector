@@ -6,7 +6,7 @@ describe("constructed correctly()", () => {
         const schema = new JsonSchema({
             title: "Test"
         });
-        const scope = new RefScope(schema);
+        const { scope } = schema;
         expect(scope.internalRefs.size).toBe(1);
         expect(scope.internalRefs.get("#")).toEqual(schema);
         expect(scope.externalRefs).toEqual(new Map());
@@ -96,7 +96,7 @@ describe("constructed correctly()", () => {
                 D: {}
             }
         });
-        const scope = new RefScope(schema);
+        const { scope } = schema;
         expect(scope.internalRefs.size).toBe(1);
         expect(scope.internalRefs.get("#")).toEqual(schema);
         expect(scope.externalRefs).toEqual(new Map());
@@ -157,50 +157,50 @@ describe("constructed correctly()", () => {
 describe("findSchemaInThisScope()", () => {
     it("in `internalRefs`", () => {
         const schema = new JsonSchema({ title: "Test" });
-        const scope = new RefScope(schema);
+        const { scope } = schema;
         expect(scope.findSchemaInThisScope("#")).toEqual(schema);
     });
     it("not in `internalRefs` when they are specifically ignored", () => {
         const schema = new JsonSchema({ title: "Test" });
-        const scope = new RefScope(schema);
+        const { scope } = schema;
         expect(scope.findSchemaInThisScope("#", false)).toBeUndefined();
     });
     it("in `externalRefs`", () => {
         const schema = new JsonSchema({ $id: "Test" });
-        const scope = new RefScope(schema);
+        const { scope } = schema;
         expect(scope.findSchemaInThisScope("Test")).toEqual(schema);
     });
     it("in `externalRefs` when `internalRefs` are being ignored", () => {
         const schema = new JsonSchema({ $id: "Test" });
-        const scope = new RefScope(schema);
+        const { scope } = schema;
         expect(scope.findSchemaInThisScope("Test", false)).toEqual(schema);
     });
 });
 describe("find()", () => {
     it("directly in this scope", () => {
         const schema = new JsonSchema({ title: "Test" });
-        const scope = new RefScope(schema);
+        const { scope } = schema;
         expect(scope.find("#")).toEqual(schema);
     });
     it("throws error if not found", () => {
         const schema = new JsonSchema({ title: "Test" });
-        const scope = new RefScope(schema);
+        const { scope } = schema;
         expect(() => scope.find("#/definitions/A")).toThrowError("Cannot resolve $ref: \"#/definitions/A\"");
     });
     it("via other scope's `externalRefs`", () => {
         const otherSchemaId = "http://valid-uri.com/$id#";
         const schema = new JsonSchema({ $id: otherSchemaId });
-        const scope = new RefScope(new JsonSchema({ title: "Test" }));
-        scope.addOtherScope(new RefScope(schema));
+        const { scope } = new JsonSchema({ title: "Test" });
+        scope.addOtherScope(schema.scope);
         expect(scope.find(otherSchemaId)).toEqual(schema);
     });
     it("not via other scope's `internalRefs`", () => {
-        const scope = new RefScope(new JsonSchema({ title: "Test" }));
-        scope.addOtherScope(new RefScope(new JsonSchema({
+        const { scope } = new JsonSchema({ title: "Test" });
+        scope.addOtherScope(new JsonSchema({
             definitions: {
                 A: { description: "Value" }
             }
-        })));
+        }).scope);
         expect(Array.from(scope.otherScopes[0].internalRefs.keys())).toEqual(["#", "#/definitions/A"]);
         expect(() => scope.find("#/definitions/A")).toThrowError("Cannot resolve $ref: \"#/definitions/A\"");
     });

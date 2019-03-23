@@ -43,7 +43,7 @@ export function mapObjectValues(original, mappingFunction) {
  * @param {?Object} nextValue single value to merge with "combined"
  * @returns {?Object} merged values
  */
-export function mergeObjects(combined, nextValue) {
+export function mergeSchemas(combined, nextValue) {
     let mergeResult;
     if (!isNonEmptyObject(combined)) {
         mergeResult = nextValue;
@@ -52,7 +52,15 @@ export function mergeObjects(combined, nextValue) {
     } else if (combined === nextValue) {
         mergeResult = combined;
     } else {
-        mergeResult = Object.assign({}, combined, nextValue);
+        mergeResult = Object.assign(
+            {},
+            combined,
+            ...Object.keys(nextValue)
+                .filter(key => !isDefined(combined[key])
+                    || typeof combined[key] === "boolean"
+                    || isNonEmptyObject(nextValue[key]))
+                .map(key => ({ [key]: nextValue[key] }))
+        );
     }
     return mergeResult;
 }

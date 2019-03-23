@@ -3,23 +3,21 @@ import { shallow } from "enzyme";
 
 import InspectorColumn from "../../src/component/InspectorColumn";
 import JsonSchema from "../../src/model/JsonSchema";
-import RefScope from "../../src/model/RefScope";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {
+        const { scope } = new JsonSchema({
+            definitions: { Target: {} }
+        });
         const component = shallow(
             <InspectorColumn
                 items={{
                     "Item One": new JsonSchema({
                         $id: "Schema One"
-                    }, {}, new RefScope({
-                        definitions: { Target: {} }
-                    })),
+                    }, {}, scope),
                     "Item Two": new JsonSchema({
                         $id: "Schema Two"
-                    }, {}, new RefScope({
-                        definitions: { Target: {} }
-                    }))
+                    }, {}, scope)
                 }}
                 onSelect={() => { }}
             />

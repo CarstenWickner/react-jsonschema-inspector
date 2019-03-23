@@ -20,7 +20,17 @@ exports[`renders correctly with minimal/default props 1`] = `
         },
         "scope": RefScope {
           "externalRefs": Map {},
-          "internalRefs": Map {},
+          "internalRefs": Map {
+            "#" => JsonSchema {
+              "parserConfig": undefined,
+              "schema": Object {
+                "definitions": Object {
+                  "Target": Object {},
+                },
+              },
+              "scope": [Circular],
+            },
+          },
           "otherScopes": Array [],
         },
       }
@@ -40,7 +50,17 @@ exports[`renders correctly with minimal/default props 1`] = `
         },
         "scope": RefScope {
           "externalRefs": Map {},
-          "internalRefs": Map {},
+          "internalRefs": Map {
+            "#" => JsonSchema {
+              "parserConfig": undefined,
+              "schema": Object {
+                "definitions": Object {
+                  "Target": Object {},
+                },
+              },
+              "scope": [Circular],
+            },
+          },
           "otherScopes": Array [],
         },
       }

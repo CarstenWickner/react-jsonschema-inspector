@@ -42,7 +42,7 @@ export default class JsonSchema {
     constructor(schema, parserConfig, scope) {
         this.schema = schema;
         this.parserConfig = parserConfig;
-        this.scope = scope || new RefScope(this);
+        this.scope = scope || new RefScope(this, JsonSchema);
     }
 
     /**
@@ -130,14 +130,14 @@ export default class JsonSchema {
      */
     getPropertyParentSchemas() {
         if (!isNonEmptyObject(this.schema)) {
-            return new JsonSchemaAllOfGroup();
+            return new JsonSchemaAllOfGroup(JsonSchema);
         }
         if (this.schema.$ref) {
             const referencedSchema = this.scope.find(this.schema.$ref);
             // this schema is just a reference to another separately defined schema
             return referencedSchema.getPropertyParentSchemas();
         }
-        const result = new JsonSchemaAllOfGroup();
+        const result = new JsonSchemaAllOfGroup(JsonSchema);
         if (isNonEmptyObject(this.schema.items)) {
             // unsupported: specifying array of schemas referring to entries at respective positions in described array
             // schema.items contains a single schema, that specifies the type of any value in the described array
@@ -148,24 +148,24 @@ export default class JsonSchema {
         } else {
             result.with(this);
             if (this.schema.allOf) {
-                this.schema.allOf
-                    .map(rawSchemaPart => (new JsonSchema(rawSchemaPart, this.parserConfig, this.scope).getPropertyParentSchemas()))
-                    .forEach(result.with.bind(result));
+                const allOfGroup = new JsonSchemaAllOfGroup(JsonSchema);
+                result.with(this.fillGroupFromRawSchemaArray(allOfGroup, this.schema.allOf));
             } else if (this.schema.anyOf && this.parserConfig && this.parserConfig.anyOf) {
-                const anyOfGroup = new JsonSchemaAnyOfGroup();
-                this.schema.anyOf
-                    .map(rawSchemaPart => (new JsonSchema(rawSchemaPart, this.parserConfig, this.scope).getPropertyParentSchemas()))
-                    .forEach(anyOfGroup.with.bind(anyOfGroup));
-                result.with(anyOfGroup);
+                const anyOfGroup = new JsonSchemaAnyOfGroup(JsonSchema, this.parserConfig);
+                result.with(this.fillGroupFromRawSchemaArray(anyOfGroup, this.schema.anyOf));
             } else if (this.schema.oneOf && this.parserConfig && this.parserConfig.oneOf) {
-                const oneOfGroup = new JsonSchemaOneOfGroup();
-                this.schema.oneOf
-                    .map(rawSchemaPart => (new JsonSchema(rawSchemaPart, this.parserConfig, this.scope).getPropertyParentSchemas()))
-                    .forEach(oneOfGroup.with.bind(oneOfGroup));
-                result.with(oneOfGroup);
+                const oneOfGroup = new JsonSchemaOneOfGroup(JsonSchema, this.parserConfig);
+                result.with(this.fillGroupFromRawSchemaArray(oneOfGroup, this.schema.oneOf));
             }
         }
         return result;
+    }
+
+    fillGroupFromRawSchemaArray(group, rawSchemaArray) {
+        rawSchemaArray
+            .map(rawSchemaPart => (new JsonSchema(rawSchemaPart, this.parserConfig, this.scope).getPropertyParentSchemas()))
+            .forEach(group.with.bind(group));
+        return group;
     }
 
     /**

@@ -1,5 +1,5 @@
 import {
-    isDefined, isNonEmptyObject, mapObjectValues, mergeObjects, listValues
+    isDefined, isNonEmptyObject, mapObjectValues, mergeSchemas, listValues
 } from "../../src/model/utils";
 
 describe("isDefined()", () => {
@@ -96,47 +96,47 @@ describe("mapObjectValues()", () => {
         });
     });
 });
-describe("mergeObjects()", () => {
+describe("mergeObjectsWithSchemas()", () => {
     it("returns second param if first param is undefined", () => {
         const secondParam = { title: "something" };
-        expect(mergeObjects(undefined, secondParam)).toEqual(secondParam);
+        expect(mergeSchemas(undefined, secondParam)).toEqual(secondParam);
     });
     it("returns second param if first param is null", () => {
         const secondParam = { title: "something" };
-        expect(mergeObjects(null, secondParam)).toEqual(secondParam);
+        expect(mergeSchemas(null, secondParam)).toEqual(secondParam);
     });
     it("returns second param if first param is not an object", () => {
         const secondParam = { title: "something" };
-        expect(mergeObjects("not an object", secondParam)).toEqual(secondParam);
+        expect(mergeSchemas("not an object", secondParam)).toEqual(secondParam);
     });
     it("returns second param if first param is empty object", () => {
         const secondParam = { title: "something" };
-        expect(mergeObjects({}, secondParam)).toEqual(secondParam);
+        expect(mergeSchemas({}, secondParam)).toEqual(secondParam);
     });
     it("returns first param if second param is undefined", () => {
         const firstParam = { title: "something" };
-        expect(mergeObjects(firstParam, undefined)).toEqual(firstParam);
+        expect(mergeSchemas(firstParam, undefined)).toEqual(firstParam);
     });
     it("returns first param if second param is null", () => {
         const firstParam = { title: "something" };
-        expect(mergeObjects(firstParam, null)).toEqual(firstParam);
+        expect(mergeSchemas(firstParam, null)).toEqual(firstParam);
     });
     it("returns first param if second param is not an object", () => {
         const firstParam = { title: "something" };
-        expect(mergeObjects(firstParam, "not an object")).toEqual(firstParam);
+        expect(mergeSchemas(firstParam, "not an object")).toEqual(firstParam);
     });
     it("returns first param if second param is empty object", () => {
         const firstParam = { title: "something" };
-        expect(mergeObjects(firstParam, {})).toEqual(firstParam);
+        expect(mergeSchemas(firstParam, {})).toEqual(firstParam);
     });
     it("returns unchanged param if both are the same", () => {
         const param = { title: "something" };
-        expect(mergeObjects(param, param)).toEqual(param);
+        expect(mergeSchemas(param, param)).toEqual(param);
     });
     it("returns single merged object if both params are non empty objects", () => {
         const firstParam = { title: "something" };
         const secondParam = { description: "text" };
-        const result = mergeObjects(firstParam, secondParam);
+        const result = mergeSchemas(firstParam, secondParam);
         expect(result).toEqual({
             title: "something",
             description: "text"
