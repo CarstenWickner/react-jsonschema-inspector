@@ -1,5 +1,3 @@
-import { isNonEmptyObject, mapObjectValues, mergeSchemas } from "./utils";
-
 /**
  * Representation of an array of schemas (e.g. "allOf", "anyOf", "oneOf"), offering a number of convenient functions for extracting information.
  */
@@ -10,25 +8,14 @@ export default class JsonSchemaGroup {
     entries = [];
 
     /**
-     * Run-time reference to the JsonSchema constructor to avoid circular dependencies at load-time.
-     */
-    JsonSchema;
-
-    /**
      * Constructor for the representation of a schema's grouping property, e.g. "allOf", "anyOf", "oneOf".
-     *
-     * @param {Function} JsonSchema run-time reference to JsonSchema constructor to avoid circular dependencies at load-time
      */
-    constructor(JsonSchema) {
+    constructor() {
         if (process.env.NODE_ENV === "development") {
-            if (!JsonSchema) {
-                throw new Error("Given JsonSchema is not a valid reference to that class");
-            }
             if (typeof this.shouldBeTreatedLikeAllOf !== "function") {
                 throw new Error("JsonSchemaGroup is abstract and expects shouldBeTreatedLikeAllOf() to be implemented by the instantiated sub-class");
             }
         }
-        this.JsonSchema = JsonSchema;
     }
 
     /**
@@ -54,15 +41,11 @@ export default class JsonSchemaGroup {
      * @param {Number} optionTarget[].index counter that should be decreased for each passed optional sub-schema; the option at 0 is deemed selected
      * @returns {Object.<String, JsonSchema>} collection of all properties mentioned in this schema
      */
-    getProperties(optionTarget) {
+    extractValues(extractFromSchema, mergeResults, defaultValue, optionTarget) {
         // collect schemas where we have both a boolean and a proper schema, favour the proper schema
-        const result = this.entries
-            .map(entry => this.getPropertiesFromEntry(entry, optionTarget))
-            .reduce(mergeSchemas, {});
-        // convert any remaining boolean values into empty schema wrappers
-        return mapObjectValues(result, value => (
-            isNonEmptyObject(value) ? value : new (this.JsonSchema)(value)
-        ));
+        return this.entries
+            .map(entry => this.extractValuesFromEntry(entry, extractFromSchema, mergeResults, defaultValue, optionTarget))
+            .reduce(mergeResults, defaultValue);
     }
 
     /**
@@ -72,7 +55,7 @@ export default class JsonSchemaGroup {
      * @param {?Array.<Object>} optionTarget array of mutable objects containing the selected optional sub-schema's (relative) index
      * @param {Number} optionTarget[].index counter that should be decreased for each passed optional sub-schema; the option at 0 is deemed selected
      */
-    getPropertiesFromEntry(entry, optionTarget) {
+    extractValuesFromEntry(entry, extractFromSchema, mergeResults, defaultValue, optionTarget) {
         const treatLikeAllOf = this.shouldBeTreatedLikeAllOf();
         if (!treatLikeAllOf) {
             // an optional entry should be kept if it is not the specifically selected one
@@ -83,53 +66,18 @@ export default class JsonSchemaGroup {
             }
             if (!isSelectedEntry) {
                 // ignore unselected option
-                return {};
+                return defaultValue;
             }
         }
         if (entry instanceof JsonSchemaGroup) {
-            return entry.getProperties(treatLikeAllOf ? optionTarget : optionTarget.slice(1));
+            return entry.extractValues(
+                extractFromSchema,
+                mergeResults,
+                defaultValue,
+                treatLikeAllOf ? optionTarget : optionTarget.slice(1)
+            );
         }
-        // entry is a single JsonSchema
-        const { schema: rawSchema, parserConfig, scope } = entry;
-        const { required = [], properties = {} } = rawSchema;
-        const rawProperties = Object.assign(
-            {},
-            ...required.map(value => ({ [value]: true })),
-            properties
-        );
-        // properties is an Object.<String, raw-json-schema> and should be converted to an Object.<String, JsonSchema>
-        return mapObjectValues(rawProperties,
-            rawPropertySchema => (
-                isNonEmptyObject(rawPropertySchema)
-                    ? new (this.JsonSchema)(rawPropertySchema, parserConfig, scope)
-                    : rawPropertySchema
-            ));
-    }
-
-    /**
-     * Determines optional paths in this schema group.
-     *
-     * @returns {Object} return representation of the available options on this group's top level
-     * @returns {?String} return.groupTitle optional title text to be displayed for this group's options
-     * @returns {?Array<Object>} return.options list of option representations (may contain representation of nested options)
-     */
-    getOptions() {
-        let containedOptions;
-        if (this.shouldBeTreatedLikeAllOf()) {
-            containedOptions = this.entries
-                // simple schemas can be ignored: no options to differentiate between there
-                .filter(entry => entry instanceof JsonSchemaGroup)
-                // for all groups: look-up their nested options recursively
-                .map(nestedGroup => nestedGroup.getOptions())
-                // if a nested group has no options to differentiate (i.e. also has shouldBeTreatedLikeAllOf() === true), we can ignore it as well
-                .filter(nestedOptions => nestedOptions.options);
-        } else {
-            containedOptions = this.entries.map(entry => (
-                // each entry is considered an option, groups may have some more nested options
-                entry instanceof JsonSchemaGroup ? entry.getOptions() : {}
-            ));
-        }
-        return this.createOptionsRepresentation(containedOptions);
+        return extractFromSchema(entry);
     }
 
     /**
@@ -154,15 +102,5 @@ export default class JsonSchemaGroup {
             };
         }
         return result;
-    }
-
-    /**
-     * Workaround to be (kinda) backwards-compatible with pre-groups API.
-     *
-     * @param {Function} func function to execute for all contained entries
-     * @deprecated temporary workaround until migration to groups API is completed
-     */
-    some(func) {
-        return this.entries.some(func);
     }
 }

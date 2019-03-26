@@ -16,8 +16,8 @@ export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
      * @param {Object} settings configuration object determining how the represented schema part should be interpreted
      * @param {String} setting.type indication how the represented schema's group of should be handled, e.g. "likeAllOf", "asAdditionalColumn"
      */
-    constructor(JsonSchema, settings) {
-        super(JsonSchema);
+    constructor(settings) {
+        super();
         if (process.env.NODE_ENV === "development") {
             if (!settings || !settings.type) {
                 throw new Error("Missing configuration of desired 'type' of parsing");

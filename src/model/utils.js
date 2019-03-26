@@ -37,33 +37,6 @@ export function mapObjectValues(original, mappingFunction) {
 }
 
 /**
- * Generic function to be used in Array.reduce() - assuming objects are being merged.
- *
- * @param {?Object} combined temporary result of previous reduce steps
- * @param {?Object} nextValue single value to merge with "combined"
- * @returns {?Object} merged values
- */
-export function mergeSchemas(combined, nextValue) {
-    let mergeResult;
-    if (!isNonEmptyObject(combined)) {
-        mergeResult = nextValue;
-    } else if (!isNonEmptyObject(nextValue)) {
-        mergeResult = combined;
-    } else if (combined === nextValue) {
-        mergeResult = combined;
-    } else {
-        mergeResult = Object.assign(
-            {},
-            combined,
-            ...Object.keys(nextValue)
-                .filter(key => !isNonEmptyObject(combined[key]) || isNonEmptyObject(nextValue[key]))
-                .map(key => ({ [key]: nextValue[key] }))
-        );
-    }
-    return mergeResult;
-}
-
-/**
  * Generic function to be used in Array.reduce().
  *
  * @param {*} combined temporary result of previous reduce steps

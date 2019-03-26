@@ -1,10 +1,18 @@
 import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
 import JsonSchema from "../../src/model/JsonSchema";
 
-describe("constructor", () => {
-    class MockJsonSchemaGroup extends JsonSchemaGroup {
-        shouldBeTreatedLikeAllOf() { return true; }
+/**
+ * Minimal implementation of JsonSchemaGroup
+ */
+class MockJsonSchemaGroup extends JsonSchemaGroup {
+    constructor(treatLikeAllOf = true) {
+        super();
+        this.treatLikeAllOf = treatLikeAllOf;
     }
+    shouldBeTreatedLikeAllOf() { return this.treatLikeAllOf; }
+}
+
+describe("constructor", () => {
     describe("in 'development' mode", () => {
         let mode;
         beforeAll(() => {
@@ -15,17 +23,8 @@ describe("constructor", () => {
             process.env.NODE_ENV = mode;
         });
 
-        it.each`
-            testType                                       | GroupClass             | parameters
-            ${"shouldBeTreatedLikeAllOf() is not present"} | ${JsonSchemaGroup}     | ${[JsonSchema]}
-            ${"missing JsonSchema reference"}              | ${MockJsonSchemaGroup} | ${[undefined]}
-        `("throws error when $testType", ({ GroupClass, parameters }) => {
-            try {
-                const successfullyInitialisedGroup = new GroupClass(...parameters);
-                expect(successfullyInitialisedGroup).toBeUndefined();
-            } catch (error) {
-                expect(error).toBeInstanceOf(Error);
-            }
+        it("throws error when shouldBeTreatedLikeAllOf() is not present", () => {
+            expect(() => new JsonSchemaGroup()).toThrow();
         });
     });
     describe("in 'production' mode", () => {
@@ -38,27 +37,11 @@ describe("constructor", () => {
             process.env.NODE_ENV = mode;
         });
 
-        it.each`
-            testType                                       | GroupClass             | parameters
-            ${"shouldBeTreatedLikeAllOf() is not present"} | ${JsonSchemaGroup}     | ${[JsonSchema]}
-            ${"missing JsonSchema reference"}              | ${MockJsonSchemaGroup} | ${[undefined]}
-        `("throws no error when $testType", ({ GroupClass, parameters }) => {
-            expect(new GroupClass(...parameters)).toBeInstanceOf(GroupClass);
+        it("throws no error when shouldBeTreatedLikeAllOf() is not present", () => {
+            expect(new JsonSchemaGroup()).toBeInstanceOf(JsonSchemaGroup);
         });
     });
 });
-
-/**
- * Minimal implementation of JsonSchemaGroup
- */
-class MockJsonSchemaGroup extends JsonSchemaGroup {
-    constructor(treatLikeAllOf = true) {
-        super(JsonSchema);
-        this.treatLikeAllOf = treatLikeAllOf;
-    }
-    shouldBeTreatedLikeAllOf() { return this.treatLikeAllOf; }
-}
-
 describe("with()", () => {
     it("adds given JsonSchema to entries", () => {
         const schema = new JsonSchema();
@@ -88,215 +71,82 @@ describe("with()", () => {
         expect(targetGroup.entries).toEqual([otherGroup]);
     });
 });
-describe("getProperties() / getPropertiesFromEntry()", () => {
-    it("extracts properties from single JsonSchema entry", () => {
-        const rawFooSchema = { type: "object" };
-        const group = new MockJsonSchemaGroup()
-            .with(new JsonSchema({
-                properties: { foo: rawFooSchema }
-            }));
-        const result = group.getProperties();
-        expect(Object.keys(result)).toHaveLength(1);
-        expect(result.foo).toBeInstanceOf(JsonSchema);
-        expect(result.foo.schema).toEqual(rawFooSchema);
-    });
-    it("extracts required from single JsonSchema entry", () => {
-        const group = new MockJsonSchemaGroup()
-            .with(new JsonSchema({
-                required: ["foo", "bar"]
-            }));
-        const result = group.getProperties();
-        expect(Object.keys(result)).toHaveLength(2);
-        expect(result.foo).toBeInstanceOf(JsonSchema);
-        expect(result.foo.schema).toBe(true);
-        expect(result.bar).toBeInstanceOf(JsonSchema);
-        expect(result.bar.schema).toBe(true);
-    });
-    it("no error if no properties or required in single JsonSchema entry", () => {
-        const group = new MockJsonSchemaGroup().with(new JsonSchema(true));
-        expect(group.getProperties()).toEqual({});
-    });
-    describe("combined properties and required", () => {
-        const rawFooSchema = { title: "Test Title" };
-        const requiredArray = ["foo", "bar"];
-        const singleEntryGroup = new MockJsonSchemaGroup()
-            .with(new JsonSchema({
-                required: requiredArray,
-                properties: { foo: rawFooSchema }
-            }));
-        const twoEntriesGroup = new MockJsonSchemaGroup()
-            .with(new JsonSchema({
-                properties: { foo: rawFooSchema }
-            }))
-            .with(new JsonSchema({ required: requiredArray }));
-        it.each`
-            testTitle                         | group
-            ${"from single JsonSchema entry"} | ${singleEntryGroup}
-            ${"from two JsonSchema entries"}  | ${twoEntriesGroup}
-        `("$testTitle", ({ group }) => {
-            const result = group.getProperties();
-            expect(Object.keys(result)).toHaveLength(2);
-            expect(result.foo).toBeInstanceOf(JsonSchema);
-            expect(result.foo.schema).toEqual(rawFooSchema);
-            expect(result.bar).toBeInstanceOf(JsonSchema);
-            expect(result.bar.schema).toBe(true);
-        });
-    });
-    describe("extracts properties from nested group", () => {
-        it("returns flat result if groups' shouldBeTreatedLikeAllOf() === true", () => {
-            const rawFooSchema = { type: "object" };
-            const rawBarSchema = { title: "bar" };
-            const rawBazSchema = { description: "baz" };
-            const group = new MockJsonSchemaGroup(true)
-                .with(new JsonSchema({
-                    properties: { foo: rawFooSchema }
-                }))
-                .with(new MockJsonSchemaGroup(true)
-                    .with(new JsonSchema({
-                        properties: { bar: rawBarSchema }
-                    }))
-                    .with(new JsonSchema({
-                        properties: { baz: rawBazSchema }
-                    })));
-            const result = group.getProperties();
-            expect(Object.keys(result)).toHaveLength(3);
-            expect(result.foo).toBeInstanceOf(JsonSchema);
-            expect(result.foo.schema).toEqual(rawFooSchema);
-            expect(result.bar).toBeInstanceOf(JsonSchema);
-            expect(result.bar.schema).toEqual(rawBarSchema);
-            expect(result.baz).toBeInstanceOf(JsonSchema);
-            expect(result.baz.schema).toEqual(rawBazSchema);
-        });
-    });
-    describe("returns partial result if groups' shouldBeTreatedLikeAllOf() === false", () => {
-        const rawBazSchema = { description: "baz" };
-        const rawFooSchema = { type: "object" };
-        const rawBarSchema = { title: "bar" };
-        const rawFoobarSchema = { minProperties: 2 };
-        const group = new MockJsonSchemaGroup(false)
-            .with(new JsonSchema({
-                properties: { baz: rawBazSchema }
-            }))
-            .with(new MockJsonSchemaGroup(true)
-                .with(new MockJsonSchemaGroup(false)
-                    .with(new JsonSchema({
-                        properties: { foo: rawFooSchema }
-                    }))
-                    .with(new JsonSchema({
-                        properties: { bar: rawBarSchema }
-                    })))
-                .with(new JsonSchema({
-                    properties: { foobar: rawFoobarSchema }
-                })));
-
-        it("from single JsonSchema option", () => {
-            const result = group.getProperties([
-                { index: 0 }
-            ]);
-            expect(Object.keys(result)).toHaveLength(1);
-            expect(result.baz).toBeInstanceOf(JsonSchema);
-            expect(result.baz.schema).toEqual(rawBazSchema);
-        });
-        it("from nested JsonSchemaGroup option #1", () => {
-            const result = group.getProperties([
-                { index: 1 },
-                { index: 0 }
-            ]);
-            expect(Object.keys(result)).toHaveLength(2);
-            expect(result.foo).toBeInstanceOf(JsonSchema);
-            expect(result.foo.schema).toEqual(rawFooSchema);
-            expect(result.foobar).toBeInstanceOf(JsonSchema);
-            expect(result.foobar.schema).toEqual(rawFoobarSchema);
-        });
-        it("from nested JsonSchemaGroup option #2", () => {
-            const result = group.getProperties([
-                { index: 1 },
-                { index: 1 }
-            ]);
-            expect(Object.keys(result)).toHaveLength(2);
-            expect(result.bar).toBeInstanceOf(JsonSchema);
-            expect(result.bar.schema).toEqual(rawBarSchema);
-            expect(result.foobar).toBeInstanceOf(JsonSchema);
-            expect(result.foobar.schema).toEqual(rawFoobarSchema);
-        });
-    });
-});
-describe("getOptions()", () => {
+describe("extractValues()/extractValuesFromEntry()", () => {
     describe("when shouldBeTreatedLikeAllOf() === true", () => {
-        it("ignores JsonSchema entries ", () => {
-            const group = new MockJsonSchemaGroup(true)
-                .with(new JsonSchema())
-                .with(new JsonSchema());
-            expect(group.getOptions()).toEqual({});
+        it("calling given extractFromSchema() function on single schema entry", () => {
+            const extractFromSchema = jest.fn()
+                .mockReturnValueOnce(10)
+                .mockReturnValueOnce("foo")
+                .mockReturnValueOnce(false);
+            const entry = new JsonSchema(true);
+            const group = new MockJsonSchemaGroup(true).with(entry);
+
+            expect(group.extractValuesFromEntry(entry, extractFromSchema)).toBe(10);
+            expect(extractFromSchema.mock.calls).toHaveLength(1);
+            expect(extractFromSchema.mock.calls[0][0]).toBe(entry);
+
+            expect(group.extractValuesFromEntry(entry, extractFromSchema)).toBe("foo");
+            expect(extractFromSchema.mock.calls).toHaveLength(2);
+            expect(extractFromSchema.mock.calls[1][0]).toBe(entry);
+
+            expect(group.extractValuesFromEntry(entry, extractFromSchema)).toBe(false);
+            expect(extractFromSchema.mock.calls).toHaveLength(3);
+            expect(extractFromSchema.mock.calls[2][0]).toBe(entry);
         });
-        it("ignores nested groups only containing JsonSchema entries when nested groups also have shouldBeTreatedLikeAllOf() === true", () => {
+        it("calling extractValues() recursively on group entry", () => {
             const group = new MockJsonSchemaGroup(true)
-                .with(
-                    new MockJsonSchemaGroup(true)
-                        .with(new JsonSchema())
-                        .with(new JsonSchema())
-                )
-                .with(
-                    new MockJsonSchemaGroup(true)
-                        .with(
-                            new MockJsonSchemaGroup(true)
-                                .with(new JsonSchema())
-                                .with(new JsonSchema())
-                        )
-                        .with(new JsonSchema())
-                );
-            expect(group.getOptions()).toEqual({});
+                .with(new MockJsonSchemaGroup(true)
+                    .with(new JsonSchema({ title: "foo" }))
+                    .with(new JsonSchema({ description: "bar" })));
+            const extractFromSchema = ({ schema }) => schema;
+            const mergeResults = (combined, nextValue) => Object.assign({}, combined, nextValue);
+            const defaultValue = {};
+            expect(group.extractValues(extractFromSchema, mergeResults, defaultValue)).toEqual({
+                title: "foo",
+                description: "bar"
+            });
         });
     });
     describe("when shouldBeTreatedLikeAllOf() === false", () => {
-        it("represents JsonSchema entries as empty arrays", () => {
-            const group = new MockJsonSchemaGroup(false)
-                .with(new JsonSchema())
-                .with(new JsonSchema());
-            expect(group.getOptions()).toEqual({
-                options: [
-                    {},
-                    {}
-                ]
-            });
+        it.each`
+            conditionText                      | optionTargetIn     | optionTargetOut
+            ${"is undefined"}                  | ${undefined}       | ${undefined}
+            ${"is empty array"}                | ${[]}              | ${[]}
+            ${"has one item with index > 1"}   | ${[{ index: 4 }]}  | ${[{ index: 3 }]}
+            ${"has one item with index === 1"} | ${[{ index: 1 }]}  | ${[{ index: 0 }]}
+            ${"has one item with index < 0"}   | ${[{ index: -2 }]} | ${[{ index: -3 }]}
+        `("returns given defaultValue if optionTarget $conditionText", ({ optionTargetIn, optionTargetOut }) => {
+            const group = new MockJsonSchemaGroup(false).with(new JsonSchema(true));
+            expect(group.extractValues(
+                null,
+                (combined, nextValue) => `${combined}, ${nextValue}`,
+                "foobar",
+                optionTargetIn
+            )).toBe("foobar, foobar");
+            expect(optionTargetIn).toEqual(optionTargetOut);
         });
-        it("represents hierarchy of nested groups that also have shouldBeTreatedLikeAllOf() === false", () => {
+        it("returns merged values when optionTarget index reaches 0", () => {
             const group = new MockJsonSchemaGroup(false)
-                .with(
-                    new MockJsonSchemaGroup(false)
-                        .with(new JsonSchema())
-                        .with(new JsonSchema())
-                )
-                .with(
-                    new MockJsonSchemaGroup(false)
-                        .with(
-                            new MockJsonSchemaGroup(false)
-                                .with(new JsonSchema())
-                                .with(new JsonSchema())
-                        )
-                        .with(new JsonSchema())
-                );
-            expect(group.getOptions()).toEqual({
-                options: [
-                    {
-                        options: [
-                            {},
-                            {}
-                        ]
-                    },
-                    {
-                        options: [
-                            {
-                                options: [
-                                    {},
-                                    {}
-                                ]
-                            },
-                            {}
-                        ]
-                    }
-                ]
-            });
+                .with(new JsonSchema(false))
+                .with(new MockJsonSchemaGroup(false)
+                    .with(new JsonSchema({ title: "bar" }))
+                    .with(new JsonSchema({ title: "baz" })));
+            const extractFromSchema = ({ schema }) => schema.title;
+            const mergeResults = (combined, nextValue) => (
+                (combined && nextValue)
+                    ? `${combined}, ${nextValue}`
+                    : combined || nextValue
+            );
+            const defaultValue = null;
+            const optionTarget = [
+                { index: 1 },
+                { index: 0 }
+            ];
+            expect(group.extractValues(extractFromSchema, mergeResults, defaultValue, optionTarget)).toBe("bar");
+            expect(optionTarget).toEqual([
+                { index: -1 },
+                { index: -2 }
+            ]);
         });
     });
 });

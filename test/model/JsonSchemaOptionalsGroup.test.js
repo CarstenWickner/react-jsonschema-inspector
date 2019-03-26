@@ -1,5 +1,4 @@
 import JsonSchemaOptionalsGroup from "../../src/model/JsonSchemaOptionalsGroup";
-import JsonSchema from "../../src/model/JsonSchema";
 
 describe("constructor", () => {
     class MockJsonSchemaOptionalsGroup extends JsonSchemaOptionalsGroup {
@@ -19,20 +18,14 @@ describe("constructor", () => {
 
         it.each`
             testType                              | GroupClass                      | parameters
-            ${"instantiated directly"}            | ${JsonSchemaOptionalsGroup}     | ${[JsonSchema, { type: "likeAllOf" }]}
-            ${"providing no parameters"}          | ${MockJsonSchemaOptionalsGroup} | ${[undefined, undefined]}
-            ${"providing no settings parameter"}  | ${MockJsonSchemaOptionalsGroup} | ${[JsonSchema, undefined]}
-            ${"providing no settings.type field"} | ${MockJsonSchemaOptionalsGroup} | ${[JsonSchema, {}]}
+            ${"instantiated directly"}            | ${JsonSchemaOptionalsGroup}     | ${[{ type: "likeAllOf" }]}
+            ${"providing no settings parameters"} | ${MockJsonSchemaOptionalsGroup} | ${[]}
+            ${"providing no settings.type field"} | ${MockJsonSchemaOptionalsGroup} | ${[{}]}
         `("throws error when $testType", ({ GroupClass, parameters }) => {
-            try {
-                const successfullyInitialisedGroup = new GroupClass(...parameters);
-                expect(successfullyInitialisedGroup).toBeUndefined();
-            } catch (error) {
-                expect(error).toBeInstanceOf(Error);
-            }
+            expect(() => new GroupClass(...parameters)).toThrow();
         });
         it("throws no error when providing JsonSchema constructor and settings.type", () => {
-            expect(new MockJsonSchemaOptionalsGroup(JsonSchema, { type: "likeAllOf" }))
+            expect(new MockJsonSchemaOptionalsGroup({ type: "likeAllOf" }))
                 .toBeInstanceOf(MockJsonSchemaOptionalsGroup);
         });
     });
@@ -48,10 +41,9 @@ describe("constructor", () => {
 
         it.each`
             testType                              | GroupClass                      | parameters
-            ${"instantiated directly"}            | ${JsonSchemaOptionalsGroup}     | ${[JsonSchema, { type: "likeAllOf" }]}
-            ${"providing no parameters"}          | ${MockJsonSchemaOptionalsGroup} | ${[undefined, undefined]}
-            ${"providing no settings parameter"}  | ${MockJsonSchemaOptionalsGroup} | ${[JsonSchema, undefined]}
-            ${"providing no settings.type field"} | ${MockJsonSchemaOptionalsGroup} | ${[JsonSchema, {}]}
+            ${"instantiated directly"}            | ${JsonSchemaOptionalsGroup}     | ${[{ type: "likeAllOf" }]}
+            ${"providing no settings parameter"}  | ${MockJsonSchemaOptionalsGroup} | ${[]}
+            ${"providing no settings.type field"} | ${MockJsonSchemaOptionalsGroup} | ${[{}]}
         `("throws no error when $testType", ({ GroupClass, parameters }) => {
             expect(new GroupClass(...parameters)).toBeInstanceOf(GroupClass);
         });
@@ -63,7 +55,7 @@ class MockJsonSchemaOptionalsGroup extends JsonSchemaOptionalsGroup {
         return "mocked";
     }
     constructor(settings = { type: "likeAllOf" }) {
-        super(JsonSchema, settings);
+        super(settings);
     }
 }
 

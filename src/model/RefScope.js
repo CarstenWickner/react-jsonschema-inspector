@@ -104,13 +104,10 @@ export default class RefScope {
      */
     find(ref) {
         let result = this.findSchemaInThisScope(ref);
-        if (!result) {
-            this.otherScopes.some((otherScope) => {
-                result = otherScope.findSchemaInThisScope(ref, false);
-                return result;
-            });
-        }
-        if (result) {
+        if (result || this.otherScopes.some((otherScope) => {
+            result = otherScope.findSchemaInThisScope(ref, false);
+            return result;
+        })) {
             return result;
         }
         throw new Error(`Cannot resolve $ref: "${ref}"`);

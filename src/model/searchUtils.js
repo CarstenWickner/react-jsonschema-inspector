@@ -17,11 +17,16 @@ import { isNonEmptyObject } from "./utils";
  * @return {Boolean} return.return output value indicates whether the given schema or any of its sub-schemas matches the provided flat filter function
  */
 export function createRecursiveFilterFunction(flatSearchFilter) {
-    const recursiveFilterFunction = (jsonSchema) => {
-        if (!jsonSchema) {
+    const recursiveFilterFunction = (target, optionTarget) => {
+        if (!target) {
             return false;
         }
-        const { schema: rawSchema, parserConfig, scope } = jsonSchema;
+        if (!(target instanceof JsonSchema)) {
+            // target is assumed to be array of option indexes
+
+            return false;
+        }
+        const { schema: rawSchema, parserConfig, scope } = target;
         if (!isNonEmptyObject(rawSchema)) {
             // empty schema can be ignored
             return false;
@@ -39,23 +44,30 @@ export function createRecursiveFilterFunction(flatSearchFilter) {
         if (rawSchema.allOf
             && rawSchema.allOf
                 .map(mapRawSubSchema)
-                .some(recursiveFilterFunction)) {
+                .some(allOfPart => recursiveFilterFunction(allOfPart, optionTarget))) {
             return true;
         }
-        if (rawSchema.anyOf
-            && parserConfig
-            && parserConfig.anyOf === "likeAllOf"
-            && rawSchema.anyOf
-                .map(mapRawSubSchema)
-                .some(recursiveFilterFunction)) {
-            return true;
-        }
-        if (rawSchema.oneOf
-            && parserConfig
-            && parserConfig.oneOf === "likeAllOf"
-            && rawSchema.oneOf
-                .map(mapRawSubSchema)
-                .some(recursiveFilterFunction)) {
+        const searchInOptionals = (groupKey) => {
+            if (!rawSchema[groupKey] || !parserConfig || !parserConfig[groupKey]) {
+                return false;
+            }
+            if (!optionTarget || parserConfig[groupKey].type === "likeAllOf") {
+                if (rawSchema[groupKey]
+                    .map(mapRawSubSchema)
+                    .some(recursiveFilterFunction)) {
+                    return true;
+                }
+            } else if (optionTarget.length) {
+                if (rawSchema[groupKey].length > optionTarget[0].index
+                    && recursiveFilterFunction(rawSchema[groupKey][optionTarget[0].index], optionTarget.slice(1))) {
+                    return true;
+                }
+                // eslint-disable-next-line no-param-reassign
+                optionTarget[0].index -= rawSchema[groupKey].length;
+            }
+            return false;
+        };
+        if (searchInOptionals("anyOf") || searchInOptionals("oneOf")) {
             return true;
         }
         // otherwise recursively check the schemas of any contained properties

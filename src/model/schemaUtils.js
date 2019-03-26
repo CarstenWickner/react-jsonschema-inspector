@@ -1,4 +1,5 @@
 import JsonSchema from "./JsonSchema";
+import JsonSchemaGroup from "./JsonSchemaGroup";
 import JsonSchemaAllOfGroup from "./JsonSchemaAllOfGroup";
 import JsonSchemaAnyOfGroup from "./JsonSchemaAnyOfGroup";
 import JsonSchemaOneOfGroup from "./JsonSchemaOneOfGroup";
@@ -12,7 +13,7 @@ import { isNonEmptyObject, listValues, mapObjectValues } from "./utils";
  * @returns {Number} return[].index respective (initial) index value as provided in input array
  */
 function createOptionTargetArrayFromIndexes(optionIndexes = []) {
-    if (Array.isArray(optionIndexes)) {
+    if (Array.isArray(optionIndexes) && optionIndexes.length && typeof optionIndexes[0] === "number") {
         return optionIndexes.map(index => ({ index }));
     }
     return optionIndexes;
@@ -30,8 +31,6 @@ function mergeSchemas(combined, nextValue) {
     if (!isNonEmptyObject(combined)) {
         mergeResult = nextValue;
     } else if (!isNonEmptyObject(nextValue)) {
-        mergeResult = combined;
-    } else if (combined === nextValue) {
         mergeResult = combined;
     } else {
         mergeResult = Object.assign(
@@ -114,9 +113,6 @@ export function createGroupFromSchema(schema) {
  */
 function getFieldValueFromSchema(schema, fieldName, mappingFunction) {
     const { schema: rawSchema } = schema;
-    if (!isNonEmptyObject(rawSchema)) {
-        return undefined;
-    }
     const rawValue = rawSchema[fieldName];
     if (mappingFunction) {
         const { parserConfig, scope } = schema;
@@ -127,7 +123,7 @@ function getFieldValueFromSchema(schema, fieldName, mappingFunction) {
 
 export function getFieldValueFromSchemaGroup(schemaGroup, fieldName, mergeValues = listValues, defaultValue, mappingFunction, optionIndexes) {
     const result = schemaGroup.extractValues(
-        schema => getFieldValueFromSchema(schema, fieldName),
+        schema => getFieldValueFromSchema(schema, fieldName, mappingFunction),
         mergeValues,
         defaultValue,
         createOptionTargetArrayFromIndexes(optionIndexes)
@@ -159,11 +155,11 @@ function getSchemaFieldValueFromSchemaGroup(schemaGroup, fieldName, optionTarget
     return result;
 }
 
-export function getTypeOfArrayItems(schemaGroup, optionIndexes) {
+export function getTypeOfArrayItemsFromSchemaGroup(schemaGroup, optionIndexes) {
     const optionTarget = createOptionTargetArrayFromIndexes(optionIndexes);
     const optionTargetCopy = JSON.parse(JSON.stringify(optionTarget));
     let arrayItemSchema = getSchemaFieldValueFromSchemaGroup(schemaGroup, "items", optionTarget);
-    if (!arrayItemSchema) {
+    if (!Array.isArray(arrayItemSchema) && !isNonEmptyObject(arrayItemSchema)) {
         const resetOptionIndex = (originalOption, arrayIndex) => {
             // eslint-disable-next-line no-param-reassign
             optionTarget[arrayIndex].index = originalOption.index;
@@ -171,7 +167,7 @@ export function getTypeOfArrayItems(schemaGroup, optionIndexes) {
         // reset indexes in optionTarget if nothing was found
         optionTargetCopy.forEach(resetOptionIndex);
         arrayItemSchema = getSchemaFieldValueFromSchemaGroup(schemaGroup, "additionalItems", optionTarget);
-        if (!arrayItemSchema) {
+        if (!Array.isArray(arrayItemSchema) && !isNonEmptyObject(arrayItemSchema)) {
             // and again: reset indexes in optionTarget
             optionTargetCopy.forEach(resetOptionIndex);
             return undefined;
@@ -208,10 +204,6 @@ function getPropertiesFromSchema(jsonSchema) {
  */
 export function getPropertiesFromSchemaGroup(schemaGroup, optionIndexes) {
     const optionTarget = createOptionTargetArrayFromIndexes(optionIndexes);
-    const arrayItemType = getTypeOfArrayItems(schemaGroup, optionTarget);
-    if (arrayItemType) {
-        return getPropertiesFromSchemaGroup(arrayItemType, optionTarget);
-    }
     let result = schemaGroup.extractValues(
         getPropertiesFromSchema,
         mergeSchemas,
@@ -237,10 +229,8 @@ export function getOptionsInSchemaGroup(schemaGroup) {
     let containedOptions;
     if (schemaGroup.shouldBeTreatedLikeAllOf()) {
         containedOptions = schemaGroup.entries
-            // if a simple schema represents an array, that may also contain nested groups
-            .map(entry => (entry instanceof JsonSchema ? getTypeOfArrayItems(entry) : entry))
-            // simple schemas that are no arrays can be safely ignored here
-            .filter(nestedGroup => nestedGroup)
+            // simple schemas can be safely ignored here
+            .filter(entry => entry instanceof JsonSchemaGroup)
             // for all groups: look-up their nested options recursively
             .map(getOptionsInSchemaGroup)
             // if a nested group has no options to differentiate (i.e. also has shouldBeTreatedLikeAllOf() === true), we can ignore it as well
@@ -248,10 +238,8 @@ export function getOptionsInSchemaGroup(schemaGroup) {
     } else {
         // each entry is considered an option (i.e. nothing is filtered out), groups may have some more nested options
         containedOptions = schemaGroup.entries
-            // if a simple schema represents an array, that may also contain nested groups
-            .map(entry => (entry instanceof JsonSchema ? getTypeOfArrayItems(entry) : entry))
             // for all groups: look-up their nested options recursively
-            .map(getOptionsInSchemaGroup);
+            .map(entry => (entry instanceof JsonSchema ? {} : getOptionsInSchemaGroup(entry)));
     }
     return schemaGroup.createOptionsRepresentation(containedOptions);
 }

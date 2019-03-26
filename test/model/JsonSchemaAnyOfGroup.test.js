@@ -1,5 +1,4 @@
 import JsonSchemaAnyOfGroup from "../../src/model/JsonSchemaAnyOfGroup";
-import JsonSchema from "../../src/model/JsonSchema";
 
 describe("getDefaultGroupTitle()", () => {
     it("always returns 'any of'", () => {
@@ -20,20 +19,14 @@ describe("constructor", () => {
 
         it.each`
             testType                              | parameters
-            ${"missing JsonSchema reference"}    | ${[undefined, { anyOf: { type: "likeAllOf" } }]}
-            ${"missing parserConfig"}            | ${[JsonSchema]}
-            ${"missing parserConfig.anyOf"}      | ${[JsonSchema, {}]}
-            ${"missing parserConfig.anyOf.type"} | ${[JsonSchema, { anyOf: {} }]}
+            ${"missing parserConfig"}            | ${[]}
+            ${"missing parserConfig.anyOf"}      | ${[{}]}
+            ${"missing parserConfig.anyOf.type"} | ${[{ anyOf: {} }]}
         `("throws error when $testType", ({ parameters }) => {
-            try {
-                const successfullyInitialisedGroup = new JsonSchemaAnyOfGroup(...parameters);
-                expect(successfullyInitialisedGroup).toBeUndefined();
-            } catch (error) {
-                expect(error).toBeInstanceOf(Error);
-            }
+            expect(() => new JsonSchemaAnyOfGroup(...parameters)).toThrow();
         });
         it("throws no error when providing JsonSchema constructor and parserConfig.anyOf.type", () => {
-            expect(new JsonSchemaAnyOfGroup(JsonSchema, { anyOf: { type: "likeAllOf" } })).toBeInstanceOf(JsonSchemaAnyOfGroup);
+            expect(new JsonSchemaAnyOfGroup({ anyOf: { type: "likeAllOf" } })).toBeInstanceOf(JsonSchemaAnyOfGroup);
         });
     });
     describe("in 'production' mode", () => {
@@ -48,10 +41,9 @@ describe("constructor", () => {
 
         it.each`
             testType                             | parameters
-            ${"missing JsonSchema reference"}    | ${[undefined, { anyOf: { type: "likeAllOf" } }]}
-            ${"missing parserConfig"}            | ${[JsonSchema]}
-            ${"missing parserConfig.anyOf"}      | ${[JsonSchema, {}]}
-            ${"missing parserConfig.anyOf.type"} | ${[JsonSchema, { anyOf: {} }]}
+            ${"missing parserConfig"}            | ${[]}
+            ${"missing parserConfig.anyOf"}      | ${[{}]}
+            ${"missing parserConfig.anyOf.type"} | ${[{ anyOf: {} }]}
         `("throws no error when $testType", ({ parameters }) => {
             expect(new JsonSchemaAnyOfGroup(...parameters)).toBeInstanceOf(JsonSchemaAnyOfGroup);
         });
