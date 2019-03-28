@@ -6,13 +6,6 @@ import JsonSchemaGroup from "./JsonSchemaGroup";
  */
 export default class JsonSchemaAllOfGroup extends JsonSchemaGroup {
     /**
-     * Implementation of method expected by super class (as other kinds of groups may also behave like an "allOf" in some respects).
-     */
-    shouldBeTreatedLikeAllOf() {
-        return true;
-    }
-
-    /**
      * Extension of method from super class for adding a given Json Schema or group to this group.
      *
      * @param {JsonSchema|JsonSchemaGroup} schemaOrGroup entry to add to this group

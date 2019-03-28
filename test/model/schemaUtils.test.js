@@ -333,9 +333,7 @@ describe("getOptionsInSchemaGroup()", () => {
             super();
             this.treatLikeAllOf = treatLikeAllOf;
         }
-        shouldBeTreatedLikeAllOf() {
-            return this.treatLikeAllOf;
-        }
+        shouldBeTreatedLikeAllOf() { return this.treatLikeAllOf && super.shouldBeTreatedLikeAllOf(); }
     }
     describe("when shouldBeTreatedLikeAllOf() === true", () => {
         it("ignores JsonSchema entries ", () => {
@@ -412,6 +410,67 @@ describe("getOptionsInSchemaGroup()", () => {
                     }
                 ]
             });
+        });
+    });
+    it("represents hierarchy of nested groups with mixed shouldBeTreatedLikeAllOf() – 1", () => {
+        const group = new MockJsonSchemaGroup(false)
+            .with(
+                new MockJsonSchemaGroup(true)
+                    .with(new JsonSchema())
+                    .with(new JsonSchema())
+            )
+            .with(
+                new MockJsonSchemaGroup(true)
+                    .with(
+                        new MockJsonSchemaGroup(false)
+                            .with(new JsonSchema())
+                            .with(new JsonSchema())
+                    )
+                    .with(new JsonSchema())
+            );
+        expect(getOptionsInSchemaGroup(group)).toEqual({
+            options: [
+                {},
+                {
+                    options: [
+                        {},
+                        {}
+                    ]
+                }
+            ]
+        });
+    });
+    it("represents hierarchy of nested groups with mixed shouldBeTreatedLikeAllOf() – 2", () => {
+        const group = new MockJsonSchemaGroup(true)
+            .with(
+                new MockJsonSchemaGroup(false)
+                    .with(new JsonSchema())
+                    .with(new JsonSchema())
+            )
+            .with(
+                new MockJsonSchemaGroup(false)
+                    .with(
+                        new MockJsonSchemaGroup(true)
+                            .with(new JsonSchema())
+                            .with(new JsonSchema())
+                    )
+                    .with(new JsonSchema())
+            );
+        expect(getOptionsInSchemaGroup(group)).toEqual({
+            options: [
+                {
+                    options: [
+                        {},
+                        {}
+                    ]
+                },
+                {
+                    options: [
+                        {},
+                        {}
+                    ]
+                }
+            ]
         });
     });
 });

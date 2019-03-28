@@ -9,39 +9,9 @@ class MockJsonSchemaGroup extends JsonSchemaGroup {
         super();
         this.treatLikeAllOf = treatLikeAllOf;
     }
-    shouldBeTreatedLikeAllOf() { return this.treatLikeAllOf; }
+    shouldBeTreatedLikeAllOf() { return this.treatLikeAllOf && super.shouldBeTreatedLikeAllOf(); }
 }
 
-describe("constructor", () => {
-    describe("in 'development' mode", () => {
-        let mode;
-        beforeAll(() => {
-            mode = process.env.NODE_ENV;
-            process.env.NODE_ENV = "development";
-        });
-        afterAll(() => {
-            process.env.NODE_ENV = mode;
-        });
-
-        it("throws error when shouldBeTreatedLikeAllOf() is not present", () => {
-            expect(() => new JsonSchemaGroup()).toThrow();
-        });
-    });
-    describe("in 'production' mode", () => {
-        let mode;
-        beforeAll(() => {
-            mode = process.env.NODE_ENV;
-            process.env.NODE_ENV = "production";
-        });
-        afterAll(() => {
-            process.env.NODE_ENV = mode;
-        });
-
-        it("throws no error when shouldBeTreatedLikeAllOf() is not present", () => {
-            expect(new JsonSchemaGroup()).toBeInstanceOf(JsonSchemaGroup);
-        });
-    });
-});
 describe("with()", () => {
     it("adds given JsonSchema to entries", () => {
         const schema = new JsonSchema();
@@ -81,15 +51,15 @@ describe("extractValues()/extractValuesFromEntry()", () => {
             const entry = new JsonSchema(true);
             const group = new MockJsonSchemaGroup(true).with(entry);
 
-            expect(group.extractValuesFromEntry(entry, extractFromSchema)).toBe(10);
+            expect(group.extractValues(extractFromSchema)).toBe(10);
             expect(extractFromSchema.mock.calls).toHaveLength(1);
             expect(extractFromSchema.mock.calls[0][0]).toBe(entry);
 
-            expect(group.extractValuesFromEntry(entry, extractFromSchema)).toBe("foo");
+            expect(group.extractValues(extractFromSchema)).toBe("foo");
             expect(extractFromSchema.mock.calls).toHaveLength(2);
             expect(extractFromSchema.mock.calls[1][0]).toBe(entry);
 
-            expect(group.extractValuesFromEntry(entry, extractFromSchema)).toBe(false);
+            expect(group.extractValues(extractFromSchema)).toBe(false);
             expect(extractFromSchema.mock.calls).toHaveLength(3);
             expect(extractFromSchema.mock.calls[2][0]).toBe(entry);
         });
@@ -118,11 +88,12 @@ describe("extractValues()/extractValuesFromEntry()", () => {
         `("returns given defaultValue if optionTarget $conditionText", ({ optionTargetIn, optionTargetOut }) => {
             const group = new MockJsonSchemaGroup(false).with(new JsonSchema(true));
             expect(group.extractValues(
-                null,
-                (combined, nextValue) => `${combined}, ${nextValue}`,
+                () => {},
+                // eslint-disable-next-line no-nested-ternary
+                (combined, nextValue) => (!combined ? nextValue : (nextValue ? `${combined}, ${nextValue}` : combined)),
                 "foobar",
                 optionTargetIn
-            )).toBe("foobar, foobar");
+            )).toBe("foobar");
             expect(optionTargetIn).toEqual(optionTargetOut);
         });
         it("returns merged values when optionTarget index reaches 0", () => {

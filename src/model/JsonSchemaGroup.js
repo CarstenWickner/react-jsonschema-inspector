@@ -1,3 +1,5 @@
+import { listValues } from "./utils";
+
 /**
  * Representation of an array of schemas (e.g. "allOf", "anyOf", "oneOf"), offering a number of convenient functions for extracting information.
  */
@@ -7,15 +9,8 @@ export default class JsonSchemaGroup {
      */
     entries = [];
 
-    /**
-     * Constructor for the representation of a schema's grouping property, e.g. "allOf", "anyOf", "oneOf".
-     */
-    constructor() {
-        if (process.env.NODE_ENV === "development") {
-            if (typeof this.shouldBeTreatedLikeAllOf !== "function") {
-                throw new Error("JsonSchemaGroup is abstract and expects shouldBeTreatedLikeAllOf() to be implemented by the instantiated sub-class");
-            }
-        }
+    shouldBeTreatedLikeAllOf() {
+        return this.entries.filter(entry => entry instanceof JsonSchemaGroup && !entry.shouldBeTreatedLikeAllOf()).length < 2;
     }
 
     /**
@@ -34,6 +29,31 @@ export default class JsonSchemaGroup {
         return this;
     }
 
+    someEntry(checkEntry, optionTarget) {
+        const treatLikeAllOf = this.shouldBeTreatedLikeAllOf();
+        return this.entries.some((entry) => {
+            if (!treatLikeAllOf) {
+                // an optional entry should be skipped if it is not the specifically selected one
+                const isSelectedEntry = !optionTarget || (optionTarget.length && optionTarget[0].index === 0);
+                if (optionTarget && optionTarget.length) {
+                    // eslint-disable-next-line no-param-reassign
+                    optionTarget[0].index -= 1;
+                }
+                if (!isSelectedEntry) {
+                    // ignore unselected option, i.e. indicate continued traversing/not to stop
+                    return false;
+                }
+            }
+            if (entry instanceof JsonSchemaGroup) {
+                return entry.someEntry(
+                    checkEntry,
+                    (treatLikeAllOf || !optionTarget) ? optionTarget : optionTarget.slice(1)
+                );
+            }
+            return checkEntry(entry, !optionTarget || !optionTarget.length);
+        });
+    }
+
     /**
      * Extract the properties mentioned in this schema group.
      *
@@ -41,43 +61,16 @@ export default class JsonSchemaGroup {
      * @param {Number} optionTarget[].index counter that should be decreased for each passed optional sub-schema; the option at 0 is deemed selected
      * @returns {Object.<String, JsonSchema>} collection of all properties mentioned in this schema
      */
-    extractValues(extractFromSchema, mergeResults, defaultValue, optionTarget) {
+    extractValues(extractFromSchema, mergeResults = listValues, defaultValue, optionTarget) {
         // collect schemas where we have both a boolean and a proper schema, favour the proper schema
-        return this.entries
-            .map(entry => this.extractValuesFromEntry(entry, extractFromSchema, mergeResults, defaultValue, optionTarget))
-            .reduce(mergeResults, defaultValue);
-    }
-
-    /**
-     * Extract a single entry's properties.
-     *
-     * @param {JsonSchema|JsonSchemaGroup} entry schema or group of schemas to extract properties from
-     * @param {?Array.<Object>} optionTarget array of mutable objects containing the selected optional sub-schema's (relative) index
-     * @param {Number} optionTarget[].index counter that should be decreased for each passed optional sub-schema; the option at 0 is deemed selected
-     */
-    extractValuesFromEntry(entry, extractFromSchema, mergeResults, defaultValue, optionTarget) {
-        const treatLikeAllOf = this.shouldBeTreatedLikeAllOf();
-        if (!treatLikeAllOf) {
-            // an optional entry should be kept if it is not the specifically selected one
-            const isSelectedEntry = optionTarget && optionTarget.length && optionTarget[0].index === 0;
-            if (optionTarget && optionTarget.length) {
-                // eslint-disable-next-line no-param-reassign
-                optionTarget[0].index -= 1;
-            }
-            if (!isSelectedEntry) {
-                // ignore unselected option
-                return defaultValue;
-            }
-        }
-        if (entry instanceof JsonSchemaGroup) {
-            return entry.extractValues(
-                extractFromSchema,
-                mergeResults,
-                defaultValue,
-                treatLikeAllOf ? optionTarget : optionTarget.slice(1)
-            );
-        }
-        return extractFromSchema(entry);
+        const values = [];
+        const addToResultAndContinue = (entry) => {
+            values.push(extractFromSchema(entry));
+            // indicate to continue traversing all entries
+            return false;
+        };
+        this.someEntry(addToResultAndContinue, optionTarget);
+        return values.reduce(mergeResults, defaultValue);
     }
 
     /**

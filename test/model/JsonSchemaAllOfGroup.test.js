@@ -17,8 +17,7 @@ describe("with()", () => {
             super(JsonSchema);
             this.treatLikeAllOf = treatLikeAllOf;
         }
-        shouldBeTreatedLikeAllOf() { return this.treatLikeAllOf; }
-        getOptions() { return []; }
+        shouldBeTreatedLikeAllOf() { return this.treatLikeAllOf && super.shouldBeTreatedLikeAllOf(); }
     }
 
     it("adds given JsonSchema to entries", () => {

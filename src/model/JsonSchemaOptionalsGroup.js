@@ -35,7 +35,7 @@ export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
      * @returns {Boolean} return whether this optional group should be treated like a mandatory ("allOf") group
      */
     shouldBeTreatedLikeAllOf() {
-        return this.settings.type === "likeAllOf";
+        return this.settings.type === "likeAllOf" && super.shouldBeTreatedLikeAllOf();
     }
 
     /**

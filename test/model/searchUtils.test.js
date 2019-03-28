@@ -1,6 +1,7 @@
 import {
     createRecursiveFilterFunction, collectReferencedSubSchemas, createFilterFunction, filteringByFields
 } from "../../src/model/searchUtils";
+import { createGroupFromSchema, getOptionsInSchemaGroup } from "../../src/model/schemaUtils";
 import JsonSchema from "../../src/model/JsonSchema";
 
 describe("createRecursiveFilterFunction()", () => {
@@ -43,110 +44,6 @@ describe("createRecursiveFilterFunction()", () => {
             expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
         });
     });
-    describe("allOf:", () => {
-        it("short-circuit on success (match in main schema)", () => {
-            const subSchemaOne = {
-                default: true,
-                enum: ["value one"]
-            };
-            const subSchemaTwo = {
-                default: true,
-                enum: ["value two", "value three"]
-            };
-            const rawSchema = {
-                allOf: [subSchemaOne, subSchemaTwo],
-                default: true
-            };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
-            expect(flatSearchFilter).toHaveBeenCalledTimes(1);
-            expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
-        });
-        it("short-circuit on success (match in first allOf part)", () => {
-            const subSchemaOne = {
-                default: true,
-                enum: ["value one"]
-            };
-            const subSchemaTwo = {
-                default: true,
-                enum: ["value two", "value three"]
-            };
-            const rawSchema = {
-                allOf: [subSchemaOne, subSchemaTwo]
-            };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
-            expect(flatSearchFilter).toHaveBeenCalledTimes(2);
-            expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
-            expect(flatSearchFilter).toHaveBeenCalledWith(subSchemaOne);
-        });
-        it("check each part (match in last allOf part)", () => {
-            const subSchemaOne = { enum: ["value one"] };
-            const subSchemaTwo = {
-                default: true,
-                enum: ["value two", "value three"]
-            };
-            const rawSchema = {
-                allOf: [subSchemaOne, subSchemaTwo]
-            };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
-            expect(flatSearchFilter).toHaveBeenCalledTimes(3);
-            expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
-            expect(flatSearchFilter).toHaveBeenCalledWith(subSchemaOne);
-            expect(flatSearchFilter).toHaveBeenCalledWith(subSchemaTwo);
-        });
-    });
-    describe.each`
-        groupName
-        ${"anyOf"}
-        ${"oneOf"}
-    `("$groupName:", ({ groupName }) => {
-        it("short-circuit on success (match in main schema)", () => {
-            const subSchemaOne = { enum: ["value one"] };
-            const subSchemaTwo = { enum: ["value two", "value three"] };
-            const rawSchema = {
-                [groupName]: [subSchemaOne, subSchemaTwo],
-                default: true
-            };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
-            expect(flatSearchFilter).toHaveBeenCalledTimes(1);
-            expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
-        });
-        describe("match in first part", () => {
-            const subSchemaOne = {
-                default: true,
-                enum: ["value one"]
-            };
-            const subSchemaTwo = { enum: ["value two", "value three"] };
-            const rawSchema = { [groupName]: [subSchemaOne, subSchemaTwo] };
-
-            it("ignored if no parserConfig present", () => {
-                expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(false);
-                expect(flatSearchFilter).toHaveBeenCalledTimes(1);
-                expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
-            });
-            it("ignored if specifically ignored in parserConfig present", () => {
-                expect(recursiveFilterFunction(new JsonSchema(rawSchema, { [groupName]: "ignore" }))).toBe(false);
-                expect(flatSearchFilter).toHaveBeenCalledTimes(1);
-                expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
-            });
-            it("short-circuiting on success (with enabled option in parserConfig)", () => {
-                expect(recursiveFilterFunction(new JsonSchema(rawSchema, { [groupName]: "likeAllOf" }))).toBe(true);
-                expect(flatSearchFilter).toHaveBeenCalledTimes(2);
-                expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
-                expect(flatSearchFilter).toHaveBeenCalledWith(subSchemaOne);
-            });
-        });
-        it("check each part (no match but with enabled option in parserConfig)", () => {
-            const subSchemaOne = { enum: ["value one"] };
-            const subSchemaTwo = { enum: ["value two", "value three"] };
-            const rawSchema = { [groupName]: [subSchemaOne, subSchemaTwo] };
-
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema, { [groupName]: "likeAllOf" }))).toBe(false);
-            expect(flatSearchFilter).toHaveBeenCalledTimes(3);
-            expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
-            expect(flatSearchFilter).toHaveBeenCalledWith(subSchemaOne);
-            expect(flatSearchFilter).toHaveBeenCalledWith(subSchemaTwo);
-        });
-    });
     describe("properties:", () => {
         it("short-circuit on success (match in allOf)", () => {
             const allOfPart = { default: true };
@@ -163,9 +60,9 @@ describe("createRecursiveFilterFunction()", () => {
                 }
             };
             expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
-            expect(flatSearchFilter).toHaveBeenCalledTimes(2);
-            expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema);
-            expect(flatSearchFilter).toHaveBeenCalledWith(allOfPart);
+            expect(flatSearchFilter.mock.calls).toHaveLength(2);
+            expect(flatSearchFilter.mock.calls[0][0]).toEqual(rawSchema);
+            expect(flatSearchFilter.mock.calls[1][0]).toEqual(allOfPart);
         });
         it("short-circuit on success (match in first property)", () => {
             const subSchemaOne = {
@@ -324,24 +221,30 @@ describe("createFilterFunction()", () => {
         it("finding match in all column entries", () => {
             const filterFunction = createFilterFunction(() => true);
             const columnInput = {
-                one: new JsonSchema({ title: "value" }),
-                other: new JsonSchema({ description: "something else" })
+                items: {
+                    one: new JsonSchema({ title: "value" }),
+                    other: new JsonSchema({ description: "something else" })
+                }
             };
             expect(filterFunction(columnInput)).toEqual(["one", "other"]);
         });
         it("finding match in some column entries", () => {
             const filterFunction = createFilterFunction(rawSchema => rawSchema.title === "value");
             const columnInput = {
-                one: new JsonSchema({ description: "value" }),
-                other: new JsonSchema({ title: "value" })
+                items: {
+                    one: new JsonSchema({ description: "value" }),
+                    other: new JsonSchema({ title: "value" })
+                }
             };
             expect(filterFunction(columnInput)).toEqual(["other"]);
         });
         it("returning empty array if no match can be found", () => {
             const filterFunction = createFilterFunction(() => false);
             const columnInput = {
-                one: new JsonSchema({ description: "value" }),
-                other: new JsonSchema({ title: "value" })
+                items: {
+                    one: new JsonSchema({ description: "value" }),
+                    other: new JsonSchema({ title: "value" })
+                }
             };
             expect(filterFunction(columnInput)).toEqual([]);
         });
@@ -371,17 +274,150 @@ describe("createFilterFunction()", () => {
             }
         });
         const columnInput = {
-            "Item One": schema.scope.find("#/definitions/One"),
-            "Item Two": schema.scope.find("#/definitions/Two"),
-            "Item Three": schema.scope.find("#/definitions/Three")
+            items: {
+                "Item One": schema.scope.find("#/definitions/One"),
+                "Item Two": schema.scope.find("#/definitions/Two"),
+                "Item Three": schema.scope.find("#/definitions/Three")
+            }
         };
-        it("finding match in via circular reference to parent schema", () => {
+        it("finding match via circular reference to parent schema", () => {
             const filterFunction = createFilterFunction(rawSchema => rawSchema.title === "Match");
             expect(filterFunction(columnInput)).toEqual(["Item One", "Item Three"]);
         });
         it("avoiding endless loop even if no match can be found", () => {
             const filterFunction = createFilterFunction(() => false);
             expect(filterFunction(columnInput)).toEqual([]);
+        });
+    });
+    describe("returning filter function for schema with optionals", () => {
+        const likeAllOf = { type: "likeAllOf" };
+        const asColumn = { type: "asAdditionalColumn" };
+
+        describe("finding match via circular reference to parent schema", () => {
+            const rawSchema = {
+                title: "Match",
+                properties: {
+                    "I-One": { $ref: "#/definitions/One" },
+                    "I-Two": { $ref: "#/definitions/Two" },
+                    "I-Three": { $ref: "#/definitions/Three" },
+                    "I-Four": { $ref: "#/definitions/Four" }
+                },
+                definitions: {
+                    One: {
+                        items: { $ref: "#" }
+                    },
+                    Two: {
+                        oneOf: [
+                            { items: { title: "Foo" } },
+                            {
+                                properties: {
+                                    bar: { $ref: "#" }
+                                }
+                            }
+                        ]
+                    },
+                    Three: {
+                        anyOf: [
+                            { $ref: "#" },
+                            { title: "Foobar" }
+                        ]
+                    },
+                    Four: {
+                        anyOf: [
+                            { $ref: "#/definitions/Two" },
+                            { title: "Qux" }
+                        ]
+                    }
+                }
+            };
+
+            it.each`
+                parserConfigDescription         | parserConfig                            | result
+                ${"empty parserConfig"}         | ${{}}                                   | ${["I-One"]}
+                ${"oneOf 'likeAllOf'"}          | ${{ oneOf: likeAllOf }}                 | ${["I-One", "I-Two"]}
+                ${"oneOf 'asAdditionalColumn'"} | ${{ oneOf: asColumn }}                  | ${["I-One", "I-Two"]}
+                ${"anyOf 'likeAllOf'"}          | ${{ anyOf: likeAllOf }}                 | ${["I-One", "I-Three"]}
+                ${"anyOf 'likeAllOf'"}          | ${{ anyOf: asColumn }}                  | ${["I-One", "I-Three"]}
+                ${"oneOf and anyOf"}            | ${{ oneOf: asColumn, anyOf: asColumn }} | ${["I-One", "I-Two", "I-Three", "I-Four"]}
+            `("with $parserConfigDescription", ({ parserConfig, result }) => {
+                const schema = new JsonSchema(rawSchema, parserConfig);
+                const columnInput = {
+                    items: {
+                        "I-One": schema.scope.find("#/definitions/One"),
+                        "I-Two": schema.scope.find("#/definitions/Two"),
+                        "I-Three": schema.scope.find("#/definitions/Three"),
+                        "I-Four": schema.scope.find("#/definitions/Four")
+                    }
+                };
+                const filterFunction = createFilterFunction(rawSubSchema => rawSubSchema.title === "Match", parserConfig);
+                expect(filterFunction(columnInput)).toEqual(result);
+            });
+        });
+        describe("finding matches in options", () => {
+            const rawSchema = {
+                oneOf: [
+                    { description: "Foo" },
+                    { title: "Match" },
+                    {
+                        oneOf: [
+                            { title: "Match" },
+                            { description: "Bar" }
+                        ]
+                    },
+                    {
+                        anyOf: [
+                            { description: "Foobar" },
+                            {
+                                items: {
+                                    anyOf: [
+                                        { title: "Match" },
+                                        { title: "Qux" }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ],
+                anyOf: [
+                    { title: "Match" },
+                    { description: "Foo" },
+                    {
+                        anyOf: [
+                            { description: "Bar" },
+                            { title: "Match" }
+                        ]
+                    },
+                    {
+                        oneOf: [
+                            {
+                                items: {
+                                    oneOf: [
+                                        { title: "Qux" },
+                                        { title: "Match" }
+                                    ]
+                                }
+                            },
+                            { description: "Foobar" }
+                        ]
+                    }
+                ]
+            };
+
+            it.each`
+                parserConfigDescription  | parserConfig                            | result
+                ${"oneOf 'asAdditionalColumn'"} | ${{ oneOf: asColumn }}           | ${[[1], [2, 0]]}
+                ${"anyOf 'likeAllOf'"}   | ${{ anyOf: asColumn }}                  | ${[[0], [2, 1]]}
+                ${"oneOf and anyOf"}     | ${{ oneOf: asColumn, anyOf: asColumn }} | ${[[1, 0], [1, 2, 1], [1, 3, 0], [2, 1], [2, 2, 0], [2, 3, 1]]}
+            `("with $parserConfigDescription", ({ parserConfig, result }) => {
+                const schema = new JsonSchema(rawSchema, parserConfig);
+                const contextGroup = createGroupFromSchema(schema);
+                const columnInput = {
+                    contextGroup,
+                    options: getOptionsInSchemaGroup(contextGroup)
+                };
+                const filterFunction = createFilterFunction(rawSubSchema => rawSubSchema.title === "Match");
+                expect(JSON.stringify(filterFunction(columnInput))).toEqual(JSON.stringify(result));
+            });
         });
     });
 });

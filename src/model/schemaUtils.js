@@ -12,36 +12,11 @@ import { isNonEmptyObject, listValues, mapObjectValues } from "./utils";
  * @returns {Array.<Object>} return array of mutable objects containing the given index values
  * @returns {Number} return[].index respective (initial) index value as provided in input array
  */
-function createOptionTargetArrayFromIndexes(optionIndexes = []) {
+export function createOptionTargetArrayFromIndexes(optionIndexes = []) {
     if (Array.isArray(optionIndexes) && optionIndexes.length && typeof optionIndexes[0] === "number") {
         return optionIndexes.map(index => ({ index }));
     }
     return optionIndexes;
-}
-
-/**
- * Generic function to be used in Array.reduce() - assuming objects are being merged.
- *
- * @param {?Object} combined temporary result of previous reduce steps
- * @param {?Object} nextValue single value to merge with "combined"
- * @returns {?Object} merged values
- */
-function mergeSchemas(combined, nextValue) {
-    let mergeResult;
-    if (!isNonEmptyObject(combined)) {
-        mergeResult = nextValue;
-    } else if (!isNonEmptyObject(nextValue)) {
-        mergeResult = combined;
-    } else {
-        mergeResult = Object.assign(
-            {},
-            combined,
-            ...Object.keys(nextValue)
-                .filter(key => !isNonEmptyObject(combined[key]) || isNonEmptyObject(nextValue[key]))
-                .map(key => ({ [key]: nextValue[key] }))
-        );
-    }
-    return mergeResult;
 }
 
 /**
@@ -193,6 +168,31 @@ function getPropertiesFromSchema(jsonSchema) {
                 ? new JsonSchema(rawPropertySchema, parserConfig, scope)
                 : rawPropertySchema
         ));
+}
+
+/**
+ * Generic function to be used in Array.reduce() - assuming objects are being merged.
+ *
+ * @param {?Object} combined temporary result of previous reduce steps
+ * @param {?Object} nextValue single value to merge with "combined"
+ * @returns {?Object} merged values
+ */
+function mergeSchemas(combined, nextValue) {
+    let mergeResult;
+    if (!isNonEmptyObject(combined)) {
+        // at least initially, "combined" is an empty object
+        mergeResult = nextValue;
+    } else {
+        // "nextValue" is always a non-empty object (otherwise it would have been filtered out during the conversion to a group)
+        mergeResult = Object.assign(
+            {},
+            combined,
+            ...Object.keys(nextValue)
+                .filter(key => !isNonEmptyObject(combined[key]) || isNonEmptyObject(nextValue[key]))
+                .map(key => ({ [key]: nextValue[key] }))
+        );
+    }
+    return mergeResult;
 }
 
 /**

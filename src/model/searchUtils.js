@@ -3,6 +3,7 @@ import isDeepEqual from "lodash.isequal";
 import escapeRegExp from "lodash.escaperegexp";
 
 import JsonSchema from "./JsonSchema";
+import { createGroupFromSchema, createOptionTargetArrayFromIndexes } from "./schemaUtils";
 import { isNonEmptyObject } from "./utils";
 
 /**
@@ -17,13 +18,8 @@ import { isNonEmptyObject } from "./utils";
  * @return {Boolean} return.return output value indicates whether the given schema or any of its sub-schemas matches the provided flat filter function
  */
 export function createRecursiveFilterFunction(flatSearchFilter) {
-    const recursiveFilterFunction = (target, optionTarget) => {
+    const recursiveFilterFunction = (target, includeNestedOptionals = true) => {
         if (!target) {
-            return false;
-        }
-        if (!(target instanceof JsonSchema)) {
-            // target is assumed to be array of option indexes
-
             return false;
         }
         const { schema: rawSchema, parserConfig, scope } = target;
@@ -39,52 +35,38 @@ export function createRecursiveFilterFunction(flatSearchFilter) {
             // if there is a $ref, no other fields are being expected to be present - and the referenced sub-schema is checked separately
             return false;
         }
-        const mapRawSubSchema = rawSubSchema => new JsonSchema(rawSubSchema, parserConfig, scope);
+        const filterRawSubSchemaConsideringOptionals = rawSubSchema => recursiveFilterFunction(
+            new JsonSchema(rawSubSchema, parserConfig, scope),
+            includeNestedOptionals
+        );
         // if the given schema is a composite of multiple sub-schemas, check each of its parts
-        if (rawSchema.allOf
-            && rawSchema.allOf
-                .map(mapRawSubSchema)
-                .some(allOfPart => recursiveFilterFunction(allOfPart, optionTarget))) {
+        if (rawSchema.allOf && rawSchema.allOf.some(filterRawSubSchemaConsideringOptionals)) {
             return true;
         }
-        const searchInOptionals = (groupKey) => {
-            if (!rawSchema[groupKey] || !parserConfig || !parserConfig[groupKey]) {
-                return false;
-            }
-            if (!optionTarget || parserConfig[groupKey].type === "likeAllOf") {
-                if (rawSchema[groupKey]
-                    .map(mapRawSubSchema)
-                    .some(recursiveFilterFunction)) {
-                    return true;
-                }
-            } else if (optionTarget.length) {
-                if (rawSchema[groupKey].length > optionTarget[0].index
-                    && recursiveFilterFunction(rawSchema[groupKey][optionTarget[0].index], optionTarget.slice(1))) {
-                    return true;
-                }
-                // eslint-disable-next-line no-param-reassign
-                optionTarget[0].index -= rawSchema[groupKey].length;
-            }
-            return false;
-        };
-        if (searchInOptionals("anyOf") || searchInOptionals("oneOf")) {
+        const searchInOptionals = groupKey => (
+            rawSchema[groupKey] && parserConfig && parserConfig[groupKey]
+            && (parserConfig[groupKey].type === "likeAllOf" || includeNestedOptionals)
+            && rawSchema[groupKey].some(filterRawSubSchemaConsideringOptionals)
+        );
+        if (searchInOptionals("oneOf") || searchInOptionals("anyOf")) {
             return true;
         }
+        const filterRawSubSchema = rawSubSchema => recursiveFilterFunction(
+            new JsonSchema(rawSubSchema, parserConfig, scope)
+        );
         // otherwise recursively check the schemas of any contained properties
         if (isNonEmptyObject(rawSchema.properties)
-            && Object.values(rawSchema.properties)
-                .map(mapRawSubSchema)
-                .some(recursiveFilterFunction)) {
+            && Object.values(rawSchema.properties).some(filterRawSubSchema)) {
             return true;
         }
         // alternatively check the defined value schema for an array's items
         if (isNonEmptyObject(rawSchema.items)) {
-            if (recursiveFilterFunction(mapRawSubSchema(rawSchema.items))) {
+            if (filterRawSubSchema(rawSchema.items)) {
                 return true;
             }
             // ignoring "additionalItems" if "items" is defined (as per convention described in JSON Schema)
         } else if (isNonEmptyObject(rawSchema.additionalItems)
-            && recursiveFilterFunction(mapRawSubSchema(rawSchema.additionalItems))) {
+            && filterRawSubSchema(rawSchema.additionalItems)) {
             return true;
         }
         return false;
@@ -101,19 +83,33 @@ export function createRecursiveFilterFunction(flatSearchFilter) {
 export function collectReferencedSubSchemas(jsonSchema) {
     // collect sub-schemas in a Set in order to avoid duplicates
     const references = new Set();
-    const collectFromSingleRawSchema = (rawSubSchema) => {
+    // collect all referenced sub-schemas
+    const filterFunction = createRecursiveFilterFunction((rawSubSchema) => {
         if (rawSubSchema.$ref) {
             // add referenced schema to the result set
             references.add(jsonSchema.scope.find(rawSubSchema.$ref));
         }
         // always return false in order to iterate through all non-referenced sub-schemas
         return false;
-    };
-    // collect all referenced sub-schemas
-    createRecursiveFilterFunction(collectFromSingleRawSchema)(jsonSchema);
+    });
+    filterFunction(jsonSchema);
     // ignore circular references
     references.delete(jsonSchema);
     return references;
+}
+
+function getIndexPermutationsForOptions({ options }) {
+    return options.map((entry, index) => (
+        isNonEmptyObject(entry)
+            ? getIndexPermutationsForOptions(entry).map(nestedOptions => [index].concat(nestedOptions))
+            : [index]
+    )).reduce((result, nextOptions) => {
+        if (typeof nextOptions[0] === "number") {
+            result.push(nextOptions);
+            return result;
+        }
+        return result.concat(nextOptions);
+    }, []);
 }
 
 /**
@@ -130,7 +126,7 @@ export function createFilterFunction(flatSearchFilter) {
     const recursiveSearchFilter = createRecursiveFilterFunction(flatSearchFilter);
     // cache definitive search results for the individual sub-schemas in a Map.<JsonSchema, boolean>
     const schemaMatchResults = new Map();
-    const containsMatchingItems = (jsonSchema) => {
+    const containsMatchingItems = (jsonSchema, includeNestedOptionals) => {
         if (schemaMatchResults.has(jsonSchema)) {
             // short-circuit: return remembered filter result for this
             return schemaMatchResults.get(jsonSchema);
@@ -139,7 +135,7 @@ export function createFilterFunction(flatSearchFilter) {
         subSchemasToVisit.add(jsonSchema);
         const subSchemasAlreadyVisited = new Set();
         const checkSubSchema = (subSchema) => {
-            let result = recursiveSearchFilter(subSchema);
+            let result = recursiveSearchFilter(subSchema, includeNestedOptionals);
             subSchemasToVisit.delete(subSchema);
             subSchemasAlreadyVisited.add(subSchema);
             if (result) {
@@ -182,7 +178,16 @@ export function createFilterFunction(flatSearchFilter) {
         });
         return false;
     };
-    return columnItems => Object.keys(columnItems).filter(key => containsMatchingItems(columnItems[key]));
+    return ({ items, contextGroup, options }) => {
+        if (items) {
+            return Object.keys(items).filter((key) => {
+                const group = createGroupFromSchema(items[key]);
+                return group.someEntry(containsMatchingItems);
+            });
+        }
+        return getIndexPermutationsForOptions(options)
+            .filter(optionIndexes => contextGroup.someEntry(containsMatchingItems, createOptionTargetArrayFromIndexes(optionIndexes)));
+    };
 }
 
 /**
