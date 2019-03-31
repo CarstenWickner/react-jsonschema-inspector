@@ -9,23 +9,11 @@ exports[`renders correctly with minimal/default props 1`] = `
     filteredItems={null}
     items={
       Object {
-        "Item One": JsonSchema {
-          "parserConfig": undefined,
-          "schema": undefined,
-          "scope": RefScope {
-            "externalRefs": Map {},
-            "internalRefs": Map {},
-            "otherScopes": Array [],
-          },
+        "Item One": JsonSchemaGroup {
+          "entries": Array [],
         },
-        "Item Two": JsonSchema {
-          "parserConfig": undefined,
-          "schema": undefined,
-          "scope": RefScope {
-            "externalRefs": Map {},
-            "internalRefs": Map {},
-            "otherScopes": Array [],
-          },
+        "Item Two": JsonSchemaGroup {
+          "entries": Array [],
         },
       }
     }
@@ -35,57 +23,41 @@ exports[`renders correctly with minimal/default props 1`] = `
     selectedItem="Item One"
     trailingSelection={false}
   />
-  <InspectorColumn
-    filteredItems={null}
-    items={
-      Object {
-        "Item One-One": JsonSchema {
-          "parserConfig": undefined,
-          "schema": undefined,
-          "scope": RefScope {
-            "externalRefs": Map {},
-            "internalRefs": Map {},
-            "otherScopes": Array [],
-          },
-        },
-        "Item One-Two": JsonSchema {
-          "parserConfig": undefined,
-          "schema": undefined,
-          "scope": RefScope {
-            "externalRefs": Map {},
-            "internalRefs": Map {},
-            "otherScopes": Array [],
-          },
-        },
+  <InspectorOptionsColumn
+    contextGroup={
+      JsonSchemaGroup {
+        "entries": Array [],
       }
     }
+    filteredItems={null}
     key="1"
     onSelect={[Function]}
+    options={
+      Object {
+        "groupTitle": "one of",
+        "options": Array [
+          Object {},
+          Object {},
+        ],
+      }
+    }
     renderItemContent={null}
-    selectedItem="Item One-Two"
+    selectedItem={
+      Array [
+        0,
+      ]
+    }
     trailingSelection={true}
   />
   <InspectorColumn
     filteredItems={null}
     items={
       Object {
-        "Item One-Two-One": JsonSchema {
-          "parserConfig": undefined,
-          "schema": undefined,
-          "scope": RefScope {
-            "externalRefs": Map {},
-            "internalRefs": Map {},
-            "otherScopes": Array [],
-          },
+        "Item One-Two-One": JsonSchemaGroup {
+          "entries": Array [],
         },
-        "Item One-Two-Two": JsonSchema {
-          "parserConfig": undefined,
-          "schema": undefined,
-          "scope": RefScope {
-            "externalRefs": Map {},
-            "internalRefs": Map {},
-            "otherScopes": Array [],
-          },
+        "Item One-Two-Two": JsonSchemaGroup {
+          "entries": Array [],
         },
       }
     }

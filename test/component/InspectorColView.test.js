@@ -2,7 +2,7 @@ import React from "react";
 import { mount, shallow } from "enzyme";
 
 import InspectorColView from "../../src/component/InspectorColView";
-import JsonSchema from "../../src/model/JsonSchema";
+import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {
@@ -11,25 +11,26 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            "Item One": new JsonSchema(),
-                            "Item Two": new JsonSchema()
+                            "Item One": new JsonSchemaGroup(),
+                            "Item Two": new JsonSchemaGroup()
                         },
                         selectedItem: "Item One",
                         onSelect: () => { }
                     },
                     {
-                        items: {
-                            "Item One-One": new JsonSchema(),
-                            "Item One-Two": new JsonSchema()
+                        options: {
+                            groupTitle: "one of",
+                            options: [{}, {}]
                         },
-                        selectedItem: "Item One-Two",
+                        contextGroup: new JsonSchemaGroup(),
+                        selectedItem: [0],
                         trailingSelection: true,
                         onSelect: () => { }
                     },
                     {
                         items: {
-                            "Item One-Two-One": new JsonSchema(),
-                            "Item One-Two-Two": new JsonSchema()
+                            "Item One-Two-One": new JsonSchemaGroup(),
+                            "Item One-Two-Two": new JsonSchemaGroup()
                         },
                         onSelect: () => { }
                     }
@@ -44,8 +45,8 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            "Item One": new JsonSchema(),
-                            "Item Two": new JsonSchema()
+                            "Item One": new JsonSchemaGroup(),
+                            "Item Two": new JsonSchemaGroup()
                         },
                         selectedItem: "Item Two",
                         trailingSelection: true,
@@ -62,8 +63,8 @@ describe("update according to prop changes", () => {
     const singleColumnData = [
         {
             items: {
-                "Item One": new JsonSchema(),
-                "Item Two": new JsonSchema()
+                "Item One": new JsonSchemaGroup(),
+                "Item Two": new JsonSchemaGroup()
             },
             onSelect: () => { }
         }
@@ -71,8 +72,8 @@ describe("update according to prop changes", () => {
     const doubleColumnData = [
         {
             items: {
-                "Item One": new JsonSchema(),
-                "Item Two": new JsonSchema()
+                "Item One": new JsonSchemaGroup(),
+                "Item Two": new JsonSchemaGroup()
             },
             selectedItem: "Item Two",
             trailingSelection: true,
@@ -80,8 +81,8 @@ describe("update according to prop changes", () => {
         },
         {
             items: {
-                "Item Two-One": new JsonSchema(),
-                "Item Two-Two": new JsonSchema()
+                "Item Two-One": new JsonSchemaGroup(),
+                "Item Two-Two": new JsonSchemaGroup()
             },
             onSelect: () => { }
         }
@@ -119,6 +120,8 @@ describe("update according to prop changes", () => {
             columnData: singleColumnData,
             appendEmptyColumn: true
         });
-        expect(component.find("InspectorColumn")).toHaveLength(1);
+        const rootColumn = component.find("InspectorColumn");
+        expect(rootColumn).toBeDefined();
+        expect(Array.isArray(rootColumn)).toBe(false);
     });
 });

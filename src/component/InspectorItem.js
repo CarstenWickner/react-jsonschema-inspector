@@ -2,13 +2,18 @@ import PropTypes from "prop-types";
 import React from "react";
 import classNames from "classnames";
 
-import JsonSchema from "../model/JsonSchema";
+import JsonSchemaGroup from "../model/JsonSchemaGroup";
+import {
+    getOptionsInSchemaGroup, getPropertiesFromSchemaGroup, getTypeOfArrayItemsFromSchemaGroup
+} from "../model/schemaUtils";
 import { isDefined, isNonEmptyObject } from "../model/utils";
 
 const InspectorItem = ({
-    name, schema, selected, matchesFilter, onSelect, renderContent
+    identifier, schemaGroup, optionIndexes, selected, matchesFilter, onSelect, renderContent
 }) => {
-    const hasNestedItems = isNonEmptyObject(schema.getProperties());
+    const hasNestedItems = isNonEmptyObject(getPropertiesFromSchemaGroup(schemaGroup, optionIndexes))
+        || getTypeOfArrayItemsFromSchemaGroup(schemaGroup, optionIndexes)
+        || (!optionIndexes && getOptionsInSchemaGroup(schemaGroup).options);
     return (
         <button
             type="button"
@@ -23,14 +28,14 @@ const InspectorItem = ({
             onFocus={onSelect}
         >
             {renderContent && renderContent({
-                name,
+                identifier,
                 hasNestedItems,
                 selected,
-                schema
+                schemaGroup
             })}
             {!renderContent && (
                 <div className="jsonschema-inspector-item-content">
-                    <span className="jsonschema-inspector-item-name">{name}</span>
+                    <span className="jsonschema-inspector-item-name">{identifier}</span>
                     <span className="jsonschema-inspector-item-icon" />
                 </div>
             )}
@@ -39,14 +44,16 @@ const InspectorItem = ({
 };
 
 InspectorItem.propTypes = {
-    name: PropTypes.string.isRequired,
-    schema: PropTypes.instanceOf(JsonSchema).isRequired,
+    identifier: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.number)]).isRequired,
+    schemaGroup: PropTypes.instanceOf(JsonSchemaGroup).isRequired,
+    optionIndexes: PropTypes.arrayOf(PropTypes.number),
     selected: PropTypes.bool,
     matchesFilter: PropTypes.bool,
     onSelect: PropTypes.func.isRequired, // func(SyntheticEvent: event)
     renderContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
 };
 InspectorItem.defaultProps = {
+    optionIndexes: undefined,
     selected: false,
     matchesFilter: undefined,
     renderContent: null

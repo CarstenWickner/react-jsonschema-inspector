@@ -3,27 +3,51 @@ import { shallow } from "enzyme";
 
 import InspectorItem from "../../src/component/InspectorItem";
 import JsonSchema from "../../src/model/JsonSchema";
+import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
+import JsonSchemaOneOfGroup from "../../src/model/JsonSchemaOneOfGroup";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {
         const component = shallow(
             <InspectorItem
-                name="Item Name"
-                schema={new JsonSchema()}
+                identifier="Item Name"
+                schemaGroup={new JsonSchemaGroup()}
                 onSelect={() => { }}
             />
         );
         expect(component).toMatchSnapshot();
     });
+    it.each`
+        testTitle                 | optionIndexes | hasNestedItems
+        ${"with nested items"}    | ${[0]}        | ${true}
+        ${"without nested items"} | ${[1]}        | ${false}
+    `("representing option $testTitle", ({ optionIndexes, hasNestedItems }) => {
+        const parserConfig = {
+            oneOf: { type: "asAdditionalColumn" }
+        };
+        const schemaGroup = new JsonSchemaOneOfGroup(parserConfig)
+            .with(new JsonSchema({
+                properties: { foo: true }
+            }, parserConfig)).with(new JsonSchema({
+                title: "bar"
+            }, parserConfig));
+        const component = shallow(
+            <InspectorItem
+                identifier="Foobar"
+                schemaGroup={schemaGroup}
+                optionIndexes={optionIndexes}
+                onSelect={() => { }}
+            />
+        );
+        expect(component.hasClass("has-nested-items")).toBe(hasNestedItems);
+    });
     it("with nested children", () => {
         const component = shallow(
             <InspectorItem
-                name="Item Name"
-                schema={new JsonSchema({
-                    properties: {
-                        "Child Item Name": true
-                    }
-                })}
+                identifier="Foo"
+                schemaGroup={new JsonSchemaGroup().with(new JsonSchema({
+                    properties: { bar: true }
+                }))}
                 onSelect={() => { }}
             />
         );
@@ -32,8 +56,8 @@ describe("renders correctly", () => {
     it("while selected", () => {
         const component = shallow(
             <InspectorItem
-                name="Item Name"
-                schema={new JsonSchema()}
+                identifier="Bar"
+                schemaGroup={new JsonSchemaGroup()}
                 onSelect={() => { }}
                 selected
             />
@@ -43,8 +67,8 @@ describe("renders correctly", () => {
     it("while matching filter", () => {
         const component = shallow(
             <InspectorItem
-                name="Item Name"
-                schema={new JsonSchema()}
+                identifier="Foobar"
+                schemaGroup={new JsonSchemaGroup()}
                 onSelect={() => { }}
                 matchesFilter
             />
@@ -55,8 +79,8 @@ describe("renders correctly", () => {
     it("while not matching filter", () => {
         const component = shallow(
             <InspectorItem
-                name="Item Name"
-                schema={new JsonSchema()}
+                identifier="Baz"
+                schemaGroup={new JsonSchemaGroup()}
                 onSelect={() => { }}
                 matchesFilter={false}
             />
@@ -67,8 +91,8 @@ describe("renders correctly", () => {
     it("with custom rendered content", () => {
         const component = shallow(
             <InspectorItem
-                name="Item Name"
-                schema={new JsonSchema()}
+                identifier="Qux"
+                schemaGroup={new JsonSchemaGroup()}
                 onSelect={() => { }}
                 renderContent={() => (
                     <span className="custom-content">Custom content</span>
@@ -87,8 +111,8 @@ describe("calls onSelect", () => {
         let onSelectCounter = 0;
         const component = shallow(
             <InspectorItem
-                name="Item Name"
-                schema={new JsonSchema()}
+                identifier="Foo"
+                schemaGroup={new JsonSchemaGroup()}
                 onSelect={() => {
                     onSelectCounter += 1;
                 }}

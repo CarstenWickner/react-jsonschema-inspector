@@ -9,19 +9,23 @@ exports[`renders correctly with minimal/default props 1`] = `
       Array [
         Object {
           "items": Object {
-            "Schema One": JsonSchema {
-              "parserConfig": undefined,
-              "schema": Object {
-                "description": "Text",
-                "title": "Schema Title",
-              },
-              "scope": RefScope {
-                "externalRefs": Map {},
-                "internalRefs": Map {
-                  "#" => [Circular],
+            "Schema One": JsonSchemaGroup {
+              "entries": Array [
+                JsonSchema {
+                  "parserConfig": undefined,
+                  "schema": Object {
+                    "description": "Text",
+                    "title": "Schema Title",
+                  },
+                  "scope": RefScope {
+                    "externalRefs": Map {},
+                    "internalRefs": Map {
+                      "#" => [Circular],
+                    },
+                    "otherScopes": Array [],
+                  },
                 },
-                "otherScopes": Array [],
-              },
+              ],
             },
           },
           "selectedItem": "Schema One",
@@ -29,20 +33,24 @@ exports[`renders correctly with minimal/default props 1`] = `
         },
       ]
     }
-    itemSchema={
-      JsonSchema {
-        "parserConfig": undefined,
-        "schema": Object {
-          "description": "Text",
-          "title": "Schema Title",
-        },
-        "scope": RefScope {
-          "externalRefs": Map {},
-          "internalRefs": Map {
-            "#" => [Circular],
+    itemSchemaGroup={
+      JsonSchemaGroup {
+        "entries": Array [
+          JsonSchema {
+            "parserConfig": undefined,
+            "schema": Object {
+              "description": "Text",
+              "title": "Schema Title",
+            },
+            "scope": RefScope {
+              "externalRefs": Map {},
+              "internalRefs": Map {
+                "#" => [Circular],
+              },
+              "otherScopes": Array [],
+            },
           },
-          "otherScopes": Array [],
-        },
+        ],
       }
     }
     selectionColumnIndex={0}

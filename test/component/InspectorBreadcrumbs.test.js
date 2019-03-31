@@ -2,47 +2,31 @@ import React from "react";
 import { shallow } from "enzyme";
 
 import InspectorBreadcrumbs from "../../src/component/InspectorBreadcrumbs";
-import JsonSchema from "../../src/model/JsonSchema";
+import { createRenderDataBuilder } from "../../src/component/renderDataUtils";
 
 describe("renders correctly", () => {
+    const buildColumnData = createRenderDataBuilder(() => () => { });
     it("with minimal/default props", () => {
         const schema = {
             properties: {
-                "Item One": true,
-                "Item Two": true
+                foo: true,
+                bar: true
             }
         };
+        const { columnData } = buildColumnData({ foobar: schema }, [], ["foobar"], {});
         const component = shallow(
             <InspectorBreadcrumbs
-                columnData={[
-                    {
-                        items: { "Schema One": new JsonSchema(schema) },
-                        selectedItem: "Schema One",
-                        trailingSelection: true,
-                        onSelect: () => { }
-                    },
-                    {
-                        items: {
-                            "Item One": new JsonSchema(),
-                            "Item Two": new JsonSchema()
-                        },
-                        onSelect: () => { }
-                    }
-                ]}
+                columnData={columnData}
                 breadcrumbsOptions={{}}
             />
         );
         expect(component).toMatchSnapshot();
     });
     it("without selection", () => {
+        const { columnData } = buildColumnData({ foo: {} }, [], [], {});
         const component = shallow(
             <InspectorBreadcrumbs
-                columnData={[
-                    {
-                        items: { root: new JsonSchema() },
-                        onSelect: () => { }
-                    }
-                ]}
+                columnData={columnData}
                 breadcrumbsOptions={{}}
             />
         );
@@ -51,210 +35,88 @@ describe("renders correctly", () => {
         expect(component.text()).toEqual("");
     });
     it("with prefix", () => {
+        const { columnData } = buildColumnData({ foo: {} }, [], ["foo"], {});
         const component = shallow(
             <InspectorBreadcrumbs
-                columnData={[
-                    {
-                        items: { root: new JsonSchema() },
-                        selectedItem: "root",
-                        trailingSelection: true,
-                        onSelect: () => { }
-                    }
-                ]}
+                columnData={columnData}
                 breadcrumbsOptions={{
                     prefix: "variableContext."
                 }}
             />
         );
         expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(1);
-        expect(component.text()).toEqual("variableContext.root");
+        expect(component.text()).toEqual("variableContext.foo");
     });
-    it("with root array selection", () => {
-        const itemSchema = {
-            properties: {
-                itemProperty: { title: "Property Title" }
+    describe("schema with array", () => {
+        const schemas = {
+            foo: {
+                items: {
+                    properties: {
+                        bar: { title: "Property Title" }
+                    }
+                }
             }
         };
-        const component = shallow(
-            <InspectorBreadcrumbs
-                columnData={[
-                    {
-                        items: {
-                            root: new JsonSchema({ items: itemSchema })
-                        },
-                        selectedItem: "root",
-                        trailingSelection: true,
-                        onSelect: () => { }
-                    },
-                    {
-                        items: {
-                            itemProperty: new JsonSchema({ title: "Property Title" })
-                        },
-                        onSelect: () => { }
-                    }
-                ]}
-                breadcrumbsOptions={{}}
-            />
-        );
-        expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(1);
-        expect(component.text()).toEqual("root");
+        it.each`
+            testTitle                 | selectedItems            | itemCount | breadcrumbsText
+            ${"root selection"}       | ${["foo"]}               | ${1}      | ${"foo"}
+            ${"array selection"}      | ${["foo", "[0]"]}        | ${2}      | ${"foo.[0]"}
+            ${"array item selection"} | ${["foo", "[0]", "bar"]} | ${3}      | ${"foo.[0].bar"}
+        `("$testTitle", ({ selectedItems, itemCount, breadcrumbsText }) => {
+            const { columnData } = buildColumnData(schemas, [], selectedItems, {});
+            const component = shallow(
+                <InspectorBreadcrumbs
+                    columnData={columnData}
+                    breadcrumbsOptions={{}}
+                />
+            );
+            expect(component.text()).toEqual(breadcrumbsText);
+            expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(itemCount);
+        });
+        it("with custom separator", () => {
+            const { columnData } = buildColumnData(schemas, [], ["foo", "[0]", "bar"], {});
+            const component = shallow(
+                <InspectorBreadcrumbs
+                    columnData={columnData}
+                    breadcrumbsOptions={{
+                        prefix: "$this->",
+                        separator: "->"
+                    }}
+                />
+            );
+            expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(3);
+            expect(component.text()).toEqual("$this->foo->[0]->bar");
+        });
     });
-    it("with array item selection", () => {
-        const itemSchema = {
-            properties: {
-                itemProperty: { title: "Property Title" }
-            }
+    it("ignores option selection", () => {
+        const parserConfig = {
+            oneOf: { type: "asAdditionalColumn" }
         };
+        const schema = {
+            oneOf: [
+                { title: "Foobar" },
+                {
+                    properties: {
+                        baz: true
+                    }
+                }
+            ]
+        };
+        const { columnData } = buildColumnData({ foo: schema }, [], ["foo", [1], "baz"], parserConfig);
         const component = shallow(
             <InspectorBreadcrumbs
-                columnData={[
-                    {
-                        items: {
-                            root: new JsonSchema({ items: itemSchema })
-                        },
-                        selectedItem: "root",
-                        onSelect: () => { }
-                    },
-                    {
-                        items: {
-                            itemProperty: new JsonSchema({ title: "Property Title" })
-                        },
-                        selectedItem: "itemProperty",
-                        trailingSelection: true,
-                        onSelect: () => { }
-                    }
-                ]}
-                breadcrumbsOptions={{}}
-            />
-        );
-        expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
-        expect(component.text()).toEqual("root[0].itemProperty");
-    });
-    it("with custom arrayItemAccessor", () => {
-        const itemSchema = {
-            properties: {
-                itemProperty: { title: "Property Title" }
-            }
-        };
-        const component = shallow(
-            <InspectorBreadcrumbs
-                columnData={[
-                    {
-                        items: {
-                            root: new JsonSchema({ items: itemSchema })
-                        },
-                        selectedItem: "root",
-                        onSelect: () => { }
-                    },
-                    {
-                        items: {
-                            itemProperty: new JsonSchema({ title: "Property Title" })
-                        },
-                        selectedItem: "itemProperty",
-                        trailingSelection: true,
-                        onSelect: () => { }
-                    }
-                ]}
-                breadcrumbsOptions={{
-                    arrayItemAccessor: ".get(0)"
-                }}
-            />
-        );
-        expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
-        expect(component.text()).toEqual("root.get(0).itemProperty");
-    });
-    it("with nested array item selection", () => {
-        const itemSchema = {
-            properties: {
-                itemProperty: { title: "Property Title" }
-            }
-        };
-        const component = shallow(
-            <InspectorBreadcrumbs
-                columnData={[
-                    {
-                        items: {
-                            root: new JsonSchema({
-                                items: {
-                                    items: {
-                                        items: itemSchema
-                                    }
-                                }
-                            })
-                        },
-                        selectedItem: "root",
-                        onSelect: () => { }
-                    },
-                    {
-                        items: {
-                            itemProperty: new JsonSchema({ title: "Property Title" })
-                        },
-                        selectedItem: "itemProperty",
-                        trailingSelection: true,
-                        onSelect: () => { }
-                    }
-                ]}
+                columnData={columnData}
                 breadcrumbsOptions={{}}
             />
         );
         expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
-        expect(component.text()).toEqual("root[0][0][0].itemProperty");
-    });
-    it("with custom separator", () => {
-        const itemSchema = {
-            properties: {
-                itemProperty: { title: "Property Title" }
-            }
-        };
-        const component = shallow(
-            <InspectorBreadcrumbs
-                columnData={[
-                    {
-                        items: {
-                            root: new JsonSchema({
-                                properties: {
-                                    item: itemSchema
-                                }
-                            })
-                        },
-                        selectedItem: "root",
-                        onSelect: () => { }
-                    },
-                    {
-                        items: {
-                            item: new JsonSchema(itemSchema)
-                        },
-                        selectedItem: "item",
-                        trailingSelection: true,
-                        onSelect: () => { }
-                    },
-                    {
-                        items: {
-                            itemProperty: new JsonSchema({ title: "Property Title" })
-                        },
-                        onSelect: () => { }
-                    }
-                ]}
-                breadcrumbsOptions={{
-                    prefix: "$this->",
-                    separator: "->"
-                }}
-            />
-        );
-        expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
-        expect(component.text()).toEqual("$this->root->item");
+        expect(component.text()).toEqual("foo.baz");
     });
     it("with navigation by default", () => {
+        const { columnData } = buildColumnData({ foo: {} }, [], ["foo"], {});
         const component = shallow(
             <InspectorBreadcrumbs
-                columnData={[
-                    {
-                        items: { root: new JsonSchema({}) },
-                        selectedItem: "root",
-                        trailingSelection: true,
-                        onSelect: () => { }
-                    }
-                ]}
+                columnData={columnData}
                 breadcrumbsOptions={{}}
             />
         );
@@ -264,34 +126,22 @@ describe("renders correctly", () => {
     });
 });
 describe("handles double-click navigation", () => {
-    let onSelectOne;
-    let onSelectTwo;
-    let columnData;
-    beforeEach(() => {
-        onSelectOne = jest.fn(() => { });
-        onSelectTwo = jest.fn(() => { });
-        columnData = [
-            {
-                items: {
-                    root: new JsonSchema({
-                        properties: {
-                            item: {}
-                        }
-                    })
-                },
-                selectedItem: "root",
-                onSelect: onSelectOne
-            },
-            {
-                items: {
-                    item: new JsonSchema({})
-                },
-                selectedItem: "item",
-                trailingSelection: true,
-                onSelect: onSelectTwo
+    const onSelectOne = jest.fn(() => { });
+    const onSelectTwo = jest.fn(() => { });
+    const { columnData } = createRenderDataBuilder(
+        index => (index === 0 ? onSelectOne : onSelectTwo)
+    )(
+        {
+            foo: {
+                properties: {
+                    bar: {}
+                }
             }
-        ];
-    });
+        },
+        [],
+        ["foo", "bar"],
+        {}
+    );
 
     it("triggers onSelect on root selection", () => {
         const component = shallow(
@@ -305,7 +155,7 @@ describe("handles double-click navigation", () => {
 
         selectedItems.at(0).prop("onDoubleClick")({});
         expect(onSelectOne.mock.calls).toHaveLength(1);
-        expect(onSelectOne.mock.calls[0][1]).toEqual("root");
+        expect(onSelectOne.mock.calls[0][1]).toEqual("foo");
         expect(onSelectTwo.mock.calls).toHaveLength(0);
     });
     it("triggers onSelect on non-root selection", () => {
@@ -321,7 +171,7 @@ describe("handles double-click navigation", () => {
         selectedItems.at(1).prop("onDoubleClick")({});
         expect(onSelectOne.mock.calls).toHaveLength(0);
         expect(onSelectTwo.mock.calls).toHaveLength(1);
-        expect(onSelectTwo.mock.calls[0][1]).toEqual("item");
+        expect(onSelectTwo.mock.calls[0][1]).toEqual("bar");
     });
     it("ignored when navigation is prevented", () => {
         const component = shallow(

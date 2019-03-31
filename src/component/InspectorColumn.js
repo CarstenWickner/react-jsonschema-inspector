@@ -1,81 +1,54 @@
+/* eslint-disable react/no-unused-prop-types */
 import PropTypes from "prop-types";
 import React from "react";
 import classNames from "classnames";
 
 import InspectorItem from "./InspectorItem";
+import { getColumnDataPropTypeShape } from "./renderDataUtils";
 
-import JsonSchema from "../model/JsonSchema";
-
-const InspectorColumn = ({
-    items, selectedItem, trailingSelection, filteredItems, onSelect, renderItemContent
-}) => (
-    <div
-        className={classNames({
-            "jsonschema-inspector-column": true,
-            "with-selection": selectedItem,
-            "trailing-selection": trailingSelection
-        })}
-        onClick={onSelect}
-        role="presentation"
-        tabIndex={-1}
-    >
-        {Object.keys(items).sort().map((name) => {
-            const selected = name === selectedItem;
-            const matchesFilter = filteredItems ? filteredItems.includes(name) : undefined;
-            return (
+const InspectorColumn = (props) => {
+    const {
+        items, selectedItem, filteredItems, trailingSelection, onSelect, renderItemContent
+    } = props;
+    return (
+        <div
+            className={classNames({
+                "jsonschema-inspector-column": true,
+                "with-selection": selectedItem,
+                "trailing-selection": trailingSelection
+            })}
+            onClick={onSelect}
+            role="presentation"
+            tabIndex={-1}
+        >
+            {Object.keys(items).sort().map(name => (
                 <InspectorItem
                     key={name}
-                    name={name}
-                    schema={items[name]}
-                    selected={selected}
-                    matchesFilter={matchesFilter}
+                    identifier={name}
+                    schemaGroup={items[name]}
+                    selected={name === selectedItem}
+                    matchesFilter={filteredItems ? filteredItems.includes(name) : undefined}
                     onSelect={event => onSelect(event, name)}
                     renderContent={renderItemContent}
                 />
-            );
-        })}
-    </div>
-);
-
-InspectorColumn.propTypes = {
-    items: PropTypes.objectOf(PropTypes.instanceOf(JsonSchema)).isRequired,
-    selectedItem: ({ items, selectedItem }) => {
-        if (selectedItem !== undefined && selectedItem !== null) {
-            if (typeof selectedItem !== "string") {
-                return new Error("`selectedItem` is not a `string`");
-            }
-            if (!items[selectedItem]) {
-                return new Error("`selectedItem` is not part of `items`");
-            }
-        }
-        // assume all ok
-        return null;
-    },
-    trailingSelection: ({ selectedItem, trailingSelection }) => {
-        if (trailingSelection && !selectedItem) {
-            return new Error("`trailingSelection` is true while there is no `selectedItem`");
-        }
-        return null;
-    },
-    filteredItems: ({ items, filteredItems }) => {
-        if (filteredItems !== undefined && filteredItems !== null) {
-            if (!Array.isArray(filteredItems)) {
-                return new Error("`filteredItems` is not an `array`");
-            }
-            if (filteredItems.some(singleItem => !items[singleItem])) {
-                return new Error("`filteredItems` are not all part of `items`");
-            }
-        }
-        return null;
-    },
-    onSelect: PropTypes.func.isRequired, // func(SyntheticEvent: event, string: name)
-    renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
+            ))}
+        </div>
+    );
 };
 
+const columnDataPropTypeShape = getColumnDataPropTypeShape(false);
+InspectorColumn.propTypes = {
+    items: columnDataPropTypeShape.items.isRequired,
+    selectedItem: PropTypes.string,
+    filteredItems: PropTypes.arrayOf(PropTypes.string),
+    trailingSelection: columnDataPropTypeShape.trailingSelection,
+    onSelect: columnDataPropTypeShape.onSelect.isRequired,
+    renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
+};
 InspectorColumn.defaultProps = {
     selectedItem: null,
-    trailingSelection: false,
     filteredItems: null,
+    trailingSelection: false,
     renderItemContent: null
 };
 

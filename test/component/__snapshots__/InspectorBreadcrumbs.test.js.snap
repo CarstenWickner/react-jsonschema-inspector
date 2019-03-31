@@ -12,7 +12,7 @@ exports[`renders correctly with minimal/default props 1`] = `
     key="0"
     onDoubleClick={[Function]}
   >
-    Schema One
+    foobar
   </span>
 </div>
 `;

@@ -3,6 +3,7 @@ import { shallow } from "enzyme";
 
 import InspectorDetails from "../../src/component/InspectorDetails";
 import JsonSchema from "../../src/model/JsonSchema";
+import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {
@@ -11,10 +12,10 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            "Schema One": new JsonSchema({
+                            "Schema One": new JsonSchemaGroup().with(new JsonSchema({
                                 title: "Schema Title",
                                 description: "Text"
-                            })
+                            }))
                         },
                         selectedItem: "Schema One",
                         trailingSelection: true
@@ -49,10 +50,10 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            "Schema One": new JsonSchema({
+                            "Schema One": new JsonSchemaGroup().with(new JsonSchema({
                                 title: "Schema Title",
                                 description: "Text"
-                            })
+                            }))
                         }
                     }
                 ]}
@@ -66,10 +67,10 @@ describe("renders correctly", () => {
                 columnData={[
                     {
                         items: {
-                            "Schema One": new JsonSchema({
+                            "Schema One": new JsonSchemaGroup().with(new JsonSchema({
                                 title: "Schema Title",
                                 description: "Text"
-                            })
+                            }))
                         }
                     }
                 ]}
@@ -94,7 +95,7 @@ describe("renders correctly", () => {
         const columnData = [
             {
                 items: {
-                    "Schema One": schema
+                    "Schema One": new JsonSchemaGroup().with(schema)
                 },
                 selectedItem: "Schema One",
                 trailingSelection: true
@@ -103,13 +104,14 @@ describe("renders correctly", () => {
         const component = shallow(
             <InspectorDetails
                 columnData={columnData}
-                itemSchema={schema}
                 selectionColumnIndex={0}
             />
         );
-        const { columnData: contentColumnDataProp, itemSchema, selectionColumnIndex } = component.find("InspectorDetailsContent").props();
+        const {
+            columnData: contentColumnDataProp, itemSchemaGroup, selectionColumnIndex
+        } = component.find("InspectorDetailsContent").props();
         expect(contentColumnDataProp).toEqual(columnData);
-        expect(itemSchema).toEqual(schema);
+        expect(itemSchemaGroup.entries[0]).toEqual(schema);
         expect(selectionColumnIndex).toEqual(0);
     });
     it("with root array selection and custom renderSelectionDetails", () => {
@@ -126,7 +128,7 @@ describe("renders correctly", () => {
         const columnDataProp = [
             {
                 items: {
-                    "Schema One": new JsonSchema(mainSchema)
+                    "Schema One": new JsonSchemaGroup().with(new JsonSchema(mainSchema))
                 },
                 selectedItem: "Schema One",
                 trailingSelection: true
@@ -142,9 +144,9 @@ describe("renders correctly", () => {
         expect(component.exists(".custom-selection-details")).toBe(true);
         expect(renderSelectionDetails.mock.calls).toHaveLength(1);
         const {
-            itemSchema, columnData, selectionColumnIndex
+            itemSchemaGroup, columnData, selectionColumnIndex
         } = renderSelectionDetails.mock.calls[0][0];
-        expect(itemSchema).toEqual(columnDataProp[0].items["Schema One"]);
+        expect(itemSchemaGroup).toEqual(columnDataProp[0].items["Schema One"]);
         expect(columnData).toEqual(columnDataProp);
         expect(selectionColumnIndex).toBe(0);
     });

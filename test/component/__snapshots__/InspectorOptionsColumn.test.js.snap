@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with minimal/default props 1`] = `
+<div
+  className="jsonschema-inspector-column"
+  onClick={[Function]}
+  role="presentation"
+  tabIndex={-1}
+>
+  <InspectorItem
+    identifier="Option 1"
+    key="[0]"
+    onSelect={[Function]}
+    optionIndexes={
+      Array [
+        0,
+      ]
+    }
+    renderContent={null}
+    schemaGroup={
+      JsonSchemaAllOfGroup {
+        "entries": Array [
+          JsonSchema {
+            "parserConfig": undefined,
+            "schema": Object {
+              "description": "Foobar",
+            },
+            "scope": RefScope {
+              "externalRefs": Map {},
+              "internalRefs": Map {
+                "#" => [Circular],
+              },
+              "otherScopes": Array [],
+            },
+          },
+          JsonSchemaOneOfGroup {
+            "entries": Array [
+              JsonSchema {
+                "parserConfig": undefined,
+                "schema": Object {
+                  "title": "Foo",
+                },
+                "scope": RefScope {
+                  "externalRefs": Map {},
+                  "internalRefs": Map {
+                    "#" => [Circular],
+                  },
+                  "otherScopes": Array [],
+                },
+              },
+              JsonSchema {
+                "parserConfig": undefined,
+                "schema": Object {
+                  "title": "Bar",
+                },
+                "scope": RefScope {
+                  "externalRefs": Map {},
+                  "internalRefs": Map {
+                    "#" => [Circular],
+                  },
+                  "otherScopes": Array [],
+                },
+              },
+            ],
+            "settings": Object {
+              "type": "asAdditionalColumn",
+            },
+          },
+        ],
+      }
+    }
+    selected={false}
+  />
+  <InspectorItem
+    identifier="Option 2"
+    key="[1]"
+    onSelect={[Function]}
+    optionIndexes={
+      Array [
+        1,
+      ]
+    }
+    renderContent={null}
+    schemaGroup={
+      JsonSchemaAllOfGroup {
+        "entries": Array [
+          JsonSchema {
+            "parserConfig": undefined,
+            "schema": Object {
+              "description": "Foobar",
+            },
+            "scope": RefScope {
+              "externalRefs": Map {},
+              "internalRefs": Map {
+                "#" => [Circular],
+              },
+              "otherScopes": Array [],
+            },
+          },
+          JsonSchemaOneOfGroup {
+            "entries": Array [
+              JsonSchema {
+                "parserConfig": undefined,
+                "schema": Object {
+                  "title": "Foo",
+                },
+                "scope": RefScope {
+                  "externalRefs": Map {},
+                  "internalRefs": Map {
+                    "#" => [Circular],
+                  },
+                  "otherScopes": Array [],
+                },
+              },
+              JsonSchema {
+                "parserConfig": undefined,
+                "schema": Object {
+                  "title": "Bar",
+                },
+                "scope": RefScope {
+                  "externalRefs": Map {},
+                  "internalRefs": Map {
+                    "#" => [Circular],
+                  },
+                  "otherScopes": Array [],
+                },
+              },
+            ],
+            "settings": Object {
+              "type": "asAdditionalColumn",
+            },
+          },
+        ],
+      }
+    }
+    selected={false}
+  />
+</div>
+`;

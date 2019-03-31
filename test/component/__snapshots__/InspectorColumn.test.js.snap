@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly with minimal/default props 1`] = `
+exports[`renders correctly with minimal/default props (items) 1`] = `
 <div
   className="jsonschema-inspector-column"
   onClick={[Function]}
@@ -8,61 +8,69 @@ exports[`renders correctly with minimal/default props 1`] = `
   tabIndex={-1}
 >
   <InspectorItem
+    identifier="Item One"
     key="Item One"
-    name="Item One"
     onSelect={[Function]}
     renderContent={null}
-    schema={
-      JsonSchema {
-        "parserConfig": Object {},
-        "schema": Object {
-          "$id": "Schema One",
-        },
-        "scope": RefScope {
-          "externalRefs": Map {},
-          "internalRefs": Map {
-            "#" => JsonSchema {
-              "parserConfig": undefined,
-              "schema": Object {
-                "definitions": Object {
-                  "Target": Object {},
+    schemaGroup={
+      JsonSchemaGroup {
+        "entries": Array [
+          JsonSchema {
+            "parserConfig": Object {},
+            "schema": Object {
+              "$id": "Schema One",
+            },
+            "scope": RefScope {
+              "externalRefs": Map {},
+              "internalRefs": Map {
+                "#" => JsonSchema {
+                  "parserConfig": undefined,
+                  "schema": Object {
+                    "definitions": Object {
+                      "Target": Object {},
+                    },
+                  },
+                  "scope": [Circular],
                 },
               },
-              "scope": [Circular],
+              "otherScopes": Array [],
             },
           },
-          "otherScopes": Array [],
-        },
+        ],
       }
     }
     selected={false}
   />
   <InspectorItem
+    identifier="Item Two"
     key="Item Two"
-    name="Item Two"
     onSelect={[Function]}
     renderContent={null}
-    schema={
-      JsonSchema {
-        "parserConfig": Object {},
-        "schema": Object {
-          "$id": "Schema Two",
-        },
-        "scope": RefScope {
-          "externalRefs": Map {},
-          "internalRefs": Map {
-            "#" => JsonSchema {
-              "parserConfig": undefined,
-              "schema": Object {
-                "definitions": Object {
-                  "Target": Object {},
+    schemaGroup={
+      JsonSchemaGroup {
+        "entries": Array [
+          JsonSchema {
+            "parserConfig": Object {},
+            "schema": Object {
+              "$id": "Schema Two",
+            },
+            "scope": RefScope {
+              "externalRefs": Map {},
+              "internalRefs": Map {
+                "#" => JsonSchema {
+                  "parserConfig": undefined,
+                  "schema": Object {
+                    "definitions": Object {
+                      "Target": Object {},
+                    },
+                  },
+                  "scope": [Circular],
                 },
               },
-              "scope": [Circular],
+              "otherScopes": Array [],
             },
           },
-          "otherScopes": Array [],
-        },
+        ],
       }
     }
     selected={false}

@@ -2,7 +2,8 @@ import PropTypes from "prop-types";
 import React from "react";
 import classNames from "classnames";
 
-import JsonSchema from "../model/JsonSchema";
+import { getColumnDataPropTypeShape } from "./renderDataUtils";
+
 import createBreadcrumbBuilder from "../model/breadcrumbsUtils";
 
 const InspectorBreadcrumbs = ({ columnData, breadcrumbsOptions }) => {
@@ -38,16 +39,10 @@ const InspectorBreadcrumbs = ({ columnData, breadcrumbsOptions }) => {
 };
 
 InspectorBreadcrumbs.propTypes = {
-    columnData: PropTypes.arrayOf(PropTypes.shape({
-        items: PropTypes.objectOf(PropTypes.instanceOf(JsonSchema)).isRequired,
-        selectedItem: PropTypes.string,
-        trailingSelection: PropTypes.bool,
-        onSelect: PropTypes.func.isRequired
-    })).isRequired,
+    columnData: PropTypes.arrayOf(PropTypes.shape(getColumnDataPropTypeShape(true))).isRequired,
     breadcrumbsOptions: PropTypes.shape({
         prefix: PropTypes.string,
         separator: PropTypes.string,
-        arrayItemAccessor: PropTypes.string,
         mutateName: PropTypes.func,
         preventNavigation: PropTypes.bool
     }).isRequired

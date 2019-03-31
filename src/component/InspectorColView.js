@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 
 import InspectorColumn from "./InspectorColumn";
-
-import JsonSchema from "../model/JsonSchema";
+import InspectorOptionsColumn from "./InspectorOptionsColumn";
+import { getColumnDataPropTypeShape } from "./renderDataUtils";
 
 class InspectorColView extends Component {
     componentDidUpdate(prevProps) {
@@ -28,18 +28,33 @@ class InspectorColView extends Component {
             >
                 {columnData.map((singleColumnData, index) => {
                     const {
-                        items, selectedItem, trailingSelection, filteredItems, onSelect
+                        items, options, contextGroup, selectedItem, trailingSelection, filteredItems, onSelect
                     } = singleColumnData;
+                    if (items) {
+                        return (
+                            <InspectorColumn
+                                // eslint-disable-next-line react/no-array-index-key
+                                key={index}
+                                items={items}
+                                selectedItem={selectedItem}
+                                trailingSelection={trailingSelection}
+                                filteredItems={filteredItems}
+                                onSelect={onSelect}
+                                renderItemContent={renderItemContent}
+                            />
+                        );
+                    }
                     return (
-                        <InspectorColumn
+                        <InspectorOptionsColumn
                             // eslint-disable-next-line react/no-array-index-key
                             key={index}
-                            renderItemContent={renderItemContent}
-                            items={items}
+                            options={options}
+                            contextGroup={contextGroup}
                             selectedItem={selectedItem}
                             trailingSelection={trailingSelection}
                             filteredItems={filteredItems}
                             onSelect={onSelect}
+                            renderItemContent={renderItemContent}
                         />
                     );
                 })}
@@ -51,13 +66,7 @@ class InspectorColView extends Component {
 }
 
 InspectorColView.propTypes = {
-    columnData: PropTypes.arrayOf(PropTypes.shape({
-        items: PropTypes.objectOf(PropTypes.instanceOf(JsonSchema)).isRequired,
-        selectedItem: PropTypes.string,
-        trailingSelection: PropTypes.bool,
-        filteredItems: PropTypes.arrayOf(PropTypes.string),
-        onSelect: PropTypes.func.isRequired // func(SyntheticEvent: event, string: name)
-    })).isRequired,
+    columnData: PropTypes.arrayOf(PropTypes.shape(getColumnDataPropTypeShape(true))).isRequired,
     appendEmptyColumn: PropTypes.bool,
     renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
 };

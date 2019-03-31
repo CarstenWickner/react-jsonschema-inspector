@@ -2,8 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 
 import InspectorDetailsContent from "./InspectorDetailsContent";
-
-import JsonSchema from "../model/JsonSchema";
+import { getColumnDataPropTypeShape } from "./renderDataUtils";
 
 const InspectorDetails = ({
     columnData, renderSelectionDetails, renderEmptyDetails
@@ -11,22 +10,27 @@ const InspectorDetails = ({
     const lastColumnContainsSelection = columnData.length && columnData[columnData.length - 1].trailingSelection;
     const selectionColumnIndex = columnData.length - (lastColumnContainsSelection ? 1 : 2);
     const trailingSelectionColumn = selectionColumnIndex < 0 ? null : columnData[selectionColumnIndex];
-    const itemSchema = trailingSelectionColumn ? trailingSelectionColumn.items[trailingSelectionColumn.selectedItem] : null;
+    let itemSchemaGroup;
+    if (trailingSelectionColumn) {
+        itemSchemaGroup = trailingSelectionColumn.items
+            ? trailingSelectionColumn.items[trailingSelectionColumn.selectedItem]
+            : trailingSelectionColumn.contextGroup;
+    }
     return (
         <div className="jsonschema-inspector-details">
-            {itemSchema && renderSelectionDetails && renderSelectionDetails({
-                itemSchema,
+            {itemSchemaGroup && renderSelectionDetails && renderSelectionDetails({
+                itemSchemaGroup,
                 selectionColumnIndex,
                 columnData
             })}
-            {itemSchema && !renderSelectionDetails && (
+            {itemSchemaGroup && !renderSelectionDetails && (
                 <InspectorDetailsContent
-                    itemSchema={itemSchema}
+                    itemSchemaGroup={itemSchemaGroup}
                     selectionColumnIndex={selectionColumnIndex}
                     columnData={columnData}
                 />
             )}
-            {!itemSchema && renderEmptyDetails && renderEmptyDetails({
+            {!itemSchemaGroup && renderEmptyDetails && renderEmptyDetails({
                 rootColumnSchemas: columnData.length ? columnData[0].items : {}
             })}
         </div>
@@ -34,11 +38,7 @@ const InspectorDetails = ({
 };
 
 InspectorDetails.propTypes = {
-    columnData: PropTypes.arrayOf(PropTypes.shape({
-        items: PropTypes.objectOf(PropTypes.instanceOf(JsonSchema)).isRequired,
-        selectedItem: PropTypes.string,
-        trailingSelection: PropTypes.bool
-    })).isRequired,
+    columnData: PropTypes.arrayOf(PropTypes.shape(getColumnDataPropTypeShape(false))).isRequired,
     /** func({ itemSchema: JsonSchema, selectionColumnIndex: number, columnData }) */
     renderSelectionDetails: PropTypes.func,
     /** func({ rootColumnSchemas }) */

@@ -13,144 +13,25 @@ exports[`renders correctly with minimal/default props 1`] = `
         Array [
           Object {
             "items": Object {
-              "Schema One": JsonSchema {
-                "parserConfig": Object {},
-                "schema": Object {
-                  "properties": Object {
-                    "Item One": Object {},
-                    "Item Two": Object {
+              "Schema One": JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": Object {},
+                    "schema": Object {
                       "properties": Object {
-                        "Property One": Object {},
+                        "Item One": Object {},
+                        "Item Two": Object {
+                          "properties": Object {
+                            "Property One": Object {},
+                          },
+                        },
                       },
+                      "title": "Main Schema One Title",
                     },
-                  },
-                  "title": "Main Schema One Title",
-                },
-                "scope": RefScope {
-                  "externalRefs": Map {},
-                  "internalRefs": Map {
-                    "#" => [Circular],
-                  },
-                  "otherScopes": Array [
-                    RefScope {
-                      "externalRefs": Map {
-                        "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
                       "internalRefs": Map {
-                        "#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "#/definitions/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
-                      "otherScopes": Array [
-                        RefScope {
-                          "externalRefs": Map {
-                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                          },
-                          "internalRefs": Map {
-                            "#" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                          },
-                          "otherScopes": Array [
-                            [Circular],
-                          ],
-                        },
-                      ],
-                    },
-                    RefScope {
-                      "externalRefs": Map {
-                        "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
-                      "internalRefs": Map {
-                        "#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
+                        "#" => [Circular],
                       },
                       "otherScopes": Array [
                         RefScope {
@@ -209,148 +90,152 @@ exports[`renders correctly with minimal/default props 1`] = `
                             },
                           },
                           "otherScopes": Array [
-                            [Circular],
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
                           ],
                         },
                       ],
                     },
-                  ],
-                },
+                  },
+                ],
               },
-              "Schema Two": JsonSchema {
-                "parserConfig": Object {},
-                "schema": Object {
-                  "properties": Object {
-                    "Item Three": Object {
-                      "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector",
+              "Schema Two": JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": Object {},
+                    "schema": Object {
+                      "properties": Object {
+                        "Item Three": Object {
+                          "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector",
+                        },
+                      },
                     },
-                  },
-                },
-                "scope": RefScope {
-                  "externalRefs": Map {},
-                  "internalRefs": Map {
-                    "#" => [Circular],
-                  },
-                  "otherScopes": Array [
-                    RefScope {
-                      "externalRefs": Map {
-                        "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
                       "internalRefs": Map {
-                        "#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "#/definitions/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
-                      "otherScopes": Array [
-                        RefScope {
-                          "externalRefs": Map {
-                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                          },
-                          "internalRefs": Map {
-                            "#" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                          },
-                          "otherScopes": Array [
-                            [Circular],
-                          ],
-                        },
-                      ],
-                    },
-                    RefScope {
-                      "externalRefs": Map {
-                        "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
-                      "internalRefs": Map {
-                        "#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
+                        "#" => [Circular],
                       },
                       "otherScopes": Array [
                         RefScope {
@@ -409,13 +294,136 @@ exports[`renders correctly with minimal/default props 1`] = `
                             },
                           },
                           "otherScopes": Array [
-                            [Circular],
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
                           ],
                         },
                       ],
                     },
-                  ],
-                },
+                  },
+                ],
               },
             },
             "onSelect": [Function],
@@ -429,144 +437,25 @@ exports[`renders correctly with minimal/default props 1`] = `
         Array [
           Object {
             "items": Object {
-              "Schema One": JsonSchema {
-                "parserConfig": Object {},
-                "schema": Object {
-                  "properties": Object {
-                    "Item One": Object {},
-                    "Item Two": Object {
+              "Schema One": JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": Object {},
+                    "schema": Object {
                       "properties": Object {
-                        "Property One": Object {},
+                        "Item One": Object {},
+                        "Item Two": Object {
+                          "properties": Object {
+                            "Property One": Object {},
+                          },
+                        },
                       },
+                      "title": "Main Schema One Title",
                     },
-                  },
-                  "title": "Main Schema One Title",
-                },
-                "scope": RefScope {
-                  "externalRefs": Map {},
-                  "internalRefs": Map {
-                    "#" => [Circular],
-                  },
-                  "otherScopes": Array [
-                    RefScope {
-                      "externalRefs": Map {
-                        "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
                       "internalRefs": Map {
-                        "#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "#/definitions/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
-                      "otherScopes": Array [
-                        RefScope {
-                          "externalRefs": Map {
-                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                          },
-                          "internalRefs": Map {
-                            "#" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                          },
-                          "otherScopes": Array [
-                            [Circular],
-                          ],
-                        },
-                      ],
-                    },
-                    RefScope {
-                      "externalRefs": Map {
-                        "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
-                      "internalRefs": Map {
-                        "#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
+                        "#" => [Circular],
                       },
                       "otherScopes": Array [
                         RefScope {
@@ -625,148 +514,152 @@ exports[`renders correctly with minimal/default props 1`] = `
                             },
                           },
                           "otherScopes": Array [
-                            [Circular],
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
                           ],
                         },
                       ],
                     },
-                  ],
-                },
+                  },
+                ],
               },
-              "Schema Two": JsonSchema {
-                "parserConfig": Object {},
-                "schema": Object {
-                  "properties": Object {
-                    "Item Three": Object {
-                      "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector",
+              "Schema Two": JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": Object {},
+                    "schema": Object {
+                      "properties": Object {
+                        "Item Three": Object {
+                          "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector",
+                        },
+                      },
                     },
-                  },
-                },
-                "scope": RefScope {
-                  "externalRefs": Map {},
-                  "internalRefs": Map {
-                    "#" => [Circular],
-                  },
-                  "otherScopes": Array [
-                    RefScope {
-                      "externalRefs": Map {
-                        "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
                       "internalRefs": Map {
-                        "#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "#/definitions/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
-                      "otherScopes": Array [
-                        RefScope {
-                          "externalRefs": Map {
-                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                          },
-                          "internalRefs": Map {
-                            "#" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                          },
-                          "otherScopes": Array [
-                            [Circular],
-                          ],
-                        },
-                      ],
-                    },
-                    RefScope {
-                      "externalRefs": Map {
-                        "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
-                      "internalRefs": Map {
-                        "#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
+                        "#" => [Circular],
                       },
                       "otherScopes": Array [
                         RefScope {
@@ -825,13 +718,136 @@ exports[`renders correctly with minimal/default props 1`] = `
                             },
                           },
                           "otherScopes": Array [
-                            [Circular],
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
                           ],
                         },
                       ],
                     },
-                  ],
-                },
+                  },
+                ],
               },
             },
             "onSelect": [Function],
@@ -851,144 +867,25 @@ exports[`renders correctly with minimal/default props 1`] = `
         Array [
           Object {
             "items": Object {
-              "Schema One": JsonSchema {
-                "parserConfig": Object {},
-                "schema": Object {
-                  "properties": Object {
-                    "Item One": Object {},
-                    "Item Two": Object {
+              "Schema One": JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": Object {},
+                    "schema": Object {
                       "properties": Object {
-                        "Property One": Object {},
+                        "Item One": Object {},
+                        "Item Two": Object {
+                          "properties": Object {
+                            "Property One": Object {},
+                          },
+                        },
                       },
+                      "title": "Main Schema One Title",
                     },
-                  },
-                  "title": "Main Schema One Title",
-                },
-                "scope": RefScope {
-                  "externalRefs": Map {},
-                  "internalRefs": Map {
-                    "#" => [Circular],
-                  },
-                  "otherScopes": Array [
-                    RefScope {
-                      "externalRefs": Map {
-                        "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
                       "internalRefs": Map {
-                        "#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "#/definitions/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
-                      "otherScopes": Array [
-                        RefScope {
-                          "externalRefs": Map {
-                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                          },
-                          "internalRefs": Map {
-                            "#" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                          },
-                          "otherScopes": Array [
-                            [Circular],
-                          ],
-                        },
-                      ],
-                    },
-                    RefScope {
-                      "externalRefs": Map {
-                        "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
-                      "internalRefs": Map {
-                        "#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
+                        "#" => [Circular],
                       },
                       "otherScopes": Array [
                         RefScope {
@@ -1047,148 +944,152 @@ exports[`renders correctly with minimal/default props 1`] = `
                             },
                           },
                           "otherScopes": Array [
-                            [Circular],
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
                           ],
                         },
                       ],
                     },
-                  ],
-                },
+                  },
+                ],
               },
-              "Schema Two": JsonSchema {
-                "parserConfig": Object {},
-                "schema": Object {
-                  "properties": Object {
-                    "Item Three": Object {
-                      "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector",
+              "Schema Two": JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": Object {},
+                    "schema": Object {
+                      "properties": Object {
+                        "Item Three": Object {
+                          "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector",
+                        },
+                      },
                     },
-                  },
-                },
-                "scope": RefScope {
-                  "externalRefs": Map {},
-                  "internalRefs": Map {
-                    "#" => [Circular],
-                  },
-                  "otherScopes": Array [
-                    RefScope {
-                      "externalRefs": Map {
-                        "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
                       "internalRefs": Map {
-                        "#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                            "definitions": Object {
-                              "react-inspector": Object {
-                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                              },
-                            },
-                          },
-                          "scope": [Circular],
-                        },
-                        "#/definitions/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
-                      "otherScopes": Array [
-                        RefScope {
-                          "externalRefs": Map {
-                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                          },
-                          "internalRefs": Map {
-                            "#" => JsonSchema {
-                              "parserConfig": Object {},
-                              "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                                "title": "Title: Main React Component",
-                              },
-                              "scope": [Circular],
-                            },
-                          },
-                          "otherScopes": Array [
-                            [Circular],
-                          ],
-                        },
-                      ],
-                    },
-                    RefScope {
-                      "externalRefs": Map {
-                        "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
-                        "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
-                      },
-                      "internalRefs": Map {
-                        "#" => JsonSchema {
-                          "parserConfig": Object {},
-                          "schema": Object {
-                            "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
-                            "title": "Title: Main React Component",
-                          },
-                          "scope": [Circular],
-                        },
+                        "#" => [Circular],
                       },
                       "otherScopes": Array [
                         RefScope {
@@ -1247,13 +1148,136 @@ exports[`renders correctly with minimal/default props 1`] = `
                             },
                           },
                           "otherScopes": Array [
-                            [Circular],
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {},
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {},
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
                           ],
                         },
                       ],
                     },
-                  ],
-                },
+                  },
+                ],
               },
             },
             "onSelect": [Function],

@@ -44,76 +44,78 @@ describe("renders correctly", () => {
         );
         expect(component).toMatchSnapshot();
     });
-    it("with search field in header (filtering by fields with non-default debounce times)", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                referenceSchemas={referenceSchemas}
-                searchOptions={{
-                    fields: ["title"],
-                    debounceWait: 100,
-                    debounceMaxWait: 1000,
-                    inputPlaceholder: "Filter by Title"
-                }}
-            />
-        );
-        const header = component.find(".jsonschema-inspector-header");
-        expect(header.exists()).toBe(true);
-        let searchField = header.find("InspectorSearchField");
-        expect(searchField.exists()).toBe(true);
-        expect(searchField.prop("searchFilter")).toEqual("");
-        const onSearchFilterChange = searchField.prop("onSearchFilterChange");
-        // trigger change of search filter
-        onSearchFilterChange("Title");
-        component.instance().debouncedApplySearchFilter(100, 1000).flush();
-        searchField = component.find("InspectorSearchField");
-        expect(searchField.prop("searchFilter")).toEqual("Title");
-        expect(searchField.prop("placeholder")).toEqual("Filter by Title");
-        const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
-        expect(filteredItems).toBeDefined();
-        expect(filteredItems).toHaveLength(2);
-        expect(filteredItems[0]).toEqual("Schema One", "Schema Two");
-    });
-    it("with search field in header (filtering by fields with non-default debounce times)", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                referenceSchemas={referenceSchemas}
-                searchOptions={{
-                    filterBy: searchFilter => rawSchema => !!rawSchema[searchFilter]
-                }}
-            />
-        );
-        const onSearchFilterChange = component.find("InspectorSearchField").prop("onSearchFilterChange");
-        // trigger change of search filter (looking for all schemas with a `properties` field)
-        onSearchFilterChange("properties");
-        // flush based on default debounce times
-        component.instance().debouncedApplySearchFilter(200, 500).flush();
-        expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("properties");
-        const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
-        expect(filteredItems).toBeDefined();
-        expect(filteredItems).toHaveLength(2);
-        expect(filteredItems[0]).toEqual("Schema One", "Schema Two");
-    });
-    it("with search field in header (filtering only when at least 3 characters were entered)", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                referenceSchemas={referenceSchemas}
-                searchOptions={{
-                    filterBy: searchFilter => (searchFilter.length < 3 ? undefined : () => true),
-                    debounceWait: 100
-                }}
-            />
-        );
-        const onSearchFilterChange = component.find("InspectorSearchField").prop("onSearchFilterChange");
-        // trigger change of search filter (but without any filtering being applied since there are only two characters)
-        onSearchFilterChange("12");
-        // flush based on default debounce maxWait
-        component.instance().debouncedApplySearchFilter(100, 500).flush();
-        expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("12");
-        const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
-        expect(filteredItems).toBeUndefined();
+    describe("with search field in header", () => {
+        it("filtering by fields with non-default debounce times", () => {
+            const component = shallow(
+                <Inspector
+                    schemas={schemas}
+                    referenceSchemas={referenceSchemas}
+                    searchOptions={{
+                        fields: ["title"],
+                        debounceWait: 100,
+                        debounceMaxWait: 1000,
+                        inputPlaceholder: "Filter by Title"
+                    }}
+                />
+            );
+            const header = component.find(".jsonschema-inspector-header");
+            expect(header.exists()).toBe(true);
+            let searchField = header.find("InspectorSearchField");
+            expect(searchField.exists()).toBe(true);
+            expect(searchField.prop("searchFilter")).toEqual("");
+            const onSearchFilterChange = searchField.prop("onSearchFilterChange");
+            // trigger change of search filter
+            onSearchFilterChange("Title");
+            component.instance().debouncedApplySearchFilter(100, 1000).flush();
+            searchField = component.find("InspectorSearchField");
+            expect(searchField.prop("searchFilter")).toEqual("Title");
+            expect(searchField.prop("placeholder")).toEqual("Filter by Title");
+            const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
+            expect(filteredItems).toBeDefined();
+            expect(filteredItems).toHaveLength(2);
+            expect(filteredItems).toEqual(["Schema One", "Schema Two"]);
+        });
+        it("filtering by fields with non-default debounce times", () => {
+            const component = shallow(
+                <Inspector
+                    schemas={schemas}
+                    referenceSchemas={referenceSchemas}
+                    searchOptions={{
+                        filterBy: searchFilter => rawSchema => !!rawSchema[searchFilter]
+                    }}
+                />
+            );
+            const onSearchFilterChange = component.find("InspectorSearchField").prop("onSearchFilterChange");
+            // trigger change of search filter (looking for all schemas with a `properties` field)
+            onSearchFilterChange("properties");
+            // flush based on default debounce times
+            component.instance().debouncedApplySearchFilter(200, 500).flush();
+            expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("properties");
+            const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
+            expect(filteredItems).toBeDefined();
+            expect(filteredItems).toHaveLength(2);
+            expect(filteredItems[0]).toEqual("Schema One", "Schema Two");
+        });
+        it("filtering only when at least 3 characters were entered", () => {
+            const component = shallow(
+                <Inspector
+                    schemas={schemas}
+                    referenceSchemas={referenceSchemas}
+                    searchOptions={{
+                        filterBy: searchFilter => (searchFilter.length < 3 ? undefined : () => true),
+                        debounceWait: 100
+                    }}
+                />
+            );
+            const onSearchFilterChange = component.find("InspectorSearchField").prop("onSearchFilterChange");
+            // trigger change of search filter (but without any filtering being applied since there are only two characters)
+            onSearchFilterChange("12");
+            // flush based on default debounce maxWait
+            component.instance().debouncedApplySearchFilter(100, 500).flush();
+            expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("12");
+            const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
+            expect(filteredItems).toBeUndefined();
+        });
     });
     it("without footer", () => {
         const component = shallow(
@@ -134,7 +136,7 @@ describe("renders correctly", () => {
         );
         const { columnData } = component.find("InspectorColView").props();
         expect(columnData).toHaveLength(2);
-        expect(columnData[0].items[selectedSchema].schema).toEqual(schemas[selectedSchema]);
+        expect(columnData[0].items[selectedSchema].entries[0].schema).toEqual(schemas[selectedSchema]);
         expect(columnData[0].selectedItem).toBe(selectedSchema);
         expect(columnData[0].trailingSelection).toBe(true);
         expect(typeof columnData[0].onSelect).toBe("function");
@@ -153,7 +155,7 @@ describe("renders correctly", () => {
         );
         const { columnData } = component.find("InspectorColView").props();
         expect(columnData).toHaveLength(2);
-        expect(columnData[0].items[selectedSchema].schema).toEqual(schemas[selectedSchema]);
+        expect(columnData[0].items[selectedSchema].entries[0].schema).toEqual(schemas[selectedSchema]);
         expect(columnData[0].selectedItem).toBe(selectedSchema);
         expect(typeof columnData[0].onSelect).toBe("function");
         expect(Object.keys(columnData[1].items)).toEqual(["Item Three"]);
@@ -233,10 +235,6 @@ describe("calls onSelect", () => {
         stopPropagation: () => { }
     };
     const onSelect = jest.fn(() => { });
-
-    beforeEach(() => {
-        onSelect.mockReset();
-    });
 
     it("when setting root selection", () => {
         const component = shallow(

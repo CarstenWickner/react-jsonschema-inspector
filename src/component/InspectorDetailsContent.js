@@ -3,18 +3,22 @@ import PropTypes from "prop-types";
 import React from "react";
 
 import InspectorDetailsForm from "./InspectorDetailsForm";
+import { getColumnDataPropTypeShape } from "./renderDataUtils";
 
-import JsonSchema from "../model/JsonSchema";
-import { isDefined } from "../model/utils";
+import JsonSchemaGroup from "../model/JsonSchemaGroup";
+import { createOptionTargetArrayFromIndexes, getFieldValueFromSchemaGroup } from "../model/schemaUtils";
+import { isDefined, listValues } from "../model/utils";
 
-export const collectFormFields = (itemSchema, columnData, selectionColumnIndex) => {
+export const collectFormFields = (itemSchemaGroup, columnData, selectionColumnIndex) => {
     const formFields = [];
     const addFormField = (labelText, rowValue) => {
         if (isDefined(rowValue)) {
             formFields.push({ labelText, rowValue });
         }
     };
-    const getValue = fieldName => itemSchema.getFieldValue(fieldName);
+    const { selectedItem } = columnData[selectionColumnIndex];
+    const optionIndexes = typeof selectedItem === "string" ? undefined : selectedItem;
+    const getValue = fieldName => getFieldValueFromSchemaGroup(itemSchemaGroup, fieldName, listValues, undefined, undefined, optionIndexes);
 
     addFormField("Title", getValue("title"));
     addFormField("Description", getValue("description"));
@@ -22,10 +26,24 @@ export const collectFormFields = (itemSchema, columnData, selectionColumnIndex) 
     let isRequired = false;
     if (selectionColumnIndex) {
         const parentColumn = columnData[selectionColumnIndex - 1];
-        const parentSchema = parentColumn.items[parentColumn.selectedItem];
-        const targetItem = columnData[selectionColumnIndex].selectedItem;
-        const schemaList = parentSchema.getPropertyParentSchemas();
-        isRequired = schemaList.some(part => isDefined(part.schema.required) && part.schema.required.includes(targetItem));
+        if (typeof selectedItem === "string") {
+            let parentSchemaGroup;
+            let optionTarget;
+            if (parentColumn.items) {
+                parentSchemaGroup = parentColumn.items[parentColumn.selectedItem];
+            } else {
+                parentSchemaGroup = parentColumn.contextGroup;
+                optionTarget = createOptionTargetArrayFromIndexes(parentColumn.selectedItem);
+            }
+            isRequired = parentSchemaGroup.someEntry(
+                ({ schema: rawSchema }) => rawSchema.required && rawSchema.required.includes(selectedItem),
+                optionTarget
+            );
+        } else {
+            const { contextGroup } = columnData[selectionColumnIndex];
+            const optionTarget = createOptionTargetArrayFromIndexes(selectedItem);
+            isRequired = contextGroup.someEntry(({ required }) => required && required.includes(parentColumn.selectedItem), optionTarget);
+        }
     }
     addFormField("Required", isRequired ? "Yes" : null);
 
@@ -76,52 +94,20 @@ export const collectFormFields = (itemSchema, columnData, selectionColumnIndex) 
     return formFields;
 };
 
-const InspectorDetailsContent = ({
-    itemSchema, columnData, selectionColumnIndex
-}) => {
-    // look-up the kind of value expected in the array (if the schema refers to an array)
-    let singleArrayItemSchema = itemSchema.getTypeOfArrayItems();
-    const arrayItemSchemas = [];
-    while (singleArrayItemSchema) {
-        arrayItemSchemas.push(singleArrayItemSchema);
-        singleArrayItemSchema = singleArrayItemSchema.getTypeOfArrayItems();
-    }
-
-    return (
-        <div className="jsonschema-inspector-details-content">
-            <h3 className="jsonschema-inspector-details-header">Details</h3>
-            <InspectorDetailsForm
-                key="main-form"
-                fields={collectFormFields(itemSchema, columnData, selectionColumnIndex)}
-            />
-            {arrayItemSchemas.map((arrayItemSchema, level) => [
-                <hr
-                    key={`separator-${level}`}
-                    className="jsonschema-inspector-details-separator"
-                />,
-                <h4
-                    key={`header-${level}`}
-                    className="jsonschema-inspector-details-header"
-                >
-                    {"Array Entry Details"}
-                </h4>,
-                <InspectorDetailsForm
-                    key={`entry-form-${level}`}
-                    fields={collectFormFields(arrayItemSchema, columnData)}
-                />
-            ])}
-        </div>
-    );
-};
+const InspectorDetailsContent = ({ itemSchemaGroup, columnData, selectionColumnIndex }) => (
+    <div className="jsonschema-inspector-details-content">
+        <h3 className="jsonschema-inspector-details-header">Details</h3>
+        <InspectorDetailsForm
+            key="main-form"
+            fields={collectFormFields(itemSchemaGroup, columnData, selectionColumnIndex)}
+        />
+    </div>
+);
 
 InspectorDetailsContent.propTypes = {
-    itemSchema: PropTypes.instanceOf(JsonSchema).isRequired,
+    itemSchemaGroup: PropTypes.instanceOf(JsonSchemaGroup).isRequired,
     selectionColumnIndex: PropTypes.number,
-    columnData: PropTypes.arrayOf(PropTypes.shape({
-        items: PropTypes.objectOf(PropTypes.instanceOf(JsonSchema)).isRequired,
-        selectedItem: PropTypes.string,
-        trailingSelection: PropTypes.bool
-    })).isRequired
+    columnData: PropTypes.arrayOf(PropTypes.shape(getColumnDataPropTypeShape(false))).isRequired
 };
 
 InspectorDetailsContent.defaultProps = {

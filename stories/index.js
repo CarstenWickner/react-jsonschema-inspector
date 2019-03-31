@@ -7,6 +7,7 @@ import {
 } from "@storybook/addon-knobs";
 
 import Inspector from "../src/component/Inspector";
+import { getFieldValueFromSchemaGroup } from "../src/model/schemaUtils";
 
 import metaSchema from "./schema-meta.json";
 import hyperMetaSchema from "./schema-hyper-meta.json";
@@ -34,8 +35,8 @@ storiesOf("Inspector", module)
                 fields: ["title", "description"]
             }}
             parserConfig={{
-                anyOf: "likeAllOf",
-                oneOf: "likeAllOf"
+                anyOf: { type: "asAdditionalColumn" },
+                oneOf: { type: "asAdditionalColumn" }
             }}
             renderEmptyDetails={({ rootColumnSchemas }) => (
                 <div style={{ padding: "0.5em 1em 0 1em" }}>
@@ -67,7 +68,6 @@ storiesOf("Inspector", module)
             breadcrumbs={{
                 prefix: knobsText("Prefix", "Selection: "),
                 separator: knobsText("Separator", "/"),
-                arrayItemAccessor: knobsText("Array Item Accessor", "[]"),
                 preventNavigation: knobsBoolean("Prevent Navigation (via double-click)", false)
             }}
             onSelect={action("onSelect")}
@@ -80,11 +80,11 @@ storiesOf("Inspector", module)
             })}
             defaultSelectedItems={["Shop", "vegetables"]}
             breadcrumbs={null}
-            renderSelectionDetails={({ itemSchema, columnData, selectionColumnIndex }) => (
+            renderSelectionDetails={({ itemSchemaGroup, columnData, selectionColumnIndex }) => (
                 <div style={{ padding: "1em", backgroundColor: "#80cbc4" }}>
                     <h3>Custom Details</h3>
                     <p>
-                        {itemSchema.description}
+                        {getFieldValueFromSchemaGroup(itemSchemaGroup, "description")}
                     </p>
                     <h4>Selection Path</h4>
                     <code>

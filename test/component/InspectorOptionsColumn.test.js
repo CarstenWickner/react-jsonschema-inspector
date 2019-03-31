@@ -1,22 +1,30 @@
 import React from "react";
 import { shallow } from "enzyme";
 
-import InspectorColumn from "../../src/component/InspectorColumn";
+import InspectorOptionsColumn from "../../src/component/InspectorOptionsColumn";
 
 import JsonSchema from "../../src/model/JsonSchema";
-import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
+import JsonSchemaAllOfGroup from "../../src/model/JsonSchemaAllOfGroup";
+import JsonSchemaOneOfGroup from "../../src/model/JsonSchemaOneOfGroup";
 
 describe("renders correctly", () => {
-    it("with minimal/default props (items)", () => {
-        const { scope } = new JsonSchema({
-            definitions: { Target: {} }
-        });
+    const parserConfig = {
+        oneOf: { type: "asAdditionalColumn" }
+    };
+    const contextGroup = new JsonSchemaAllOfGroup()
+        .with(new JsonSchema({ description: "Foobar" }))
+        .with(new JsonSchemaOneOfGroup(parserConfig)
+            .with(new JsonSchema({ title: "Foo" }))
+            .with(new JsonSchema({ title: "Bar" })));
+    const options = {
+        groupTitle: "one of",
+        options: [{}, {}]
+    };
+    it("with minimal/default props", () => {
         const component = shallow(
-            <InspectorColumn
-                items={{
-                    "Item One": new JsonSchemaGroup().with(new JsonSchema({ $id: "Schema One" }, {}, scope)),
-                    "Item Two": new JsonSchemaGroup().with(new JsonSchema({ $id: "Schema Two" }, {}, scope))
-                }}
+            <InspectorOptionsColumn
+                options={options}
+                contextGroup={contextGroup}
                 onSelect={() => { }}
             />
         );
@@ -24,13 +32,11 @@ describe("renders correctly", () => {
     });
     it("with selection", () => {
         const component = shallow(
-            <InspectorColumn
-                items={{
-                    "Item One": new JsonSchemaGroup(),
-                    "Item Two": new JsonSchemaGroup()
-                }}
+            <InspectorOptionsColumn
+                options={options}
+                contextGroup={contextGroup}
                 onSelect={() => { }}
-                selectedItem="Item Two"
+                selectedItem={[1]}
             />
         );
         expect(component.hasClass("with-selection")).toBe(true);
@@ -42,13 +48,11 @@ describe("renders correctly", () => {
     });
     it("with trailing selection", () => {
         const component = shallow(
-            <InspectorColumn
-                items={{
-                    "Item One": new JsonSchemaGroup(),
-                    "Item Two": new JsonSchemaGroup()
-                }}
+            <InspectorOptionsColumn
+                options={options}
+                contextGroup={contextGroup}
                 onSelect={() => { }}
-                selectedItem="Item Two"
+                selectedItem={[1]}
                 trailingSelection
             />
         );
@@ -61,13 +65,11 @@ describe("renders correctly", () => {
     });
     it("with filtered items", () => {
         const component = shallow(
-            <InspectorColumn
-                items={{
-                    "Item One": new JsonSchemaGroup(),
-                    "Item Two": new JsonSchemaGroup()
-                }}
+            <InspectorOptionsColumn
+                options={options}
+                contextGroup={contextGroup}
                 onSelect={() => { }}
-                filteredItems={["Item Two"]}
+                filteredItems={[[1]]}
             />
         );
         expect(component.hasClass("with-selection")).toBe(false);
@@ -78,11 +80,24 @@ describe("renders correctly", () => {
 });
 describe("calls onSelect", () => {
     const onSelect = jest.fn(() => { });
+    const parserConfig = {
+        oneOf: { type: "asAdditionalColumn" }
+    };
+    const contextGroup = new JsonSchemaAllOfGroup()
+        .with(new JsonSchema({ description: "Foobar" }, parserConfig))
+        .with(new JsonSchemaOneOfGroup(parserConfig)
+            .with(new JsonSchema({ title: "Foo" }, parserConfig))
+            .with(new JsonSchema({ title: "Bar" }, parserConfig)));
+    const options = {
+        groupTitle: "one of",
+        options: [{}, {}]
+    };
 
     it("clearing selection when clicking on column", () => {
         const component = shallow(
-            <InspectorColumn
-                items={{ Foo: new JsonSchemaGroup() }}
+            <InspectorOptionsColumn
+                options={options}
+                contextGroup={contextGroup}
                 onSelect={onSelect}
             />
         );
@@ -91,17 +106,20 @@ describe("calls onSelect", () => {
         // expect no second parameter indicating selected item
         expect(onSelect.mock.calls[0]).toHaveLength(1);
     });
-    it("setting selection when clicking on item", () => {
+    it("setting selection when clicking on option", () => {
         const component = shallow(
-            <InspectorColumn
-                items={{ Foo: new JsonSchemaGroup() }}
+            <InspectorOptionsColumn
+                options={options}
+                contextGroup={contextGroup}
                 onSelect={onSelect}
             />
         );
-        component.find("InspectorItem").prop("onSelect")({});
+        const optionItems = component.find("InspectorItem");
+        expect(optionItems).toHaveLength(2);
+        optionItems.at(0).prop("onSelect")({});
         expect(onSelect.mock.calls).toHaveLength(1);
-        // expect second parameter indicating selected item
+        // expect second parameter indicating selected option
         expect(onSelect.mock.calls[0]).toHaveLength(2);
-        expect(onSelect.mock.calls[0][1]).toEqual("Foo");
+        expect(onSelect.mock.calls[0][1]).toEqual([0]);
     });
 });

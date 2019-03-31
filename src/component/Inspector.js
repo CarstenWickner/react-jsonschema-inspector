@@ -12,10 +12,9 @@ import InspectorBreadcrumbs from "./InspectorBreadcrumbs";
 import InspectorSearchField from "./InspectorSearchField";
 import JsonSchemaPropType from "./JsonSchemaPropType";
 
-import JsonSchema from "../model/JsonSchema";
+import { createRenderDataBuilder, createFilterFunctionForColumn } from "./renderDataUtils";
 import createBreadcrumbBuilder from "../model/breadcrumbsUtils";
-import { createFilterFunction, filteringByFields } from "../model/searchUtils";
-import { isDefined, isNonEmptyObject, mapObjectValues } from "../model/utils";
+import { filteringByFields } from "../model/searchUtils";
 
 class Inspector extends Component {
     /**
@@ -23,7 +22,7 @@ class Inspector extends Component {
      * This is wrapped into memoize() to allow setting the wait times via props.
      *
      * @param {Number} debounceWait the number of milliseconds to delay before applying the new filter value
-     * @param {Number} debounceMxWait the maximum time the filter reevaluation is allowed to be delayed before it’s invoked
+     * @param {Number} debounceMxWait the maximum time the filter re-evaluation is allowed to be delayed before it's invoked
      * @returns {Function} return debounced function to set applied filter
      * @returns {String} return.value input parameter is the new search filter value to apply
      */
@@ -52,7 +51,7 @@ class Inspector extends Component {
     }
 
     /**
-     * When the entered search filter changes, store it in the component state and trigger the debounced reevaluation of the actual filtering
+     * When the entered search filter changes, store it in the component state and trigger the debounced re-evaluation of the actual filtering
      *
      * @param {String} enteredSearchFilter the newly entered search filter in its respective input field
      */
@@ -64,98 +63,34 @@ class Inspector extends Component {
     };
 
     /**
-     * Collect the data to provide as props to the sub components.
-     * Thanks to 'memoize', all this logic will only be executed again if the provided parameters changed.
-     *
-     * @param {Object.<String, Object>} schemas object containing the top-level JsonSchema definitions as values
-     * @param {Array.<Object>} referenceSchemas
-     * @param {Array.<String>} selectedItems array of strings identifying the selected properties per column
-     * @param {Object} parserConfig configuration affecting how the JSON schemas are being traversed/parsed
-     * @return {Object} return
-     * @return {Array.<Object>} return.columnData
-     * @return {Object.<String, JsonSchema>} return.columnData[].items named schemas to list in the respective column
-     * @return {String} return.columnData[].selectedItem name of the currently selected item (may be null)
-     * @return {Boolean} return.columnData[].trailingSelection flag indicating whether this column's selection is the last
-     * @return {Function} return.columnData[].onSelect callback expecting an event and the name of the selected item in that column as parameters
-     */
-    getRenderDataForSelection = memoize((schemas, referenceSchemas, selectedItems, parserConfig) => {
-        // first prepare those schemas that may be referenced by the displayed ones
-        const referenceScopes = [];
-        referenceSchemas.forEach((rawRefSchema) => {
-            const refScope = new JsonSchema(rawRefSchema, parserConfig).scope;
-            referenceScopes.forEach((otherScope) => {
-                refScope.addOtherScope(otherScope);
-                otherScope.addOtherScope(refScope);
-            });
-            referenceScopes.push(refScope);
-        });
-        // the first column always lists all top-level schemas
-        let nextColumn = mapObjectValues(schemas, (rawSchema) => {
-            const schema = new JsonSchema(rawSchema, parserConfig);
-            referenceScopes.forEach(otherScope => schema.scope.addOtherScope(otherScope));
-            return schema;
-        });
-        const columnData = selectedItems.map((selection, index) => {
-            const currentColumn = nextColumn;
-            const isValidSelection = isDefined(currentColumn[selection]);
-            nextColumn = isValidSelection ? currentColumn[selection].getProperties() : {};
-            return {
-                items: currentColumn, // mapped JsonSchema definitions to select from in this column
-                selectedItem: isValidSelection ? selection : null, // name of the selected item (i.e. key in 'items')
-                onSelect: this.onSelectInColumn(index)
-            };
-        }).filter(({ items }) => isNonEmptyObject(items));
-        // set the flag for the last column containing a valid selection
-        const columnCount = columnData.length;
-        if (columnCount) {
-            // there is at least one column, check whether the last column has a valid selection
-            const selectedItemInLastColumn = columnData[columnCount - 1].selectedItem;
-            // if the last column has no valid selection, the second to last column must have one
-            if (selectedItemInLastColumn || columnCount > 1) {
-                // there is at least one column with a valid selection, mark the column with the trailing selection as such
-                columnData[selectedItemInLastColumn ? (columnCount - 1) : (columnCount - 2)].trailingSelection = true;
-            }
-        }
-        // append last column where there is no selection yet, unless the last selected item has no nested items of its own
-        if (isNonEmptyObject(nextColumn)) {
-            columnData.push({
-                items: nextColumn,
-                onSelect: this.onSelectInColumn(selectedItems.length)
-            });
-        }
-        // wrap the result into a new object in order to make this more easily extendable in the future
-        return { columnData };
-    }, isDeepEqual);
-
-    /**
      * Create an onSelect function for a particular column.
      *
      * @param {Number} columnIndex the index of the column to create the onSelect function for
      * @returns {Function} return the onSelect function to be used in that given column (for either setting or clearing its selected item)
-     * @returns {SyntheticEvent} return.value.event the originally triggered event (e.g. onClick, onDoubleClick, onKeyDown, etc.)
-     * @returns {String} return.value.name the item to select (or `null` to discard any selection in this column -- and all subsequent ones)
+     * @returns {SyntheticEvent} return.param0.event the originally triggered event (e.g. onClick, onDoubleClick, onKeyDown, etc.)
+     * @returns {String} return.param0.selectedItem the item to select (or `null` to discard any selection in this column – and all subsequent ones)
      */
-    onSelectInColumn = columnIndex => (event, name) => {
+    onSelectInColumn = columnIndex => (event, selectedItem) => {
         // the lowest child component accepting the click/selection event should consume it
         event.stopPropagation();
         const { selectedItems, appendEmptyColumn } = this.state;
-        if (selectedItems.length === columnIndex && !name) {
+        if (selectedItems.length === columnIndex && !selectedItem) {
             // click clearing selection in next column (where there was no selection yet)
             // i.e. no change = no need for any action
             return;
         }
-        if (selectedItems.length === (columnIndex + 1) && selectedItems[columnIndex] === name) {
+        if (selectedItems.length === (columnIndex + 1) && isDeepEqual(selectedItems[columnIndex], selectedItem)) {
             // click on current/last selection
             // i.e. no change = no need for any action
             return;
         }
-        // shallow-copy array of item identifiers (i.e. strings)
+        // shallow-copy array of item identifiers
         const newSelection = selectedItems.slice();
         // discard any extraneous columns
         newSelection.length = columnIndex;
         // add the new selection in the targeted column (i.e. at the end), if a particular item was selected
-        if (name) {
-            newSelection.push(name);
+        if (selectedItem) {
+            newSelection.push(selectedItem);
         }
         // need to look-up the currently displayed number of content columns
         // thanks to 'memoize', we just look-up the result of the previous evaluation
@@ -183,6 +118,23 @@ class Inspector extends Component {
         );
     };
 
+    /**
+     * Collect the data to provide as props to the sub components.
+     * Thanks to 'memoize', all this logic will only be executed again if the provided parameters changed.
+     *
+     * @param {Object.<String, Object>} schemas object containing the top-level JsonSchema definitions as values
+     * @param {Array.<Object>} referenceSchemas
+     * @param {Array.<String>} selectedItems array of strings identifying the selected properties per column
+     * @param {Object} parserConfig configuration affecting how the JSON schemas are being traversed/parsed
+     * @return {Object} return
+     * @return {Array.<Object>} return.columnData
+     * @return {Object.<String, JsonSchema>} return.columnData[].items named schemas to list in the respective column
+     * @return {String} return.columnData[].selectedItem name of the currently selected item (may be null)
+     * @return {Boolean} return.columnData[].trailingSelection flag indicating whether this column's selection is the last
+     * @return {Function} return.columnData[].onSelect callback expecting an event and the name of the selected item in that column as parameters
+     */
+    getRenderDataForSelection = memoize(createRenderDataBuilder(this.onSelectInColumn), isDeepEqual);
+
     setFilteredItemsForColumn = memoize((searchOptions, searchFilter) => {
         if (searchOptions && searchFilter) {
             // search feature is enabled
@@ -191,10 +143,10 @@ class Inspector extends Component {
             const flatFilterFunction = filterBy ? filterBy(searchFilter) : filteringByFields(fields, searchFilter);
             if (flatFilterFunction) {
                 // search feature is being used, so we set the filteredItems accordingly
-                const getFilteredItemsForColumn = createFilterFunction(flatFilterFunction);
+                const getFilteredItemsForColumn = createFilterFunctionForColumn(flatFilterFunction);
                 return (column) => {
                     // eslint-disable-next-line no-param-reassign
-                    column.filteredItems = getFilteredItemsForColumn(column.items);
+                    column.filteredItems = getFilteredItemsForColumn(column);
                 };
             }
         }
