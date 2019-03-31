@@ -684,17 +684,15 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
         const itemSchema = { title: "Test" };
         const schema = { items: itemSchema };
         const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
-        expect(result).toBeInstanceOf(JsonSchemaGroup);
-        expect(result.entries).toHaveLength(1);
-        expect(result.entries[0].schema).toEqual(itemSchema);
+        expect(result).toBeInstanceOf(JsonSchema);
+        expect(result.schema).toEqual(itemSchema);
     });
     it("finds `additionalItems` in simple schema", () => {
         const additionalItemSchema = { description: "Value" };
         const schema = { additionalItems: additionalItemSchema };
         const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
-        expect(result).toBeInstanceOf(JsonSchemaGroup);
-        expect(result.entries).toHaveLength(1);
-        expect(result.entries[0].schema).toEqual(additionalItemSchema);
+        expect(result).toBeInstanceOf(JsonSchema);
+        expect(result.schema).toEqual(additionalItemSchema);
     });
     it("ignores boolean `additionalItems`", () => {
         const additionalItemSchema = true;
@@ -710,9 +708,8 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             additionalItems: additionalItemSchema
         };
         const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
-        expect(result).toBeInstanceOf(JsonSchemaGroup);
-        expect(result.entries).toHaveLength(1);
-        expect(result.entries[0].schema).toEqual(itemSchema);
+        expect(result).toBeInstanceOf(JsonSchema);
+        expect(result.schema).toEqual(itemSchema);
     });
     it("ignores boolean `items`", () => {
         const itemSchema = true;
@@ -722,9 +719,8 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             additionalItems: additionalItemSchema
         };
         const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
-        expect(result).toBeInstanceOf(JsonSchemaGroup);
-        expect(result.entries).toHaveLength(1);
-        expect(result.entries[0].schema).toEqual(additionalItemSchema);
+        expect(result).toBeInstanceOf(JsonSchema);
+        expect(result.schema).toEqual(additionalItemSchema);
     });
     it("ignores array of `items`", () => {
         const itemSchemaArray = [
@@ -737,9 +733,8 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             additionalItems: additionalItemSchema
         };
         const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
-        expect(result).toBeInstanceOf(JsonSchemaGroup);
-        expect(result.entries).toHaveLength(1);
-        expect(result.entries[0].schema).toEqual(additionalItemSchema);
+        expect(result).toBeInstanceOf(JsonSchema);
+        expect(result.schema).toEqual(additionalItemSchema);
     });
     it("returns null if neither `items` nor `additionalItems` are present", () => {
         const schema = {
@@ -762,9 +757,8 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             ]
         };
         const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
-        expect(result).toBeInstanceOf(JsonSchemaGroup);
-        expect(result.entries).toHaveLength(1);
-        expect(result.entries[0].schema).toEqual({ title: "foo" });
+        expect(result).toBeInstanceOf(JsonSchema);
+        expect(result.schema).toEqual({ title: "foo" });
     });
     describe.each`
         groupName
@@ -794,10 +788,8 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             ${"two-level optionTarget"}     | ${[2, 1]}     | ${{ type: "object" }}
         `("$testTitle", ({ optionIndexes, expectedResult }) => {
             const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, parserConfig)), optionIndexes);
-            expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
-            expect(result.entries).toHaveLength(1);
-            expect(result.entries[0]).toBeInstanceOf(JsonSchema);
-            expect(result.entries[0].schema).toEqual(expectedResult);
+            expect(result).toBeInstanceOf(JsonSchema);
+            expect(result.schema).toEqual(expectedResult);
         });
         it.each`
             testTitle                                                    | optionIndexes

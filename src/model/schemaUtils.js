@@ -6,6 +6,46 @@ import JsonSchemaOneOfGroup from "./JsonSchemaOneOfGroup";
 import { isNonEmptyObject, listValues, mapObjectValues } from "./utils";
 
 /**
+ * Determines optional paths in this schema group.
+ *
+ * @returns {Object} return representation of the available options on this group's top level
+ * @returns {?String} return.groupTitle optional title text to be displayed for this group's options
+ * @returns {?Array<Object>} return.options list of option representations (may contain representation of nested options)
+ */
+export function getOptionsInSchemaGroup(schemaGroup) {
+    let containedOptions;
+    if (schemaGroup.shouldBeTreatedLikeAllOf()) {
+        containedOptions = schemaGroup.entries
+            // simple schemas can be safely ignored here
+            .filter(entry => entry instanceof JsonSchemaGroup)
+            // for all groups: look-up their nested options recursively
+            .map(getOptionsInSchemaGroup)
+            // if a nested group has no options to differentiate (i.e. also has shouldBeTreatedLikeAllOf() === true), we can ignore it as well
+            .filter(({ options }) => options);
+    } else {
+        // each entry is considered an option (i.e. nothing is filtered out), groups may have some more nested options
+        containedOptions = schemaGroup.entries
+            // for all groups: look-up their nested options recursively
+            .map(entry => (entry instanceof JsonSchema ? {} : getOptionsInSchemaGroup(entry)));
+    }
+    return schemaGroup.createOptionsRepresentation(containedOptions);
+}
+
+export function getIndexPermutationsForOptions({ options }) {
+    return options.map((entry, index) => (
+        isNonEmptyObject(entry)
+            ? getIndexPermutationsForOptions(entry).map(nestedOptions => [index].concat(nestedOptions))
+            : [index]
+    )).reduce((result, nextOptions) => {
+        if (typeof nextOptions[0] === "number") {
+            result.push(nextOptions);
+            return result;
+        }
+        return result.concat(nextOptions);
+    }, []);
+}
+
+/**
  * Convert an array of indexes into an array of mutable objects (initialised with the respective index) as expected by JsonSchemaGroup methods.
  *
  * @param {?Array.<Number>|Array.<Object>} optionIndexes array of non-negative integers indicating the selected option(s) (or already result array)
@@ -130,6 +170,13 @@ function getSchemaFieldValueFromSchemaGroup(schemaGroup, fieldName, optionTarget
     return result;
 }
 
+/**
+ * Determine the type of entries within the indicated schema group representing an array, otherwise returning undefined.
+ *
+ * @param {JsonSchemaGroup} schemaGroup targeted schema group which may represent an array
+ * @param {?Array.<Number>} optionIndexes in case a group with optional branches, indexes indicating selected path
+ * @return {JsonSchema|undefined} return type of items in given schema group, if it represents an array
+ */
 export function getTypeOfArrayItemsFromSchemaGroup(schemaGroup, optionIndexes) {
     const optionTarget = createOptionTargetArrayFromIndexes(optionIndexes);
     const optionTargetCopy = JSON.parse(JSON.stringify(optionTarget));
@@ -150,7 +197,7 @@ export function getTypeOfArrayItemsFromSchemaGroup(schemaGroup, optionIndexes) {
     }
     // due to the 'listValues' mergeFunction, the array item schemas may be in an array
     // for simplicity's sake: treating this as unclean schema declaration – we just consider the first
-    return createGroupFromSchema(Array.isArray(arrayItemSchema) ? arrayItemSchema[0] : arrayItemSchema);
+    return Array.isArray(arrayItemSchema) ? arrayItemSchema[0] : arrayItemSchema;
 }
 
 function getPropertiesFromSchema(jsonSchema) {
@@ -216,30 +263,4 @@ export function getPropertiesFromSchemaGroup(schemaGroup, optionIndexes) {
         value instanceof JsonSchema ? value : new JsonSchema(value)
     ));
     return result;
-}
-
-/**
- * Determines optional paths in this schema group.
- *
- * @returns {Object} return representation of the available options on this group's top level
- * @returns {?String} return.groupTitle optional title text to be displayed for this group's options
- * @returns {?Array<Object>} return.options list of option representations (may contain representation of nested options)
- */
-export function getOptionsInSchemaGroup(schemaGroup) {
-    let containedOptions;
-    if (schemaGroup.shouldBeTreatedLikeAllOf()) {
-        containedOptions = schemaGroup.entries
-            // simple schemas can be safely ignored here
-            .filter(entry => entry instanceof JsonSchemaGroup)
-            // for all groups: look-up their nested options recursively
-            .map(getOptionsInSchemaGroup)
-            // if a nested group has no options to differentiate (i.e. also has shouldBeTreatedLikeAllOf() === true), we can ignore it as well
-            .filter(({ options }) => options);
-    } else {
-        // each entry is considered an option (i.e. nothing is filtered out), groups may have some more nested options
-        containedOptions = schemaGroup.entries
-            // for all groups: look-up their nested options recursively
-            .map(entry => (entry instanceof JsonSchema ? {} : getOptionsInSchemaGroup(entry)));
-    }
-    return schemaGroup.createOptionsRepresentation(containedOptions);
 }

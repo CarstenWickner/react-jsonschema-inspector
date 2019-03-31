@@ -87,7 +87,8 @@
         ],
         "moduleNameMapper": {
             "\\.(scss)$": "identity-obj-proxy"
-        }
+        },
+        "clearMocks": true
     },
     "bugs": {
         "url": "https://github.com/CarstenWickner/react-jsonschema-inspector/issues"
