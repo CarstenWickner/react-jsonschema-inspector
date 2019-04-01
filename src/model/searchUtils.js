@@ -122,7 +122,7 @@ export function createFilterFunctionForSchema(flatSearchFilter) {
                 return resultExcludingOptionals;
             }
         }
-        if (!includeNestedOptionals && schemaMatchResultsInclOptionals.has(jsonSchema)) {
+        if (includeNestedOptionals && schemaMatchResultsInclOptionals.has(jsonSchema)) {
             return schemaMatchResultsInclOptionals.get(jsonSchema);
         }
         return undefined;

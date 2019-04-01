@@ -113,26 +113,74 @@ describe("collectFormFields()", () => {
             }
         ]);
     });
-    it("includes `required`", () => {
-        const { columnData } = buildColumnData({
+    describe("includes `required`", () => {
+        const schemas = {
             Foo: {
                 required: ["Bar"],
                 properties: {
-                    Bar: { title: "Required Property" }
+                    Bar: {
+                        description: "Required Property",
+                        oneOf: [
+                            { title: "Qux" },
+                            { title: "Quux" }
+                        ]
+                    }
+                },
+                anyOf: [
+                    { required: ["Foobar"] },
+                    true
+                ]
+            }
+        };
+
+        it("from main schema", () => {
+            const { columnData } = buildColumnData(schemas, [], ["Foo", "Bar"], {});
+            const itemSchemaGroup = columnData[1].items.Bar;
+            expect(collectFormFields(itemSchemaGroup, columnData, 1)).toEqual([
+                {
+                    labelText: "Description",
+                    rowValue: "Required Property"
+                },
+                {
+                    labelText: "Required",
+                    rowValue: "Yes"
                 }
-            }
-        }, [], ["Foo", "Bar"], {});
-        const itemSchemaGroup = columnData[1].items.Bar;
-        expect(collectFormFields(itemSchemaGroup, columnData, 1)).toEqual([
-            {
-                labelText: "Title",
-                rowValue: "Required Property"
-            },
-            {
-                labelText: "Required",
-                rowValue: "Yes"
-            }
-        ]);
+            ]);
+        });
+        it("from optional sub schema", () => {
+            const parserConfig = {
+                oneOf: { type: "asAdditionalColumn" }
+            };
+            const { columnData } = buildColumnData(schemas, [], ["Foo", "Bar", [0]], parserConfig);
+            const itemSchemaGroup = columnData[1].items.Bar;
+            expect(collectFormFields(itemSchemaGroup, columnData, 2)).toEqual([
+                {
+                    labelText: "Title",
+                    rowValue: "Qux"
+                },
+                {
+                    labelText: "Description",
+                    rowValue: "Required Property"
+                },
+                {
+                    labelText: "Required",
+                    rowValue: "Yes"
+                }
+            ]);
+        });
+        it("from property in optional sub schema", () => {
+            const parserConfig = {
+                anyOf: { type: "asAdditionalColumn" }
+            };
+            const { columnData } = buildColumnData(schemas, [], ["Foo", [0], "Foobar"], parserConfig);
+            const itemSchemaGroup = columnData[2].items.Foobar;
+            expect(collectFormFields(itemSchemaGroup, columnData, 2)).toEqual([
+                {
+                    labelText: "Required",
+                    rowValue: "Yes"
+                }
+            ]);
+        });
     });
     it("includes `minimum` without exclusiveMinimum", () => {
         const schema = { minimum: 42 };

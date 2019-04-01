@@ -9,6 +9,30 @@ import JsonSchemaGroup from "../model/JsonSchemaGroup";
 import { createOptionTargetArrayFromIndexes, getFieldValueFromSchemaGroup } from "../model/schemaUtils";
 import { isDefined, listValues } from "../model/utils";
 
+function checkIfIsRequired(columnData, selectionColumnIndex) {
+    if (!selectionColumnIndex) {
+        return false;
+    }
+    const { selectedItem } = columnData[selectionColumnIndex];
+    const parentColumn = columnData[selectionColumnIndex - 1];
+    if (typeof selectedItem === "string") {
+        let parentSchemaGroup;
+        let optionTarget;
+        if (parentColumn.items) {
+            parentSchemaGroup = parentColumn.items[parentColumn.selectedItem];
+        } else {
+            parentSchemaGroup = parentColumn.contextGroup;
+            optionTarget = createOptionTargetArrayFromIndexes(parentColumn.selectedItem);
+        }
+        return parentSchemaGroup.someEntry(
+            ({ schema: rawSchema }) => rawSchema.required && rawSchema.required.includes(selectedItem),
+            optionTarget
+        );
+    }
+    // simply check whether the parent (the one the selected option belongs to) is required
+    return checkIfIsRequired(columnData, selectionColumnIndex - 1);
+}
+
 export const collectFormFields = (itemSchemaGroup, columnData, selectionColumnIndex) => {
     const formFields = [];
     const addFormField = (labelText, rowValue) => {
@@ -23,29 +47,7 @@ export const collectFormFields = (itemSchemaGroup, columnData, selectionColumnIn
     addFormField("Title", getValue("title"));
     addFormField("Description", getValue("description"));
 
-    let isRequired = false;
-    if (selectionColumnIndex) {
-        const parentColumn = columnData[selectionColumnIndex - 1];
-        if (typeof selectedItem === "string") {
-            let parentSchemaGroup;
-            let optionTarget;
-            if (parentColumn.items) {
-                parentSchemaGroup = parentColumn.items[parentColumn.selectedItem];
-            } else {
-                parentSchemaGroup = parentColumn.contextGroup;
-                optionTarget = createOptionTargetArrayFromIndexes(parentColumn.selectedItem);
-            }
-            isRequired = parentSchemaGroup.someEntry(
-                ({ schema: rawSchema }) => rawSchema.required && rawSchema.required.includes(selectedItem),
-                optionTarget
-            );
-        } else {
-            const { contextGroup } = columnData[selectionColumnIndex];
-            const optionTarget = createOptionTargetArrayFromIndexes(selectedItem);
-            isRequired = contextGroup.someEntry(({ required }) => required && required.includes(parentColumn.selectedItem), optionTarget);
-        }
-    }
-    addFormField("Required", isRequired ? "Yes" : null);
+    addFormField("Required", checkIfIsRequired(columnData, selectionColumnIndex) ? "Yes" : null);
 
     addFormField("Type", getValue("type"));
     addFormField("Constant Value", getValue("const"));

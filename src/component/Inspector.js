@@ -95,13 +95,13 @@ class Inspector extends Component {
         // need to look-up the currently displayed number of content columns
         // thanks to 'memoize', we just look-up the result of the previous evaluation
         const {
-            schemas, referenceSchemas, onSelect: onSelectProp, parserConfig, breadcrumbs: breadcrumbsOptions
+            schemas, referenceSchemas, onSelect: onSelectProp, parserConfig, buildArrayProperties, breadcrumbs: breadcrumbsOptions
         } = this.props;
         const oldColumnCount = (appendEmptyColumn ? 1 : 0)
-            + this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig).columnData.length;
+            + this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties).columnData.length;
         // now we need to know what the number of content columns will be after changing the state
         // thanks to 'memoize', the subsequent render() call will just look-up the result of this evaluation
-        const newRenderData = this.getRenderDataForSelection(schemas, referenceSchemas, newSelection, parserConfig);
+        const newRenderData = this.getRenderDataForSelection(schemas, referenceSchemas, newSelection, parserConfig, buildArrayProperties);
         const { columnData } = newRenderData;
         // update state to trigger re-rendering of the whole component
         this.setState(
@@ -157,12 +157,13 @@ class Inspector extends Component {
 
     render() {
         const {
-            schemas, referenceSchemas, renderItemContent, renderSelectionDetails, renderEmptyDetails, parserConfig, searchOptions, breadcrumbs
+            schemas, referenceSchemas, parserConfig, buildArrayProperties,
+            searchOptions, breadcrumbs, renderItemContent, renderSelectionDetails, renderEmptyDetails
         } = this.props;
         const {
             selectedItems, appendEmptyColumn, enteredSearchFilter, appliedSearchFilter
         } = this.state;
-        const { columnData } = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig);
+        const { columnData } = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties);
         // apply search filter if enabled or clear (potentially left-over) search results
         columnData.forEach(this.setFilteredItemsForColumn(searchOptions, appliedSearchFilter));
         const searchFeatureEnabled = searchOptions && ((searchOptions.fields && searchOptions.fields.length) || searchOptions.filterBy);
@@ -220,18 +221,18 @@ Inspector.propTypes = {
             type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"])
         })
     }),
+    buildArrayProperties: PropTypes.func,
     /**
      * Options for the breadcrumbs feature shown in the footer – set to `null` to turn it off.
      * - "prefix": Text to show in front of root level selection, e.g. "//" or "./"
      * - "separator": Text to add between the selected item names from adjacent columns, e.g. "." or "/"
-     * - "arrayItemAccessor": Text to append to an intermediary array selection to indicate selecting one of its items, e.g. "[]", "[0]", or ".get(0)"
      * - "mutateName": Function to derive the selected item's representation in the breadcrumbs from their name
      * - "preventNavigation": Flag indicating whether double-clicking an item should preserve subsequent selections, otherwise they are discarded
      */
     breadcrumbs: PropTypes.shape({
         prefix: PropTypes.string,
         separator: PropTypes.string,
-        arrayItemAccessor: PropTypes.string,
+        skipSeparator: PropTypes.func,
         mutateName: PropTypes.func,
         preventNavigation: PropTypes.bool
     }),
@@ -285,9 +286,17 @@ Inspector.propTypes = {
 Inspector.defaultProps = {
     referenceSchemas: [],
     defaultSelectedItems: [],
-    parserConfig: {},
-    breadcrumbs: {},
-    searchOptions: undefined,
+    parserConfig: {
+        oneOf: { type: "asAdditionalColumn" },
+        anyOf: { type: "asAdditionalColumn" }
+    },
+    buildArrayProperties: undefined,
+    breadcrumbs: {
+        skipSeparator: fieldName => (fieldName === "[0]")
+    },
+    searchOptions: {
+        fields: ["title", "description"]
+    },
     onSelect: undefined,
     renderItemContent: undefined,
     renderSelectionDetails: undefined,

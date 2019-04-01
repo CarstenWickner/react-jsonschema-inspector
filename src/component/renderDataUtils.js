@@ -41,7 +41,11 @@ function createRootColumnData(schemas, referenceSchemas, parserConfig) {
     return { items: rootColumnItems };
 }
 
-function buildNextColumn(schemaGroup, optionIndexes) {
+function buildDefaultArrayProperties(arrayItemSchema) {
+    return { "[0]": arrayItemSchema };
+}
+
+function buildNextColumn(schemaGroup, optionIndexes, buildArrayProperties = buildDefaultArrayProperties) {
     if (!optionIndexes) {
         const options = getOptionsInSchemaGroup(schemaGroup);
         if (options.options) {
@@ -64,17 +68,22 @@ function buildNextColumn(schemaGroup, optionIndexes) {
     const nestedArrayItemSchema = getTypeOfArrayItemsFromSchemaGroup(schemaGroup, optionIndexes);
     if (nestedArrayItemSchema) {
         // next column should allow accessing the schema of the array's items
+        const arrayProperties = mapObjectValues(
+            buildArrayProperties(nestedArrayItemSchema),
+            propertyValue => (
+                propertyValue instanceof JsonSchema ? propertyValue : new JsonSchema(propertyValue, nestedArrayItemSchema.parserConfig)
+            )
+        );
+
         return {
-            items: {
-                "[0]": createGroupFromSchema(nestedArrayItemSchema)
-            }
+            items: mapObjectValues(arrayProperties, createGroupFromSchema)
         };
     }
     return {};
 }
 
 export function createRenderDataBuilder(onSelectInColumn) {
-    return (schemas, referenceSchemas, selectedItems, parserConfig) => {
+    return (schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties) => {
         // the first column always lists all top-level schemas
         let nextColumn = createRootColumnData(schemas, referenceSchemas, parserConfig);
         let selectedSchemaGroup;
@@ -89,7 +98,7 @@ export function createRenderDataBuilder(onSelectInColumn) {
                 isValidSelection = isDefined(selectedSchemaGroup);
             }
             if (isValidSelection) {
-                nextColumn = buildNextColumn(selectedSchemaGroup, isOptionSelection ? selection : undefined);
+                nextColumn = buildNextColumn(selectedSchemaGroup, isOptionSelection ? selection : undefined, buildArrayProperties);
                 if (isOptionSelection) {
                     selectedSchemaGroup = null;
                 }

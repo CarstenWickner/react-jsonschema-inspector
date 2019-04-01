@@ -28,13 +28,15 @@ describe("createBreadcrumbBuilder()", () => {
         const buildBreadcrumb = createBreadcrumbBuilder({
             prefix: "//",
             separator: "/",
+            skipSeparator: selectedItem => (selectedItem === "without-separator"),
             mutateName: selectedItem => (selectedItem === "null" ? null : selectedItem.replace(/\s/g, "-"))
         });
         it.each`
-                type              | name          | index | expected
-                ${"simple"}       | ${"root"}     | ${0}  | ${"//root"}
-                ${"simple"}       | ${"non root"} | ${1}  | ${"/non-root"}
-                ${"skipping"}     | ${"null"}     | ${1}  | ${null}
+                type          | name                   | index | expected
+                ${"simple"}   | ${"root"}              | ${0}  | ${"//root"}
+                ${"simple"}   | ${"non root"}          | ${1}  | ${"/non-root"}
+                ${"simple"}   | ${"without separator"} | ${1}  | ${"without-separator"}
+                ${"skipping"} | ${"null"}              | ${1}  | ${null}
             `("$type $name item", ({ name, index, expected }) => {
             const column = {
                 items: { [name]: simpleSchema },

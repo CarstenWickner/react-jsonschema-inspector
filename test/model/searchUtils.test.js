@@ -284,10 +284,10 @@ describe("createFilterFunctionForSchema()", () => {
             const rawSchema = {
                 title: "Match",
                 properties: {
-                    "I-One": { $ref: "#/definitions/One" },
-                    "I-Two": { $ref: "#/definitions/Two" },
-                    "I-Three": { $ref: "#/definitions/Three" },
-                    "I-Four": { $ref: "#/definitions/Four" }
+                    "Array of Main Schema": { $ref: "#/definitions/One" },
+                    "OneOf with Main Schema as Property in Option": { $ref: "#/definitions/Two" },
+                    "AnyOf with Main Schema as Option": { $ref: "#/definitions/Three" },
+                    "AnyOf with OneOf as Option, which has Main Schema as Property": { $ref: "#/definitions/Four" }
                 },
                 definitions: {
                     One: {
@@ -319,20 +319,26 @@ describe("createFilterFunctionForSchema()", () => {
             };
 
             it.each`
-                parserConfigDescription         | parserConfig                            | result
-                ${"empty parserConfig"}         | ${{}}                                   | ${[true, false, false, false]}
-                ${"oneOf 'likeAllOf'"}          | ${{ oneOf: likeAllOf }}                 | ${[true, true, false, false]}
-                ${"oneOf 'asAdditionalColumn'"} | ${{ oneOf: asColumn }}                  | ${[true, true, false, false]}
-                ${"anyOf 'likeAllOf'"}          | ${{ anyOf: likeAllOf }}                 | ${[true, false, true, false]}
-                ${"anyOf 'likeAllOf'"}          | ${{ anyOf: asColumn }}                  | ${[true, false, true, false]}
-                ${"oneOf and anyOf"}            | ${{ oneOf: asColumn, anyOf: asColumn }} | ${[true, true, true, true]}
-            `("with $parserConfigDescription", ({ parserConfig, result }) => {
+                parserConfigDescription         | parserConfig                            | resultIncluding | resultExcluding
+                ${"empty parserConfig"}         | ${{}}                                   | ${[1, 0, 0, 0]} | ${[1, 0, 0, 0]}
+                ${"oneOf 'likeAllOf'"}          | ${{ oneOf: likeAllOf }}                 | ${[1, 1, 0, 0]} | ${[1, 1, 0, 0]}
+                ${"oneOf 'asAdditionalColumn'"} | ${{ oneOf: asColumn }}                  | ${[1, 1, 0, 0]} | ${[1, 0, 0, 0]}
+                ${"anyOf 'likeAllOf'"}          | ${{ anyOf: likeAllOf }}                 | ${[1, 0, 1, 0]} | ${[1, 0, 1, 0]}
+                ${"anyOf 'asAdditionalColumn'"} | ${{ anyOf: asColumn }}                  | ${[1, 0, 1, 0]} | ${[1, 0, 0, 0]}
+                ${"oneOf and anyOf"}            | ${{ oneOf: asColumn, anyOf: asColumn }} | ${[1, 1, 1, 1]} | ${[1, 0, 0, 0]}
+            `("with $parserConfigDescription", ({ parserConfig, resultIncluding, resultExcluding }) => {
                 const { scope } = new JsonSchema(rawSchema, parserConfig);
                 const filterFunction = createFilterFunctionForSchema(rawSubSchema => rawSubSchema.title === "Match", parserConfig);
-                expect(filterFunction(scope.find("#/definitions/One"), true)).toBe(result[0]);
-                expect(filterFunction(scope.find("#/definitions/Two"), true)).toBe(result[1]);
-                expect(filterFunction(scope.find("#/definitions/Three"), true)).toBe(result[2]);
-                expect(filterFunction(scope.find("#/definitions/Four"), true)).toBe(result[3]);
+
+                expect(filterFunction(scope.find("#/definitions/One"), true)).toBe(!!resultIncluding[0]);
+                expect(filterFunction(scope.find("#/definitions/Two"), true)).toBe(!!resultIncluding[1]);
+                expect(filterFunction(scope.find("#/definitions/Three"), true)).toBe(!!resultIncluding[2]);
+                expect(filterFunction(scope.find("#/definitions/Four"), true)).toBe(!!resultIncluding[3]);
+
+                expect(filterFunction(scope.find("#/definitions/One"), false)).toBe(!!resultExcluding[0]);
+                expect(filterFunction(scope.find("#/definitions/Two"), false)).toBe(!!resultExcluding[1]);
+                expect(filterFunction(scope.find("#/definitions/Three"), false)).toBe(!!resultExcluding[2]);
+                expect(filterFunction(scope.find("#/definitions/Four"), false)).toBe(!!resultExcluding[3]);
             });
         });
     });

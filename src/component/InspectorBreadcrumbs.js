@@ -43,6 +43,7 @@ InspectorBreadcrumbs.propTypes = {
     breadcrumbsOptions: PropTypes.shape({
         prefix: PropTypes.string,
         separator: PropTypes.string,
+        skipSeparator: PropTypes.func,
         mutateName: PropTypes.func,
         preventNavigation: PropTypes.bool
     }).isRequired

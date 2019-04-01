@@ -2,121 +2,76 @@ import React from "react";
 import { shallow } from "enzyme";
 
 import InspectorDetails from "../../src/component/InspectorDetails";
-import JsonSchema from "../../src/model/JsonSchema";
-import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
+import { createRenderDataBuilder } from "../../src/component/renderDataUtils";
 
 describe("renders correctly", () => {
+    const buildColumnData = createRenderDataBuilder(() => () => { });
     it("with minimal/default props", () => {
+        const { columnData } = buildColumnData({
+            Foo: {
+                title: "Bar",
+                description: "Foobar"
+            }
+        }, [], ["Foo"], {});
         const component = shallow(
             <InspectorDetails
-                columnData={[
-                    {
-                        items: {
-                            "Schema One": new JsonSchemaGroup().with(new JsonSchema({
-                                title: "Schema Title",
-                                description: "Text"
-                            }))
-                        },
-                        selectedItem: "Schema One",
-                        trailingSelection: true
-                    }
-                ]}
+                columnData={columnData}
             />
         );
         expect(component).toMatchSnapshot();
     });
-    it("with empty columnData", () => {
-        const component = shallow(
-            <InspectorDetails
-                columnData={[]}
-            />
-        );
-        expect(component.children().exists()).toBe(false);
-    });
-    it("with empty columnData and custom renderEmptyDetails", () => {
-        const component = shallow(
-            <InspectorDetails
-                columnData={[]}
-                renderEmptyDetails={({ rootColumnSchemas }) => (
-                    <span className="custom-empty-details">{Object.keys(rootColumnSchemas).length}</span>
-                )}
-            />
-        );
-        expect(component.find(".custom-empty-details").text()).toBe("0");
-    });
-    it("with no selection", () => {
-        const component = shallow(
-            <InspectorDetails
-                columnData={[
-                    {
-                        items: {
-                            "Schema One": new JsonSchemaGroup().with(new JsonSchema({
-                                title: "Schema Title",
-                                description: "Text"
-                            }))
-                        }
-                    }
-                ]}
-            />
-        );
-        expect(component.children().exists()).toBe(false);
-    });
-    it("with no selection and custom renderEmptyDetails", () => {
-        const component = shallow(
-            <InspectorDetails
-                columnData={[
-                    {
-                        items: {
-                            "Schema One": new JsonSchemaGroup().with(new JsonSchema({
-                                title: "Schema Title",
-                                description: "Text"
-                            }))
-                        }
-                    }
-                ]}
-                renderEmptyDetails={({ rootColumnSchemas }) => (
-                    <span className="custom-empty-details">{Object.keys(rootColumnSchemas).length}</span>
-                )}
-            />
-        );
-        expect(component.find(".custom-empty-details").text()).toBe("1");
-    });
-    it("with root array selection", () => {
-        const schema = new JsonSchema({
-            title: "Schema Title",
-            items: { $ref: "#/definitions/itemSchema" },
-            definitions: {
-                itemSchema: {
-                    description: "Array Item",
-                    type: "object"
-                }
-            }
+    describe("with empty columnData", () => {
+        it("shows nothing by default", () => {
+            const component = shallow(
+                <InspectorDetails
+                    columnData={[]}
+                />
+            );
+            expect(component.children().exists()).toBe(false);
         });
-        const columnData = [
-            {
-                items: {
-                    "Schema One": new JsonSchemaGroup().with(schema)
-                },
-                selectedItem: "Schema One",
-                trailingSelection: true
-            }
-        ];
-        const component = shallow(
-            <InspectorDetails
-                columnData={columnData}
-                selectionColumnIndex={0}
-            />
-        );
-        const {
-            columnData: contentColumnDataProp, itemSchemaGroup, selectionColumnIndex
-        } = component.find("InspectorDetailsContent").props();
-        expect(contentColumnDataProp).toEqual(columnData);
-        expect(itemSchemaGroup.entries[0]).toEqual(schema);
-        expect(selectionColumnIndex).toEqual(0);
+        it("applies custom renderEmptyDetails", () => {
+            const component = shallow(
+                <InspectorDetails
+                    columnData={[]}
+                    renderEmptyDetails={({ rootColumnSchemas }) => (
+                        <span className="custom-empty-details">{Object.keys(rootColumnSchemas).length}</span>
+                    )}
+                />
+            );
+            expect(component.find(".custom-empty-details").text()).toBe("0");
+        });
     });
-    it("with root array selection and custom renderSelectionDetails", () => {
-        const mainSchema = {
-            title: "Schema Title",
+    describe("with no selection", () => {
+        const { columnData } = buildColumnData({
+            Foo: {
+                title: "Bar",
+                description: "Foobar"
+            }
+        }, [], [], {});
+
+        it("shows nothing by default", () => {
+            const component = shallow(
+                <InspectorDetails
+                    columnData={columnData}
+                />
+            );
+            expect(component.children().exists()).toBe(false);
+        });
+        it("applies custom renderEmptyDetails", () => {
+            const component = shallow(
+                <InspectorDetails
+                    columnData={columnData}
+                    renderEmptyDetails={({ rootColumnSchemas }) => (
+                        <span className="custom-empty-details">{Object.keys(rootColumnSchemas).length}</span>
+                    )}
+                />
+            );
+            expect(component.find(".custom-empty-details").text()).toBe("1");
+        });
+    });
+    describe("with array item selection", () => {
+        const schema = {
+            title: "Bar",
             items: { $ref: "#/definitions/itemSchema" },
             definitions: {
                 itemSchema: {
@@ -125,29 +80,86 @@ describe("renders correctly", () => {
                 }
             }
         };
-        const columnDataProp = [
-            {
-                items: {
-                    "Schema One": new JsonSchemaGroup().with(new JsonSchema(mainSchema))
-                },
-                selectedItem: "Schema One",
-                trailingSelection: true
-            }
-        ];
-        const renderSelectionDetails = jest.fn(() => (<span className="custom-selection-details" />));
-        const component = shallow(
-            <InspectorDetails
-                columnData={columnDataProp}
-                renderSelectionDetails={renderSelectionDetails}
-            />
-        );
-        expect(component.exists(".custom-selection-details")).toBe(true);
-        expect(renderSelectionDetails.mock.calls).toHaveLength(1);
-        const {
-            itemSchemaGroup, columnData, selectionColumnIndex
-        } = renderSelectionDetails.mock.calls[0][0];
-        expect(itemSchemaGroup).toEqual(columnDataProp[0].items["Schema One"]);
-        expect(columnData).toEqual(columnDataProp);
-        expect(selectionColumnIndex).toBe(0);
+        const { columnData: columnDataProp } = buildColumnData({ Foo: schema }, [], ["Foo", "[0]"], {});
+
+        it("show InspectorDetailsContent by default", () => {
+            const component = shallow(
+                <InspectorDetails
+                    columnData={columnDataProp}
+                />
+            );
+            const {
+                columnData, itemSchemaGroup, selectionColumnIndex
+            } = component.find("InspectorDetailsContent").props();
+            expect(columnData).toEqual(columnDataProp);
+            expect(itemSchemaGroup).toEqual(columnDataProp[1].items["[0]"]);
+            expect(selectionColumnIndex).toEqual(1);
+        });
+        it("applies custom renderSelectionDetails", () => {
+            const renderSelectionDetails = jest.fn(() => (<span className="custom-selection-details" />));
+            const component = shallow(
+                <InspectorDetails
+                    columnData={columnDataProp}
+                    renderSelectionDetails={renderSelectionDetails}
+                />
+            );
+            expect(component.exists(".custom-selection-details")).toBe(true);
+            expect(renderSelectionDetails.mock.calls).toHaveLength(1);
+            const {
+                columnData, itemSchemaGroup, selectionColumnIndex
+            } = renderSelectionDetails.mock.calls[0][0];
+            expect(columnData).toEqual(columnDataProp);
+            expect(itemSchemaGroup).toEqual(columnDataProp[1].items["[0]"]);
+            expect(selectionColumnIndex).toBe(1);
+        });
+    });
+    describe("with option selection", () => {
+        const subSchema = {
+            title: "Sub Title"
+        };
+        const schema = {
+            title: "Bar",
+            oneOf: [
+                subSchema,
+                {
+                    description: "Sub Description"
+                }
+            ]
+        };
+        const parserConfig = {
+            oneOf: { type: "asAdditionalColumn" }
+        };
+        const { columnData: columnDataProp } = buildColumnData({ Foo: schema }, [], ["Foo", [0]], parserConfig);
+
+        it("show InspectorDetailsContent by default", () => {
+            const component = shallow(
+                <InspectorDetails
+                    columnData={columnDataProp}
+                />
+            );
+            const {
+                columnData, itemSchemaGroup, selectionColumnIndex
+            } = component.find("InspectorDetailsContent").props();
+            expect(columnData).toEqual(columnDataProp);
+            expect(itemSchemaGroup.entries[0].schema).toEqual(schema);
+            expect(selectionColumnIndex).toEqual(1);
+        });
+        it("applies custom renderSelectionDetails", () => {
+            const renderSelectionDetails = jest.fn(() => (<span className="custom-selection-details" />));
+            const component = shallow(
+                <InspectorDetails
+                    columnData={columnDataProp}
+                    renderSelectionDetails={renderSelectionDetails}
+                />
+            );
+            expect(component.exists(".custom-selection-details")).toBe(true);
+            expect(renderSelectionDetails.mock.calls).toHaveLength(1);
+            const {
+                columnData, itemSchemaGroup, selectionColumnIndex
+            } = renderSelectionDetails.mock.calls[0][0];
+            expect(columnData).toEqual(columnDataProp);
+            expect(itemSchemaGroup.entries[0].schema).toEqual(schema);
+            expect(selectionColumnIndex).toBe(1);
+        });
     });
 });

@@ -1,5 +1,6 @@
 import {
-    createGroupFromSchema, getFieldValueFromSchemaGroup, getOptionsInSchemaGroup, getPropertiesFromSchemaGroup, getTypeOfArrayItemsFromSchemaGroup
+    createGroupFromSchema, getIndexPermutationsForOptions, getOptionsInSchemaGroup,
+    getFieldValueFromSchemaGroup, getPropertiesFromSchemaGroup, getTypeOfArrayItemsFromSchemaGroup
 } from "../../src/model/schemaUtils";
 
 import JsonSchema from "../../src/model/JsonSchema";
@@ -201,6 +202,34 @@ describe("createGroupFromSchema()", () => {
         const schema = { $ref: "#/definitions/baz" };
         expect(() => createGroupFromSchema(new JsonSchema(schema, {}, scope)))
             .toThrowError("Cannot resolve $ref: \"#/definitions/baz\"");
+    });
+});
+describe("getIndexPermutationsForOptions()", () => {
+    it("collects permutations from options object", () => {
+        const input = {
+            options: [
+                {},
+                {
+                    options: [
+                        {
+                            options: [
+                                {},
+                                {}
+                            ]
+                        },
+                        {}
+                    ]
+                },
+                {}
+            ]
+        };
+        expect(getIndexPermutationsForOptions(input)).toEqual([
+            [0],
+            [1, 0, 0],
+            [1, 0, 1],
+            [1, 1],
+            [2]
+        ]);
     });
 });
 describe("getPropertiesFromSchemaGroup()", () => {

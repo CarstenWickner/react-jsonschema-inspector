@@ -9,13 +9,13 @@ exports[`renders correctly with minimal/default props 1`] = `
       Array [
         Object {
           "items": Object {
-            "Schema One": JsonSchemaGroup {
+            "Foo": JsonSchemaAllOfGroup {
               "entries": Array [
                 JsonSchema {
-                  "parserConfig": undefined,
+                  "parserConfig": Object {},
                   "schema": Object {
-                    "description": "Text",
-                    "title": "Schema Title",
+                    "description": "Foobar",
+                    "title": "Bar",
                   },
                   "scope": RefScope {
                     "externalRefs": Map {},
@@ -28,19 +28,20 @@ exports[`renders correctly with minimal/default props 1`] = `
               ],
             },
           },
-          "selectedItem": "Schema One",
+          "onSelect": [Function],
+          "selectedItem": "Foo",
           "trailingSelection": true,
         },
       ]
     }
     itemSchemaGroup={
-      JsonSchemaGroup {
+      JsonSchemaAllOfGroup {
         "entries": Array [
           JsonSchema {
-            "parserConfig": undefined,
+            "parserConfig": Object {},
             "schema": Object {
-              "description": "Text",
-              "title": "Schema Title",
+              "description": "Foobar",
+              "title": "Bar",
             },
             "scope": RefScope {
               "externalRefs": Map {},

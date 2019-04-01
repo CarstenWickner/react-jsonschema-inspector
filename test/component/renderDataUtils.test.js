@@ -203,7 +203,12 @@ describe("createRenderDataBuilder()", () => {
             expect(thirdColumn.trailingSelection).toBeFalsy();
         });
         it("allows for arrays in arrays", () => {
-            const { columnData } = getRenderData(schemas, [], ["foobar", "[0]", "[0]", "qux"], {});
+            const arraySizeSchema = { type: "number" };
+            const buildArrayItemProperties = arrayItemSchemaGroup => ({
+                "get(0)": arrayItemSchemaGroup,
+                "size()": arraySizeSchema
+            });
+            const { columnData } = getRenderData(schemas, [], ["foobar", "get(0)", "get(0)", "qux"], {}, buildArrayItemProperties);
             expect(columnData).toHaveLength(4);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(2);
@@ -211,24 +216,26 @@ describe("createRenderDataBuilder()", () => {
             expect(rootColumn.selectedItem).toBe("foobar");
             expect(rootColumn.trailingSelection).toBeFalsy();
             const secondColumn = columnData[1];
-            expect(Object.keys(secondColumn.items)).toHaveLength(1);
-            expect(secondColumn.items["[0]"]).toBeInstanceOf(JsonSchemaGroup);
-            expect(secondColumn.items["[0]"].entries).toHaveLength(1);
-            expect(secondColumn.items["[0]"].entries[0]).toBeInstanceOf(JsonSchema);
-            expect(secondColumn.items["[0]"].entries[0].schema).toEqual(barSchema);
+            expect(Object.keys(secondColumn.items)).toHaveLength(2);
+            expect(secondColumn.items["get(0)"]).toBeInstanceOf(JsonSchemaGroup);
+            expect(secondColumn.items["get(0)"].entries).toHaveLength(1);
+            expect(secondColumn.items["get(0)"].entries[0]).toBeInstanceOf(JsonSchema);
+            expect(secondColumn.items["get(0)"].entries[0].schema).toEqual(barSchema);
+            expect(secondColumn.items["size()"]).toBeInstanceOf(JsonSchemaGroup);
+            expect(secondColumn.items["size()"].entries).toHaveLength(1);
+            expect(secondColumn.items["size()"].entries[0]).toBeInstanceOf(JsonSchema);
+            expect(secondColumn.items["size()"].entries[0].schema).toEqual(arraySizeSchema);
             expect(secondColumn.options).toBeUndefined();
             expect(secondColumn.contextGroup).toBeUndefined();
             expect(secondColumn.onSelect).toBeDefined();
             expect(secondColumn.onSelect()).toBe(1);
-            expect(secondColumn.selectedItem).toBe("[0]");
+            expect(secondColumn.selectedItem).toBe("get(0)");
             expect(secondColumn.trailingSelection).toBeFalsy();
             const thirdColumn = columnData[2];
-            expect(Object.keys(thirdColumn.items)).toHaveLength(1);
-            expect(thirdColumn.items["[0]"]).toBeInstanceOf(JsonSchemaGroup);
-            expect(thirdColumn.items["[0]"].entries).toHaveLength(1);
-            expect(thirdColumn.items["[0]"].entries[0]).toBeInstanceOf(JsonSchema);
-            expect(thirdColumn.items["[0]"].entries[0].schema).toEqual(fooSchema);
-            expect(thirdColumn.selectedItem).toBe("[0]");
+            expect(Object.keys(thirdColumn.items)).toHaveLength(2);
+            expect(thirdColumn.items["get(0)"].entries[0].schema).toEqual(fooSchema);
+            expect(thirdColumn.items["size()"].entries[0].schema).toEqual(arraySizeSchema);
+            expect(thirdColumn.selectedItem).toBe("get(0)");
             expect(thirdColumn.trailingSelection).toBeFalsy();
             const fourthColumn = columnData[3];
             expect(Object.keys(fourthColumn.items)).toHaveLength(1);
