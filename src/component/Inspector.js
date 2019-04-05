@@ -22,7 +22,7 @@ class Inspector extends Component {
      * This is wrapped into memoize() to allow setting the wait times via props.
      *
      * @param {Number} debounceWait the number of milliseconds to delay before applying the new filter value
-     * @param {Number} debounceMxWait the maximum time the filter re-evaluation is allowed to be delayed before it's invoked
+     * @param {Number} debounceMaxWait the maximum time the filter re-evaluation is allowed to be delayed before it's invoked
      * @returns {Function} return debounced function to set applied filter
      * @returns {String} return.value input parameter is the new search filter value to apply
      */
@@ -66,7 +66,7 @@ class Inspector extends Component {
      * Create an onSelect function for a particular column.
      *
      * @param {Number} columnIndex the index of the column to create the onSelect function for
-     * @returns {Function} return the onSelect function to be used in that given column (for either setting or clearing its selected item)
+     * @returns {Function} return the onSelect function to be used in that given column (for either setting or clearing its selection)
      * @returns {SyntheticEvent} return.param0.event the originally triggered event (e.g. onClick, onDoubleClick, onKeyDown, etc.)
      * @returns {String} return.param0.selectedItem the item to select (or `null` to discard any selection in this column – and all subsequent ones)
      */
@@ -123,18 +123,33 @@ class Inspector extends Component {
      * Thanks to 'memoize', all this logic will only be executed again if the provided parameters changed.
      *
      * @param {Object.<String, Object>} schemas object containing the top-level JsonSchema definitions as values
-     * @param {Array.<Object>} referenceSchemas
-     * @param {Array.<String>} selectedItems array of strings identifying the selected properties per column
-     * @param {Object} parserConfig configuration affecting how the JSON schemas are being traversed/parsed
-     * @return {Object} return
+     * @param {?Array.<Object>} referenceSchemas
+     * @param {?Array.<String>} selectedItems array of strings identifying the selected properties per column
+     * @param {?Object} parserConfig configuration affecting how the JSON schemas are being traversed/parsed
+     * @param {?Function} buildArrayProperties function to derive the properties to list for an array, based on a given `JsonSchema` of the items
+     * @return {Object} return wrapper object for the column data (for the sake of future extensibility)
      * @return {Array.<Object>} return.columnData
-     * @return {Object.<String, JsonSchema>} return.columnData[].items named schemas to list in the respective column
-     * @return {String} return.columnData[].selectedItem name of the currently selected item (may be null)
-     * @return {Boolean} return.columnData[].trailingSelection flag indicating whether this column's selection is the last
+     * @return {?Object.<String, JsonSchemaGroup>} return.columnData[].items named schemas to list in the respective column
+     * @return {?Object} return.columnData[].options representation of a schema's hierarchy in case of optionals being included `"asAdditionalColumn"`
+     * @return {?JsonSchemaGroup} return.columnData[].contextGroup the schema group containing the `options`
+     * @return {?String} return.columnData[].selectedItem name of the currently selected item (may be null)
+     * @return {?Boolean} return.columnData[].trailingSelection flag indicating whether this column's selection is the last
      * @return {Function} return.columnData[].onSelect callback expecting an event and the name of the selected item in that column as parameters
      */
     getRenderDataForSelection = memoize(createRenderDataBuilder(this.onSelectInColumn), isDeepEqual);
 
+    /**
+     * Provide setter for a single entry in the standard columnData array to set or clear its list of `filteredItems` according to the given
+     * `searchOptions` (prop) and entered `searchFilter` value (from search input field).
+     * Thanks to 'memoize', exactly one set of previous search results will be preserved if the options and filter value are unchanged.
+     *
+     * @param {?Object} searchOptions
+     * @param {?Function} searchOptions.filterBy custom filter function to apply (expecting the `searchFilter` as input)
+     * @param {?Array.<String>} searchOptions.fields alternative to `filterBy`, generating a filter function checking the listed fields' contents
+     * @param {?String} searchFilter entered value from the search input field to filter by
+     * @return {Function} return function to apply for setting/clearing the `filteredItems` in an entry of the 'columnData' array
+     * @return {Object} return.param0 entry of the 'columnData' array to set/clear the `filteredItems` in
+     */
     setFilteredItemsForColumn = memoize((searchOptions, searchFilter) => {
         if (searchOptions && searchFilter) {
             // search feature is enabled
@@ -204,28 +219,45 @@ class Inspector extends Component {
 }
 
 Inspector.propTypes = {
-    /** Object containing names of root level items (as keys) each associated with their respective JSON Schema (as values). */
+    /**
+     * Object containing names of root level items (as keys) each associated with their respective JSON Schema (as values).
+     */
     schemas: PropTypes.objectOf(JsonSchemaPropType).isRequired,
-    /** Array of additional JSON Schemas that may be referenced by entries in `schemas` but are not shown (on the root level) themselves. */
+    /**
+     * Array of additional JSON Schemas that may be referenced by entries in `schemas` but are not shown (on the root level) themselves.
+     */
     referenceSchemas: PropTypes.arrayOf(JsonSchemaPropType),
-    /** Array of (default) selected items – each item representing the selection in one displayed column. */
-    defaultSelectedItems: PropTypes.arrayOf(PropTypes.string),
-    /** Options for the traversing/parsing of JSON schemas. Enabling the inclusion of optional part of a schema. */
+    /**
+     * Array of (default) selected items – each item representing the selection in one displayed column.
+     */
+    defaultSelectedItems: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.number)])),
+    /**
+     * Options for the traversing/parsing of JSON schemas. Enabling the inclusion of optional part of a schema.
+     */
     parserConfig: PropTypes.shape({
-        /** Setting indicating whether to include schema parts wrapped in "anyOf". */
+        /**
+         * Setting indicating whether/how to include schema parts wrapped in "anyOf".
+         */
         anyOf: PropTypes.shape({
-            type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"])
+            type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"]).isRequired
         }),
-        /** Setting indicating whether to include schema parts wrapped in "oneOf". */
+        /**
+         * Setting indicating whether/how to include schema parts wrapped in "oneOf".
+         */
         oneOf: PropTypes.shape({
-            type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"])
+            type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"]).isRequired
         })
     }),
+    /**
+     * Function accepting a `JsonSchema` instance representing an array's declared type of items and returning an object listing the available
+     * properties to offer. The default, providing access to the array's items, is: `arrayItemSchema => ({ "[0]": arrayItemSchema })`
+     */
     buildArrayProperties: PropTypes.func,
     /**
      * Options for the breadcrumbs feature shown in the footer – set to `null` to turn it off.
      * - "prefix": Text to show in front of root level selection, e.g. "//" or "./"
      * - "separator": Text to add between the selected item names from adjacent columns, e.g. "." or "/"
+     * - "skipSeparator": Function to identify breadcrumb names that should not be prepended with a "separator"
      * - "mutateName": Function to derive the selected item's representation in the breadcrumbs from their name
      * - "preventNavigation": Flag indicating whether double-clicking an item should preserve subsequent selections, otherwise they are discarded
      */
@@ -261,16 +293,16 @@ Inspector.propTypes = {
     /**
      * Custom render function for the content of a single item in a column.
      * Expects a single object as input with the following keys:
-     * - "name": providing the name of the respective item
+     * - "identifier": providing the name of the respective item
      * - "hasNestedItems": flag indicating whether selecting this item may display another column with further options to the right
      * - "selected": flag indicating whether the item is currently selected
-     * - "schema": the full `JsonSchema` associated with the item
+     * - "schemaGroup": the full `JsonSchemaGroup` associated with the item
      */
     renderItemContent: PropTypes.func,
     /**
      * Custom render function for the details block on the right (only used if there is an actual selection).
      * Expects a single object as input with the following keys:
-     * - "itemSchema": the full `JsonSchema` associated with the currently selected trailing item (i.e. right-most selection)
+     * - "itemSchemaGroup": the full `JsonSchemaGroup` associated with the currently selected trailing item (i.e. right-most selection)
      * - "columnData": the full render information for all columns
      * - "selectionColumnIndex": indicating the index of the right-most column containing a selected item (for more convenient use of "columnData")
      */
@@ -290,7 +322,7 @@ Inspector.defaultProps = {
         oneOf: { type: "asAdditionalColumn" },
         anyOf: { type: "asAdditionalColumn" }
     },
-    buildArrayProperties: undefined,
+    buildArrayProperties: arrayItemSchema => ({ "[0]": arrayItemSchema }),
     breadcrumbs: {
         skipSeparator: fieldName => (fieldName === "[0]")
     },

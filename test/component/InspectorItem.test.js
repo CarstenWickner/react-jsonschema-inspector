@@ -28,7 +28,8 @@ describe("renders correctly", () => {
         const schemaGroup = new JsonSchemaOneOfGroup(parserConfig)
             .with(new JsonSchema({
                 properties: { foo: true }
-            }, parserConfig)).with(new JsonSchema({
+            }, parserConfig))
+            .with(new JsonSchema({
                 title: "bar"
             }, parserConfig));
         const component = shallow(

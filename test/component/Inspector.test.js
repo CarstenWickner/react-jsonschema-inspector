@@ -10,8 +10,8 @@ describe("renders correctly", () => {
             properties: {
                 "Item One": {},
                 "Item Two": {
-                    properties: {
-                        "Property One": {}
+                    items: {
+                        title: "Item in Array"
                     }
                 }
             }
@@ -178,7 +178,7 @@ describe("renders correctly", () => {
         expect(columnData[1].selectedItem).toBe(selectedItem);
         expect(columnData[1].trailingSelection).toBe(true);
         expect(typeof columnData[1].onSelect).toBe("function");
-        expect(Object.keys(columnData[2].items)).toEqual(["Property One"]);
+        expect(Object.keys(columnData[2].items)).toEqual(["[0]"]);
         expect(typeof columnData[2].onSelect).toBe("function");
     });
     it("ignores invalid root selection", () => {

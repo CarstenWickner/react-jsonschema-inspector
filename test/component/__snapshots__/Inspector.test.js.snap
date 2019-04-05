@@ -37,8 +37,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "properties": Object {
                         "Item One": Object {},
                         "Item Two": Object {
-                          "properties": Object {
-                            "Property One": Object {},
+                          "items": Object {
+                            "title": "Item in Array",
                           },
                         },
                       },
@@ -699,8 +699,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "properties": Object {
                         "Item One": Object {},
                         "Item Two": Object {
-                          "properties": Object {
-                            "Property One": Object {},
+                          "items": Object {
+                            "title": "Item in Array",
                           },
                         },
                       },
@@ -1371,8 +1371,8 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "properties": Object {
                         "Item One": Object {},
                         "Item Two": Object {
-                          "properties": Object {
-                            "Property One": Object {},
+                          "items": Object {
+                            "title": "Item in Array",
                           },
                         },
                       },

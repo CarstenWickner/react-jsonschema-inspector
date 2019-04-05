@@ -3,17 +3,13 @@ import React from "react";
 import classNames from "classnames";
 
 import JsonSchemaGroup from "../model/JsonSchemaGroup";
-import {
-    getOptionsInSchemaGroup, getPropertiesFromSchemaGroup, getTypeOfArrayItemsFromSchemaGroup
-} from "../model/schemaUtils";
-import { isDefined, isNonEmptyObject } from "../model/utils";
+import { hasSchemaGroupNestedItems } from "./renderDataUtils";
+import { isDefined } from "../model/utils";
 
 const InspectorItem = ({
     identifier, schemaGroup, optionIndexes, selected, matchesFilter, onSelect, renderContent
 }) => {
-    const hasNestedItems = isNonEmptyObject(getPropertiesFromSchemaGroup(schemaGroup, optionIndexes))
-        || getTypeOfArrayItemsFromSchemaGroup(schemaGroup, optionIndexes)
-        || (!optionIndexes && getOptionsInSchemaGroup(schemaGroup).options);
+    const hasNestedItems = hasSchemaGroupNestedItems(schemaGroup, optionIndexes);
     return (
         <button
             type="button"
