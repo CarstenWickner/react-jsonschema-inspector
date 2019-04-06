@@ -5,20 +5,27 @@ import InspectorOptionsColumn from "../../src/component/InspectorOptionsColumn";
 
 import JsonSchema from "../../src/model/JsonSchema";
 import JsonSchemaAllOfGroup from "../../src/model/JsonSchemaAllOfGroup";
+import JsonSchemaAnyOfGroup from "../../src/model/JsonSchemaAnyOfGroup";
 import JsonSchemaOneOfGroup from "../../src/model/JsonSchemaOneOfGroup";
 
 describe("renders correctly", () => {
     const parserConfig = {
+        anyOf: { type: "asAdditionalColumn" },
         oneOf: { type: "asAdditionalColumn" }
     };
     const contextGroup = new JsonSchemaAllOfGroup()
         .with(new JsonSchema({ description: "Foobar" }))
         .with(new JsonSchemaOneOfGroup(parserConfig)
             .with(new JsonSchema({ title: "Foo" }))
-            .with(new JsonSchema({ title: "Bar" })));
+            .with(new JsonSchemaAnyOfGroup(parserConfig)
+                .with(new JsonSchema({ title: "Bar" }))
+                .with(new JsonSchema({ description: "Baz" }))));
     const options = {
         groupTitle: "one of",
-        options: [{}, {}]
+        options: [{}, {
+            groupTitle: "any of",
+            options: [{}, {}]
+        }]
     };
     it("with minimal/default props", () => {
         const component = shallow(
@@ -36,15 +43,17 @@ describe("renders correctly", () => {
                 options={options}
                 contextGroup={contextGroup}
                 onSelect={() => { }}
-                selectedItem={[1]}
+                selectedItem={[1, 0]}
             />
         );
         expect(component.hasClass("with-selection")).toBe(true);
         expect(component.hasClass("trailing-selection")).toBe(false);
         expect(component.find("InspectorItem").at(0).prop("selected")).toBe(false);
         expect(component.find("InspectorItem").at(1).prop("selected")).toBe(true);
+        expect(component.find("InspectorItem").at(2).prop("selected")).toBe(false);
         expect(component.find("InspectorItem").at(0).prop("matchesFilter")).toBeUndefined();
         expect(component.find("InspectorItem").at(1).prop("matchesFilter")).toBeUndefined();
+        expect(component.find("InspectorItem").at(2).prop("matchesFilter")).toBeUndefined();
     });
     it("with trailing selection", () => {
         const component = shallow(
@@ -52,16 +61,18 @@ describe("renders correctly", () => {
                 options={options}
                 contextGroup={contextGroup}
                 onSelect={() => { }}
-                selectedItem={[1]}
+                selectedItem={[0]}
                 trailingSelection
             />
         );
         expect(component.hasClass("with-selection")).toBe(true);
         expect(component.hasClass("trailing-selection")).toBe(true);
-        expect(component.find("InspectorItem").at(0).prop("selected")).toBe(false);
-        expect(component.find("InspectorItem").at(1).prop("selected")).toBe(true);
+        expect(component.find("InspectorItem").at(0).prop("selected")).toBe(true);
+        expect(component.find("InspectorItem").at(1).prop("selected")).toBe(false);
+        expect(component.find("InspectorItem").at(2).prop("selected")).toBe(false);
         expect(component.find("InspectorItem").at(0).prop("matchesFilter")).toBeUndefined();
         expect(component.find("InspectorItem").at(1).prop("matchesFilter")).toBeUndefined();
+        expect(component.find("InspectorItem").at(2).prop("matchesFilter")).toBeUndefined();
     });
     it("with filtered items", () => {
         const component = shallow(
@@ -69,13 +80,14 @@ describe("renders correctly", () => {
                 options={options}
                 contextGroup={contextGroup}
                 onSelect={() => { }}
-                filteredItems={[[1]]}
+                filteredItems={[[1, 1]]}
             />
         );
         expect(component.hasClass("with-selection")).toBe(false);
         expect(component.hasClass("trailing-selection")).toBe(false);
         expect(component.find("InspectorItem").at(0).prop("matchesFilter")).toBe(false);
-        expect(component.find("InspectorItem").at(1).prop("matchesFilter")).toBe(true);
+        expect(component.find("InspectorItem").at(1).prop("matchesFilter")).toBe(false);
+        expect(component.find("InspectorItem").at(2).prop("matchesFilter")).toBe(true);
     });
 });
 describe("calls onSelect", () => {

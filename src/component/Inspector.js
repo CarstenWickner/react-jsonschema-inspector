@@ -239,13 +239,15 @@ Inspector.propTypes = {
          * Setting indicating whether/how to include schema parts wrapped in "anyOf".
          */
         anyOf: PropTypes.shape({
-            type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"]).isRequired
+            type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"]).isRequired,
+            groupTitle: PropTypes.string
         }),
         /**
          * Setting indicating whether/how to include schema parts wrapped in "oneOf".
          */
         oneOf: PropTypes.shape({
-            type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"]).isRequired
+            type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"]).isRequired,
+            groupTitle: PropTypes.string
         })
     }),
     /**

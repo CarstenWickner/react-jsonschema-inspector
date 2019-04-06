@@ -87,7 +87,7 @@ storiesOf("Inspector", module)
                         {getFieldValueFromSchemaGroup(itemSchemaGroup, "description")}
                     </p>
                     <h4>Selection Path</h4>
-                    <code>
+                    <code style={{ wordBreak: "break-word" }}>
                         {`//${columnData
                             .filter((_column, index) => index <= selectionColumnIndex)
                             .map(column => column.selectedItem)
@@ -130,7 +130,7 @@ storiesOf("Inspector", module)
             defaultSelectedItems={["Person", "friends", "friends"]}
             searchOptions={{
                 fields: knobsArray("Search Fields", ["title", "description"]),
-                inputPlaceholder: knobsText("Input Placeholder", "Find in 'Title' or 'Description'…")
+                inputPlaceholder: knobsText("Input Placeholder", "Find in Title or Description…")
             }}
             onSelect={action("onSelect")}
         />

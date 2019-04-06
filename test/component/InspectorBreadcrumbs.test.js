@@ -88,7 +88,7 @@ describe("renders correctly", () => {
             expect(component.text()).toEqual("$this->foo->[0]->bar");
         });
     });
-    it("ignores option selection", () => {
+    describe("with option selection", () => {
         const parserConfig = {
             oneOf: { type: "asAdditionalColumn" }
         };
@@ -102,15 +102,35 @@ describe("renders correctly", () => {
                 }
             ]
         };
-        const { columnData } = buildColumnData({ foo: schema }, [], ["foo", [1], "baz"], parserConfig);
-        const component = shallow(
-            <InspectorBreadcrumbs
-                columnData={columnData}
-                breadcrumbsOptions={{}}
-            />
-        );
-        expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
-        expect(component.text()).toEqual("foo.baz");
+
+        it("is skipping option selection", () => {
+            const { columnData } = buildColumnData({ foo: schema }, [], ["foo", [1], "baz"], parserConfig);
+            const component = shallow(
+                <InspectorBreadcrumbs
+                    columnData={columnData}
+                    breadcrumbsOptions={{}}
+                />
+            );
+            expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
+            expect(component.text()).toEqual("foo.baz");
+        });
+        it.each`
+            testTitle                                                                      | optionIndexes | hasNestedItems
+            ${"indicates on previous breadcrumb when selected option has no nested items"} | ${[0]}        | ${false}
+            ${"indicates on previous breadcrumb when selected option has nested property"} | ${[1]}        | ${true}
+        `("$testTitle", ({ optionIndexes, hasNestedItems }) => {
+            const { columnData } = buildColumnData({ foo: schema }, [], ["foo", optionIndexes], parserConfig);
+            const component = shallow(
+                <InspectorBreadcrumbs
+                    columnData={columnData}
+                    breadcrumbsOptions={{}}
+                />
+            );
+            const singleItem = component.find(".jsonschema-inspector-breadcrumbs-item");
+            expect(singleItem).toHaveLength(1);
+            expect(singleItem.hasClass("has-nested-items")).toBe(hasNestedItems);
+            expect(component.text()).toEqual("foo");
+        });
     });
     it("with navigation by default", () => {
         const { columnData } = buildColumnData({ foo: {} }, [], ["foo"], {});

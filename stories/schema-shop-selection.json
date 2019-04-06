@@ -2,13 +2,45 @@
     "description": "A representation of a shop's inventory.",
     "type": "object",
     "properties": {
-        "vegetables": {
+        "inventory": {
             "type": "array",
-            "description": "List of available vegetables.",
+            "description": "List of available items.",
             "items": {
-                "allOf": [{
+                "oneOf": [
+                    {
+                        "$ref": "#/definitions/fruit"
+                    },
+                    {
+                        "$ref": "#/definitions/vegetable"
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "fruit": {
+            "type": "object",
+            "required": [
+                "fruitName"
+            ],
+            "properties": {
+                "fruitName": {
+                    "type": "string",
+                    "description": "The name of the fruit."
+                },
+                "fruitLike": {
+                    "type": "boolean",
+                    "description": "Do I like this fruit?"
+                }
+            }
+        },
+        "vegetable": {
+            "allOf": [
+                {
                     "type": "object",
-                    "required": ["veggieName"],
+                    "required": [
+                        "veggieName"
+                    ],
                     "properties": {
                         "veggieName": {
                             "type": "string",
@@ -17,16 +49,32 @@
                     }
                 },
                 {
-                    "type": "object",
-                    "required": ["veggieLike"],
-                    "properties": {
-                        "veggieLike": {
-                            "type": "boolean",
-                            "description": "Do I like this vegetable?"
+                    "anyOf": [
+                        {
+                            "type": "object",
+                            "required": [
+                                "veggieLike"
+                            ],
+                            "properties": {
+                                "veggieLike": {
+                                    "type": "boolean",
+                                    "description": "Do I like this vegetable?"
+                                }
+                            }
+                        },
+                        {
+                            "properties": {
+                                "relatedVegetables": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/vegetable"
+                                    }
+                                }
+                            }
                         }
-                    }
-                }]
-            }
+                    ]
+                }
+            ]
         }
     }
 }

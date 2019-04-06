@@ -1,43 +1,76 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { Component } from "react";
 import classNames from "classnames";
 import isDeepEqual from "lodash.isequal";
 
 import InspectorItem from "./InspectorItem";
 import { getColumnDataPropTypeShape } from "./renderDataUtils";
 
-import { getIndexPermutationsForOptions } from "../model/schemaUtils";
+class InspectorOptionsColumn extends Component {
+    renderSingleOption(optionIndexes) {
+        const {
+            contextGroup, selectedItem, filteredItems, renderItemContent, onSelect
+        } = this.props;
+        return (
+            <InspectorItem
+                identifier={`Option ${optionIndexes.map(index => index + 1).join("-")}`}
+                schemaGroup={contextGroup}
+                optionIndexes={optionIndexes}
+                selected={isDeepEqual(optionIndexes, selectedItem)}
+                matchesFilter={filteredItems ? filteredItems.some(filteredOption => isDeepEqual(filteredOption, optionIndexes)) : undefined}
+                onSelect={event => onSelect(event, optionIndexes)}
+                renderContent={renderItemContent}
+            />
+        )
+    }
 
-const InspectorOptionsColumn = (props) => {
-    const {
-        options, contextGroup, selectedItem, filteredItems, trailingSelection, renderItemContent, onSelect
-    } = props;
-    return (
-        <div
-            className={classNames({
-                "jsonschema-inspector-column": true,
-                "with-selection": selectedItem,
-                "trailing-selection": trailingSelection
-            })}
-            onClick={onSelect}
-            role="presentation"
-            tabIndex={-1}
-        >
-            {getIndexPermutationsForOptions(options).map(optionIndexes => (
-                <InspectorItem
-                    key={JSON.stringify(optionIndexes)}
-                    identifier={`Option ${1 + optionIndexes[optionIndexes.length - 1]}`}
-                    schemaGroup={contextGroup}
-                    optionIndexes={optionIndexes}
-                    selected={isDeepEqual(optionIndexes, selectedItem)}
-                    matchesFilter={filteredItems ? filteredItems.some(filteredOption => isDeepEqual(filteredOption, optionIndexes)) : undefined}
-                    onSelect={event => onSelect(event, optionIndexes)}
-                    renderContent={renderItemContent}
-                />
-            ))}
-        </div>
-    );
-};
+    renderGroupOfOptions({ groupTitle, options }, parentOptionIndexes = []) {
+        return [
+            groupTitle && (
+                <span
+                    key="group-title"
+                    className="optional-group-title"
+                >
+                    {groupTitle}
+                </span>
+            ),
+            (
+                <ul key="list-of-options">
+                    {options.map((optionOrNestedGroup, index) => {
+                        const optionIndexes = parentOptionIndexes.concat([index]);
+                        return (
+                            <li key={JSON.stringify(optionIndexes)}>
+                                {optionOrNestedGroup.options && this.renderGroupOfOptions(optionOrNestedGroup, optionIndexes)}
+                                {!optionOrNestedGroup.options && this.renderSingleOption(optionIndexes)}
+                            </li>
+                        );
+                    })}
+                </ul>
+            )
+        ];
+    }
+
+    render() {
+        const {
+            options, selectedItem, trailingSelection, onSelect
+        } = this.props;
+        return (
+            <div
+                className={classNames({
+                    "jsonschema-inspector-column": true,
+                    "optional-groups": true,
+                    "with-selection": selectedItem,
+                    "trailing-selection": trailingSelection
+                })}
+                onClick={onSelect}
+                role="presentation"
+                tabIndex={-1}
+            >
+                {this.renderGroupOfOptions(options)}
+            </div>
+        );
+    }
+}
 
 const columnDataPropTypeShape = getColumnDataPropTypeShape(false);
 InspectorOptionsColumn.propTypes = {

@@ -39,8 +39,10 @@ npm i react-jsonschema-inspector
 | `parserConfig` | Object: enabling the inclusion/exclusion of optional parts of a JSON Schema – both for the inclusion of properties and their attributes as well as in the search. |
 | `parserConfig.anyOf` | Object: enabling the inclusion/exclusion of JSON Schema parts wrapped in `anyOf`. |
 | `parserConfig.anyOf.type` | String: can be `"likeAllOf"` or `"asAdditionalColumn"`. |
+| `parserConfig.anyOf.groupTitle` | String: alternative title to show in option selection column (only relevant if `type: "asAdditionalColumn"`) – defaults to `"any of"` |
 | `parserConfig.oneOf` | Object: enabling the inclusion/exclusion of JSON Schema parts wrapped in `oneOf`. |
 | `parserConfig.oneOf.type` | String: can be `"likeAllOf"` or `"asAdditionalColumn"`. |
+| `parserConfig.oneOf.groupTitle` | String: alternative title to show in option selection column (only relevant if `type: "asAdditionalColumn"`) – defaults to `"one of"` |
 | `breadcrumbs` | Object: enabling the definition of options for the breadcrumbs feature in the footer (can be disabled by setting to `null`) |
 | `breadcrumbs.prefix` | String: to be shown in front of the root selection (e.g. "//" or "./") – defaults to `""` |
 | `breadcrumbs.separator` | String: to be shown in front of any non-root selection (e.g. "/") – defaults to `"."` |

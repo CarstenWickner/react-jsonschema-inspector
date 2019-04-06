@@ -18,9 +18,11 @@ const InspectorBreadcrumbs = ({ columnData, breadcrumbsOptions }) => {
                     // omit empty breadcrumb
                     return null;
                 }
+                const hasNestedItems = index < (columnData.length - 2)
+                    || (index === (columnData.length - 2) && (!columnData[columnData.length - 1].options || !columnData[columnData.length - 1].selectedItem));
                 const className = classNames({
                     "jsonschema-inspector-breadcrumbs-item": true,
-                    "has-nested-items": index < (columnData.length - 1)
+                    "has-nested-items": hasNestedItems
                 });
                 const { selectedItem, onSelect } = column;
                 return (

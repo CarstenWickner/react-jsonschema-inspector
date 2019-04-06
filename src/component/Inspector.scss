@@ -15,6 +15,8 @@
     $outerBorder: 1px solid $outerBorderColor;
 
     $verticalSpacingOutside: 0.25em;
+    $verticalItemSpacingInside: 0.25em;
+    $leadItemSpacingInside: 0.75em;
     $spacingInside: 0.5em;
     $borderRadius: 0.25em;
 
@@ -48,6 +50,31 @@
         &-placeholder {
             opacity: 0;
         }
+        .optional-group-title {
+            display: block;
+            padding: $verticalItemSpacingInside $spacingInside $verticalItemSpacingInside $leadItemSpacingInside;
+            font-style: italic;
+        }
+        &.optional-groups ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+
+            ul {
+                background-color: $innerBorderColor;
+            }
+            ul,
+            .jsonschema-inspector-item {
+                padding-left: $leadItemSpacingInside;
+            }
+            ul .optional-group-title,
+            ul .jsonschema-inspector-item {
+                background-color: $backgroundColor;
+            }
+            .optional-group-title {
+                padding-left: (2 * $leadItemSpacingInside);
+            }
+        }
     }
     &-item {
         flex-shrink: 0;
@@ -58,6 +85,7 @@
         font: inherit;
         padding: 0;
         margin: 0;
+        width: 100%;
 
         &.selected {
             background-color: $selectionColor;
@@ -75,7 +103,7 @@
         &-name {
             display: block;
             flex-grow: 1;
-            padding: 0.25em 0.5em 0.25em 0.75em;
+            padding: $verticalItemSpacingInside $spacingInside $verticalItemSpacingInside $leadItemSpacingInside;
         }
         &-icon {
             display: block;
@@ -172,19 +200,19 @@
         }
         &-item {
             background-color: $selectionColor;
-            margin-right: -0.5em;
+            margin-right: -0.75em;
             padding: 0 0.25em 0 1.25em;
             line-height: 2em;
             text-overflow: ellipsis;
 
             &.has-nested-items {
                 padding-right: 1em;
-                -webkit-clip-path: polygon(0% 0%, calc(100% - 1em) 0%, 100% 50%, calc(100% - 1em) 100%, 0% 100%, 1em 50%);
-                clip-path: polygon(0% 0%, calc(100% - 1em) 0%, 100% 50%, calc(100% - 1em) 100%, 0% 100%, 1em 50%);
+                -webkit-clip-path: polygon(0% 5%, calc(100% - 1em) 5%, 100% 50%, calc(100% - 1em) 95%, 0% 95%, 1em 50%);
+                clip-path: polygon(0% 5%, calc(100% - 1em) 5%, 100% 50%, calc(100% - 1em) 95%, 0% 95%, 1em 50%);
             }
             &:not(.has-nested-items) {
-                -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 1em 50%);
-                clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 1em 50%);
+                -webkit-clip-path: polygon(0% 5%, 100% 5%, 100% 95%, 0% 95%, 1em 50%);
+                clip-path: polygon(0% 5%, 100% 5%, 100% 95%, 0% 95%, 1em 50%);
             }
         }
     }
