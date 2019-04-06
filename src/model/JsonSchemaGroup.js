@@ -9,6 +9,12 @@ export default class JsonSchemaGroup {
      */
     entries = [];
 
+    /**
+     * Indicate whether the entries of this group should be treated as if they were all defined in a single schema.
+     * Otherwise, all entries shall be listed as alternative options to choose from.
+     *
+     * @return {Boolean} return whether entries should be included transparently (otherwise as options)
+     */
     shouldBeTreatedLikeAllOf() {
         return this.entries.filter(entry => entry instanceof JsonSchemaGroup && !entry.shouldBeTreatedLikeAllOf()).length < 2;
     }
@@ -29,6 +35,17 @@ export default class JsonSchemaGroup {
         return this;
     }
 
+    /**
+     * Iterate through the parts of this schema group until the given predicate `checkEntry` returns 'true' for one.
+     *
+     * @param {Function} checkEntry predicate to invoke for each schema part until 'true' is returned
+     * @param {JsonSchema} checkEntry.param0 single plain schema to check (potentially ignoring any nested `allOf`/`oneOf`/`anyOf`)
+     * @param {Boolean} checkEntry.param1 whether nested `allOf`/`oneOf`/`anyOf` may be included in the check
+     * @param {Boolean} checkEntry.return whether the predicate's condition was fulfilled
+     * @param {?Array.<Object>} optionTarget array of mutable objects indicating which optional schema parts to consider (ignoring all others)
+     * @param {Object} optionTarget[] mutable object indicating which optional schema part to consider in a single group, that is not `likeAllOf`
+     * @param {Number} optionTarget[].index mutable index, a value of `0` marks the optional schema part to be considered
+     */
     someEntry(checkEntry, optionTarget) {
         const treatLikeAllOf = this.shouldBeTreatedLikeAllOf();
         return this.entries.some((entry) => {
@@ -45,11 +62,13 @@ export default class JsonSchemaGroup {
                 }
             }
             if (entry instanceof JsonSchemaGroup) {
+                // recursively check all parts of this nested group
                 return entry.someEntry(
                     checkEntry,
                     (treatLikeAllOf || !optionTarget) ? optionTarget : optionTarget.slice(1)
                 );
             }
+            // entry is a JsonSchema, invoke the given checkEntry function and return its result
             return checkEntry(entry, !optionTarget || !optionTarget.length);
         });
     }

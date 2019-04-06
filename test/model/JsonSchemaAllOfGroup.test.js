@@ -58,7 +58,7 @@ describe("with()", () => {
         expect(returnedGroup).toBe(targetGroup);
         expect(targetGroup.entries).toEqual([entryOne, entryTwo]);
     });
-    it("adds nested entries of given JsonSchemaGroup (with shouldBeTreatedLikeAllOf() === true) 's to this group's entries", () => {
+    it("adds nested entries of given JsonSchemaGroup (with shouldBeTreatedLikeAllOf() === true) to this group's entries", () => {
         const nestedEntryOne = new JsonSchema();
         const nestedEntryTwo = new JsonSchema();
         const singleNestedEntryThree = new JsonSchema();
