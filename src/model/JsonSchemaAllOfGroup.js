@@ -1,14 +1,13 @@
-/* eslint-disable class-methods-use-this */
 import JsonSchemaGroup from "./JsonSchemaGroup";
 
 /**
- * Representation of an "allOf" element in a Json Schema.
+ * Representation of an `allOf` element in a Json Schema.
  */
 export default class JsonSchemaAllOfGroup extends JsonSchemaGroup {
     /**
      * Extension of method from super class for adding a given Json Schema or group to this group.
      *
-     * @param {JsonSchema|JsonSchemaGroup} schemaOrGroup entry to add to this group
+     * @param {JsonSchema|JsonSchemaGroup} schemaOrGroup - entry to add to this group
      * @returns {JsonSchemaAllOfGroup} this (i.e. self-reference for chaining)
      */
     with(schemaOrGroup) {

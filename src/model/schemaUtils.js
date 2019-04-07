@@ -8,9 +8,8 @@ import { isNonEmptyObject, listValues, mapObjectValues } from "./utils";
 /**
  * Determines optional paths in this schema group.
  *
- * @returns {Object} return representation of the available options on this group's top level
- * @returns {?String} return.groupTitle optional title text to be displayed for this group's options
- * @returns {?Array<Object>} return.options list of option representations (may contain representation of nested options)
+ * @param {JsonSchemaGroup} schemaGroup - schema group for which optional paths should be determined
+ * @returns {{groupTitle: ?string, options: ?Array.<Object>}} representation of the available options on this group's top level
  */
 export function getOptionsInSchemaGroup(schemaGroup) {
     let containedOptions;
@@ -34,10 +33,9 @@ export function getOptionsInSchemaGroup(schemaGroup) {
 /**
  * Determine all possible `optionIndexes` for accessing a single option in the given input.
  *
- * @param {Object} param0 representation of the hierarchical structure of options in a schema group
- * @param {Array.<Object>} param0.options nested options (that may have further nested options of their own)
- * @param {?Array.<Object>} param0.options[].options further nested options
- * @return {Array.<Array<Number>>} return all possible `optionIndexes` for the given input
+ * @param {Object} param0 - representation of the hierarchical structure of options in a schema group
+ * @param {Array.<Object>} param0.options - nested options (that may have further nested options of their own)
+ * @returns {Array.<Array<number>>} all possible `optionIndexes` for the given input
  */
 export function getIndexPermutationsForOptions({ options }) {
     const recursivelyCollectOptionIndexes = (entry, index) => (
@@ -59,9 +57,8 @@ export function getIndexPermutationsForOptions({ options }) {
 /**
  * Convert an array of indexes into an array of mutable objects (initialised with the respective index) as expected by JsonSchemaGroup methods.
  *
- * @param {?Array.<Number>|Array.<Object>} optionIndexes array of non-negative integers indicating the selected option(s) (or already result array)
- * @returns {Array.<Object>} return array of mutable objects containing the given index values
- * @returns {Number} return[].index respective (initial) index value as provided in input array
+ * @param {?Array.<number>|Array.<{index: number}>} optionIndexes - non-negative indexes of selected option(s); or already result array
+ * @returns {?Array.<{index: number}>} array of mutable objects containing the given index values
  */
 export function createOptionTargetArrayFromIndexes(optionIndexes = []) {
     if (Array.isArray(optionIndexes) && optionIndexes.length && typeof optionIndexes[0] === "number") {
@@ -73,12 +70,11 @@ export function createOptionTargetArrayFromIndexes(optionIndexes = []) {
 /**
  * Helper function to create a group class for the respective raw grouping in this schema.
  *
- * @param {Function} GroupClass constructor reference to the group to create
- * @param {Function} GroupClass.param0 constructor reference to JsonSchema (to avoid circular dependencies)
- * @param {?Object} GroupClass.param1 parserConfig object being forwarded to group (not necessarily expected by all groups)
- * @param {JsonSchema} param1 context JsonSchema in which to create the schema group (providing the applicable `parserConfig` and `scope`)
- * @param {Array.<JsonSchema>} rawSchemaArray grouped raw schema definitions to represent
- * @return {JsonSchemaGroup} return created group
+ * @param {Function} GroupClass - constructor reference to the group to create
+ * @param {?Object} GroupClass.param0 - `parserConfig` object being forwarded to group (not necessarily expected by all groups)
+ * @param {JsonSchema} param1 - context JsonSchema in which to create the schema group (providing the applicable `parserConfig` and `scope`)
+ * @param {Array.<JsonSchema>} rawSchemaArray - grouped raw schema definitions to represent
+ * @returns {JsonSchemaGroup} created group
  */
 function createGroupFromRawSchemaArray(GroupClass, { parserConfig, scope }, rawSchemaArray) {
     // create group representation
@@ -102,7 +98,7 @@ function createGroupFromRawSchemaArray(GroupClass, { parserConfig, scope }, rawS
  * BEWARE: if a schema consists of multiple sub-schemas and only one of them defines an "items" field, the other sibling schemas
  * will still be included in the result list - they are just assumed to not have any relevant fields we are looking for.
  *
- * @param {JsonSchema} schema single JsonSchema for which to create the equivalent JsonSchemaGroup
+ * @param {JsonSchema} schema - single JsonSchema for which to create the equivalent JsonSchemaGroup
  * @returns {JsonSchemaAllOfGroup} group of sub-schemas that may define properties about their children
  */
 export function createGroupFromSchema(schema) {
@@ -132,13 +128,13 @@ export function createGroupFromSchema(schema) {
  * Look-up of the value associated with a specific kind of field in the given JsonSchema.
  * If the targeted schema represents an array, the sub-schemas of its "items" will be ignored.
  *
- * @param {JsonSchema} schema single schema to extract a certain field's value from
- * @param {String} fieldName name/key of the field to look-up
- * @param {?Function} mappingFunction converting the raw value
- * @param {?*} mappingFunction.param0 raw value retrieved from raw Json Schema
- * @param {?Object} mappingFunction.param1 parserConfig from given 'schema'
- * @param {?RefScope} mappingFunction.param2 scope from given 'schema'
- * @return {*} return looked-up field value (possibly changed by 'mappingFunction'
+ * @param {JsonSchema} schema - single schema to extract a certain field's value from
+ * @param {string} fieldName - name/key of the field to look-up
+ * @param {?Function} mappingFunction - converting the raw value
+ * @param {?*} mappingFunction.param0 - raw value retrieved from raw Json Schema
+ * @param {?Object} mappingFunction.param1 - parserConfig from given 'schema'
+ * @param {?RefScope} mappingFunction.param2 - scope from given 'schema'
+ * @returns {*} return looked-up field value (possibly changed by 'mappingFunction'
  */
 function getFieldValueFromSchema(schema, fieldName, mappingFunction) {
     const { schema: rawSchema } = schema;
@@ -153,18 +149,19 @@ function getFieldValueFromSchema(schema, fieldName, mappingFunction) {
 /**
  * Extract value(s) from a certain field from all schema parts of the given schema group.
  *
- * @param {JsonSchemaGroup} schemaGroup schema group to extract a certain field's value(s) from
- * @param {String} fieldName name/key of the field to look-up
- * @param {?Function} mergeValues function to be used in `Array.reduce()` to combine extracted values from multiple JsonSchemas
- * @param {*} mergeValues.param0 combined values
- * @param {*} mergeValues.param1 single value to add to the already combined values
- * @param {*} mergeValues.return combined values including additional single value
- * @param {*} defaultValue initial value of mergeValues.param0 on first execution
- * @param {?*} mappingFunction.param0 raw value retrieved from raw Json Schema
- * @param {?Object} mappingFunction.param1 parserConfig from given 'schema'
- * @param {?RefScope} mappingFunction.param2 scope from given 'schema'
- * @param {?Array.<Number>} optionIndexes indexes representing the selection path to a particular option (if there are options in the given group)
- * @return {*} return merged result of all encountered values in schema parts in the given group
+ * @param {JsonSchemaGroup} schemaGroup - schema group to extract a certain field's value(s) from
+ * @param {string} fieldName - name/key of the field to look-up
+ * @param {?Function} mergeValues - function to be used in `Array.reduce()` to combine extracted values from multiple JsonSchemas
+ * @param {*} mergeValues.param0 - combined values
+ * @param {*} mergeValues.param1 - single value to add to the already combined values
+ * @param {*} mergeValues.return - combined values including additional single value
+ * @param {*} defaultValue - initial value of mergeValues.param0 on first execution
+ * @param {?Function} mappingFunction - function to mutate single looked-up value
+ * @param {?*} mappingFunction.param0 - raw value retrieved from raw Json Schema
+ * @param {?Object} mappingFunction.param1 - parserConfig from given 'schema'
+ * @param {?RefScope} mappingFunction.param2 - scope from given 'schema'
+ * @param {?Array.<number>} optionIndexes - indexes representing the selection path to a particular option (if there are options in the given group)
+ * @returns {*} merged result of all encountered values in schema parts in the given group
  */
 export function getFieldValueFromSchemaGroup(schemaGroup, fieldName, mergeValues = listValues, defaultValue, mappingFunction, optionIndexes) {
     const result = schemaGroup.extractValues(
@@ -179,10 +176,10 @@ export function getFieldValueFromSchemaGroup(schemaGroup, fieldName, mergeValues
 /**
  * If the given raw schema is a non-empty object, wrap it into a JsonSchema – otherwise return 'undefined'.
  *
- * @param {?Object} rawSchema the JSON Schema to represent
- * @param {?Object} parserConfig configuration affecting how the JSON schema is being traversed/parsed
- * @param {?RefScope} scope collection of available $ref targets
- * @return {JsonSchema|undefined} return successfully created JsonSchema or 'undefined'
+ * @param {?Object} rawSchema - the JSON Schema to represent
+ * @param {?Object} parserConfig - configuration affecting how the JSON schema is being traversed/parsed
+ * @param {?RefScope} scope - collection of available $ref targets
+ * @returns {?JsonSchema} successfully created JsonSchema or 'undefined'
  */
 function createJsonSchemaIfNotEmpty(rawSchema, parserConfig, scope) {
     return isNonEmptyObject(rawSchema) ? new JsonSchema(rawSchema, parserConfig, scope) : undefined;
@@ -191,10 +188,10 @@ function createJsonSchemaIfNotEmpty(rawSchema, parserConfig, scope) {
 /**
  * Convenience function for calling `getFieldValueFromSchemaGroup()` when expecting the field's value to be a schema (part) of its own.
  *
- * @param {JsonSchemaGroup} schemaGroup schema group to extract a certain field's value(s) from
- * @param {String} fieldName name/key of the field to look-up
- * @param {?Array.<Number>} optionIndexes indexes representing the selection path to a particular option (if there are options in the given group)
- * @return {JsonSchema|Array.<JsonSchema>|undefined} return all encountered values in schema parts in the given group, each as a JsonSchema
+ * @param {JsonSchemaGroup} schemaGroup - schema group to extract a certain field's value(s) from
+ * @param {string} fieldName - name/key of the field to look-up
+ * @param {?Array.<{index: number}>} optionTarget - array of mutable objects containing index values to selected option(s)
+ * @returns {JsonSchema|Array.<JsonSchema>|undefined} all encountered values in schema parts in the given group, each as a JsonSchema
  */
 function getSchemaFieldValueFromSchemaGroup(schemaGroup, fieldName, optionTarget) {
     const result = getFieldValueFromSchemaGroup(
@@ -211,9 +208,9 @@ function getSchemaFieldValueFromSchemaGroup(schemaGroup, fieldName, optionTarget
 /**
  * Determine the type of entries within the indicated schema group representing an array, otherwise returning undefined.
  *
- * @param {JsonSchemaGroup} schemaGroup targeted schema group which may represent an array
- * @param {?Array.<Number>} optionIndexes in case a group with optional branches, indexes indicating selected path
- * @return {JsonSchema|undefined} return type of items in given schema group, if it represents an array
+ * @param {JsonSchemaGroup} schemaGroup - targeted schema group which may represent an array
+ * @param {?Array.<number>} optionIndexes - in case a group with optional branches, indexes indicating selected path
+ * @returns {?JsonSchema} type of items in given schema group, if it represents an array
  */
 export function getTypeOfArrayItemsFromSchemaGroup(schemaGroup, optionIndexes) {
     const optionTarget = createOptionTargetArrayFromIndexes(optionIndexes);
@@ -241,8 +238,8 @@ export function getTypeOfArrayItemsFromSchemaGroup(schemaGroup, optionIndexes) {
 /**
  * Collect all mentioned properties with their associated schema definitions (if available) from a given JsonSchema.
  *
- * @param {JsonSchema} schema targeted schema to collect properties from (ignoring any nested `allOf`/`anyOf`/`oneOf`)
- * @return {Object.<String, JsonSchema|Boolean|Object} collected properties, still including 'true' or ' {}' where no more details are available
+ * @param {JsonSchema} schema - targeted schema to collect properties from (ignoring any nested `allOf`/`anyOf`/`oneOf`)
+ * @returns {Object.<string, JsonSchema|boolean|Object>} collected properties, still including 'true' or ' {}' where no more details are available
  */
 function getPropertiesFromSchema(schema) {
     const { schema: rawSchema, parserConfig, scope } = schema;
@@ -264,8 +261,8 @@ function getPropertiesFromSchema(schema) {
 /**
  * Generic function to be used in Array.reduce() - assuming objects are being merged.
  *
- * @param {?Object} combined temporary result of previous reduce steps
- * @param {?Object} nextValue single value to merge with "combined"
+ * @param {?Object} combined - temporary result of previous reduce steps
+ * @param {?Object} nextValue - single value to merge with "combined"
  * @returns {?Object} merged values
  */
 function mergeSchemas(combined, nextValue) {
@@ -289,9 +286,9 @@ function mergeSchemas(combined, nextValue) {
 /**
  * Extract the properties mentioned in this schema group.
  *
- * @param {?Array.<Number>} optionIndexes array of (relative) index
- * @param {Number} optionTarget[].index counter that should be decreased for each passed optional sub-schema; the option at 0 is deemed selected
- * @returns {Object.<String, JsonSchema>} collection of all properties mentioned in this schema
+ * @param {JsonSchemaGroup} schemaGroup - schema group from which to retrieve properties
+ * @param {?Array.<number>} optionIndexes - indexes of selected option(s)
+ * @returns {Object.<string, JsonSchema>} collection of all properties mentioned in this schema
  */
 export function getPropertiesFromSchemaGroup(schemaGroup, optionIndexes) {
     const optionTarget = createOptionTargetArrayFromIndexes(optionIndexes);

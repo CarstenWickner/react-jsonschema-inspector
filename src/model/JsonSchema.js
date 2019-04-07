@@ -5,26 +5,30 @@ import RefScope from "./RefScope";
  */
 export default class JsonSchema {
     /**
-     * Raw JSON Schema
+     * Raw JSON Schema.
+     *
+     * @type {Object}
      */
     schema;
 
     /**
-     * Configuration steering how the JSON schema is being traversed/parsed
+     * Configuration steering how the json schema is being traversed/parsed.
+     *
+     * @type {{oneOf: ?{type: string, groupTitle: ?string}, anyOf: ?{type: string, groupTitle: ?string}}}
      */
     parserConfig;
 
     /**
-     * @type RefScope
+     * @type {RefScope}
      */
     scope;
 
     /**
      * Constructor for a JsonSchema (wrapper).
      *
-     * @param {Object} schema the JSON Schema to represent
-     * @param {Object} parserConfig configuration affecting how the JSON schema is being traversed/parsed
-     * @param {?RefScope} scope collection of available $ref targets (will be generated based on `schema` if not provided)
+     * @param {Object} schema - the JSON Schema to represent
+     * @param {Object} parserConfig - configuration affecting how the json schema is being traversed/parsed
+     * @param {?RefScope} scope - collection of available $ref targets (will be generated based on `schema` if not provided)
      */
     constructor(schema, parserConfig, scope) {
         this.schema = schema;

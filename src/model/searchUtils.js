@@ -9,12 +9,10 @@ import { isNonEmptyObject } from "./utils";
  * Creating a function that accepts a single raw schema definition and applies the given filter function on itself and all contained sub-schemas.
  * Any $ref-erences are being ignored here and expected to be handled independently
  *
- * @param {Function} flatSearchFilter function that checks whether a given raw schema
- * @param {Object} flatSearchFilter.value expected input parameter is a raw schema definition
- * @param {*} flatSearchFilter.return expected output value is a truthy/falsy whether the given schema matches the filter (ignoring sub-schemas)
- * @return {Function} return created filter function
- * @return {Object} return.value expected input parameter is a JsonSchema instance
- * @return {Boolean} return.return output value indicates whether the given schema or any of its sub-schemas matches the provided flat filter function
+ * @param {Function} flatSearchFilter - function that checks whether a given raw schema
+ * @param {Object} flatSearchFilter.value - expected input parameter is a raw schema definition
+ * @param {*} flatSearchFilter.return - expected output value is a truthy/falsy whether the given schema matches the filter (ignoring sub-schemas)
+ * @returns {Function} created filter function for a `JsonSchema`; returning whether the given schema or any of its sub-schemas matches the filter
  */
 export function createRecursiveFilterFunction(flatSearchFilter) {
     const recursiveFilterFunction = (target, includeNestedOptionals = true) => {
@@ -77,37 +75,43 @@ export function createRecursiveFilterFunction(flatSearchFilter) {
 /**
  * Traverse a given schema definition and collect all referenced sub-schemas (except for itself).
  *
- * @param {JsonSchema} jsonSchema targeted schema definition for which to collect sub-schemas referenced via $ref
- * @returns {Map.<JsonSchema, Boolean>} all referenced sub-schemas (excluding self-references)
+ * @param {JsonSchema} schema - targeted schema definition for which to collect sub-schemas referenced via $ref
+ * @param {boolean} includeNestedOptionals - whether included `oneOf`/`anyOf` blocks should be included in the results
+ * @returns {Map.<JsonSchema, boolean>} all referenced sub-schemas (excluding self-references), indicating whether `oneOf`/`anyOf` may be included
  */
-export function collectReferencedSubSchemas(jsonSchema, includeNestedOptionals) {
-    // collect sub-schemas in a Set in order to avoid duplicates
+export function collectReferencedSubSchemas(schema, includeNestedOptionals) {
+    // collect sub-schemas in a Map in order to avoid duplicates
     const references = new Map();
     // collect all referenced sub-schemas
     const collectReferences = (rawSubSchema, isIncludingOptionals) => {
         if (rawSubSchema.$ref) {
             // add referenced schema to the result set
-            const targetSchema = jsonSchema.scope.find(rawSubSchema.$ref);
+            const targetSchema = schema.scope.find(rawSubSchema.$ref);
             references.set(targetSchema, isIncludingOptionals || (references.get(targetSchema) === true));
         }
         // always return false in order to iterate through all non-referenced sub-schemas
         return false;
     };
-    createRecursiveFilterFunction(collectReferences)(jsonSchema, includeNestedOptionals);
+    createRecursiveFilterFunction(collectReferences)(schema, includeNestedOptionals);
     // ignore circular references
-    references.delete(jsonSchema);
+    references.delete(schema);
     return references;
 }
 
 /**
+ * @name FilterFunctionForSchema
+ * @function
+ * @param {JsonSchema} param0 single JsonSchema to check whether it matches a given filter function (to be applied on its raw schema)
+ * @param {boolean} param1 - whether nested optionals from `oneOf`/`anyOf` may be included for the given JsonSchema
+ * @returns {Array.<string|Array.<number>>} output is an array of "filteredItems"
+ */
+/**
  * Build the function for determining the "filteredItems" for a given Object.<String, JsonSchema>.
  *
- * @param {Function} flatSearchFilter filter to apply on a single raw json schema
- * @param {Object} flatSearchFilter.param0 raw JSON schema to filter (without considering any sub-structures like `properties` or `allOf`)
- * @param {Boolean} flatSearchFilter.return whether there is a direct match in the given schema (e.g. in its `title` or `description`)
- * @return {Function} return producing a function to apply for filtering
- * @return {Object.<String, JsonSchema>} return.param0 expected input is an object representing a view column's items
- * @return {Array.<String>} return.return output is an array of "filteredItems"
+ * @param {Function} flatSearchFilter - filter to apply on a single raw json schema
+ * @param {Object} flatSearchFilter.param0 - raw JSON schema to filter (without considering any sub-structures like `properties` or `allOf`)
+ * @param {boolean} flatSearchFilter.return - whether there is a direct match in the given schema (e.g. in its `title` or `description`)
+ * @returns {FilterFunctionForSchema} function to apply for filtering
  */
 export function createFilterFunctionForSchema(flatSearchFilter) {
     const recursiveSearchFilter = createRecursiveFilterFunction(flatSearchFilter);
@@ -208,11 +212,11 @@ export function createFilterFunctionForSchema(flatSearchFilter) {
 /**
  * Build the function for determining the "filteredItems" for a given Object.<String, JsonSchema>.
  *
- * @param {Array.<String>} searchFields names of the fields in a schema to check for a (partial) match with the entered searchFilter text
- * @param {String} searchFilter entered search filter text
- * @return {Function|undefined} return producing either a function to apply for filtering or undefined if the search feature is turned off
- * @return {Object.<String, JsonSchema>} return.value expected input is an object representing a view column's items
- * @return {Array.<String>} return.return output is an array of "filteredItems"
+ * @param {Array.<string>} searchFields - names of the fields in a schema to check for a (partial) match with the entered searchFilter text
+ * @param {string} searchFilter - entered search filter text
+ * @returns {?Function} return producing either a function to apply for filtering or undefined if the search feature is turned off
+ * @returns {Object.<string, JsonSchema>} return.value expected input is an object representing a view column's items
+ * @returns {Array.<string|Array.<number>>} return.return output is an array of "filteredItems"
  */
 export const filteringByFields = memoize((searchFields, searchFilter) => {
     if (searchFields && searchFields.length && searchFilter) {

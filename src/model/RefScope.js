@@ -6,27 +6,30 @@ import { isNonEmptyObject } from "./utils";
  */
 export default class RefScope {
     /**
-     * Map.<String, JsonSchema>
-     * collection of available sub-schema to be referenced via "$ref" within the originating schema.
+     * Collection of available sub-schema to be referenced via "$ref" within the originating schema.
+     *
+     * @type {Map.<string, JsonSchema>}
      */
     internalRefs = new Map();
 
     /**
-     * Map.<String, JsonSchema>
-     * collection of available sub-schema to be referenced via "$ref" within the originating schema or from other schemas.
+     * Collection of available sub-schema to be referenced via "$ref" within the originating schema or from other schemas.
+     *
+     * @type {Map.<string, JsonSchema>}
      */
     externalRefs = new Map();
 
     /**
-     * Array.<RefScope>
      * Array of other scopes (e.g. in case of separate schemas being provided for that purpose).
+     *
+     * @type {Array.<RefScope>}
      */
     otherScopes = [];
 
     /**
      * Constructor collecting all available references to contained re-usable (sub-) schemas.
      *
-     * @param {JsonSchema} schema to collect $ref-erence-able sub-schemas from
+     * @param {JsonSchema} schema - to collect $ref-erence-able sub-schemas from
      */
     constructor(schema) {
         if (!schema || !isNonEmptyObject(schema.schema)) {
@@ -78,7 +81,7 @@ export default class RefScope {
     /**
      * Add other available scope.
      *
-     * @param {RefScope} refScope other reference scope that is available (at least its external $ref-erences)
+     * @param {RefScope} refScope - other reference scope that is available (at least its external $ref-erences)
      */
     addOtherScope(refScope) {
         this.otherScopes.push(refScope);
@@ -87,8 +90,8 @@ export default class RefScope {
     /**
      * Look-up a re-usable schema by its $ref-erence.
      *
-     * @param {String} ref the "$ref" value for which to look-up the associated (sub-)schema
-     * @param {Boolean} includeInternalRefs whether the "$ref" value is from within the same main schema this RefScope belongs to
+     * @param {string} ref - the "$ref" value for which to look-up the associated (sub-)schema
+     * @param {boolean} includeInternalRefs - whether the "$ref" value is from within the same main schema this RefScope belongs to
      * @returns {JsonSchema} the successfully looked-up reference (or null if no match was found)
      */
     findSchemaInThisScope(ref, includeInternalRefs = true) {
@@ -98,7 +101,7 @@ export default class RefScope {
     /**
      * Look-up a re-usable schema by its $ref-erence.
      *
-     * @param {String} ref the "$ref" value for which to look-up the associated (sub-)schema
+     * @param {string} ref - the "$ref" value for which to look-up the associated (sub-)schema
      * @returns {JsonSchema} the successfully looked-up reference
      * @throws error if no match was found
      */

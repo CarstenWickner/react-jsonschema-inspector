@@ -21,10 +21,10 @@ class Inspector extends Component {
      * Avoid constant/immediate re-rendering while the search filter is being entered by using debounce.
      * This is wrapped into memoize() to allow setting the wait times via props.
      *
-     * @param {Number} debounceWait the number of milliseconds to delay before applying the new filter value
-     * @param {Number} debounceMaxWait the maximum time the filter re-evaluation is allowed to be delayed before it's invoked
+     * @param {number} debounceWait the number of milliseconds to delay before applying the new filter value
+     * @param {number} debounceMaxWait the maximum time the filter re-evaluation is allowed to be delayed before it's invoked
      * @returns {Function} return debounced function to set applied filter
-     * @returns {String} return.value input parameter is the new search filter value to apply
+     * @returns {string} return.value input parameter is the new search filter value to apply
      */
     debouncedApplySearchFilter = memoize(
         (debounceWait, debounceMaxWait) => debounce(
@@ -53,7 +53,7 @@ class Inspector extends Component {
     /**
      * When the entered search filter changes, store it in the component state and trigger the debounced re-evaluation of the actual filtering
      *
-     * @param {String} enteredSearchFilter the newly entered search filter in its respective input field
+     * @param {string} enteredSearchFilter - the newly entered search filter in its respective input field
      */
     onSearchFilterChange = (enteredSearchFilter) => {
         this.setState({ enteredSearchFilter });
@@ -65,10 +65,10 @@ class Inspector extends Component {
     /**
      * Create an onSelect function for a particular column.
      *
-     * @param {Number} columnIndex the index of the column to create the onSelect function for
+     * @param {number} columnIndex - the index of the column to create the onSelect function for
      * @returns {Function} return the onSelect function to be used in that given column (for either setting or clearing its selection)
-     * @returns {SyntheticEvent} return.param0.event the originally triggered event (e.g. onClick, onDoubleClick, onKeyDown, etc.)
-     * @returns {String} return.param0.selectedItem the item to select (or `null` to discard any selection in this column – and all subsequent ones)
+     * @returns {*} return.param0.event the originally triggered event (e.g. onClick, onDoubleClick, onKeyDown, etc.)
+     * @returns {string} return.param0.selectedItem the item to select (or `null` to discard any selection in this column – and all subsequent ones)
      */
     onSelectInColumn = columnIndex => (event, selectedItem) => {
         // the lowest child component accepting the click/selection event should consume it
@@ -324,7 +324,7 @@ Inspector.defaultProps = {
         oneOf: { type: "asAdditionalColumn" },
         anyOf: { type: "asAdditionalColumn" }
     },
-    buildArrayProperties: arrayItemSchema => ({ "[0]": arrayItemSchema }),
+    buildArrayProperties: undefined,
     breadcrumbs: {
         skipSeparator: fieldName => (fieldName === "[0]")
     },

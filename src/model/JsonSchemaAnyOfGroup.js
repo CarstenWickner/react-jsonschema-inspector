@@ -1,24 +1,24 @@
 import JsonSchemaOptionalsGroup from "./JsonSchemaOptionalsGroup";
 
 /**
- * Representation of an "anyOf" element in a Json Schema.
+ * Representation of an `anyOf` element in a json schema.
  */
 export default class JsonSchemaAnyOfGroup extends JsonSchemaOptionalsGroup {
     /**
-     * Providing default value if parserConfig.anyOf.groupTitle parameter provided to constructor is not defined.
+     * @returns {string} default value if `anyOf.groupTitle` is not set in `parserConfig` provided to constructor.
      */
     static getDefaultGroupTitle() {
         return "any of";
     }
 
     /**
-     * Constructor for the representation of a schema's "anyOf" property.
-     * The "anyOf" property is a collection of sub-schemas of which one or multiple are expected to be fulfilled.
+     * Constructor for the representation of a schema's `anyOf` property.
+     * The `anyOf` property is a collection of sub-schemas of which one or multiple are expected to be fulfilled.
      *
-     * @param {Object} parserConfig configuration object determining how particular parts of a schema are being interpreted
-     * @param {Object} parserConfig.anyOf part of the configuration object focussing on a schema's "anyOf" property
-     * @param {String} parserConfig.anyOf.type indication how a schema's "anyOf" should be handled, e.g. "likeAllOf", "asAdditionalColumn"
-     * @param {?String} parserConfig.anyOf.groupTitle text to display above options to select from (defaults to value from getDefaultGroupTitle())
+     * @param {Object} parserConfig - configuration object determining how particular parts of a schema are being interpreted
+     * @param {Object} parserConfig.anyOf - part of the configuration object focussing on a schema's `anyOf` property
+     * @param {string} parserConfig.anyOf.type - indication how a schema's `anyOf` should be handled, e.g. `"likeAllOf"`, `"asAdditionalColumn"`
+     * @param {?string} parserConfig.anyOf.groupTitle - text to display above options to select from (defaults to value from getDefaultGroupTitle())
      */
     constructor(parserConfig) {
         super(parserConfig && parserConfig.anyOf);

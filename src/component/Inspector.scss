@@ -37,45 +37,6 @@
         overflow-x: auto;
         margin-right: -1px;
     }
-    &-column {
-        &,
-        &-placeholder {
-            display: flex;
-            flex-direction: column;
-            width: $columnWidth;
-            min-width: $columnWidth;
-            border-right: $innerBorder;
-            overflow-y: auto;
-        }
-        &-placeholder {
-            opacity: 0;
-        }
-        .optional-group-title {
-            display: block;
-            padding: $verticalItemSpacingInside $spacingInside $verticalItemSpacingInside $leadItemSpacingInside;
-            font-style: italic;
-        }
-        &.optional-groups ul {
-            margin: 0;
-            padding: 0;
-            list-style-type: none;
-
-            ul {
-                background-color: $innerBorderColor;
-            }
-            ul,
-            .jsonschema-inspector-item {
-                padding-left: $leadItemSpacingInside;
-            }
-            ul .optional-group-title,
-            ul .jsonschema-inspector-item {
-                background-color: $backgroundColor;
-            }
-            .optional-group-title {
-                padding-left: (2 * $leadItemSpacingInside);
-            }
-        }
-    }
     &-item {
         flex-shrink: 0;
         text-align: start;
@@ -114,6 +75,45 @@
             background-color: #7f7f7f;
             -webkit-clip-path: polygon(25% 25%, 75% 50%, 25% 75%);
             clip-path: polygon(25% 25%, 75% 50%, 25% 75%);
+        }
+    }
+    &-column {
+        &,
+        &-placeholder {
+            display: flex;
+            flex-direction: column;
+            width: $columnWidth;
+            min-width: $columnWidth;
+            border-right: $innerBorder;
+            overflow-y: auto;
+        }
+        &-placeholder {
+            opacity: 0;
+        }
+        .optional-group-title {
+            display: block;
+            padding: $verticalItemSpacingInside $spacingInside $verticalItemSpacingInside $leadItemSpacingInside;
+            font-style: italic;
+        }
+        &.optional-groups ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+
+            .optional-group-title {
+                padding-left: (2 * $leadItemSpacingInside);
+            }
+            ul {
+                background-color: $innerBorderColor;
+            }
+            ul,
+            .jsonschema-inspector-item {
+                padding-left: $leadItemSpacingInside;
+            }
+            ul .optional-group-title,
+            ul .jsonschema-inspector-item {
+                background-color: $backgroundColor;
+            }
         }
     }
     &-column.trailing-selection &-item.selected {

@@ -9,6 +9,13 @@ import {
 import { isDefined, isNonEmptyObject, mapObjectValues } from "../model/utils";
 import { createFilterFunctionForSchema } from "../model/searchUtils";
 
+/**
+ * Check whether a given array of indexes corresponds to an existing path in the `options` hierarchy.
+ *
+ * @param {Array.<number>} optionIndexes - indexes representing a single selection path in the `options` hierarchy
+ * @param {{groupTitle: ?string, options: Array.<Object>}} options - representation of the hierarchical structure of optional sub schemas
+ * @returns {boolean} whether given `optionIndexes` represent a valid option path
+ */
 function isOptionIndexValidForOptions(optionIndexes, options) {
     let optionsPart = options;
     optionIndexes.forEach((index) => {
@@ -21,6 +28,14 @@ function isOptionIndexValidForOptions(optionIndexes, options) {
     return optionsPart && !optionsPart.options;
 }
 
+/**
+ * Create the root entry of the standard `columnData` array.
+ *
+ * @param {Object} schemas - named raw schemas to list in root `columnData` entry
+ * @param {Array.<Object>} referenceSchemas - additional schemas that may be referenced
+ * @param {*} parserConfig - settings determining how a json schema is being traversed/parsed
+ * @returns {Object.<string, JsonSchemaGroup>} named schema groups, derived from the provided raw schemas
+ */
 function createRootColumnData(schemas, referenceSchemas, parserConfig) {
     // first prepare those schemas that may be referenced by the displayed ones or each other
     const referenceScopes = [];
@@ -41,10 +56,30 @@ function createRootColumnData(schemas, referenceSchemas, parserConfig) {
     return { items: rootColumnItems };
 }
 
+/**
+ * Provide default array accessor function.
+ *
+ * @param {JsonSchema} arrayItemSchema - declared type of items in an array (as per the respective json schema)
+ * @returns {{"[0]": JsonSchema}} simple object allowing to access the array's item definition via a single entry
+ */
 function buildDefaultArrayProperties(arrayItemSchema) {
     return { "[0]": arrayItemSchema };
 }
 
+/**
+ * @name ArrayPropertiesBuilder
+ * @function
+ * @param {JsonSchema} param0 - declared type of the array's items
+ * @returns {Object.<string, JsonSchema|Object} object containing the selectable items for an array, e.g. for accessing an item
+ */
+/**
+ * Create an entry for the standard `columnData` array.
+ *
+ * @param {JsonSchemaGroup} schemaGroup - selected schema group (in previous column)
+ * @param {?Array.<number>} optionIndexes - selected option path in `schemaGroup`
+ * @param {?ArrayPropertiesBuilder} buildArrayProperties - function for building dynamic sub schema based on declared array item type
+ * @returns {Object} `columnData` entry
+ */
 function buildNextColumn(schemaGroup, optionIndexes, buildArrayProperties = buildDefaultArrayProperties) {
     if (!optionIndexes) {
         const options = getOptionsInSchemaGroup(schemaGroup);
@@ -83,20 +118,22 @@ function buildNextColumn(schemaGroup, optionIndexes, buildArrayProperties = buil
 }
 
 /**
+ * @name RenderDataBuilder
+ * @function
+ * @param {Object.<string, Object>} param0 - mapped raw schemas to be listed in the root column
+ * @param {Array.<Object>} param1 - additional raw schemas that may be referenced but are not listed (directly) in the root column
+ * @param {Array.<string|Array.<number>>} param2 - currently selected elements in the respective columns
+ * @param {Object} param3 - `parserConfig` object indicating how the schemas should be traversed/parsed
+ * @param {?ArrayPropertiesBuilder} param4 - function for building an array's properties
+ * @returns {{columnData: Array.<Object>}} render data
+ */
+/**
  * Create a function for constructing the render data to be used throughout the whole component.
  *
- * @param {Function} onSelectInColumn function for creating the onSelect call-back for a single column
- * @param {Number} onSelectInColumn.param0 index of the column for which to provide the onSelect call-back
- * @param {Function} onSelectInColumn.return onSelect call-back for the column at the indicated index
- * @return {Function} return function for building the standard render data used throughout the component
- * @return {Object.<String, Object>} return.param0 mapped raw schemas to be listed in the root column
- * @return {Array.<Object>} return.param1 additional raw schemas that may be referenced but are not listed (directly) in the root column
- * @return {Array.<String|Array.<Number>>} return.param2 currently selected elements in the respective columns
- * @return {Object} return.param3 `parserConfig` object indicating how the schemas should be traversed/parsed
- * @return {?Function} return.param4 function for building an array's properties
- * @return {JsonSchema} return.param4.param0 declared type of the array's items
- * @return {Object.<String, JsonSchema|Object} return.param4.return object containing the selectable items for an array, e.g. for accessing an item 
- * @return {Array.<Object>} return.return.columnData
+ * @param {Function} onSelectInColumn - function for creating the onSelect call-back for a single column
+ * @param {number} onSelectInColumn.param0 - index of the column for which to provide the onSelect call-back
+ * @param {Function} onSelectInColumn.return - onSelect call-back for the column at the indicated index
+ * @returns {RenderDataBuilder} function for building the standard render data used throughout the component
  */
 export function createRenderDataBuilder(onSelectInColumn) {
     return (schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties) => {
@@ -150,12 +187,14 @@ export function createRenderDataBuilder(onSelectInColumn) {
 /**
  * Check whether a given JsonSchema has any nested properties or is an array.
  *
- * @param {JsonSchema} schema single schema instance to check in (ignoring any nested sub schemas, e.g. `allOf`/`oneOf`/`anyOf`)
- * @return {Boolean} return whether any properties are mentioned or `schema` represents an array with items of a certain type
+ * @param {JsonSchema} schema - single schema instance to check in (ignoring any nested sub schemas, e.g. `allOf`/`oneOf`/`anyOf`)
+ * @returns {boolean} whether any properties are mentioned or `schema` represents an array with items of a certain type
  */
 function hasSchemaNestedItems(schema) {
     const { schema: rawSchema } = schema;
-    const { properties, required, items, additionalItems } = rawSchema;
+    const {
+        properties, required, items, additionalItems
+    } = rawSchema;
     return isNonEmptyObject(properties)
         || required
         || isNonEmptyObject(items)
@@ -163,10 +202,11 @@ function hasSchemaNestedItems(schema) {
 }
 
 /**
- * Check whether a given JsonSchemaGroup has any nested properties, is an array or contains selectable optional sub-schemas.
+ * Check whether a given JsonSchemaGroup has any nested properties, is an array, or contains selectable optional sub-schemas.
  *
- * @param {JsonSchemaGroup} schemaGroup single schema group instance to check in
- * @return {Boolean} return whether any properties are mentioned, it represents an array with items of a certain type or contains selectable options
+ * @param {JsonSchemaGroup} schemaGroup - single schema group instance to check in
+ * @param {Array.<number>} optionIndexes - indexes of selected options
+ * @returns {boolean} whether any properties are mentioned, it represents an array with items of a certain type or contains selectable options
  */
 export function hasSchemaGroupNestedItems(schemaGroup, optionIndexes) {
     return schemaGroup.someEntry(hasSchemaNestedItems, createOptionTargetArrayFromIndexes(optionIndexes))
@@ -179,13 +219,13 @@ const optionShape = {
 optionShape.options = PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.shape({}), PropTypes.shape(optionShape)])).isRequired;
 
 /**
- * Proptype validation of the `contextGroup` prop (and the related `options`/`items` props).
+ * PropType validation of the `contextGroup` prop (and the related `options`/`items` props).
  *
- * @param {Object} param0 props
- * @param {?JsonSchemaGroup} param0.contextGroup group to validate
- * @param {?Object} param0.options representation of options within the `contextGroup`
- * @param {?Object} param0.items list of selectable entries being listed (i.e. properties/options/array-item-accessors)
- * @return {Error|null} validation error or null if validation is successful
+ * @param {Object} param0 - props
+ * @param {?JsonSchemaGroup} param0.contextGroup - group to validate
+ * @param {?Object} param0.options - representation of options within the `contextGroup`
+ * @param {?Object} param0.items - list of selectable entries being listed (i.e. properties/options/array-item-accessors)
+ * @returns {?Error} validation error or null if validation is successful
  */
 function contextGroupValidator({ contextGroup, options, items }) {
     if (isDefined(contextGroup) && !(contextGroup instanceof JsonSchemaGroup)) {
@@ -203,9 +243,9 @@ function contextGroupValidator({ contextGroup, options, items }) {
 /**
  * PropType validation of the `selectedItem` prop.
  *
- * @param {Object} param0 props
- * @param {?String|Array.<Number>} param0.selectedItem name of the selected property/array-item-accessor or array of option indexes
- * @return {Error|null} validation error or null if validation is successful
+ * @param {Object} param0 - props
+ * @param {?string|Array.<number>} param0.selectedItem - name of the selected property/array-item-accessor or array of option indexes
+ * @returns {?Error} validation error or null if validation is successful
  */
 function selectedItemValidator({ selectedItem }) {
     if (isDefined(selectedItem)
@@ -222,10 +262,10 @@ function selectedItemValidator({ selectedItem }) {
 /**
  * PropType validation of the `trailingSelection` prop (and the related `selectedItem` prop).
  *
- * @param {Object} param0 props
- * @param {?String|Array.<Number>} param0.selectedItem name of the selected property/array-item-accessor or array of option indexes
- * @param {?Boolean} param0.trailingSelection flag indicating whether the `selectedItem` is the last selection (i.e. in the right-most column)
- * @return {Error|null} validation error or null if validation is successful
+ * @param {Object} param0 - props
+ * @param {?string|Array.<number>} param0.selectedItem - name of the selected property/array-item-accessor or array of option indexes
+ * @param {?boolean} param0.trailingSelection - flag indicating whether the `selectedItem` is the last selection (i.e. in the right-most column)
+ * @returns {?Error} validation error or null if validation is successful
  */
 function trailingSelectionValidator({ selectedItem, trailingSelection }) {
     if (isDefined(trailingSelection) && typeof trailingSelection !== "boolean") {
@@ -240,11 +280,11 @@ function trailingSelectionValidator({ selectedItem, trailingSelection }) {
 /**
  * PropType validation of the `filteredItems` prop.
  *
- * @param {Object} param0 props
- * @param {?Array.<String>|Array.<Array.<Number>>} param0.filteredItems names of properties/options/array-item-accessors matchign the search filter
- * @param {?Object} param0.options representation of options within the `contextGroup`
- * @param {?Object} param0.items list of selectable entries being listed (i.e. properties/options/array-item-accessors)
- * @return {Error|null} validation error or null if validation is successful
+ * @param {Object} param0 - props
+ * @param {?Array.<string>|Array.<Array.<number>>} param0.filteredItems - names of properties/options/array-item-accessors matchign the search filter
+ * @param {?Object} param0.options - representation of options within the `contextGroup`
+ * @param {?Object} param0.items - list of selectable entries being listed (i.e. properties/options/array-item-accessors)
+ * @returns {?Error} validation error or null if validation is successful
  */
 function filteredItemsValidator({ items, options, filteredItems }) {
     if (isDefined(filteredItems)) {
@@ -264,8 +304,8 @@ function filteredItemsValidator({ items, options, filteredItems }) {
 /**
  * Shape for PropType validation of a single entries in the standard `columnData` array generated by a created render-data-builder.
  *
- * @param {?Boolean} includeOnSelect flag indicating whether `onSelect` should be treated as required
- * @return {Object} return `columnData` shape for PropType validation
+ * @param {?boolean} includeOnSelect - flag indicating whether `onSelect` should be treated as required
+ * @returns {Object} `columnData` shape for PropType validation
  */
 export function getColumnDataPropTypeShape(includeOnSelect = true) {
     return {
@@ -280,17 +320,21 @@ export function getColumnDataPropTypeShape(includeOnSelect = true) {
 }
 
 /**
+ * @name FilterFunctionForColumn
+ * @function
+ * @param {Object} param0 - entry in `columnData` array to check
+ * @param {?JsonSchemaGroup} param0.contextGroup - json schema group containing options to select from
+ * @param {?Object} param0.options - representation of options within the `contextGroup`
+ * @param {?Object} param0.items - list of selectable entries being listed (i.e. properties/options/array-item-accessors)
+ * @returns {?Array.<string>|Array.<Array.<number>>} names of properties/options/array-item-accessors matching the search filter
+ */
+/**
  * Create a function that returns the list of `filteredItems` for a given entry in the standard `columnData` array.
  *
- * @param {Function} flatSearchFilter function determining whether a given raw json schema matches some search filter
- * @param {Object} flatSearchFilter.param0 raw json schema
- * @param {Boolean} flatSearchFilter.return indication whether raw json schema is matching search filter
- * @return {Function} return function that returns the list of `filteredItems` for a given entry in the standard `columnData` array
- * @return {Object} return.param0 entry in `columnData` array to check
- * @return {?JsonSchemaGroup} return.param0.contextGroup json schema group containing options to select from
- * @return {?Object} return.param0.options representation of options within the `contextGroup`
- * @return {?Object} return.param0.items list of selectable entries being listed (i.e. properties/options/array-item-accessors)
- * @return {?Array.<String>|Array.<Array.<Number>>} return.return names of properties/options/array-item-accessors matchign the search filter
+ * @param {Function} flatSearchFilter - function determining whether a given raw json schema matches some search filter
+ * @param {Object} flatSearchFilter.param0 - raw json schema
+ * @param {boolean} flatSearchFilter.return - indication whether raw json schema is matching search filter
+ * @returns {FilterFunctionForColumn} function that returns the list of `filteredItems` for a given entry in the standard `columnData` array
  */
 export function createFilterFunctionForColumn(flatSearchFilter) {
     const containsMatchingItems = createFilterFunctionForSchema(flatSearchFilter);

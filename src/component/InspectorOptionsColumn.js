@@ -21,7 +21,7 @@ class InspectorOptionsColumn extends Component {
                 onSelect={event => onSelect(event, optionIndexes)}
                 renderContent={renderItemContent}
             />
-        )
+        );
     }
 
     renderGroupOfOptions({ groupTitle, options }, parentOptionIndexes = []) {

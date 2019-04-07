@@ -3,6 +3,8 @@
         "class-methods-use-this": "off",
         "import/no-extraneous-dependencies": "off",
         "indent": ["error", 4, { "ignoredNodes": ["TemplateLiteral"] }],
+        "jsdoc/require-param": "off",
+        "jsdoc/require-returns": "off",
         "lines-between-class-members": "off",
         "no-prototype-builtins": "off"
     },

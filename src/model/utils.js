@@ -1,7 +1,7 @@
 /**
  * Generic function determining whether the given value is neither undefined nor null.
  *
- * @param {*} target value to confirm
+ * @param {*} target - value to confirm
  * @returns {boolean} whether the target is neither undefined nor null
  */
 export function isDefined(target) {
@@ -11,7 +11,7 @@ export function isDefined(target) {
 /**
  * Generic function determining whether the given value is a not-null object with at least one key.
  *
- * @param {*} target value to confirm as non-empty object
+ * @param {*} target - value to confirm as non-empty object
  * @returns {boolean} whether the target is a non-empty object
  */
 export function isNonEmptyObject(target) {
@@ -24,9 +24,9 @@ export function isNonEmptyObject(target) {
 /**
  * Create a shallow copy of the given object and apply the given mapping function on each of its values.
  *
- * @param {Object} original object to copy while mapping its values
- * @param {Function} mappingFunction conversion to perform
- * @return {Object} cloned object with same keys as the original, but with mapped values
+ * @param {Object} original - object to copy while mapping its values
+ * @param {Function} mappingFunction - conversion to perform
+ * @returns {Object} cloned object with same keys as the original, but with mapped values
  */
 export function mapObjectValues(original, mappingFunction) {
     const mappedObject = {};
@@ -39,8 +39,8 @@ export function mapObjectValues(original, mappingFunction) {
 /**
  * Generic function to be used in Array.reduce().
  *
- * @param {*} combined temporary result of previous reduce steps
- * @param {*} nextValue single value to merge with "combined"
+ * @param {*} combined - temporary result of previous reduce steps
+ * @param {*} nextValue - single value to merge with "combined"
  * @returns {*|Array.<*>} either single (defined) value or array of multiple (defined) values
  */
 export function listValues(combined, nextValue) {
