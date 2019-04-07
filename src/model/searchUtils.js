@@ -12,7 +12,7 @@ import { isNonEmptyObject } from "./utils";
  * @param {Function} flatSearchFilter function that checks whether a given raw schema
  * @param {Object} flatSearchFilter.value expected input parameter is a raw schema definition
  * @param {*} flatSearchFilter.return expected output value is a truthy/falsy whether the given schema matches the filter (ignoring sub-schemas)
- * @return {Function}
+ * @return {Function} return created filter function
  * @return {Object} return.value expected input parameter is a JsonSchema instance
  * @return {Boolean} return.return output value indicates whether the given schema or any of its sub-schemas matches the provided flat filter function
  */
@@ -102,7 +102,7 @@ export function collectReferencedSubSchemas(jsonSchema, includeNestedOptionals) 
 /**
  * Build the function for determining the "filteredItems" for a given Object.<String, JsonSchema>.
  *
- * @param {Function} flatSearchFilter
+ * @param {Function} flatSearchFilter filter to apply on a single raw json schema
  * @param {Object} flatSearchFilter.param0 raw JSON schema to filter (without considering any sub-structures like `properties` or `allOf`)
  * @param {Boolean} flatSearchFilter.return whether there is a direct match in the given schema (e.g. in its `title` or `description`)
  * @return {Function} return producing a function to apply for filtering
@@ -127,18 +127,13 @@ export function createFilterFunctionForSchema(flatSearchFilter) {
         }
         return undefined;
     };
-    const createRememberedResultSetter = includeNestedOptionals => (subSchema, result) => {
-        if (includeNestedOptionals) {
-            schemaMatchResultsInclOptionals.set(subSchema, result);
-            if (!result) {
-                schemaMatchResultsExclOptionals.set(subSchema, false);
-            }
-        } else {
-            schemaMatchResultsExclOptionals.set(subSchema, result);
+    const setRememberedResultInclOptionals = (subSchema, result) => {
+        schemaMatchResultsInclOptionals.set(subSchema, result);
+        if (!result) {
+            schemaMatchResultsExclOptionals.set(subSchema, false);
         }
     };
-    const setRememberedResultInclOptionals = createRememberedResultSetter(true);
-    const setRememberedResultExclOptionals = createRememberedResultSetter(false);
+    const setRememberedResultExclOptionals = (subSchema, result) => schemaMatchResultsExclOptionals.set(subSchema, result);
     return (jsonSchema, includeNestedOptionalsForMainSchema) => {
         const rememberedResult = getRememberedResult(jsonSchema, includeNestedOptionalsForMainSchema);
         if (rememberedResult !== undefined) {

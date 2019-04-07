@@ -12,7 +12,6 @@ export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
     /**
      * Constructor for the representation of a schema's grouping property, e.g. "anyOf" or "oneOf".
      *
-     * @param {Function} JsonSchema run-time reference to JsonSchema constructor to avoid circular dependencies at load-time
      * @param {Object} settings configuration object determining how the represented schema part should be interpreted
      * @param {String} setting.type indication how the represented schema's group of should be handled, e.g. "likeAllOf", "asAdditionalColumn"
      */

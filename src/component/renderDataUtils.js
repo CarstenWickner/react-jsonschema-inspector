@@ -82,6 +82,22 @@ function buildNextColumn(schemaGroup, optionIndexes, buildArrayProperties = buil
     return {};
 }
 
+/**
+ * Create a function for constructing the render data to be used throughout the whole component.
+ *
+ * @param {Function} onSelectInColumn function for creating the onSelect call-back for a single column
+ * @param {Number} onSelectInColumn.param0 index of the column for which to provide the onSelect call-back
+ * @param {Function} onSelectInColumn.return onSelect call-back for the column at the indicated index
+ * @return {Function} return function for building the standard render data used throughout the component
+ * @return {Object.<String, Object>} return.param0 mapped raw schemas to be listed in the root column
+ * @return {Array.<Object>} return.param1 additional raw schemas that may be referenced but are not listed (directly) in the root column
+ * @return {Array.<String|Array.<Number>>} return.param2 currently selected elements in the respective columns
+ * @return {Object} return.param3 `parserConfig` object indicating how the schemas should be traversed/parsed
+ * @return {?Function} return.param4 function for building an array's properties
+ * @return {JsonSchema} return.param4.param0 declared type of the array's items
+ * @return {Object.<String, JsonSchema|Object} return.param4.return object containing the selectable items for an array, e.g. for accessing an item 
+ * @return {Array.<Object>} return.return.columnData
+ */
 export function createRenderDataBuilder(onSelectInColumn) {
     return (schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties) => {
         // the first column always lists all top-level schemas

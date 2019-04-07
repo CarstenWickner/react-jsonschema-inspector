@@ -1,11 +1,11 @@
 import { listValues } from "./utils";
 
 /**
- * Representation of an array of schemas (e.g. "allOf", "anyOf", "oneOf"), offering a number of convenient functions for extracting information.
+ * Representation of an array of schemas (e.g. "allOf", "anyOf", "oneOf"), offering a number of convenience functions for extracting information.
  */
 export default class JsonSchemaGroup {
     /**
-     * Array of JsonSchema and/or JsonSchemaGroup instances.
+     * @type {Array.<JsonSchema|JsonSchemaGroup>}
      */
     entries = [];
 
@@ -23,7 +23,7 @@ export default class JsonSchemaGroup {
      * Adding the given Json Schema or group to this group.
      *
      * @param {JsonSchema|JsonSchemaGroup} schemaOrGroup entry to add to this group
-     * @returns {JsonSchemaGroup} this (i.e. self-reference for chaining)
+     * @return {JsonSchemaGroup} return this (i.e. self-reference for chaining)
      */
     with(schemaOrGroup) {
         if (schemaOrGroup instanceof JsonSchemaGroup && schemaOrGroup.entries.length === 1) {
@@ -45,6 +45,7 @@ export default class JsonSchemaGroup {
      * @param {?Array.<Object>} optionTarget array of mutable objects indicating which optional schema parts to consider (ignoring all others)
      * @param {Object} optionTarget[] mutable object indicating which optional schema part to consider in a single group, that is not `likeAllOf`
      * @param {Number} optionTarget[].index mutable index, a value of `0` marks the optional schema part to be considered
+     * @return {Boolean} whether `checkEntry` returned 'true' for any item in this group's `entries` 
      */
     someEntry(checkEntry, optionTarget) {
         const treatLikeAllOf = this.shouldBeTreatedLikeAllOf();
@@ -76,9 +77,19 @@ export default class JsonSchemaGroup {
     /**
      * Extract the properties mentioned in this schema group.
      *
-     * @param {?Array.<Object>} optionTarget array of mutable objects containing the selected optional sub-schema's (relative) index
+     * @param {Function} extractFromSchema mapping function to invoke for extracting value(s) from a single JsonSchema
+     * @param {JsonSchema} extractFromSchema.param0 single JsonSchema to extract value(s) from
+     * @param {*} extractFromSchema.return extracted value(s) from a single JsonSchema
+     * @param {?Function} mergeResults function to be used in `Array.reduce()` to combine extracted values from multiple JsonSchemas
+     * @param {*} mergeResults.param0 combined values
+     * @param {*} mergeResults.param1 single value to add to the already combined values
+     * @param {*} mergeResults.return combined values including additional single value
+     * @param {*} defaultValue initial value of mergeResults.param0 on first execution
+     * @param {?Array.<Object>} optionTarget array of mutable objects indicating which optional schema parts to consider (ignoring all others)
+     * @param {Object} optionTarget[] mutable object indicating which optional schema part to consider in a single group, that is not `likeAllOf`
+     * @param {Number} optionTarget[].index mutable index, a value of `0` marks the optional schema part to be considered
      * @param {Number} optionTarget[].index counter that should be decreased for each passed optional sub-schema; the option at 0 is deemed selected
-     * @returns {Object.<String, JsonSchema>} collection of all properties mentioned in this schema
+     * @returns {*} return combined extracted values from this schema group
      */
     extractValues(extractFromSchema, mergeResults = listValues, defaultValue, optionTarget) {
         // collect schemas where we have both a boolean and a proper schema, favour the proper schema
@@ -96,9 +107,11 @@ export default class JsonSchemaGroup {
      * Create representation of this group's given options.
      *
      * @param {Array.<Object>} containedOptions list of (this kind of) option representations
-     * @returns {Object} return representation of the available options on this group's top level
-     * @returns {?String} return.groupTitle optional title text to be displayed for this group's options
-     * @returns {?Array<Object>} return.options list of option representations (may contain representation of nested options)
+     * @param {?Array.<Object>} containedOptions[].options list of nested options
+     * @return {Object} return representation of the available options on this group's top level
+     * @return {?String} return.groupTitle optional title text to be displayed for this group's options
+     * @return {?Array.<Object>} return.options list of option representations (may contain representation of nested options)
+     * @return {?Array.<Object>} return.options[].options list of nested options
      */
     // eslint-disable-next-line class-methods-use-this
     createOptionsRepresentation(containedOptions) {

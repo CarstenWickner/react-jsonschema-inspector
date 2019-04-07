@@ -43,7 +43,7 @@ export default class RefScope {
             const mainAliasWithoutFragment = mainAliasWithFragment.substring(0, mainAliasWithFragment.length - 1);
             this.externalRefs.set(mainAliasWithFragment, schema);
             this.externalRefs.set(mainAliasWithoutFragment, schema);
-            // for definitions, there should always by the empty fragment between the URI and the definitions path
+            // for definitions, there should always be the empty fragment between the URI and the definitions path
             externalRefBase = mainAliasWithFragment;
         } else {
             // no valid alias provided

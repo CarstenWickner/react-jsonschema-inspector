@@ -24,7 +24,7 @@ export default class JsonSchema {
      *
      * @param {Object} schema the JSON Schema to represent
      * @param {Object} parserConfig configuration affecting how the JSON schema is being traversed/parsed
-     * @param {?RefScope} scope collection of available $ref targets
+     * @param {?RefScope} scope collection of available $ref targets (will be generated based on `schema` if not provided)
      */
     constructor(schema, parserConfig, scope) {
         this.schema = schema;
