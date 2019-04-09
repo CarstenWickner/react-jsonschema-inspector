@@ -204,50 +204,6 @@ describe("createRenderDataBuilder()", () => {
             expect(thirdColumn.selectedItem).toBeFalsy();
             expect(thirdColumn.trailingSelection).toBeFalsy();
         });
-        it("calls provided buildArrayItemProperties()", () => {
-            const getMaxDefined = (a, b) => {
-                if (!isDefined(b)) {
-                    return a;
-                }
-                if (!isDefined(a)) {
-                    return b;
-                }
-                return Math.max(a, b);
-            };
-            const buildArrayItemProperties = (arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
-                "get(0)": arrayItemSchema,
-                "size()": {
-                    type: "number",
-                    minItems: getFieldValueFromSchemaGroup(arraySchemaGroup, "minItems", getMaxDefined, 0, null, optionIndexes)
-                }
-            });
-            const { columnData } = getRenderData(schemas, [], ["bar", "get(0)"], {}, buildArrayItemProperties);
-            expect(columnData).toHaveLength(3);
-            const rootColumn = columnData[0];
-            expect(Object.keys(rootColumn.items)).toHaveLength(2);
-            expect(rootColumn.items.bar).toBeInstanceOf(JsonSchemaGroup);
-            expect(rootColumn.selectedItem).toBe("bar");
-            expect(rootColumn.trailingSelection).toBeFalsy();
-            const secondColumn = columnData[1];
-            expect(Object.keys(secondColumn.items)).toHaveLength(2);
-            expect(secondColumn.items["get(0)"].entries[0].schema).toEqual(fooSchema);
-            expect(secondColumn.items["size()"].entries[0].schema).toEqual({
-                type: "number",
-                minItems: 3
-            });
-            expect(secondColumn.selectedItem).toBe("get(0)");
-            expect(secondColumn.options).toBeUndefined();
-            expect(secondColumn.contextGroup).toBeUndefined();
-            expect(secondColumn.onSelect).toBeDefined();
-            expect(secondColumn.onSelect()).toBe(1);
-            expect(secondColumn.trailingSelection).toBe(true);
-            const thirdColumn = columnData[2];
-            expect(Object.keys(thirdColumn.items)).toHaveLength(1);
-            expect(thirdColumn.items.qux).toBeInstanceOf(JsonSchemaGroup);
-            expect(thirdColumn.selectedItem).toBeFalsy();
-            expect(thirdColumn.trailingSelection).toBeFalsy();
-
-        });
         it("allows for arrays in arrays", () => {
             const { columnData } = getRenderData(schemas, [], ["foobar", "[0]", "[0]", "qux"], {});
             expect(columnData).toHaveLength(4);
@@ -278,6 +234,70 @@ describe("createRenderDataBuilder()", () => {
             expect(fourthColumn.items.qux).toBeInstanceOf(JsonSchemaGroup);
             expect(fourthColumn.selectedItem).toBe("qux");
             expect(fourthColumn.trailingSelection).toBe(true);
+        });
+        it("calls provided buildArrayItemProperties() with array schema and option indexes", () => {
+            const getMaxDefined = (a, b) => {
+                if (!isDefined(b)) {
+                    return a;
+                }
+                if (!isDefined(a)) {
+                    return b;
+                }
+                return Math.max(a, b);
+            };
+            const buildArrayItemProperties = (arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
+                "get(0)": arrayItemSchema,
+                "size()": {
+                    type: "number",
+                    minItems: getFieldValueFromSchemaGroup(arraySchemaGroup, "minItems", getMaxDefined, 0, null, optionIndexes)
+                }
+            });
+            const rootSchemas = {
+                bar: {
+                    oneOf: [
+                        barSchema,
+                        foobarSchema
+                    ]
+                }
+            };
+            const parserConfig = {
+                oneOf: {
+                    type: "asAdditionalColumn"
+                }
+            };
+            const { columnData } = getRenderData(rootSchemas, [], ["bar", [0], "get(0)"], parserConfig, buildArrayItemProperties);
+            expect(columnData).toHaveLength(4);
+            const rootColumn = columnData[0];
+            expect(Object.keys(rootColumn.items)).toHaveLength(1);
+            expect(rootColumn.items.bar).toBeInstanceOf(JsonSchemaGroup);
+            expect(rootColumn.selectedItem).toBe("bar");
+            expect(rootColumn.trailingSelection).toBeFalsy();
+            const secondColumn = columnData[1];
+            expect(secondColumn.items).toBeUndefined();
+            expect(secondColumn.contextGroup.entries[0].schema).toEqual(rootSchemas.bar);
+            expect(secondColumn.options).toEqual({
+                groupTitle: "one of",
+                options: [{}, {}]
+            });
+            expect(secondColumn.selectedItem).toEqual([0]);
+            expect(secondColumn.trailingSelection).toBeFalsy();
+            const thirdColumn = columnData[2];
+            expect(Object.keys(thirdColumn.items)).toHaveLength(2);
+            expect(thirdColumn.items["get(0)"].entries[0].schema).toEqual(fooSchema);
+            expect(thirdColumn.items["size()"].entries[0].schema).toEqual({
+                type: "number",
+                minItems: 3
+            });
+            expect(thirdColumn.selectedItem).toBe("get(0)");
+            expect(thirdColumn.options).toBeUndefined();
+            expect(thirdColumn.contextGroup).toBeUndefined();
+            expect(thirdColumn.onSelect).toBeDefined();
+            expect(thirdColumn.trailingSelection).toBe(true);
+            const fourthColumn = columnData[3];
+            expect(Object.keys(fourthColumn.items)).toHaveLength(1);
+            expect(fourthColumn.items.qux).toBeInstanceOf(JsonSchemaGroup);
+            expect(fourthColumn.selectedItem).toBeFalsy();
+            expect(fourthColumn.trailingSelection).toBeFalsy();
         });
     });
     describe("with optionals", () => {
