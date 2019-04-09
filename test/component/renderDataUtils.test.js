@@ -4,7 +4,8 @@ import { createRenderDataBuilder, getColumnDataPropTypeShape, createFilterFuncti
 
 import JsonSchema from "../../src/model/JsonSchema";
 import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
-import { createGroupFromSchema, getOptionsInSchemaGroup } from "../../src/model/schemaUtils";
+import { createGroupFromSchema, getOptionsInSchemaGroup, getFieldValueFromSchemaGroup } from "../../src/model/schemaUtils";
+import { isDefined } from "../../src/model/utils";
 
 describe("createRenderDataBuilder()", () => {
     const onSelectInColumn = jest.fn(columnIndex => () => columnIndex);
@@ -166,7 +167,8 @@ describe("createRenderDataBuilder()", () => {
             }
         };
         const barSchema = {
-            items: fooSchema
+            items: fooSchema,
+            minItems: 3
         };
         const foobarSchema = {
             items: barSchema
@@ -202,13 +204,52 @@ describe("createRenderDataBuilder()", () => {
             expect(thirdColumn.selectedItem).toBeFalsy();
             expect(thirdColumn.trailingSelection).toBeFalsy();
         });
-        it("allows for arrays in arrays", () => {
-            const arraySizeSchema = { type: "number" };
-            const buildArrayItemProperties = arrayItemSchemaGroup => ({
-                "get(0)": arrayItemSchemaGroup,
-                "size()": arraySizeSchema
+        it("calls provided buildArrayItemProperties()", () => {
+            const getMaxDefined = (a, b) => {
+                if (!isDefined(b)) {
+                    return a;
+                }
+                if (!isDefined(a)) {
+                    return b;
+                }
+                return Math.max(a, b);
+            };
+            const buildArrayItemProperties = (arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
+                "get(0)": arrayItemSchema,
+                "size()": {
+                    type: "number",
+                    minItems: getFieldValueFromSchemaGroup(arraySchemaGroup, "minItems", getMaxDefined, 0, null, optionIndexes)
+                }
             });
-            const { columnData } = getRenderData(schemas, [], ["foobar", "get(0)", "get(0)", "qux"], {}, buildArrayItemProperties);
+            const { columnData } = getRenderData(schemas, [], ["bar", "get(0)"], {}, buildArrayItemProperties);
+            expect(columnData).toHaveLength(3);
+            const rootColumn = columnData[0];
+            expect(Object.keys(rootColumn.items)).toHaveLength(2);
+            expect(rootColumn.items.bar).toBeInstanceOf(JsonSchemaGroup);
+            expect(rootColumn.selectedItem).toBe("bar");
+            expect(rootColumn.trailingSelection).toBeFalsy();
+            const secondColumn = columnData[1];
+            expect(Object.keys(secondColumn.items)).toHaveLength(2);
+            expect(secondColumn.items["get(0)"].entries[0].schema).toEqual(fooSchema);
+            expect(secondColumn.items["size()"].entries[0].schema).toEqual({
+                type: "number",
+                minItems: 3
+            });
+            expect(secondColumn.selectedItem).toBe("get(0)");
+            expect(secondColumn.options).toBeUndefined();
+            expect(secondColumn.contextGroup).toBeUndefined();
+            expect(secondColumn.onSelect).toBeDefined();
+            expect(secondColumn.onSelect()).toBe(1);
+            expect(secondColumn.trailingSelection).toBe(true);
+            const thirdColumn = columnData[2];
+            expect(Object.keys(thirdColumn.items)).toHaveLength(1);
+            expect(thirdColumn.items.qux).toBeInstanceOf(JsonSchemaGroup);
+            expect(thirdColumn.selectedItem).toBeFalsy();
+            expect(thirdColumn.trailingSelection).toBeFalsy();
+
+        });
+        it("allows for arrays in arrays", () => {
+            const { columnData } = getRenderData(schemas, [], ["foobar", "[0]", "[0]", "qux"], {});
             expect(columnData).toHaveLength(4);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(2);
@@ -216,26 +257,21 @@ describe("createRenderDataBuilder()", () => {
             expect(rootColumn.selectedItem).toBe("foobar");
             expect(rootColumn.trailingSelection).toBeFalsy();
             const secondColumn = columnData[1];
-            expect(Object.keys(secondColumn.items)).toHaveLength(2);
-            expect(secondColumn.items["get(0)"]).toBeInstanceOf(JsonSchemaGroup);
-            expect(secondColumn.items["get(0)"].entries).toHaveLength(1);
-            expect(secondColumn.items["get(0)"].entries[0]).toBeInstanceOf(JsonSchema);
-            expect(secondColumn.items["get(0)"].entries[0].schema).toEqual(barSchema);
-            expect(secondColumn.items["size()"]).toBeInstanceOf(JsonSchemaGroup);
-            expect(secondColumn.items["size()"].entries).toHaveLength(1);
-            expect(secondColumn.items["size()"].entries[0]).toBeInstanceOf(JsonSchema);
-            expect(secondColumn.items["size()"].entries[0].schema).toEqual(arraySizeSchema);
+            expect(Object.keys(secondColumn.items)).toHaveLength(1);
+            expect(secondColumn.items["[0]"]).toBeInstanceOf(JsonSchemaGroup);
+            expect(secondColumn.items["[0]"].entries).toHaveLength(1);
+            expect(secondColumn.items["[0]"].entries[0]).toBeInstanceOf(JsonSchema);
+            expect(secondColumn.items["[0]"].entries[0].schema).toEqual(barSchema);
             expect(secondColumn.options).toBeUndefined();
             expect(secondColumn.contextGroup).toBeUndefined();
             expect(secondColumn.onSelect).toBeDefined();
             expect(secondColumn.onSelect()).toBe(1);
-            expect(secondColumn.selectedItem).toBe("get(0)");
+            expect(secondColumn.selectedItem).toBe("[0]");
             expect(secondColumn.trailingSelection).toBeFalsy();
             const thirdColumn = columnData[2];
-            expect(Object.keys(thirdColumn.items)).toHaveLength(2);
-            expect(thirdColumn.items["get(0)"].entries[0].schema).toEqual(fooSchema);
-            expect(thirdColumn.items["size()"].entries[0].schema).toEqual(arraySizeSchema);
-            expect(thirdColumn.selectedItem).toBe("get(0)");
+            expect(Object.keys(thirdColumn.items)).toHaveLength(1);
+            expect(thirdColumn.items["[0]"].entries[0].schema).toEqual(fooSchema);
+            expect(thirdColumn.selectedItem).toBe("[0]");
             expect(thirdColumn.trailingSelection).toBeFalsy();
             const fourthColumn = columnData[3];
             expect(Object.keys(fourthColumn.items)).toHaveLength(1);

@@ -34,12 +34,25 @@ storiesOf("Inspector", module)
             searchOptions={{
                 fields: ["title", "description"]
             }}
-            parserConfig={{
-                anyOf: { type: "asAdditionalColumn" },
-                oneOf: { type: "asAdditionalColumn" }
-            }}
+            buildArrayProperties={(arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
+                "[0]": arrayItemSchema,
+                length: {
+                    title: "Number of Items",
+                    type: "number",
+                    minValue: getFieldValueFromSchemaGroup(arraySchemaGroup, "minItems",
+                        (a, b) => {
+                            if (b === undefined) {
+                                return a;
+                            }
+                            if (a === undefined) {
+                                return b;
+                            }
+                            return Math.min(a, b);
+                        }, 0, null, optionIndexes)
+                }
+            })}
             renderEmptyDetails={({ rootColumnSchemas }) => (
-                <div style={{ padding: "0.5em 1em 0 1em" }}>
+                <div style={{ padding: "0.5em 1em 0" }}>
                     <h3>JSON Schema Inspector</h3>
                     <p>
                         {`Just click on one of the ${Object.keys(rootColumnSchemas).length} schema titles

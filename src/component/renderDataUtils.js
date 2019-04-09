@@ -104,7 +104,7 @@ function buildNextColumn(schemaGroup, optionIndexes, buildArrayProperties = buil
     if (nestedArrayItemSchema) {
         // next column should allow accessing the schema of the array's items
         const arrayProperties = mapObjectValues(
-            buildArrayProperties(nestedArrayItemSchema),
+            buildArrayProperties(nestedArrayItemSchema, schemaGroup, optionIndexes),
             propertyValue => (
                 propertyValue instanceof JsonSchema ? propertyValue : new JsonSchema(propertyValue, nestedArrayItemSchema.parserConfig)
             )

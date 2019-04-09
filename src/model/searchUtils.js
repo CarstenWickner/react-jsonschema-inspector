@@ -11,7 +11,7 @@ import { isNonEmptyObject } from "./utils";
  *
  * @param {Function} flatSearchFilter - function that checks whether a given raw schema
  * @param {Object} flatSearchFilter.value - expected input parameter is a raw schema definition
- * @param {*} flatSearchFilter.return - expected output value is a truthy/falsy whether the given schema matches the filter (ignoring sub-schemas)
+ * @param {*} flatSearchFilter.return - expected output is a truthy/falsy value, whether the given schema matches the filter (ignoring sub-schemas)
  * @returns {Function} created filter function for a `JsonSchema`; returning whether the given schema or any of its sub-schemas matches the filter
  */
 export function createRecursiveFilterFunction(flatSearchFilter) {
