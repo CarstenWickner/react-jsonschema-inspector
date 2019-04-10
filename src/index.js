@@ -1,3 +1,8 @@
-import Inspector from "./component/Inspector";
+import InspectorComponent from "./component/Inspector";
+import {
+    getFieldValueFromSchemaGroup as getFieldValueFromSchemaGroupFunction
+} from "./model/schemaUtils";
 
-export default Inspector;
+export const Inspector = InspectorComponent;
+
+export const getFieldValueFromSchemaGroup = getFieldValueFromSchemaGroupFunction;

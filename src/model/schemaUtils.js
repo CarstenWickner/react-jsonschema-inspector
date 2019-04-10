@@ -115,10 +115,12 @@ export function createGroupFromSchema(schema) {
     if (rawSchema.allOf) {
         result.with(createGroupFromRawSchemaArray(JsonSchemaAllOfGroup, schema, rawSchema.allOf));
     }
-    if (rawSchema.anyOf && parserConfig && parserConfig.anyOf) {
+    const includeAnyOf = rawSchema.anyOf && parserConfig && parserConfig.anyOf;
+    if (includeAnyOf) {
         result.with(createGroupFromRawSchemaArray(JsonSchemaAnyOfGroup, schema, rawSchema.anyOf));
     }
-    if (rawSchema.oneOf && parserConfig && parserConfig.oneOf) {
+    const includeOneOf = rawSchema.oneOf && parserConfig && parserConfig.oneOf;
+    if (includeOneOf && (!includeAnyOf || parserConfig.anyOf.type === "likeAllOf" || parserConfig.oneOf.type === "likeAllOf")) {
         result.with(createGroupFromRawSchemaArray(JsonSchemaOneOfGroup, schema, rawSchema.oneOf));
     }
     return result;

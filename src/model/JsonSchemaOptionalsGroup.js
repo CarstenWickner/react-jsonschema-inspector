@@ -17,6 +17,7 @@ export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
      * @param {Object} settings - configuration object determining how the represented schema part should be interpreted
      * @param {string} settings.type - indication how the represented schema's group of should be handled, e.g. `"likeAllOf"`, `"asAdditionalColumn"`
      * @param {?string} settings.groupTitle - group title to show instead of the default provided by `getDefaultGroupTitle()`
+     * @param {?Function} settings.optionNameForIndex - function for deriving an option's name/label from an 'optionIndexes' array
      */
     constructor(settings) {
         super();
@@ -51,6 +52,9 @@ export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
         const result = super.createOptionsRepresentation(containedOptions);
         if (result.options && !result.groupTitle) {
             result.groupTitle = this.settings.groupTitle === undefined ? this.constructor.getDefaultGroupTitle() : this.settings.groupTitle;
+        }
+        if (result.options) {
+            result.optionNameForIndex = this.settings.optionNameForIndex;
         }
         return result;
     }

@@ -6,8 +6,7 @@ import {
     array as knobsArray, boolean as knobsBoolean, object as knobsObject, text as knobsText, withKnobs
 } from "@storybook/addon-knobs";
 
-import Inspector from "../src/component/Inspector";
-import { getFieldValueFromSchemaGroup } from "../src/model/schemaUtils";
+import { Inspector, getFieldValueFromSchemaGroup } from "../src/index";
 
 import metaSchema from "./schema-meta.json";
 import hyperMetaSchema from "./schema-hyper-meta.json";
@@ -91,7 +90,7 @@ storiesOf("Inspector", module)
             schemas={knobsObject("Schemas", {
                 Shop: shopSelectionSchema
             })}
-            defaultSelectedItems={["Shop", "vegetables"]}
+            defaultSelectedItems={["Shop", "inventory"]}
             breadcrumbs={null}
             renderSelectionDetails={({ itemSchemaGroup, columnData, selectionColumnIndex }) => (
                 <div style={{ padding: "1em", backgroundColor: "#80cbc4" }}>
@@ -117,7 +116,7 @@ storiesOf("Inspector", module)
                 Person: personSchema,
                 Shop: shopSelectionSchema
             }}
-            defaultSelectedItems={["Person", "friends", "friends"]}
+            defaultSelectedItems={["Person", "friends", "[0]", "friends"]}
             renderItemContent={({
                 name, hasNestedItems, selected, focused
             }) => {
@@ -140,7 +139,7 @@ storiesOf("Inspector", module)
                 Person: personSchema,
                 Shop: shopSelectionSchema
             }}
-            defaultSelectedItems={["Person", "friends", "friends"]}
+            defaultSelectedItems={["Person", "friends", "[0]", "friends"]}
             searchOptions={{
                 fields: knobsArray("Search Fields", ["title", "description"]),
                 inputPlaceholder: knobsText("Input Placeholder", "Find in Title or Description…")

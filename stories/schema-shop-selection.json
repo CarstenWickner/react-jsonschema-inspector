@@ -13,6 +13,14 @@
                     {
                         "$ref": "#/definitions/vegetable"
                     }
+                ],
+                "anyOf": [
+                    {
+                        "$ref": "#/definitions/fruit"
+                    },
+                    {
+                        "$ref": "#/definitions/vegetable"
+                    }
                 ]
             }
         }

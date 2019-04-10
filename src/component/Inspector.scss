@@ -90,30 +90,15 @@
         &-placeholder {
             opacity: 0;
         }
+        &.optional-groups ul {
+            margin: 0;
+            padding: 0 0 0 $leadItemSpacingInside;
+            list-style-type: none;
+        }
         .optional-group-title {
             display: block;
             padding: $verticalItemSpacingInside $spacingInside $verticalItemSpacingInside $leadItemSpacingInside;
             font-style: italic;
-        }
-        &.optional-groups ul {
-            margin: 0;
-            padding: 0;
-            list-style-type: none;
-
-            .optional-group-title {
-                padding-left: (2 * $leadItemSpacingInside);
-            }
-            ul {
-                background-color: $innerBorderColor;
-            }
-            ul,
-            .jsonschema-inspector-item {
-                padding-left: $leadItemSpacingInside;
-            }
-            ul .optional-group-title,
-            ul .jsonschema-inspector-item {
-                background-color: $backgroundColor;
-            }
         }
     }
     &-column.trailing-selection &-item.selected {

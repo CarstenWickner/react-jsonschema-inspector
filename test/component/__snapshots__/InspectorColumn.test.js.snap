@@ -8,8 +8,8 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
   tabIndex={-1}
 >
   <InspectorItem
-    identifier="Item One"
     key="Item One"
+    name="Item One"
     onSelect={[Function]}
     renderContent={null}
     schemaGroup={
@@ -42,8 +42,8 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
     selected={false}
   />
   <InspectorItem
-    identifier="Item Two"
     key="Item Two"
+    name="Item Two"
     onSelect={[Function]}
     renderContent={null}
     schemaGroup={

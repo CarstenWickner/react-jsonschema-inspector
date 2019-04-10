@@ -10,7 +10,7 @@ describe("renders correctly", () => {
     it("with minimal/default props", () => {
         const component = shallow(
             <InspectorItem
-                identifier="Item Name"
+                name="Item Name"
                 schemaGroup={new JsonSchemaGroup()}
                 onSelect={() => { }}
             />
@@ -34,7 +34,7 @@ describe("renders correctly", () => {
             }, parserConfig));
         const component = shallow(
             <InspectorItem
-                identifier="Foobar"
+                name="Foobar"
                 schemaGroup={schemaGroup}
                 optionIndexes={optionIndexes}
                 onSelect={() => { }}
@@ -45,7 +45,7 @@ describe("renders correctly", () => {
     it("with nested children", () => {
         const component = shallow(
             <InspectorItem
-                identifier="Foo"
+                name="Foo"
                 schemaGroup={new JsonSchemaGroup().with(new JsonSchema({
                     properties: { bar: true }
                 }))}
@@ -57,7 +57,7 @@ describe("renders correctly", () => {
     it("while selected", () => {
         const component = shallow(
             <InspectorItem
-                identifier="Bar"
+                name="Bar"
                 schemaGroup={new JsonSchemaGroup()}
                 onSelect={() => { }}
                 selected
@@ -68,7 +68,7 @@ describe("renders correctly", () => {
     it("while matching filter", () => {
         const component = shallow(
             <InspectorItem
-                identifier="Foobar"
+                name="Foobar"
                 schemaGroup={new JsonSchemaGroup()}
                 onSelect={() => { }}
                 matchesFilter
@@ -80,7 +80,7 @@ describe("renders correctly", () => {
     it("while not matching filter", () => {
         const component = shallow(
             <InspectorItem
-                identifier="Baz"
+                name="Baz"
                 schemaGroup={new JsonSchemaGroup()}
                 onSelect={() => { }}
                 matchesFilter={false}
@@ -92,7 +92,7 @@ describe("renders correctly", () => {
     it("with custom rendered content", () => {
         const component = shallow(
             <InspectorItem
-                identifier="Qux"
+                name="Qux"
                 schemaGroup={new JsonSchemaGroup()}
                 onSelect={() => { }}
                 renderContent={() => (
@@ -112,7 +112,7 @@ describe("calls onSelect", () => {
         let onSelectCounter = 0;
         const component = shallow(
             <InspectorItem
-                identifier="Foo"
+                name="Foo"
                 schemaGroup={new JsonSchemaGroup()}
                 onSelect={() => {
                     onSelectCounter += 1;

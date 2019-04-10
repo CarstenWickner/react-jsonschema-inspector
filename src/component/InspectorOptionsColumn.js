@@ -7,13 +7,17 @@ import InspectorItem from "./InspectorItem";
 import { getColumnDataPropTypeShape } from "./renderDataUtils";
 
 class InspectorOptionsColumn extends Component {
-    renderSingleOption(optionIndexes) {
+    static defaultOptionNameForIndex(optionIndexes) {
+        return `Option ${optionIndexes.map(index => index + 1).join("-")}`;
+    }
+
+    renderSingleOption(optionIndexes, name) {
         const {
             contextGroup, selectedItem, filteredItems, renderItemContent, onSelect
         } = this.props;
         return (
             <InspectorItem
-                identifier={`Option ${optionIndexes.map(index => index + 1).join("-")}`}
+                name={name}
                 schemaGroup={contextGroup}
                 optionIndexes={optionIndexes}
                 selected={isDeepEqual(optionIndexes, selectedItem)}
@@ -24,7 +28,7 @@ class InspectorOptionsColumn extends Component {
         );
     }
 
-    renderGroupOfOptions({ groupTitle, options }, parentOptionIndexes = []) {
+    renderGroupOfOptions({ groupTitle, options, optionNameForIndex = InspectorOptionsColumn.defaultOptionNameForIndex }, parentOptionIndexes = []) {
         return [
             groupTitle && (
                 <span
@@ -41,7 +45,7 @@ class InspectorOptionsColumn extends Component {
                         return (
                             <li key={JSON.stringify(optionIndexes)}>
                                 {optionOrNestedGroup.options && this.renderGroupOfOptions(optionOrNestedGroup, optionIndexes)}
-                                {!optionOrNestedGroup.options && this.renderSingleOption(optionIndexes)}
+                                {!optionOrNestedGroup.options && this.renderSingleOption(optionIndexes, optionNameForIndex(optionIndexes))}
                             </li>
                         );
                     })}

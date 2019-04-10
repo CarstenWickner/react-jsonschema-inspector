@@ -23,7 +23,7 @@ const InspectorColumn = (props) => {
             {Object.keys(items).sort().map(name => (
                 <InspectorItem
                     key={name}
-                    identifier={name}
+                    name={name}
                     schemaGroup={items[name]}
                     selected={name === selectedItem}
                     matchesFilter={filteredItems ? filteredItems.includes(name) : undefined}

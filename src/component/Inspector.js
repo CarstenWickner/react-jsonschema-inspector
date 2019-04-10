@@ -240,19 +240,25 @@ Inspector.propTypes = {
          */
         anyOf: PropTypes.shape({
             type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"]).isRequired,
-            groupTitle: PropTypes.string
+            groupTitle: PropTypes.string,
+            optionNameForIndex: PropTypes.func
         }),
         /**
          * Setting indicating whether/how to include schema parts wrapped in "oneOf".
          */
         oneOf: PropTypes.shape({
             type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"]).isRequired,
-            groupTitle: PropTypes.string
+            groupTitle: PropTypes.string,
+            optionNameForIndex: PropTypes.func
         })
     }),
     /**
      * Function accepting a `JsonSchema` instance representing an array's declared type of items and returning an object listing the available
      * properties to offer. The default, providing access to the array's items, is: `arrayItemSchema => ({ "[0]": arrayItemSchema })`
+     * Provided inputs are (1) a `JsonSchema` representing the declared type of array items, (2) a `JsonSchemaGroup` representing the surrounding
+     * array's type, (3) an `Array.<number>` indicating the 'optionIndexes' selected in the array (i.e. #2), which may be undefined.
+     * The expected values of the expected object being returned may be either `JsonSchema`, plain/raw json schema definitions, or a mix of them.
+     * E.g. `arrayItemSchema => ({ "[0]": arrayItemSchema, "length": { type: "number" } })` is valid here as well.
      */
     buildArrayProperties: PropTypes.func,
     /**
@@ -295,7 +301,7 @@ Inspector.propTypes = {
     /**
      * Custom render function for the content of a single item in a column.
      * Expects a single object as input with the following keys:
-     * - "identifier": providing the name of the respective item
+     * - "name": providing the name of the respective item
      * - "hasNestedItems": flag indicating whether selecting this item may display another column with further options to the right
      * - "selected": flag indicating whether the item is currently selected
      * - "schemaGroup": the full `JsonSchemaGroup` associated with the item

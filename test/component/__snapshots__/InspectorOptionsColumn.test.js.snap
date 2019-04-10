@@ -20,7 +20,7 @@ exports[`renders correctly with minimal/default props 1`] = `
       key="[0]"
     >
       <InspectorItem
-        identifier="Option 1"
+        name="Exclusive Option 1"
         onSelect={[Function]}
         optionIndexes={
           Array [
@@ -94,6 +94,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                   },
                 ],
                 "settings": Object {
+                  "optionNameForIndex": [Function],
                   "type": "asAdditionalColumn",
                 },
               },
@@ -119,7 +120,7 @@ exports[`renders correctly with minimal/default props 1`] = `
           key="[1,0]"
         >
           <InspectorItem
-            identifier="Option 2-1"
+            name="Option 2-1"
             onSelect={[Function]}
             optionIndexes={
               Array [
@@ -194,6 +195,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                     ],
                     "settings": Object {
+                      "optionNameForIndex": [Function],
                       "type": "asAdditionalColumn",
                     },
                   },
@@ -207,7 +209,7 @@ exports[`renders correctly with minimal/default props 1`] = `
           key="[1,1]"
         >
           <InspectorItem
-            identifier="Option 2-2"
+            name="Option 2-2"
             onSelect={[Function]}
             optionIndexes={
               Array [
@@ -282,6 +284,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                     ],
                     "settings": Object {
+                      "optionNameForIndex": [Function],
                       "type": "asAdditionalColumn",
                     },
                   },

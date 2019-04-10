@@ -245,7 +245,7 @@ describe("createRenderDataBuilder()", () => {
                 }
                 return Math.max(a, b);
             };
-            const buildArrayItemProperties = (arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
+            const buildArrayProperties = (arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
                 "get(0)": arrayItemSchema,
                 "size()": {
                     type: "number",
@@ -265,7 +265,7 @@ describe("createRenderDataBuilder()", () => {
                     type: "asAdditionalColumn"
                 }
             };
-            const { columnData } = getRenderData(rootSchemas, [], ["bar", [0], "get(0)"], parserConfig, buildArrayItemProperties);
+            const { columnData } = getRenderData(rootSchemas, [], ["bar", [0], "get(0)"], parserConfig, buildArrayProperties);
             expect(columnData).toHaveLength(4);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(1);
@@ -804,10 +804,10 @@ describe("createFilterFunctionForColumn()", () => {
             };
 
             it.each`
-                parserConfigDescription  | parserConfig                            | result
-                ${"oneOf 'asAdditionalColumn'"} | ${{ oneOf: asColumn }}           | ${[[1], [2, 0]]}
-                ${"anyOf 'likeAllOf'"}   | ${{ anyOf: asColumn }}                  | ${[[0], [2, 1]]}
-                ${"oneOf and anyOf"}     | ${{ oneOf: asColumn, anyOf: asColumn }} | ${[[1, 0], [1, 2, 1], [1, 3, 0], [2, 1], [2, 2, 0], [2, 3, 1]]}
+                parserConfigDescription                       | parserConfig                            | result
+                ${"oneOf 'asAdditionalColumn'"}               | ${{ oneOf: asColumn }}                  | ${[[1], [2, 0]]}
+                ${"anyOf 'likeAllOf'"}                        | ${{ anyOf: asColumn }}                  | ${[[0], [2, 1]]}
+                ${"oneOf and anyOf 'asAdditionalColumn'"}     | ${{ oneOf: asColumn, anyOf: asColumn }} | ${[[0], [2, 1], [3, 0]]}
             `("with $parserConfigDescription", ({ parserConfig, result }) => {
                 const schema = new JsonSchema(rawSchema, parserConfig);
                 const contextGroup = createGroupFromSchema(schema);

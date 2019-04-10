@@ -144,17 +144,18 @@ describe("createGroupFromSchema()", () => {
         const rawBazSchema = { minProperties: 1 };
         const rawQuxSchema = { maxProperties: 5 };
         const rawQuuxSchema = { additionalProperties: false };
+        const rawTargetSchema = {
+            allOf: [rawFooSchema, rawBarSchema],
+            anyOf: [rawFoobarSchema, rawBazSchema],
+            oneOf: [rawQuxSchema, rawQuuxSchema]
+        };
 
         it("flattening entries (when parserConfig.anyOf/oneOf.type = 'likeAllOf')", () => {
             const parserConfig = {
                 anyOf: { type: "likeAllOf" },
                 oneOf: { type: "likeAllOf" }
             };
-            const schema = new JsonSchema({
-                allOf: [rawFooSchema, rawBarSchema],
-                anyOf: [rawFoobarSchema, rawBazSchema],
-                oneOf: [rawQuxSchema, rawQuuxSchema]
-            }, parserConfig);
+            const schema = new JsonSchema(rawTargetSchema, parserConfig);
             const result = createGroupFromSchema(schema);
             expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
             expect(result.entries).toHaveLength(7);
@@ -166,19 +167,15 @@ describe("createGroupFromSchema()", () => {
             expect(result.entries[5].schema).toEqual(rawQuxSchema);
             expect(result.entries[6].schema).toEqual(rawQuuxSchema);
         });
-        it("with nested groups (when parserConfig.anyOf/oneOf.type = 'asAdditionalColumn')", () => {
+        it("with nested anyOf group (when parserConfig.anyOf.type = 'asAdditionalColumn' and oneOf.type = 'likeAllOf')", () => {
             const parserConfig = {
                 anyOf: { type: "asAdditionalColumn" },
-                oneOf: { type: "asAdditionalColumn" }
+                oneOf: { type: "likeAllOf" }
             };
-            const schema = new JsonSchema({
-                allOf: [rawFooSchema, rawBarSchema],
-                anyOf: [rawFoobarSchema, rawBazSchema],
-                oneOf: [rawQuxSchema, rawQuuxSchema]
-            }, parserConfig);
+            const schema = new JsonSchema(rawTargetSchema, parserConfig);
             const result = createGroupFromSchema(schema);
             expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
-            expect(result.entries).toHaveLength(5);
+            expect(result.entries).toHaveLength(6);
             expect(result.entries[0]).toBe(schema);
             expect(result.entries[1].schema).toEqual(rawFooSchema);
             expect(result.entries[2].schema).toEqual(rawBarSchema);
@@ -186,10 +183,51 @@ describe("createGroupFromSchema()", () => {
             expect(result.entries[3].entries).toHaveLength(2);
             expect(result.entries[3].entries[0].schema).toEqual(rawFoobarSchema);
             expect(result.entries[3].entries[1].schema).toEqual(rawBazSchema);
-            expect(result.entries[4]).toBeInstanceOf(JsonSchemaOneOfGroup);
-            expect(result.entries[4].entries).toHaveLength(2);
-            expect(result.entries[4].entries[0].schema).toEqual(rawQuxSchema);
-            expect(result.entries[4].entries[1].schema).toEqual(rawQuuxSchema);
+            expect(result.entries[4].schema).toEqual(rawQuxSchema);
+            expect(result.entries[5].schema).toEqual(rawQuuxSchema);
+        });
+        it("with nested oneOf group (when parserConfig.anyOf.type = 'likeAllOf' and oneOf.type = 'asAdditionalColumn')", () => {
+            const parserConfig = {
+                anyOf: { type: "likeAllOf" },
+                oneOf: { type: "asAdditionalColumn" }
+            };
+            const schema = new JsonSchema(rawTargetSchema, parserConfig);
+            const result = createGroupFromSchema(schema);
+            expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
+            expect(result.entries).toHaveLength(6);
+            expect(result.entries[0]).toBe(schema);
+            expect(result.entries[1].schema).toEqual(rawFooSchema);
+            expect(result.entries[2].schema).toEqual(rawBarSchema);
+            expect(result.entries[3].schema).toEqual(rawFoobarSchema);
+            expect(result.entries[4].schema).toEqual(rawBazSchema);
+            expect(result.entries[5]).toBeInstanceOf(JsonSchemaOneOfGroup);
+            expect(result.entries[5].entries).toHaveLength(2);
+            expect(result.entries[5].entries[0].schema).toEqual(rawQuxSchema);
+            expect(result.entries[5].entries[1].schema).toEqual(rawQuuxSchema);
+        });
+        it("ignoring oneOf if anyOf is also present (when parserConfig.anyOf/oneOf.type = 'asAdditionalColumn')", () => {
+            const parserConfig = {
+                anyOf: { type: "asAdditionalColumn" },
+                oneOf: { type: "asAdditionalColumn" }
+            };
+            const schema = new JsonSchema(rawTargetSchema, parserConfig);
+            const result = createGroupFromSchema(schema);
+            expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
+            expect(result.entries).toHaveLength(4);
+            expect(result.entries[0]).toBe(schema);
+            expect(result.entries[1].schema).toEqual(rawFooSchema);
+            expect(result.entries[2].schema).toEqual(rawBarSchema);
+            expect(result.entries[3]).toBeInstanceOf(JsonSchemaAnyOfGroup);
+            expect(result.entries[3].entries).toHaveLength(2);
+            expect(result.entries[3].entries[0].schema).toEqual(rawFoobarSchema);
+            expect(result.entries[3].entries[1].schema).toEqual(rawBazSchema);
+            // oneOf should be skipped, i.e. not:
+            /*
+                expect(result.entries[4]).toBeInstanceOf(JsonSchemaOneOfGroup);
+                expect(result.entries[4].entries).toHaveLength(2);
+                expect(result.entries[4].entries[0].schema).toEqual(rawQuxSchema);
+                expect(result.entries[4].entries[1].schema).toEqual(rawQuuxSchema);
+            */
         });
     });
     it("throws error for invalid $ref if scope provided", () => {

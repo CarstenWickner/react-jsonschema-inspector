@@ -7,7 +7,7 @@ import { hasSchemaGroupNestedItems } from "./renderDataUtils";
 import { isDefined } from "../model/utils";
 
 const InspectorItem = ({
-    identifier, schemaGroup, optionIndexes, selected, matchesFilter, onSelect, renderContent
+    name, schemaGroup, optionIndexes, selected, matchesFilter, onSelect, renderContent
 }) => {
     const hasNestedItems = hasSchemaGroupNestedItems(schemaGroup, optionIndexes);
     return (
@@ -24,14 +24,14 @@ const InspectorItem = ({
             onFocus={onSelect}
         >
             {renderContent && renderContent({
-                identifier,
+                name,
                 hasNestedItems,
                 selected,
                 schemaGroup
             })}
             {!renderContent && (
                 <div className="jsonschema-inspector-item-content">
-                    <span className="jsonschema-inspector-item-name">{identifier}</span>
+                    <span className="jsonschema-inspector-item-name">{name}</span>
                     <span className="jsonschema-inspector-item-icon" />
                 </div>
             )}
@@ -40,7 +40,7 @@ const InspectorItem = ({
 };
 
 InspectorItem.propTypes = {
-    identifier: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.number)]).isRequired,
+    name: PropTypes.string.isRequired,
     schemaGroup: PropTypes.instanceOf(JsonSchemaGroup).isRequired,
     optionIndexes: PropTypes.arrayOf(PropTypes.number),
     selected: PropTypes.bool,
