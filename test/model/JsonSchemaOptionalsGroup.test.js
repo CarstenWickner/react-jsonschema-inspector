@@ -59,14 +59,14 @@ class MockJsonSchemaOptionalsGroup extends JsonSchemaOptionalsGroup {
     }
 }
 
-describe("shouldBeTreatedLikeAllOf()", () => {
-    it("returns true if type is 'likeAllOf'", () => {
-        const group = new MockJsonSchemaOptionalsGroup({ type: "likeAllOf" });
-        expect(group.shouldBeTreatedLikeAllOf()).toBe(true);
-    });
-    it("returns false if type is not 'likeAllOf'", () => {
+describe("considerSchemasAsSeparateOptions()", () => {
+    it("returns true if type is 'asAdditionalColumn'", () => {
         const group = new MockJsonSchemaOptionalsGroup({ type: "asAdditionalColumn" });
-        expect(group.shouldBeTreatedLikeAllOf()).toBe(false);
+        expect(group.considerSchemasAsSeparateOptions()).toBe(true);
+    });
+    it("returns false if type is not 'asAdditionalColumn'", () => {
+        const group = new MockJsonSchemaOptionalsGroup({ type: "likeAllOf" });
+        expect(group.considerSchemasAsSeparateOptions()).toBe(false);
     });
 });
 describe("createOptionsRepresentation()", () => {

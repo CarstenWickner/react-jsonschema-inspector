@@ -9,21 +9,23 @@ import { isNonEmptyObject, listValues, mapObjectValues } from "./utils";
  * Determines optional paths in this schema group.
  *
  * @param {JsonSchemaGroup} schemaGroup - schema group for which optional paths should be determined
- * @returns {{groupTitle: ?string, options: ?Array.<Object>}} representation of the available options on this group's top level
+ * @returns {{groupTitle: ?string, options: ?Array.<Object>, nameForIndex: ?Function}} representation of the given group's top level options
  */
 export function getOptionsInSchemaGroup(schemaGroup) {
     let containedOptions;
-    if (schemaGroup.shouldBeTreatedLikeAllOf()) {
+    if (schemaGroup.shouldTreatEntriesAsOne()) {
         containedOptions = schemaGroup.entries
             // simple schemas can be safely ignored here
             .filter(entry => entry instanceof JsonSchemaGroup)
             // for all groups: look-up their nested options recursively
             .map(getOptionsInSchemaGroup)
-            // if a nested group has no options to differentiate (i.e. also has shouldBeTreatedLikeAllOf() === true), we can ignore it as well
+            // if a nested group has no options to differentiate (i.e. also has shouldTreatEntriesAsOne() === true), we can ignore it as well
             .filter(({ options }) => options);
     } else {
+        const considerSchemasAsOptions = schemaGroup.considerSchemasAsSeparateOptions();
         // each entry is considered an option (i.e. nothing is filtered out), groups may have some more nested options
         containedOptions = schemaGroup.entries
+            .filter(entry => considerSchemasAsOptions || entry instanceof JsonSchemaGroup)
             // for all groups: look-up their nested options recursively
             .map(entry => (entry instanceof JsonSchema ? {} : getOptionsInSchemaGroup(entry)));
     }
@@ -115,12 +117,10 @@ export function createGroupFromSchema(schema) {
     if (rawSchema.allOf) {
         result.with(createGroupFromRawSchemaArray(JsonSchemaAllOfGroup, schema, rawSchema.allOf));
     }
-    const includeAnyOf = rawSchema.anyOf && parserConfig && parserConfig.anyOf;
-    if (includeAnyOf) {
+    if (rawSchema.anyOf && parserConfig && parserConfig.anyOf) {
         result.with(createGroupFromRawSchemaArray(JsonSchemaAnyOfGroup, schema, rawSchema.anyOf));
     }
-    const includeOneOf = rawSchema.oneOf && parserConfig && parserConfig.oneOf;
-    if (includeOneOf && (!includeAnyOf || parserConfig.anyOf.type === "likeAllOf" || parserConfig.oneOf.type === "likeAllOf")) {
+    if (rawSchema.oneOf && parserConfig && parserConfig.oneOf) {
         result.with(createGroupFromRawSchemaArray(JsonSchemaOneOfGroup, schema, rawSchema.oneOf));
     }
     return result;
@@ -162,7 +162,7 @@ function getFieldValueFromSchema(schema, fieldName, mappingFunction) {
  * @param {?*} mappingFunction.param0 - raw value retrieved from raw Json Schema
  * @param {?Object} mappingFunction.param1 - parserConfig from given 'schema'
  * @param {?RefScope} mappingFunction.param2 - scope from given 'schema'
- * @param {?Array.<number>} optionIndexes - indexes representing the selection path to a particular option (if there are options in the given group)
+ * @param {?Array.<{index: number}>|Array.<number>} optionIndexes - indexes representing the selection path to a particular option
  * @returns {*} merged result of all encountered values in schema parts in the given group
  */
 export function getFieldValueFromSchemaGroup(schemaGroup, fieldName, mergeValues = listValues, defaultValue, mappingFunction, optionIndexes) {
@@ -192,7 +192,7 @@ function createJsonSchemaIfNotEmpty(rawSchema, parserConfig, scope) {
  *
  * @param {JsonSchemaGroup} schemaGroup - schema group to extract a certain field's value(s) from
  * @param {string} fieldName - name/key of the field to look-up
- * @param {?Array.<{index: number}>} optionTarget - array of mutable objects containing index values to selected option(s)
+ * @param {?Array.<{index: number}>|Array.<number>} optionTarget - array of mutable objects containing index values to selected option(s)
  * @returns {JsonSchema|Array.<JsonSchema>|undefined} all encountered values in schema parts in the given group, each as a JsonSchema
  */
 function getSchemaFieldValueFromSchemaGroup(schemaGroup, fieldName, optionTarget) {
@@ -211,7 +211,7 @@ function getSchemaFieldValueFromSchemaGroup(schemaGroup, fieldName, optionTarget
  * Determine the type of entries within the indicated schema group representing an array, otherwise returning undefined.
  *
  * @param {JsonSchemaGroup} schemaGroup - targeted schema group which may represent an array
- * @param {?Array.<number>} optionIndexes - in case a group with optional branches, indexes indicating selected path
+ * @param {?Array.<number>} optionIndexes - in case of a group with optional branches, indexes indicating selected path
  * @returns {?JsonSchema} type of items in given schema group, if it represents an array
  */
 export function getTypeOfArrayItemsFromSchemaGroup(schemaGroup, optionIndexes) {

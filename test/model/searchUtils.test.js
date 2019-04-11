@@ -341,6 +341,44 @@ describe("createFilterFunctionForSchema()", () => {
                 expect(filterFunction(scope.find("#/definitions/Four"), false)).toBe(!!resultExcluding[3]);
             });
         });
+
+        describe("support non-optional parts of schema containing options", () => {
+            const rawSchema = {
+                minProperties: 1,
+                allOf: [
+                    { title: "Foo" },
+                    { description: "Bar" }
+                ],
+                anyOf: [
+                    { maxProperties: 3 },
+                    { type: "object" }
+                ],
+                oneOf: [
+                    { maxProperties: 5 },
+                    { maxProperties: 7 }
+                ]
+            };
+            const parserConfig = {
+                anyOf: asColumn,
+                oneOf: asColumn
+            };
+
+            it.each`
+                testTitle                                      | flatSearchFilter                  | includeOptionals | result
+                ${"directly on main schema (incl. optionals)"} | ${sub => sub.minProperties === 1} | ${true}          | ${true}
+                ${"directly on main schema (excl. optionals)"} | ${sub => sub.minProperties === 1} | ${false}         | ${true}
+                ${"in allOf part (incl. optionals)"}           | ${sub => sub.title === "Foo"}     | ${true}          | ${true}
+                ${"in allOf part (excl. optionals)"}           | ${sub => sub.title === "Foo"}     | ${false}         | ${true}
+                ${"in anyOf part (incl. optionals)"}           | ${sub => sub.type === "object"}   | ${true}          | ${true}
+                ${"in anyOf part (excl. optionals)"}           | ${sub => sub.type === "object"}   | ${false}         | ${false}
+                ${"in oneOf part (incl. optionals)"}           | ${sub => sub.maxProperties === 7} | ${true}          | ${true}
+                ${"in oneOf part (excl. optionals)"}           | ${sub => sub.maxProperties === 7} | ${false}         | ${false}
+            `("$testTitle", ({ flatSearchFilter, includeOptionals, result }) => {
+                const schema = new JsonSchema(rawSchema, parserConfig);
+                const filterFunction = createFilterFunctionForSchema(flatSearchFilter, parserConfig);
+                expect(filterFunction(schema, includeOptionals)).toBe(result);
+            });
+        });
     });
 });
 describe("filteringByFields()", () => {

@@ -2,22 +2,16 @@ import JsonSchemaAllOfGroup from "../../src/model/JsonSchemaAllOfGroup";
 import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
 import JsonSchema from "../../src/model/JsonSchema";
 
-describe("shouldBeTreatedLikeAllOf()", () => {
-    it("always returns true", () => {
-        const group = new JsonSchemaAllOfGroup(JsonSchema);
-        expect(group.shouldBeTreatedLikeAllOf()).toBe(true);
-    });
-});
 describe("with()", () => {
     /**
      * Minimal implementation of JsonSchemaGroup
      */
     class MockJsonSchemaGroup extends JsonSchemaGroup {
-        constructor(treatLikeAllOf = false) {
-            super(JsonSchema);
-            this.treatLikeAllOf = treatLikeAllOf;
+        constructor(treatAsAdditionalColumn = false) {
+            super();
+            this.treatAsAdditionalColumn = treatAsAdditionalColumn;
         }
-        shouldBeTreatedLikeAllOf() { return this.treatLikeAllOf && super.shouldBeTreatedLikeAllOf(); }
+        considerSchemasAsSeparateOptions() { return this.treatAsAdditionalColumn; }
     }
 
     it("adds given JsonSchema to entries", () => {
@@ -38,8 +32,8 @@ describe("with()", () => {
         expect(returnedGroup).toBe(targetGroup);
         expect(targetGroup.entries).toEqual([otherEntry]);
     });
-    it("adds given JsonSchemaGroup (with more than one entry, and shouldBeTreatedLikeAllOf() === false) to this group's entries", () => {
-        const otherGroup = new MockJsonSchemaGroup(false)
+    it("adds given JsonSchemaGroup (with more than one entry, and shouldTreatEntriesAsOne() === false) to this group's entries", () => {
+        const otherGroup = new MockJsonSchemaGroup(true)
             .with(new JsonSchema())
             .with(new JsonSchema());
         const targetGroup = new JsonSchemaAllOfGroup(JsonSchema);
@@ -47,10 +41,10 @@ describe("with()", () => {
         expect(returnedGroup).toBe(targetGroup);
         expect(targetGroup.entries).toEqual([otherGroup]);
     });
-    it("adds entries of given JsonSchemaGroup (with shouldBeTreatedLikeAllOf() === true) 's to this group's entries", () => {
+    it("adds entries of given JsonSchemaGroup (with shouldTreatEntriesAsOne() === true) 's to this group's entries", () => {
         const entryOne = new JsonSchema();
         const entryTwo = new JsonSchema();
-        const otherGroup = new MockJsonSchemaGroup(true)
+        const otherGroup = new MockJsonSchemaGroup(false)
             .with(entryOne)
             .with(entryTwo);
         const targetGroup = new JsonSchemaAllOfGroup(JsonSchema);
@@ -58,16 +52,16 @@ describe("with()", () => {
         expect(returnedGroup).toBe(targetGroup);
         expect(targetGroup.entries).toEqual([entryOne, entryTwo]);
     });
-    it("adds nested entries of given JsonSchemaGroup (with shouldBeTreatedLikeAllOf() === true) to this group's entries", () => {
+    it("adds nested entries of given JsonSchemaGroup (with shouldTreatEntriesAsOne() === true) to this group's entries", () => {
         const nestedEntryOne = new JsonSchema();
         const nestedEntryTwo = new JsonSchema();
         const singleNestedEntryThree = new JsonSchema();
-        const nestedGroupNotLikeAllOf = new MockJsonSchemaGroup(false)
+        const nestedGroupNotLikeAllOf = new MockJsonSchemaGroup(true)
             .with(new JsonSchema())
             .with(new JsonSchema());
-        const otherGroup = new MockJsonSchemaGroup(true)
-            .with(new MockJsonSchemaGroup(true).with(nestedEntryOne).with(nestedEntryTwo))
-            .with(new MockJsonSchemaGroup(false).with(singleNestedEntryThree))
+        const otherGroup = new MockJsonSchemaGroup(false)
+            .with(new MockJsonSchemaGroup(false).with(nestedEntryOne).with(nestedEntryTwo))
+            .with(new MockJsonSchemaGroup(true).with(singleNestedEntryThree))
             .with(nestedGroupNotLikeAllOf);
         const targetGroup = new JsonSchemaAllOfGroup(JsonSchema);
         const returnedGroup = targetGroup.with(otherGroup);

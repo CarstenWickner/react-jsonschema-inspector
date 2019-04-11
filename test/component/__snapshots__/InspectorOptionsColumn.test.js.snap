@@ -7,12 +7,14 @@ exports[`renders correctly with minimal/default props 1`] = `
   role="presentation"
   tabIndex={-1}
 >
-  <span
+  <div
     className="optional-group-title"
     key="group-title"
   >
-    one of
-  </span>
+    <span>
+      one of
+    </span>
+  </div>
   <ul
     key="list-of-options"
   >
@@ -107,12 +109,14 @@ exports[`renders correctly with minimal/default props 1`] = `
     <li
       key="[1]"
     >
-      <span
+      <div
         className="optional-group-title"
         key="group-title"
       >
-        any of
-      </span>
+        <span>
+          any of
+        </span>
+      </div>
       <ul
         key="list-of-options"
       >

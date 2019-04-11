@@ -40,8 +40,8 @@ describe("createGroupFromSchema()", () => {
         expect(result.entries[0].schema).toEqual(rawFooSchema);
     });
     describe.each`
-        groupName  | parserConfigDescription                                  | parserConfig
-        ${"allOf"} | ${"(with empty parserConfig)"}                           | ${{}}
+        groupName  | parserConfigDescription                                | parserConfig
+        ${"allOf"} | ${"(with empty parserConfig)"}                         | ${{}}
         ${"anyOf"} | ${"(when parserConfig.anyOf = { type: 'likeAllOf' })"} | ${{ anyOf: { type: "likeAllOf" } }}
         ${"oneOf"} | ${"(when parserConfig.oneOf = { type: 'likeAllOf' })"} | ${{ oneOf: { type: "likeAllOf" } }}
     `("returns allOf group for schema containing $groupName, flattening entries $parserConfigDescription", ({
@@ -205,7 +205,7 @@ describe("createGroupFromSchema()", () => {
             expect(result.entries[5].entries[0].schema).toEqual(rawQuxSchema);
             expect(result.entries[5].entries[1].schema).toEqual(rawQuuxSchema);
         });
-        it("ignoring oneOf if anyOf is also present (when parserConfig.anyOf/oneOf.type = 'asAdditionalColumn')", () => {
+        it("including oneOf and anyOf if both are present (when parserConfig.anyOf/oneOf.type = 'asAdditionalColumn')", () => {
             const parserConfig = {
                 anyOf: { type: "asAdditionalColumn" },
                 oneOf: { type: "asAdditionalColumn" }
@@ -213,7 +213,7 @@ describe("createGroupFromSchema()", () => {
             const schema = new JsonSchema(rawTargetSchema, parserConfig);
             const result = createGroupFromSchema(schema);
             expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
-            expect(result.entries).toHaveLength(4);
+            expect(result.entries).toHaveLength(5);
             expect(result.entries[0]).toBe(schema);
             expect(result.entries[1].schema).toEqual(rawFooSchema);
             expect(result.entries[2].schema).toEqual(rawBarSchema);
@@ -221,13 +221,10 @@ describe("createGroupFromSchema()", () => {
             expect(result.entries[3].entries).toHaveLength(2);
             expect(result.entries[3].entries[0].schema).toEqual(rawFoobarSchema);
             expect(result.entries[3].entries[1].schema).toEqual(rawBazSchema);
-            // oneOf should be skipped, i.e. not:
-            /*
-                expect(result.entries[4]).toBeInstanceOf(JsonSchemaOneOfGroup);
-                expect(result.entries[4].entries).toHaveLength(2);
-                expect(result.entries[4].entries[0].schema).toEqual(rawQuxSchema);
-                expect(result.entries[4].entries[1].schema).toEqual(rawQuuxSchema);
-            */
+            expect(result.entries[4]).toBeInstanceOf(JsonSchemaOneOfGroup);
+            expect(result.entries[4].entries).toHaveLength(2);
+            expect(result.entries[4].entries[0].schema).toEqual(rawQuxSchema);
+            expect(result.entries[4].entries[1].schema).toEqual(rawQuuxSchema);
         });
     });
     it("throws error for invalid $ref if scope provided", () => {
@@ -396,41 +393,75 @@ describe("getOptionsInSchemaGroup()", () => {
         static getDefaultGroupTitle() {
             return "mocked";
         }
-        constructor(treatLikeAllOf) {
+        constructor(treatAsAdditionalColumn = false) {
             super();
-            this.treatLikeAllOf = treatLikeAllOf;
+            this.treatAsAdditionalColumn = treatAsAdditionalColumn;
         }
-        shouldBeTreatedLikeAllOf() { return this.treatLikeAllOf && super.shouldBeTreatedLikeAllOf(); }
+        considerSchemasAsSeparateOptions() { return this.treatAsAdditionalColumn; }
     }
-    describe("when shouldBeTreatedLikeAllOf() === true", () => {
-        it("ignores JsonSchema entries ", () => {
-            const group = new MockJsonSchemaGroup(true)
+
+    describe("when considerSchemasAsSeparateOptions() === false", () => {
+        it("ignores JsonSchema entries", () => {
+            const group = new MockJsonSchemaGroup(false)
                 .with(new JsonSchema())
                 .with(new JsonSchema());
             expect(getOptionsInSchemaGroup(group)).toEqual({});
         });
-        it("ignores nested groups only containing JsonSchema entries when nested groups also have shouldBeTreatedLikeAllOf() === true", () => {
-            const group = new MockJsonSchemaGroup(true)
-                .with(
-                    new MockJsonSchemaGroup(true)
+        it("flattening single JsonSchemaGroup entry that contains options", () => {
+            const group = new MockJsonSchemaGroup(false)
+                .with(new JsonSchema())
+                .with(new MockJsonSchemaGroup(true)
+                    .with(new JsonSchema())
+                    .with(new JsonSchema()));
+            expect(getOptionsInSchemaGroup(group)).toEqual({
+                options: [
+                    {},
+                    {}
+                ]
+            });
+        });
+        it("ignores JsonSchema entries while including parallel JsonSchemaGroup entries that contain options", () => {
+            const group = new MockJsonSchemaGroup(false)
+                .with(new JsonSchema())
+                .with(new MockJsonSchemaGroup(true)
+                    .with(new JsonSchema())
+                    .with(new JsonSchema()))
+                .with(new MockJsonSchemaGroup(true)
+                    .with(new JsonSchema())
+                    .with(new JsonSchema()));
+            expect(getOptionsInSchemaGroup(group)).toEqual({
+                options: [
+                    {
+                        options: [
+                            {},
+                            {}
+                        ]
+                    },
+                    {
+                        options: [
+                            {},
+                            {}
+                        ]
+                    }
+                ]
+            });
+        });
+        it("ignores nested groups only containing JsonSchema entries when nested groups have considerSchemasAsSeparateOptions() === false", () => {
+            const group = new MockJsonSchemaGroup(false)
+                .with(new MockJsonSchemaGroup(false)
+                    .with(new JsonSchema())
+                    .with(new JsonSchema()))
+                .with(new MockJsonSchemaGroup(false)
+                    .with(new MockJsonSchemaGroup(false)
                         .with(new JsonSchema())
-                        .with(new JsonSchema())
-                )
-                .with(
-                    new MockJsonSchemaGroup(true)
-                        .with(
-                            new MockJsonSchemaGroup(true)
-                                .with(new JsonSchema())
-                                .with(new JsonSchema())
-                        )
-                        .with(new JsonSchema())
-                );
+                        .with(new JsonSchema()))
+                    .with(new JsonSchema()));
             expect(getOptionsInSchemaGroup(group)).toEqual({});
         });
     });
-    describe("when shouldBeTreatedLikeAllOf() === false", () => {
+    describe("when considerSchemasAsSeparateOptions() === true", () => {
         it("represents JsonSchema entries as empty arrays", () => {
-            const group = new MockJsonSchemaGroup(false)
+            const group = new MockJsonSchemaGroup(true)
                 .with(new JsonSchema())
                 .with(new JsonSchema());
             expect(getOptionsInSchemaGroup(group)).toEqual({
@@ -440,22 +471,16 @@ describe("getOptionsInSchemaGroup()", () => {
                 ]
             });
         });
-        it("represents hierarchy of nested groups that also have shouldBeTreatedLikeAllOf() === false", () => {
-            const group = new MockJsonSchemaGroup(false)
-                .with(
-                    new MockJsonSchemaGroup(false)
+        it("represents hierarchy of nested groups that have considerSchemasAsSeparateOptions() === true", () => {
+            const group = new MockJsonSchemaGroup(true)
+                .with(new MockJsonSchemaGroup(true)
+                    .with(new JsonSchema())
+                    .with(new JsonSchema()))
+                .with(new MockJsonSchemaGroup(true)
+                    .with(new MockJsonSchemaGroup(true)
                         .with(new JsonSchema())
-                        .with(new JsonSchema())
-                )
-                .with(
-                    new MockJsonSchemaGroup(false)
-                        .with(
-                            new MockJsonSchemaGroup(false)
-                                .with(new JsonSchema())
-                                .with(new JsonSchema())
-                        )
-                        .with(new JsonSchema())
-                );
+                        .with(new JsonSchema()))
+                    .with(new JsonSchema()));
             expect(getOptionsInSchemaGroup(group)).toEqual({
                 options: [
                     {
@@ -479,22 +504,16 @@ describe("getOptionsInSchemaGroup()", () => {
             });
         });
     });
-    it("represents hierarchy of nested groups with mixed shouldBeTreatedLikeAllOf() – 1", () => {
-        const group = new MockJsonSchemaGroup(false)
-            .with(
-                new MockJsonSchemaGroup(true)
+    it("represents hierarchy of nested groups with mixed considerSchemasAsSeparateOptions() – 1", () => {
+        const group = new MockJsonSchemaGroup(true)
+            .with(new MockJsonSchemaGroup(false)
+                .with(new JsonSchema())
+                .with(new JsonSchema()))
+            .with(new MockJsonSchemaGroup(false)
+                .with(new MockJsonSchemaGroup(true)
                     .with(new JsonSchema())
-                    .with(new JsonSchema())
-            )
-            .with(
-                new MockJsonSchemaGroup(true)
-                    .with(
-                        new MockJsonSchemaGroup(false)
-                            .with(new JsonSchema())
-                            .with(new JsonSchema())
-                    )
-                    .with(new JsonSchema())
-            );
+                    .with(new JsonSchema()))
+                .with(new JsonSchema()));
         expect(getOptionsInSchemaGroup(group)).toEqual({
             options: [
                 {},
@@ -507,22 +526,16 @@ describe("getOptionsInSchemaGroup()", () => {
             ]
         });
     });
-    it("represents hierarchy of nested groups with mixed shouldBeTreatedLikeAllOf() – 2", () => {
-        const group = new MockJsonSchemaGroup(true)
-            .with(
-                new MockJsonSchemaGroup(false)
+    it("represents hierarchy of nested groups with mixed considerSchemasAsSeparateOptions() – 2", () => {
+        const group = new MockJsonSchemaGroup(false)
+            .with(new MockJsonSchemaGroup(true)
+                .with(new JsonSchema())
+                .with(new JsonSchema()))
+            .with(new MockJsonSchemaGroup(true)
+                .with(new MockJsonSchemaGroup(false)
                     .with(new JsonSchema())
-                    .with(new JsonSchema())
-            )
-            .with(
-                new MockJsonSchemaGroup(false)
-                    .with(
-                        new MockJsonSchemaGroup(true)
-                            .with(new JsonSchema())
-                            .with(new JsonSchema())
-                    )
-                    .with(new JsonSchema())
-            );
+                    .with(new JsonSchema()))
+                .with(new JsonSchema()));
         expect(getOptionsInSchemaGroup(group)).toEqual({
             options: [
                 {
@@ -838,7 +851,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
                 { items: { description: "bar" } },
                 {
                     [groupName]: [
-                        true,
+                        { title: "no item type defined" },
                         { additionalItems: { type: "object" } }
                     ]
                 }

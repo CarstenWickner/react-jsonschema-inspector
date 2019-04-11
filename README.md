@@ -38,11 +38,15 @@ npm i react-jsonschema-inspector
 | `buildArrayProperties` | Function: accepting a `JsonSchema` instance representing an array's declared type of items and returning an object listing the available properties to offer with either `JsonSchema` or raw JSON Schemas as values. The default, providing access to the array's items, is: `arrayItemSchema => ({ "[0]": arrayItemSchema })` |
 | `parserConfig` | Object: enabling the inclusion/exclusion of optional parts of a JSON Schema – both for the inclusion of properties and their attributes as well as in the search. |
 | `parserConfig.anyOf` | Object: enabling the inclusion/exclusion of JSON Schema parts wrapped in `anyOf`. |
-| `parserConfig.anyOf.type` | String: can be `"likeAllOf"` or `"asAdditionalColumn"`. |
+| `parserConfig.anyOf.type` | String: can be `"likeAllOf"` or `"asAdditionalColumn"` (the latter being the default if no `parserConfig` is provided). |
 | `parserConfig.anyOf.groupTitle` | String: alternative title to show in option selection column (only relevant if `type: "asAdditionalColumn"`) – defaults to `"any of"` |
+| `parserConfig.anyOf.optionNameForIndex` | Function: providing the name/label to show for a single option (only relevant if `type: "asAdditionalColumn"`) –
+defaults to ``(optionIndexes) => `Option ${optionIndexes.map(index => index + 1).join("-")}` ``, resulting in e.g. "Option 1", "Option 2-1", "Option 3" |
 | `parserConfig.oneOf` | Object: enabling the inclusion/exclusion of JSON Schema parts wrapped in `oneOf`. |
-| `parserConfig.oneOf.type` | String: can be `"likeAllOf"` or `"asAdditionalColumn"`. |
+| `parserConfig.oneOf.type` | String: can be `"likeAllOf"` or `"asAdditionalColumn"` (the latter being the default if no `parserConfig` is provided). |
 | `parserConfig.oneOf.groupTitle` | String: alternative title to show in option selection column (only relevant if `type: "asAdditionalColumn"`) – defaults to `"one of"` |
+| `parserConfig.oneOf.optionNameForIndex` | Function: providing the name/label to show for a single option (only relevant if `type: "asAdditionalColumn"`) –
+defaults to ``(optionIndexes) => `Option ${optionIndexes.map(index => index + 1).join("-")}` ``, resulting in e.g. "Option 1", "Option 2-1", "Option 3" |
 | `breadcrumbs` | Object: enabling the definition of options for the breadcrumbs feature in the footer (can be disabled by setting to `null`) |
 | `breadcrumbs.prefix` | String: to be shown in front of the root selection (e.g. "//" or "./") – defaults to `""` |
 | `breadcrumbs.separator` | String: to be shown in front of any non-root selection (e.g. "/") – defaults to `"."` |

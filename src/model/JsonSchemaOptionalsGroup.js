@@ -7,7 +7,7 @@ export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
     /**
      * Configuration object determining how a particular part of a schema is being interpreted.
      *
-     * @type {{type: string, groupTitle: ?string}}
+     * @type {{type: string, groupTitle: ?string, optionNameForIndex: ?Function}}
      */
     settings;
 
@@ -35,10 +35,10 @@ export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
     /**
      * Implementation of method expected by super class, determining desired behaviour from settings.type value.
      *
-     * @returns {boolean} whether this optional group should be treated like a mandatory ("allOf") group
+     * @returns {boolean} 'true' if `settings.type === "asAdditionalColumn"`
      */
-    shouldBeTreatedLikeAllOf() {
-        return this.settings.type === "likeAllOf" && super.shouldBeTreatedLikeAllOf();
+    considerSchemasAsSeparateOptions() {
+        return this.settings.type === "asAdditionalColumn";
     }
 
     /**

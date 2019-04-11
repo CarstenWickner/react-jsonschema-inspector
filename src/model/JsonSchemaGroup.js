@@ -10,13 +10,27 @@ export default class JsonSchemaGroup {
     entries = [];
 
     /**
+     * Determine whether an entry of type `JsonSchema` should be treated as a separate selectable option (i.e. like a `JsonSchemaGroup`).
+     *
+     * @returns {boolean} by default: always 'false', but may be overridden by sub-classes
+     */
+    // eslint-disable-next-line class-methods-use-this
+    considerSchemasAsSeparateOptions() {
+        return false;
+    }
+
+    /**
      * Indicate whether the entries of this group should be treated as if they were all defined in a single schema.
      * Otherwise, all entries shall be listed as alternative options to choose from.
      *
      * @returns {boolean} whether entries should be included transparently (otherwise as options)
      */
-    shouldBeTreatedLikeAllOf() {
-        return this.entries.filter(entry => entry instanceof JsonSchemaGroup && !entry.shouldBeTreatedLikeAllOf()).length < 2;
+    shouldTreatEntriesAsOne() {
+        let filteredEntries = this.entries;
+        if (!this.considerSchemasAsSeparateOptions()) {
+            filteredEntries = filteredEntries.filter(entry => entry instanceof JsonSchemaGroup && !entry.shouldTreatEntriesAsOne());
+        }
+        return filteredEntries.length < 2;
     }
 
     /**
@@ -47,9 +61,10 @@ export default class JsonSchemaGroup {
      * @returns {boolean} whether `checkEntry` returned 'true' for any item in this group's `entries`
      */
     someEntry(checkEntry, optionTarget) {
-        const treatLikeAllOf = this.shouldBeTreatedLikeAllOf();
+        const considerSchemasAsOptions = this.considerSchemasAsSeparateOptions();
+        const treatEntriesAsSingleSchema = this.shouldTreatEntriesAsOne();
         return this.entries.some((entry) => {
-            if (!treatLikeAllOf) {
+            if (!treatEntriesAsSingleSchema && (considerSchemasAsOptions || entry instanceof JsonSchemaGroup)) {
                 // an optional entry should be skipped if it is not the specifically selected one
                 const isSelectedEntry = !optionTarget || (optionTarget.length && optionTarget[0].index === 0);
                 if (optionTarget && optionTarget.length) {
@@ -65,7 +80,7 @@ export default class JsonSchemaGroup {
                 // recursively check all parts of this nested group
                 return entry.someEntry(
                     checkEntry,
-                    (treatLikeAllOf || !optionTarget) ? optionTarget : optionTarget.slice(1)
+                    (treatEntriesAsSingleSchema || !optionTarget) ? optionTarget : optionTarget.slice(1)
                 );
             }
             // entry is a JsonSchema, invoke the given checkEntry function and return its result
@@ -103,8 +118,8 @@ export default class JsonSchemaGroup {
     /**
      * Create representation of this group's given options.
      *
-     * @param {Array.<{groupTitle: ?string, options: ?Array.<Object>}>} containedOptions - list of (this kind of) option representations
-     * @returns {{groupTitle: ?string, options: ?Array.<Object>}} representation of the available options on this group's top level
+     * @param {Array.<{groupTitle: ?string, options: ?Array.<Object>, nameForIndex: ?Function}>} containedOptions - nested option representations
+     * @returns {{groupTitle: ?string, options: ?Array.<Object>, nameForIndex: ?Function}} representation of the given group's top level options
      */
     // eslint-disable-next-line class-methods-use-this
     createOptionsRepresentation(containedOptions) {

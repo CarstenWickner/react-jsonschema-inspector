@@ -803,11 +803,12 @@ describe("createFilterFunctionForColumn()", () => {
                 ]
             };
 
+            const bothAsColumn = { oneOf: asColumn, anyOf: asColumn };
             it.each`
-                parserConfigDescription                       | parserConfig                            | result
-                ${"oneOf 'asAdditionalColumn'"}               | ${{ oneOf: asColumn }}                  | ${[[1], [2, 0]]}
-                ${"anyOf 'likeAllOf'"}                        | ${{ anyOf: asColumn }}                  | ${[[0], [2, 1]]}
-                ${"oneOf and anyOf 'asAdditionalColumn'"}     | ${{ oneOf: asColumn, anyOf: asColumn }} | ${[[0], [2, 1], [3, 0]]}
+                parserConfigDescription                   | parserConfig           | result
+                ${"oneOf 'asAdditionalColumn'"}           | ${{ oneOf: asColumn }} | ${[[1], [2, 0]]}
+                ${"anyOf 'likeAllOf'"}                    | ${{ anyOf: asColumn }} | ${[[0], [2, 1]]}
+                ${"oneOf and anyOf 'asAdditionalColumn'"} | ${bothAsColumn}        | ${[[0, 0], [0, 2, 1], [0, 3, 0], [1, 1], [1, 2, 0], [1, 3, 1]]}
             `("with $parserConfigDescription", ({ parserConfig, result }) => {
                 const schema = new JsonSchema(rawSchema, parserConfig);
                 const contextGroup = createGroupFromSchema(schema);

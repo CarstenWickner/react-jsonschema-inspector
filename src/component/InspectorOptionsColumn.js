@@ -7,9 +7,7 @@ import InspectorItem from "./InspectorItem";
 import { getColumnDataPropTypeShape } from "./renderDataUtils";
 
 class InspectorOptionsColumn extends Component {
-    static defaultOptionNameForIndex(optionIndexes) {
-        return `Option ${optionIndexes.map(index => index + 1).join("-")}`;
-    }
+    static defaultOptionNameForIndex = optionIndexes => `Option ${optionIndexes.map(index => index + 1).join("-")}`;
 
     renderSingleOption(optionIndexes, name) {
         const {
@@ -31,12 +29,12 @@ class InspectorOptionsColumn extends Component {
     renderGroupOfOptions({ groupTitle, options, optionNameForIndex = InspectorOptionsColumn.defaultOptionNameForIndex }, parentOptionIndexes = []) {
         return [
             groupTitle && (
-                <span
+                <div
                     key="group-title"
                     className="optional-group-title"
                 >
-                    {groupTitle}
-                </span>
+                    <span>{groupTitle}</span>
+                </div>
             ),
             (
                 <ul key="list-of-options">
