@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with minimal/default props 1`] = `
+<div
+  className="jsonschema-inspector-details"
+>
+  <InspectorDetailsContent
+    columnData={
+      Array [
+        Object {
+          "items": Object {
+            "Foo": JsonSchemaAllOfGroup {
+              "entries": Array [
+                JsonSchema {
+                  "parserConfig": Object {},
+                  "schema": Object {
+                    "description": "Foobar",
+                    "title": "Bar",
+                  },
+                  "scope": RefScope {
+                    "externalRefs": Map {},
+                    "internalRefs": Map {
+                      "#" => [Circular],
+                    },
+                    "otherScopes": Array [],
+                  },
+                },
+              ],
+            },
+          },
+          "onSelect": [Function],
+          "selectedItem": "Foo",
+          "trailingSelection": true,
+        },
+      ]
+    }
+    itemSchemaGroup={
+      JsonSchemaAllOfGroup {
+        "entries": Array [
+          JsonSchema {
+            "parserConfig": Object {},
+            "schema": Object {
+              "description": "Foobar",
+              "title": "Bar",
+            },
+            "scope": RefScope {
+              "externalRefs": Map {},
+              "internalRefs": Map {
+                "#" => [Circular],
+              },
+              "otherScopes": Array [],
+            },
+          },
+        ],
+      }
+    }
+    selectionColumnIndex={0}
+  />
+</div>
+`;

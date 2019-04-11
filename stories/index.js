@@ -6,7 +6,7 @@ import {
     array as knobsArray, boolean as knobsBoolean, object as knobsObject, text as knobsText, withKnobs
 } from "@storybook/addon-knobs";
 
-import Inspector from "../src/Inspector";
+import { Inspector, getFieldValueFromSchemaGroup } from "../src/index";
 
 import metaSchema from "./schema-meta.json";
 import hyperMetaSchema from "./schema-hyper-meta.json";
@@ -33,8 +33,25 @@ storiesOf("Inspector", module)
             searchOptions={{
                 fields: ["title", "description"]
             }}
+            buildArrayProperties={(arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
+                "[0]": arrayItemSchema,
+                length: {
+                    title: "Number of Items",
+                    type: "number",
+                    minValue: getFieldValueFromSchemaGroup(arraySchemaGroup, "minItems",
+                        (a, b) => {
+                            if (b === undefined) {
+                                return a;
+                            }
+                            if (a === undefined) {
+                                return b;
+                            }
+                            return Math.min(a, b);
+                        }, 0, null, optionIndexes)
+                }
+            })}
             renderEmptyDetails={({ rootColumnSchemas }) => (
-                <div style={{ padding: "0.5em 1em 0 1em" }}>
+                <div style={{ padding: "0.5em 1em 0" }}>
                     <h3>JSON Schema Inspector</h3>
                     <p>
                         {`Just click on one of the ${Object.keys(rootColumnSchemas).length} schema titles
@@ -63,7 +80,6 @@ storiesOf("Inspector", module)
             breadcrumbs={{
                 prefix: knobsText("Prefix", "Selection: "),
                 separator: knobsText("Separator", "/"),
-                arrayItemAccessor: knobsText("Array Item Accessor", "[]"),
                 preventNavigation: knobsBoolean("Prevent Navigation (via double-click)", false)
             }}
             onSelect={action("onSelect")}
@@ -74,16 +90,16 @@ storiesOf("Inspector", module)
             schemas={knobsObject("Schemas", {
                 Shop: shopSelectionSchema
             })}
-            defaultSelectedItems={["Shop", "vegetables"]}
+            defaultSelectedItems={["Shop", "inventory"]}
             breadcrumbs={null}
-            renderSelectionDetails={({ itemSchema, columnData, selectionColumnIndex }) => (
+            renderSelectionDetails={({ itemSchemaGroup, columnData, selectionColumnIndex }) => (
                 <div style={{ padding: "1em", backgroundColor: "#80cbc4" }}>
                     <h3>Custom Details</h3>
                     <p>
-                        {itemSchema.description}
+                        {getFieldValueFromSchemaGroup(itemSchemaGroup, "description")}
                     </p>
                     <h4>Selection Path</h4>
-                    <code>
+                    <code style={{ wordBreak: "break-word" }}>
                         {`//${columnData
                             .filter((_column, index) => index <= selectionColumnIndex)
                             .map(column => column.selectedItem)
@@ -100,7 +116,7 @@ storiesOf("Inspector", module)
                 Person: personSchema,
                 Shop: shopSelectionSchema
             }}
-            defaultSelectedItems={["Person", "friends", "friends"]}
+            defaultSelectedItems={["Person", "friends", "[0]", "friends"]}
             renderItemContent={({
                 name, hasNestedItems, selected, focused
             }) => {
@@ -123,10 +139,10 @@ storiesOf("Inspector", module)
                 Person: personSchema,
                 Shop: shopSelectionSchema
             }}
-            defaultSelectedItems={["Person", "friends", "friends"]}
+            defaultSelectedItems={["Person", "friends", "[0]", "friends"]}
             searchOptions={{
                 fields: knobsArray("Search Fields", ["title", "description"]),
-                inputPlaceholder: knobsText("Input Placeholder", "Find in 'Title' or 'Description'…")
+                inputPlaceholder: knobsText("Input Placeholder", "Find in Title or Description…")
             }}
             onSelect={action("onSelect")}
         />

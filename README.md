@@ -35,10 +35,22 @@ npm i react-jsonschema-inspector
 | `referenceSchemas` | Array of objects: the entries are expected to be JSON Schema definitions with an absolute URI as `$id`/`id` (compatible to Draft 4, 6 or 7). These schemas will not be shown on the root column, but are used to resolve URI `$ref`-erences in any of the displayed `schemas` or in another entry of the `referenceSchemas` |
 | `defaultSelectedItems` | Array of strings: each referring to the name of the selected item in the respective column (i.e. the first entry in this array should match one key in the `schemas` object) |
 | `onSelect` | Function: call-back being invoked after the selection changed. Receives two parameters: (1) the selection - as per the `defaultSelectedItems`, (2) an object containing the "columnData" - the full render information for all visible columns |
+| `buildArrayProperties` | Function: accepting a `JsonSchema` instance representing an array's declared type of items and returning an object listing the available properties to offer with either `JsonSchema` or raw JSON Schemas as values. The default, providing access to the array's items, is: `arrayItemSchema => ({ "[0]": arrayItemSchema })` |
+| `parserConfig` | Object: enabling the inclusion/exclusion of optional parts of a JSON Schema – both for the inclusion of properties and their attributes as well as in the search. |
+| `parserConfig.anyOf` | Object: enabling the inclusion/exclusion of JSON Schema parts wrapped in `anyOf`. |
+| `parserConfig.anyOf.type` | String: can be `"likeAllOf"` or `"asAdditionalColumn"` (the latter being the default if no `parserConfig` is provided). |
+| `parserConfig.anyOf.groupTitle` | String: alternative title to show in option selection column (only relevant if `type: "asAdditionalColumn"`) – defaults to `"any of"` |
+| `parserConfig.anyOf.optionNameForIndex` | Function: providing the name/label to show for a single option (only relevant if `type: "asAdditionalColumn"`) –
+defaults to ``(optionIndexes) => `Option ${optionIndexes.map(index => index + 1).join("-")}` ``, resulting in e.g. "Option 1", "Option 2-1", "Option 3" |
+| `parserConfig.oneOf` | Object: enabling the inclusion/exclusion of JSON Schema parts wrapped in `oneOf`. |
+| `parserConfig.oneOf.type` | String: can be `"likeAllOf"` or `"asAdditionalColumn"` (the latter being the default if no `parserConfig` is provided). |
+| `parserConfig.oneOf.groupTitle` | String: alternative title to show in option selection column (only relevant if `type: "asAdditionalColumn"`) – defaults to `"one of"` |
+| `parserConfig.oneOf.optionNameForIndex` | Function: providing the name/label to show for a single option (only relevant if `type: "asAdditionalColumn"`) –
+defaults to ``(optionIndexes) => `Option ${optionIndexes.map(index => index + 1).join("-")}` ``, resulting in e.g. "Option 1", "Option 2-1", "Option 3" |
 | `breadcrumbs` | Object: enabling the definition of options for the breadcrumbs feature in the footer (can be disabled by setting to `null`) |
 | `breadcrumbs.prefix` | String: to be shown in front of the root selection (e.g. "//" or "./") – defaults to `""` |
 | `breadcrumbs.separator` | String: to be shown in front of any non-root selection (e.g. "/") – defaults to `"."` |
-| `breadcrumbs.arrayItemAccessor` | String: to be appended for any non-trailing selection that is an array (e.g. ".get(0)") – defaults to `"[0]"` |
+| `breadcrumbs.skipSeparator` | Function: expecting a `JsonSchema` as input and should return an object containing `JsonSchema` or raw JSON Schemas as values – defaults to excluding `"[0]"` |
 | `breadcrumbs.mutateName` | Function: expecting two inputs: (1) the selected item's name, (2) the full information for the respective column and (3) the index of the respective column; a column's breadcrumb can be skipped by returning `null` |
 | `breadcrumbs.preventNavigation` | Boolean: set to `true` in order to turn-off the default behaviour of discarding any following selections when double-clicking on a breadcrumbs item |
 | `searchOptions` | Object: enabling the definition of options for the search/filter feature in the header (is disabled by default) – either `searchOptions.fields` or `searchOptions.filterBy` needs to be specified to enable it. the component itself will take care of looking-up sub-schemas (e.g. in `properties`) and also respects `$ref`-erences and has no problem with circular references. |
@@ -47,8 +59,8 @@ npm i react-jsonschema-inspector
 | `searchOptions.inputPlaceholder` | String: for setting the input hint in the search field. This defaults to `"Search"`. |
 | `searchOptions.debounceWait` | Number indicating the delay in milliseconds between the last change to the search term being entered and it actually being applied. This defaults to `200` but may be increased when used with exceptionally large schemas and you experience performance issues. Please refer to the documentation on [`lodash.debounce`](https://lodash.com/docs/4.17.11#debounce). |
 | `searchOptions.debounceMaxWait` | Number indicating the maximum delay in milliseconds after the search term was changed. This defaults to `500`. Please refer to the documentation on [`lodash.debounce`](https://lodash.com/docs/4.17.11#debounce). |
-| `renderItemContent` | Function: custom render function for name of single property/sub-schema in a column. Receives one parameter: object with the following properties: "name", "hasNestedItems", "selected", "schema" |
-| `renderSelectionDetails` | Function: custom render function for the "Details" block on the right for the single property/sub-schema being selected. Receives one parameter: object with the following properties: "itemSchema", "columnData", "selectionColumnIndex" |
+| `renderItemContent` | Function: custom render function for name of single property/sub-schema in a column. Receives one parameter: object with the following properties: "name", "hasNestedItems", "selected", "schemaGroup" |
+| `renderSelectionDetails` | Function: custom render function for the "Details" block on the right for the single property/sub-schema being selected. Receives one parameter: object with the following properties: "itemSchemaGroup", "columnData", "selectionColumnIndex" |
 | `renderEmptyDetails` | Function: custom render function for the "Details" block on the right if nothing is selected yet. Receives one parameter, which is an object with the "rootColumnSchemas" property, which holds the array of top-level schemas (as derived from the `schemas` prop and augmented by any given `referenceSchemas`)
 
 
@@ -73,8 +85,8 @@ It is also backwards-compatible with Drafts 4 and 6.
 | `items`| Partially | used to look-up `properties` of single kind of items in an array; however if `items` is an array of multiple sub-schemas they are being *ignored* |
 | `additionalItems`| Yes | used to look-up `properties` of kind of items in an array if `items` is not present or defined as an array (which is not supported itself), otherwise `additionalItems` are being *ignored* |
 | `allOf` | Yes | used to combine sub-schemas transparently |
-| `anyOf` | - | *ignored* |
-| `oneOf` | - | *ignored* |
+| `anyOf` | Yes | used to combine sub-schemas (transparently via `parserConfig.anyOf.type === "likeAllOf"` or explicitly via `parserConfig.anyOf.type === "asAdditionalColumn"`) |
+| `oneOf` | Yes | used to combine sub-schemas (transparently via `parserConfig.oneOf.type === "likeAllOf"` or explicitly via `parserConfig.oneOf.type === "asAdditionalColumn"`) |
 | `not` | - | *ignored* |
 | `contains` | - | *ignored* |
 | `dependencies` | - | *ignored* |
@@ -110,11 +122,6 @@ It is also backwards-compatible with Drafts 4 and 6.
 | `minProperties` | - | *ignored* |
 | `maxProperties` | - | *ignored* |
 
-
-## Ideas Needed
-
-- support `oneOf` (if there is a nice/consistent way to do so)
-- support `anyOf` (if there is a nice/consistent way to do so)
 
 
 [main-logo-image]: https://raw.githubusercontent.com/CarstenWickner/react-jsonschema-inspector/master/logo.svg?sanitize=true

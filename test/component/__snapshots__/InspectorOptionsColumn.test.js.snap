@@ -1,0 +1,305 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with minimal/default props 1`] = `
+<div
+  className="jsonschema-inspector-column optional-groups"
+  onClick={[Function]}
+  role="presentation"
+  tabIndex={-1}
+>
+  <div
+    className="optional-group-title"
+    key="group-title"
+  >
+    <span>
+      one of
+    </span>
+  </div>
+  <ul
+    key="list-of-options"
+  >
+    <li
+      key="[0]"
+    >
+      <InspectorItem
+        name="Exclusive Option 1"
+        onSelect={[Function]}
+        optionIndexes={
+          Array [
+            0,
+          ]
+        }
+        renderContent={null}
+        schemaGroup={
+          JsonSchemaAllOfGroup {
+            "entries": Array [
+              JsonSchema {
+                "parserConfig": undefined,
+                "schema": Object {
+                  "description": "Foobar",
+                },
+                "scope": RefScope {
+                  "externalRefs": Map {},
+                  "internalRefs": Map {
+                    "#" => [Circular],
+                  },
+                  "otherScopes": Array [],
+                },
+              },
+              JsonSchemaOneOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": undefined,
+                    "schema": Object {
+                      "title": "Foo",
+                    },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
+                      "internalRefs": Map {
+                        "#" => [Circular],
+                      },
+                      "otherScopes": Array [],
+                    },
+                  },
+                  JsonSchemaAnyOfGroup {
+                    "entries": Array [
+                      JsonSchema {
+                        "parserConfig": undefined,
+                        "schema": Object {
+                          "title": "Bar",
+                        },
+                        "scope": RefScope {
+                          "externalRefs": Map {},
+                          "internalRefs": Map {
+                            "#" => [Circular],
+                          },
+                          "otherScopes": Array [],
+                        },
+                      },
+                      JsonSchema {
+                        "parserConfig": undefined,
+                        "schema": Object {
+                          "description": "Baz",
+                        },
+                        "scope": RefScope {
+                          "externalRefs": Map {},
+                          "internalRefs": Map {
+                            "#" => [Circular],
+                          },
+                          "otherScopes": Array [],
+                        },
+                      },
+                    ],
+                    "settings": Object {
+                      "type": "asAdditionalColumn",
+                    },
+                  },
+                ],
+                "settings": Object {
+                  "optionNameForIndex": [Function],
+                  "type": "asAdditionalColumn",
+                },
+              },
+            ],
+          }
+        }
+        selected={false}
+      />
+    </li>
+    <li
+      key="[1]"
+    >
+      <div
+        className="optional-group-title"
+        key="group-title"
+      >
+        <span>
+          any of
+        </span>
+      </div>
+      <ul
+        key="list-of-options"
+      >
+        <li
+          key="[1,0]"
+        >
+          <InspectorItem
+            name="Option 2-1"
+            onSelect={[Function]}
+            optionIndexes={
+              Array [
+                1,
+                0,
+              ]
+            }
+            renderContent={null}
+            schemaGroup={
+              JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": undefined,
+                    "schema": Object {
+                      "description": "Foobar",
+                    },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
+                      "internalRefs": Map {
+                        "#" => [Circular],
+                      },
+                      "otherScopes": Array [],
+                    },
+                  },
+                  JsonSchemaOneOfGroup {
+                    "entries": Array [
+                      JsonSchema {
+                        "parserConfig": undefined,
+                        "schema": Object {
+                          "title": "Foo",
+                        },
+                        "scope": RefScope {
+                          "externalRefs": Map {},
+                          "internalRefs": Map {
+                            "#" => [Circular],
+                          },
+                          "otherScopes": Array [],
+                        },
+                      },
+                      JsonSchemaAnyOfGroup {
+                        "entries": Array [
+                          JsonSchema {
+                            "parserConfig": undefined,
+                            "schema": Object {
+                              "title": "Bar",
+                            },
+                            "scope": RefScope {
+                              "externalRefs": Map {},
+                              "internalRefs": Map {
+                                "#" => [Circular],
+                              },
+                              "otherScopes": Array [],
+                            },
+                          },
+                          JsonSchema {
+                            "parserConfig": undefined,
+                            "schema": Object {
+                              "description": "Baz",
+                            },
+                            "scope": RefScope {
+                              "externalRefs": Map {},
+                              "internalRefs": Map {
+                                "#" => [Circular],
+                              },
+                              "otherScopes": Array [],
+                            },
+                          },
+                        ],
+                        "settings": Object {
+                          "type": "asAdditionalColumn",
+                        },
+                      },
+                    ],
+                    "settings": Object {
+                      "optionNameForIndex": [Function],
+                      "type": "asAdditionalColumn",
+                    },
+                  },
+                ],
+              }
+            }
+            selected={false}
+          />
+        </li>
+        <li
+          key="[1,1]"
+        >
+          <InspectorItem
+            name="Option 2-2"
+            onSelect={[Function]}
+            optionIndexes={
+              Array [
+                1,
+                1,
+              ]
+            }
+            renderContent={null}
+            schemaGroup={
+              JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": undefined,
+                    "schema": Object {
+                      "description": "Foobar",
+                    },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
+                      "internalRefs": Map {
+                        "#" => [Circular],
+                      },
+                      "otherScopes": Array [],
+                    },
+                  },
+                  JsonSchemaOneOfGroup {
+                    "entries": Array [
+                      JsonSchema {
+                        "parserConfig": undefined,
+                        "schema": Object {
+                          "title": "Foo",
+                        },
+                        "scope": RefScope {
+                          "externalRefs": Map {},
+                          "internalRefs": Map {
+                            "#" => [Circular],
+                          },
+                          "otherScopes": Array [],
+                        },
+                      },
+                      JsonSchemaAnyOfGroup {
+                        "entries": Array [
+                          JsonSchema {
+                            "parserConfig": undefined,
+                            "schema": Object {
+                              "title": "Bar",
+                            },
+                            "scope": RefScope {
+                              "externalRefs": Map {},
+                              "internalRefs": Map {
+                                "#" => [Circular],
+                              },
+                              "otherScopes": Array [],
+                            },
+                          },
+                          JsonSchema {
+                            "parserConfig": undefined,
+                            "schema": Object {
+                              "description": "Baz",
+                            },
+                            "scope": RefScope {
+                              "externalRefs": Map {},
+                              "internalRefs": Map {
+                                "#" => [Circular],
+                              },
+                              "otherScopes": Array [],
+                            },
+                          },
+                        ],
+                        "settings": Object {
+                          "type": "asAdditionalColumn",
+                        },
+                      },
+                    ],
+                    "settings": Object {
+                      "optionNameForIndex": [Function],
+                      "type": "asAdditionalColumn",
+                    },
+                  },
+                ],
+              }
+            }
+            selected={false}
+          />
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+`;

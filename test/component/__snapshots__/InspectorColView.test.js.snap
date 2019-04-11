@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with minimal/default props 1`] = `
+<div
+  className="jsonschema-inspector-colview"
+  tabIndex={-1}
+>
+  <InspectorColumn
+    filteredItems={null}
+    items={
+      Object {
+        "Item One": JsonSchemaGroup {
+          "entries": Array [],
+        },
+        "Item Two": JsonSchemaGroup {
+          "entries": Array [],
+        },
+      }
+    }
+    key="0"
+    onSelect={[Function]}
+    renderItemContent={null}
+    selectedItem="Item One"
+    trailingSelection={false}
+  />
+  <InspectorOptionsColumn
+    contextGroup={
+      JsonSchemaGroup {
+        "entries": Array [],
+      }
+    }
+    filteredItems={null}
+    key="1"
+    onSelect={[Function]}
+    options={
+      Object {
+        "groupTitle": "one of",
+        "options": Array [
+          Object {},
+          Object {},
+        ],
+      }
+    }
+    renderItemContent={null}
+    selectedItem={
+      Array [
+        0,
+      ]
+    }
+    trailingSelection={true}
+  />
+  <InspectorColumn
+    filteredItems={null}
+    items={
+      Object {
+        "Item One-Two-One": JsonSchemaGroup {
+          "entries": Array [],
+        },
+        "Item One-Two-Two": JsonSchemaGroup {
+          "entries": Array [],
+        },
+      }
+    }
+    key="2"
+    onSelect={[Function]}
+    renderItemContent={null}
+    selectedItem={null}
+    trailingSelection={false}
+  />
+</div>
+`;

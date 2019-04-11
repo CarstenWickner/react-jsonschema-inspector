@@ -1,0 +1,2017 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with minimal/default props 1`] = `
+<div
+  className="jsonschema-inspector"
+>
+  <div
+    className="jsonschema-inspector-header"
+  >
+    <InspectorSearchField
+      onSearchFilterChange={[Function]}
+      placeholder="Search"
+      searchFilter=""
+    />
+  </div>
+  <div
+    className="jsonschema-inspector-body"
+  >
+    <InspectorColView
+      appendEmptyColumn={false}
+      columnData={
+        Array [
+          Object {
+            "items": Object {
+              "Schema One": JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": Object {
+                      "anyOf": Object {
+                        "type": "asAdditionalColumn",
+                      },
+                      "oneOf": Object {
+                        "type": "asAdditionalColumn",
+                      },
+                    },
+                    "schema": Object {
+                      "properties": Object {
+                        "Item One": Object {},
+                        "Item Two": Object {
+                          "items": Object {
+                            "title": "Item in Array",
+                          },
+                        },
+                      },
+                      "title": "Main Schema One Title",
+                    },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
+                      "internalRefs": Map {
+                        "#" => [Circular],
+                      },
+                      "otherScopes": Array [
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "#/definitions/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+              "Schema Two": JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": Object {
+                      "anyOf": Object {
+                        "type": "asAdditionalColumn",
+                      },
+                      "oneOf": Object {
+                        "type": "asAdditionalColumn",
+                      },
+                    },
+                    "schema": Object {
+                      "properties": Object {
+                        "Item Three": Object {
+                          "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector",
+                        },
+                      },
+                    },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
+                      "internalRefs": Map {
+                        "#" => [Circular],
+                      },
+                      "otherScopes": Array [
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "#/definitions/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            "onSelect": [Function],
+          },
+        ]
+      }
+      renderItemContent={null}
+    />
+    <InspectorDetails
+      columnData={
+        Array [
+          Object {
+            "items": Object {
+              "Schema One": JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": Object {
+                      "anyOf": Object {
+                        "type": "asAdditionalColumn",
+                      },
+                      "oneOf": Object {
+                        "type": "asAdditionalColumn",
+                      },
+                    },
+                    "schema": Object {
+                      "properties": Object {
+                        "Item One": Object {},
+                        "Item Two": Object {
+                          "items": Object {
+                            "title": "Item in Array",
+                          },
+                        },
+                      },
+                      "title": "Main Schema One Title",
+                    },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
+                      "internalRefs": Map {
+                        "#" => [Circular],
+                      },
+                      "otherScopes": Array [
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "#/definitions/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+              "Schema Two": JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": Object {
+                      "anyOf": Object {
+                        "type": "asAdditionalColumn",
+                      },
+                      "oneOf": Object {
+                        "type": "asAdditionalColumn",
+                      },
+                    },
+                    "schema": Object {
+                      "properties": Object {
+                        "Item Three": Object {
+                          "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector",
+                        },
+                      },
+                    },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
+                      "internalRefs": Map {
+                        "#" => [Circular],
+                      },
+                      "otherScopes": Array [
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "#/definitions/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            "onSelect": [Function],
+          },
+        ]
+      }
+      renderEmptyDetails={null}
+      renderSelectionDetails={null}
+    />
+  </div>
+  <div
+    className="jsonschema-inspector-footer"
+  >
+    <InspectorBreadcrumbs
+      breadcrumbsOptions={
+        Object {
+          "skipSeparator": [Function],
+        }
+      }
+      columnData={
+        Array [
+          Object {
+            "items": Object {
+              "Schema One": JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": Object {
+                      "anyOf": Object {
+                        "type": "asAdditionalColumn",
+                      },
+                      "oneOf": Object {
+                        "type": "asAdditionalColumn",
+                      },
+                    },
+                    "schema": Object {
+                      "properties": Object {
+                        "Item One": Object {},
+                        "Item Two": Object {
+                          "items": Object {
+                            "title": "Item in Array",
+                          },
+                        },
+                      },
+                      "title": "Main Schema One Title",
+                    },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
+                      "internalRefs": Map {
+                        "#" => [Circular],
+                      },
+                      "otherScopes": Array [
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "#/definitions/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+              "Schema Two": JsonSchemaAllOfGroup {
+                "entries": Array [
+                  JsonSchema {
+                    "parserConfig": Object {
+                      "anyOf": Object {
+                        "type": "asAdditionalColumn",
+                      },
+                      "oneOf": Object {
+                        "type": "asAdditionalColumn",
+                      },
+                    },
+                    "schema": Object {
+                      "properties": Object {
+                        "Item Three": Object {
+                          "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector",
+                        },
+                      },
+                    },
+                    "scope": RefScope {
+                      "externalRefs": Map {},
+                      "internalRefs": Map {
+                        "#" => [Circular],
+                      },
+                      "otherScopes": Array [
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                "definitions": Object {
+                                  "react-inspector": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                },
+                              },
+                              "scope": [Circular],
+                            },
+                            "#/definitions/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                    "title": "Title: Main React Component",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                        RefScope {
+                          "externalRefs": Map {
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                            "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "internalRefs": Map {
+                            "#" => JsonSchema {
+                              "parserConfig": Object {
+                                "anyOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                                "oneOf": Object {
+                                  "type": "asAdditionalColumn",
+                                },
+                              },
+                              "schema": Object {
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                "title": "Title: Main React Component",
+                              },
+                              "scope": [Circular],
+                            },
+                          },
+                          "otherScopes": Array [
+                            RefScope {
+                              "externalRefs": Map {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "internalRefs": Map {
+                                "#" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
+                                    "definitions": Object {
+                                      "react-inspector": Object {
+                                        "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                      },
+                                    },
+                                  },
+                                  "scope": [Circular],
+                                },
+                                "#/definitions/react-inspector" => JsonSchema {
+                                  "parserConfig": Object {
+                                    "anyOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                    "oneOf": Object {
+                                      "type": "asAdditionalColumn",
+                                    },
+                                  },
+                                  "schema": Object {
+                                    "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
+                                  },
+                                  "scope": [Circular],
+                                },
+                              },
+                              "otherScopes": Array [
+                                [Circular],
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            "onSelect": [Function],
+          },
+        ]
+      }
+    />
+  </div>
+</div>
+`;
