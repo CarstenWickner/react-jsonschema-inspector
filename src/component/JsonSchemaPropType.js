@@ -76,10 +76,10 @@ jsonSchemaShape.definitions = PropTypes.objectOf(JsonSchemaPropType);
 
 // cater for recursive combined schemas
 jsonSchemaShape.allOf = PropTypes.arrayOf(JsonSchemaPropType);
+// cater for conditional recursive combined schemas
+jsonSchemaShape.anyOf = PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.bool, JsonSchemaPropType]));
+jsonSchemaShape.oneOf = PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.bool, JsonSchemaPropType]));
 /* commented out: unsupported fields (for now)
-    // cater for conditional recursive combined schemas
-    jsonSchemaShape.anyOf = PropTypes.arrayOf([PropTypes.bool, JsonSchemaPropType]);
-    jsonSchemaShape.oneOf = PropTypes.arrayOf([PropTypes.bool, JsonSchemaPropType]);
     jsonSchemaShape.not = JsonSchemaPropType;
     // some things may only apply if a particular property is present
     jsonSchemaShape.dependencies = PropTypes.objectOf(PropTypes.oneOfType([JsonSchemaPropType, PropTypes.arrayOf(PropTypes.string)]));
