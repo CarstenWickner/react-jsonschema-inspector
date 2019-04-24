@@ -1,5 +1,5 @@
 import {
-    isDefined, isNonEmptyObject, mapObjectValues, listValues
+    isDefined, isNonEmptyObject, mapObjectValues, minimumValue, maximumValue, listValues, commonValues
 } from "../../src/model/utils";
 
 describe("isDefined()", () => {
@@ -96,49 +96,65 @@ describe("mapObjectValues()", () => {
         });
     });
 });
+describe("nullAwareReduce()", () => {
+    it.each`
+        testDescription                                       | firstParam   | secondParam  | result
+        ${"returns second param if first param is undefined"} | ${undefined} | ${1}         | ${1}
+        ${"returns second param if first param is null"}      | ${null}      | ${2}         | ${2}
+        ${"returns first param if second param is undefined"} | ${3}         | ${undefined} | ${3}
+        ${"returns first param if second param is null"}      | ${4}         | ${null}      | ${4}
+    `("$testDescription", ({ firstParam, secondParam, result }) => {
+        expect(minimumValue(firstParam, secondParam)).toEqual(result);
+        expect(maximumValue(firstParam, secondParam)).toEqual(result);
+        expect(listValues(firstParam, secondParam)).toEqual(result);
+        expect(commonValues(firstParam, secondParam)).toEqual(result);
+    });
+});
+describe("minimumValue()", () => {
+    it.each`
+        testDescription                                      | firstParam   | secondParam  | result
+        ${"returns unchanged param if both are the same"}    | ${5}         | ${5}         | ${5}
+        ${"returns first param if that is the lower value"}  | ${6}         | ${9}         | ${6}
+        ${"returns second param if that is the lower value"} | ${8}         | ${7}         | ${7}
+    `("$testDescription", ({ firstParam, secondParam, result }) => {
+        expect(minimumValue(firstParam, secondParam)).toEqual(result);
+    });
+});
+describe("maximumValue()", () => {
+    it.each`
+        testDescription                                       | firstParam   | secondParam  | result
+        ${"returns unchanged param if both are the same"}     | ${5}         | ${5}         | ${5}
+        ${"returns first param if that is the higher value"}  | ${6}         | ${1}         | ${6}
+        ${"returns second param if that is the higher value"} | ${5}         | ${7}         | ${7}
+    `("$testDescription", ({ firstParam, secondParam, result }) => {
+        expect(maximumValue(firstParam, secondParam)).toEqual(result);
+    });
+});
 describe("listValues()", () => {
-    it("returns second param if first param is undefined", () => {
-        const secondParam = "something";
-        expect(listValues(undefined, secondParam)).toEqual(secondParam);
+    it.each`
+        testDescription                                              | firstParam   | secondParam  | result
+        ${"returns unchanged param if both are the same"}            | ${"foo"}     | ${"foo"}     | ${"foo"}
+        ${"returns combined array if both params are arrays"}        | ${[1, 2]}    | ${[3, 4]}    | ${[1, 2, 3, 4]}
+        ${"returns combined array if only first param is an array"}  | ${[1, 2]}    | ${3}         | ${[1, 2, 3]}
+        ${"returns combined array if only second param is an array"} | ${1}         | ${[2, 3]}    | ${[1, 2, 3]}
+        ${"returns combined array if params are not the same"}       | ${1}         | ${2}         | ${[1, 2]}
+    `("$testDescription", ({ firstParam, secondParam, result }) => {
+        expect(listValues(firstParam, secondParam)).toEqual(result);
     });
-    it("returns second param if first param is null", () => {
-        const secondParam = "something";
-        expect(listValues(null, secondParam)).toEqual(secondParam);
-    });
-    it("returns first param if second param is undefined", () => {
-        const firstParam = "text";
-        expect(listValues(firstParam, undefined)).toEqual(firstParam);
-    });
-    it("returns first param if second param is null", () => {
-        const firstParam = "text";
-        expect(listValues(firstParam, null)).toEqual(firstParam);
-    });
-    it("returns unchanged param if both are the same", () => {
-        const param = { title: "something" };
-        expect(listValues(param, param)).toEqual(param);
-    });
-    it("returns combined array if both params are arrays", () => {
-        const firstParam = [1, 2];
-        const secondParam = [3, 4];
-        expect(listValues(firstParam, secondParam)).toEqual([1, 2, 3, 4]);
-        expect(firstParam).toHaveLength(2);
-        expect(secondParam).toHaveLength(2);
-    });
-    it("returns combined array if first param is an array", () => {
-        const firstParam = [1, 2];
-        const secondParam = 3;
-        expect(listValues(firstParam, secondParam)).toEqual([1, 2, 3]);
-        expect(firstParam).toHaveLength(2);
-    });
-    it("returns combined array if second param is an array", () => {
-        const firstParam = 1;
-        const secondParam = [2, 3];
-        expect(listValues(firstParam, secondParam)).toEqual([1, 2, 3]);
-        expect(secondParam).toHaveLength(2);
-    });
-    it("returns combined array if params are not the same", () => {
-        const firstParam = 1;
-        const secondParam = 2;
-        expect(listValues(firstParam, secondParam)).toEqual([1, 2]);
+});
+describe("commonValues()", () => {
+    it.each`
+        testDescription                                                                        | firstParam   | secondParam  | result
+        ${"returns unchanged param if both are the same"}                                      | ${"foo"}     | ${"foo"}     | ${"foo"}
+        ${"returns intersection value if both params are arrays"}                              | ${[1, 2]}    | ${[2, 3]}    | ${2}
+        ${"returns intersection of values if both params are arrays"}                          | ${[1, 2, 3]} | ${[4, 3, 2]} | ${[2, 3]}
+        ${"returns empty array if both params are arrays without intersecting values"}         | ${[1, 2]}    | ${[3, 4]}    | ${[]}
+        ${"returns contained second param value if first param is an array"}                   | ${[1, 2]}    | ${2}         | ${2}
+        ${"returns empty array if second param value is not in first param which is an array"} | ${[1, 2]}    | ${3}         | ${[]}
+        ${"returns contained first param value if second param is an array"}                   | ${1}         | ${[1, 2]}    | ${1}
+        ${"returns empty array if first param value is not in second param which is an array"} | ${1}         | ${[2, 3]}    | ${[]}
+        ${"returns empty array if params are distinct non-array values"}                       | ${1}         | ${2}         | ${[]}
+    `("$testDescription", ({ firstParam, secondParam, result }) => {
+        expect(commonValues(firstParam, secondParam)).toEqual(result);
     });
 });

@@ -7,7 +7,9 @@ import { getColumnDataPropTypeShape } from "./renderDataUtils";
 
 import JsonSchemaGroup from "../model/JsonSchemaGroup";
 import { createOptionTargetArrayFromIndexes, getFieldValueFromSchemaGroup } from "../model/schemaUtils";
-import { isDefined, listValues } from "../model/utils";
+import {
+    isDefined, listValues, commonValues, minimumValue, maximumValue
+} from "../model/utils";
 
 function checkIfIsRequired(columnData, selectionColumnIndex) {
     if (!selectionColumnIndex) {
@@ -33,6 +35,17 @@ function checkIfIsRequired(columnData, selectionColumnIndex) {
     return checkIfIsRequired(columnData, selectionColumnIndex - 1);
 }
 
+function containsTrueOrReduce(allValues, reduceNonBooleans) {
+    if (!Array.isArray(allValues)) {
+        // return single value as-is
+        return allValues;
+    }
+    if (allValues.includes(true)) {
+        return true;
+    }
+    return allValues.reduce(reduceNonBooleans);
+}
+
 export const collectFormFields = (itemSchemaGroup, columnData, selectionColumnIndex) => {
     const formFields = [];
     const addFormField = (labelText, rowValue) => {
@@ -42,19 +55,30 @@ export const collectFormFields = (itemSchemaGroup, columnData, selectionColumnIn
     };
     const { selectedItem } = columnData[selectionColumnIndex];
     const optionIndexes = typeof selectedItem === "string" ? undefined : selectedItem;
-    const getValue = fieldName => getFieldValueFromSchemaGroup(itemSchemaGroup, fieldName, listValues, undefined, undefined, optionIndexes);
+    const getValue = (fieldName, mergeValues = listValues) => getFieldValueFromSchemaGroup(
+        itemSchemaGroup, fieldName, mergeValues, undefined, undefined, optionIndexes
+    );
 
     addFormField("Title", getValue("title"));
     addFormField("Description", getValue("description"));
 
     addFormField("Required", checkIfIsRequired(columnData, selectionColumnIndex) ? "Yes" : null);
 
-    addFormField("Type", getValue("type"));
-    addFormField("Constant Value", getValue("const"));
-    addFormField("Possible Values", getValue("enum"));
+    addFormField("Type", getValue("type", commonValues));
+    const enumValues = commonValues(getValue("const", commonValues), getValue("enum", commonValues));
+    if (isDefined(enumValues)) {
+        if (!Array.isArray(enumValues)) {
+            addFormField("Constant Value", enumValues);
+        } else if (enumValues.length === 1) {
+            addFormField("Constant Value", enumValues[0]);
+        } else {
+            addFormField("Possible Values", enumValues);
+        }
+    }
 
-    const minimum = getValue("minimum");
-    const exclusiveMinimum = getValue("exclusiveMinimum");
+    // if multiple minimums are specified (in allOf parts), the highest minimum applies
+    const minimum = getValue("minimum", maximumValue);
+    const exclusiveMinimum = containsTrueOrReduce(getValue("exclusiveMinimum"), maximumValue);
     let minValue;
     if (isDefined(minimum)) {
         // according to JSON Schema Draft 4, "exclusiveMinimum" is a boolean and used in combination with "minimum"
@@ -66,8 +90,9 @@ export const collectFormFields = (itemSchemaGroup, columnData, selectionColumnIn
     }
     addFormField("Min Value", minValue);
 
-    const maximum = getValue("maximum");
-    const exclusiveMaximum = getValue("exclusiveMaximum");
+    // if multiple maximums are specified (in allOf parts), the lowest maximum applies
+    const maximum = getValue("maximum", minimumValue);
+    const exclusiveMaximum = containsTrueOrReduce(getValue("exclusiveMaximum"), minimumValue);
     let maxValue;
     if (isDefined(maximum)) {
         // according to JSON Schema Draft 4, "exclusiveMaximum" is a boolean and used in combination with "maximum"
@@ -86,12 +111,14 @@ export const collectFormFields = (itemSchemaGroup, columnData, selectionColumnIn
     addFormField("Example(s)",
         (examples && typeof examples[0] === "object") ? JSON.stringify(examples) : examples);
     addFormField("Value Pattern", getValue("pattern"));
-    addFormField("Value Format", getValue("format"));
-    addFormField("Min Length", getValue("minLength"));
-    addFormField("Max Length", getValue("maxLength"));
-    addFormField("Min Items", getValue("minItems"));
-    addFormField("Max Items", getValue("maxItems"));
-    addFormField("Items Unique", getValue("uniqueItems") === true ? "Yes" : null);
+    addFormField("Value Format", getValue("format", commonValues));
+    // if multiple minimums are specified (in allOf parts), the highest minimum applies
+    addFormField("Min Length", getValue("minLength", maximumValue));
+    // if multiple maximums are specified (in allOf parts), the lowest maximum applies
+    addFormField("Max Length", getValue("maxLength", minimumValue));
+    addFormField("Min Items", getValue("minItems", maximumValue));
+    addFormField("Max Items", getValue("maxItems", minimumValue));
+    addFormField("Items Unique", containsTrueOrReduce(getValue("uniqueItems")) ? "Yes" : null);
 
     return formFields;
 };
