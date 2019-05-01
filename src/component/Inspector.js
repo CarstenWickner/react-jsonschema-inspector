@@ -236,14 +236,14 @@ Inspector.propTypes = {
      */
     parserConfig: PropTypes.shape({
         /**
-         * Setting indicating whether/how to include schema parts wrapped in "anyOf".
+         * Setting indicating how to include schema parts wrapped in "anyOf".
          */
         anyOf: PropTypes.shape({
             groupTitle: PropTypes.string,
             optionNameForIndex: PropTypes.func
         }),
         /**
-         * Setting indicating whether/how to include schema parts wrapped in "oneOf".
+         * Setting indicating how to include schema parts wrapped in "oneOf".
          */
         oneOf: PropTypes.shape({
             groupTitle: PropTypes.string,
@@ -324,10 +324,7 @@ Inspector.propTypes = {
 Inspector.defaultProps = {
     referenceSchemas: [],
     defaultSelectedItems: [],
-    parserConfig: {
-        oneOf: {},
-        anyOf: {}
-    },
+    parserConfig: {},
     buildArrayProperties: undefined,
     breadcrumbs: {
         skipSeparator: fieldName => (fieldName === "[0]")

@@ -32,22 +32,16 @@ export function createRecursiveFilterFunction(flatSearchFilter) {
             // if there is a $ref, no other fields are being expected to be present - and the referenced sub-schema is checked separately
             return false;
         }
-        const filterRawSubSchemaConsideringOptionals = rawSubSchema => recursiveFilterFunction(
-            new JsonSchema(rawSubSchema, parserConfig, scope),
-            includeNestedOptionals
+        const searchInParts = groupKey => (
+            rawSchema[groupKey]
+            && rawSchema[groupKey].some(rawSubSchema => recursiveFilterFunction(
+                new JsonSchema(rawSubSchema, parserConfig, scope),
+                includeNestedOptionals
+            ))
         );
         // if the given schema is a composite of multiple sub-schemas, check each of its parts
-        if (rawSchema.allOf && rawSchema.allOf.some(filterRawSubSchemaConsideringOptionals)) {
-            return true;
-        }
-        const searchInOptionals = groupKey => (
-            rawSchema[groupKey]
-            && parserConfig
-            && parserConfig[groupKey]
-            && includeNestedOptionals
-            && rawSchema[groupKey].some(filterRawSubSchemaConsideringOptionals)
-        );
-        if (searchInOptionals("oneOf") || searchInOptionals("anyOf")) {
+        if (searchInParts("allOf")
+            || (includeNestedOptionals && (searchInParts("oneOf") || searchInParts("anyOf")))) {
             return true;
         }
         const filterRawSubSchemaIncludingOptionals = rawSubSchema => recursiveFilterFunction(

@@ -13,7 +13,7 @@ describe("renders correctly", () => {
                 bar: true
             }
         };
-        const { columnData } = buildColumnData({ foobar: schema }, [], ["foobar"], {});
+        const { columnData } = buildColumnData({ foobar: schema }, [], ["foobar"]);
         const component = shallow(
             <InspectorBreadcrumbs
                 columnData={columnData}
@@ -23,7 +23,7 @@ describe("renders correctly", () => {
         expect(component).toMatchSnapshot();
     });
     it("without selection", () => {
-        const { columnData } = buildColumnData({ foo: {} }, [], [], {});
+        const { columnData } = buildColumnData({ foo: {} }, [], []);
         const component = shallow(
             <InspectorBreadcrumbs
                 columnData={columnData}
@@ -35,7 +35,7 @@ describe("renders correctly", () => {
         expect(component.text()).toEqual("");
     });
     it("with prefix", () => {
-        const { columnData } = buildColumnData({ foo: {} }, [], ["foo"], {});
+        const { columnData } = buildColumnData({ foo: {} }, [], ["foo"]);
         const component = shallow(
             <InspectorBreadcrumbs
                 columnData={columnData}
@@ -63,7 +63,7 @@ describe("renders correctly", () => {
             ${"array selection"}      | ${["foo", "[0]"]}        | ${2}      | ${"foo.[0]"}
             ${"array item selection"} | ${["foo", "[0]", "bar"]} | ${3}      | ${"foo.[0].bar"}
         `("$testTitle", ({ selectedItems, itemCount, breadcrumbsText }) => {
-            const { columnData } = buildColumnData(schemas, [], selectedItems, {});
+            const { columnData } = buildColumnData(schemas, [], selectedItems);
             const component = shallow(
                 <InspectorBreadcrumbs
                     columnData={columnData}
@@ -74,7 +74,7 @@ describe("renders correctly", () => {
             expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(itemCount);
         });
         it("with custom separator", () => {
-            const { columnData } = buildColumnData(schemas, [], ["foo", "[0]", "bar"], {});
+            const { columnData } = buildColumnData(schemas, [], ["foo", "[0]", "bar"]);
             const component = shallow(
                 <InspectorBreadcrumbs
                     columnData={columnData}
@@ -89,9 +89,6 @@ describe("renders correctly", () => {
         });
     });
     describe("with option selection", () => {
-        const parserConfig = {
-            oneOf: {}
-        };
         const schema = {
             oneOf: [
                 { title: "Foobar" },
@@ -104,7 +101,7 @@ describe("renders correctly", () => {
         };
 
         it("is skipping option selection", () => {
-            const { columnData } = buildColumnData({ foo: schema }, [], ["foo", [1], "baz"], parserConfig);
+            const { columnData } = buildColumnData({ foo: schema }, [], ["foo", [1], "baz"]);
             const component = shallow(
                 <InspectorBreadcrumbs
                     columnData={columnData}
@@ -119,7 +116,7 @@ describe("renders correctly", () => {
             ${"indicates on previous breadcrumb when selected option has no nested items"} | ${[0]}        | ${false}
             ${"indicates on previous breadcrumb when selected option has nested property"} | ${[1]}        | ${true}
         `("$testTitle", ({ optionIndexes, hasNestedItems }) => {
-            const { columnData } = buildColumnData({ foo: schema }, [], ["foo", optionIndexes], parserConfig);
+            const { columnData } = buildColumnData({ foo: schema }, [], ["foo", optionIndexes]);
             const component = shallow(
                 <InspectorBreadcrumbs
                     columnData={columnData}
@@ -133,7 +130,7 @@ describe("renders correctly", () => {
         });
     });
     it("with navigation by default", () => {
-        const { columnData } = buildColumnData({ foo: {} }, [], ["foo"], {});
+        const { columnData } = buildColumnData({ foo: {} }, [], ["foo"]);
         const component = shallow(
             <InspectorBreadcrumbs
                 columnData={columnData}

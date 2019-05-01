@@ -14,7 +14,7 @@ export default class JsonSchema {
     /**
      * Configuration steering how the json schema is being traversed/parsed.
      *
-     * @type {{oneOf: ?{type: string, groupTitle: ?string}, anyOf: ?{type: string, groupTitle: ?string}}}
+     * @type {{oneOf: ?{groupTitle: ?string}, anyOf: ?{groupTitle: ?string}}}
      */
     parserConfig;
 

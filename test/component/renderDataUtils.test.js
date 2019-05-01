@@ -260,10 +260,7 @@ describe("createRenderDataBuilder()", () => {
                     ]
                 }
             };
-            const parserConfig = {
-                oneOf: {}
-            };
-            const { columnData } = getRenderData(rootSchemas, [], ["bar", [0], "get(0)"], parserConfig, buildArrayProperties);
+            const { columnData } = getRenderData(rootSchemas, [], ["bar", [0], "get(0)"], {}, buildArrayProperties);
             expect(columnData).toHaveLength(4);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(1);
@@ -316,10 +313,6 @@ describe("createRenderDataBuilder()", () => {
                 ]
             }
         };
-        const parserConfig = {
-            oneOf: {},
-            anyOf: {}
-        };
         const expectedOptions = {
             groupTitle: "one of",
             options: [
@@ -338,7 +331,7 @@ describe("createRenderDataBuilder()", () => {
             ${"without option selection"}           | ${["root"]}
             ${"ignoring invalid option selection"}  | ${["root", [3]]}
         `("offering the selected root schema's options ($testTitle)", ({ selectedItems }) => {
-            const { columnData } = getRenderData(schemas, [], selectedItems, parserConfig);
+            const { columnData } = getRenderData(schemas, [], selectedItems);
             expect(columnData).toHaveLength(2);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(1);
@@ -366,7 +359,7 @@ describe("createRenderDataBuilder()", () => {
             ${"valid selection"}                                      | ${["root", [0]]}
             ${"ignoring option selection where there are no options"} | ${["root", [0], [0]]}
         `("offering the selected option's properties", ({ selectedItems }) => {
-            const { columnData } = getRenderData(schemas, [], selectedItems, parserConfig);
+            const { columnData } = getRenderData(schemas, [], selectedItems);
             expect(columnData).toHaveLength(3);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(1);
@@ -396,7 +389,7 @@ describe("createRenderDataBuilder()", () => {
             expect(thirdColumn.trailingSelection).toBeFalsy();
         });
         it("ignoring an invalid option selection", () => {
-            const { columnData } = getRenderData(schemas, [], ["root", [0]], parserConfig);
+            const { columnData } = getRenderData(schemas, [], ["root", [0]]);
             expect(columnData).toHaveLength(3);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(1);
@@ -725,26 +718,17 @@ describe("createFilterFunctionForColumn()", () => {
                     }
                 }
             };
-
-            it.each`
-                parserConfigDescription | parserConfig                | result
-                ${"empty parserConfig"} | ${{}}                       | ${["I-One"]}
-                ${"oneOf"}              | ${{ oneOf: {} }}            | ${["I-One", "I-Two"]}
-                ${"anyOf"}              | ${{ anyOf: {} }}            | ${["I-One", "I-Three"]}
-                ${"oneOf and anyOf"}    | ${{ oneOf: {}, anyOf: {} }} | ${["I-One", "I-Two", "I-Three", "I-Four"]}
-            `("with $parserConfigDescription", ({ parserConfig, result }) => {
-                const schema = new JsonSchema(rawSchema, parserConfig);
-                const columnInput = {
-                    items: {
-                        "I-One": createGroupFromSchema(schema.scope.find("#/definitions/One")),
-                        "I-Two": createGroupFromSchema(schema.scope.find("#/definitions/Two")),
-                        "I-Three": createGroupFromSchema(schema.scope.find("#/definitions/Three")),
-                        "I-Four": createGroupFromSchema(schema.scope.find("#/definitions/Four"))
-                    }
-                };
-                const filterFunction = createFilterFunctionForColumn(rawSubSchema => rawSubSchema.title === "Match", parserConfig);
-                expect(filterFunction(columnInput)).toEqual(result);
-            });
+            const schema = new JsonSchema(rawSchema);
+            const columnInput = {
+                items: {
+                    "I-One": createGroupFromSchema(schema.scope.find("#/definitions/One")),
+                    "I-Two": createGroupFromSchema(schema.scope.find("#/definitions/Two")),
+                    "I-Three": createGroupFromSchema(schema.scope.find("#/definitions/Three")),
+                    "I-Four": createGroupFromSchema(schema.scope.find("#/definitions/Four"))
+                }
+            };
+            const filterFunction = createFilterFunctionForColumn(rawSubSchema => rawSubSchema.title === "Match");
+            expect(filterFunction(columnInput)).toEqual(["I-One", "I-Two", "I-Three", "I-Four"]);
         });
         describe("finding matches in options", () => {
             const rawSchema = {
@@ -795,22 +779,22 @@ describe("createFilterFunctionForColumn()", () => {
                     }
                 ]
             };
-
-            it.each`
-                parserConfigDescription | parserConfig                  | result
-                ${"oneOf"}              | ${{ oneOf: {} }}              | ${[[1], [2, 0]]}
-                ${"anyOf"}              | ${{ anyOf: {} }}              | ${[[0], [2, 1]]}
-                ${"oneOf and anyOf"}    | ${{ oneOf: {}, anyOf: {} }}   | ${[[0, 0], [0, 2, 1], [0, 3, 0], [1, 1], [1, 2, 0], [1, 3, 1]]}
-            `("with $parserConfigDescription", ({ parserConfig, result }) => {
-                const schema = new JsonSchema(rawSchema, parserConfig);
-                const contextGroup = createGroupFromSchema(schema);
-                const columnInput = {
-                    contextGroup,
-                    options: getOptionsInSchemaGroup(contextGroup)
-                };
-                const filterFunction = createFilterFunctionForColumn(rawSubSchema => rawSubSchema.title === "Match");
-                expect(JSON.stringify(filterFunction(columnInput))).toEqual(JSON.stringify(result));
-            });
+            const schema = new JsonSchema(rawSchema);
+            const contextGroup = createGroupFromSchema(schema);
+            const columnInput = {
+                contextGroup,
+                options: getOptionsInSchemaGroup(contextGroup)
+            };
+            const filterFunction = createFilterFunctionForColumn(rawSubSchema => rawSubSchema.title === "Match");
+            // stringify to more easily detect differences in case of test failure
+            expect(JSON.stringify(filterFunction(columnInput))).toEqual(JSON.stringify([
+                [0, 0],
+                [0, 2, 1],
+                [0, 3, 0],
+                [1, 1],
+                [1, 2, 0],
+                [1, 3, 1]
+            ]));
         });
     });
 });

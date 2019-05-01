@@ -25,10 +25,7 @@ exports[`renders correctly with minimal/default props 1`] = `
               "Schema One": JsonSchemaAllOfGroup {
                 "entries": Array [
                   JsonSchema {
-                    "parserConfig": Object {
-                      "anyOf": Object {},
-                      "oneOf": Object {},
-                    },
+                    "parserConfig": Object {},
                     "schema": Object {
                       "properties": Object {
                         "Item One": Object {},
@@ -49,10 +46,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                         RefScope {
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -64,10 +58,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -79,10 +70,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -91,10 +79,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -106,10 +91,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "#/definitions/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -120,10 +102,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                             RefScope {
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -131,10 +110,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -144,10 +120,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               },
                               "internalRefs": Map {
                                 "#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -164,10 +137,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                         RefScope {
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -175,10 +145,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -188,10 +155,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -203,10 +167,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                             RefScope {
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -218,10 +179,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -233,10 +191,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
@@ -245,10 +200,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               },
                               "internalRefs": Map {
                                 "#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -260,10 +212,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "#/definitions/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
@@ -284,10 +233,7 @@ exports[`renders correctly with minimal/default props 1`] = `
               "Schema Two": JsonSchemaAllOfGroup {
                 "entries": Array [
                   JsonSchema {
-                    "parserConfig": Object {
-                      "anyOf": Object {},
-                      "oneOf": Object {},
-                    },
+                    "parserConfig": Object {},
                     "schema": Object {
                       "properties": Object {
                         "Item Three": Object {
@@ -304,10 +250,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                         RefScope {
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -319,10 +262,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -334,10 +274,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -346,10 +283,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -361,10 +295,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "#/definitions/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -375,10 +306,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                             RefScope {
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -386,10 +314,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -399,10 +324,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               },
                               "internalRefs": Map {
                                 "#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -419,10 +341,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                         RefScope {
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -430,10 +349,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -443,10 +359,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -458,10 +371,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                             RefScope {
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -473,10 +383,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -488,10 +395,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
@@ -500,10 +404,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               },
                               "internalRefs": Map {
                                 "#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -515,10 +416,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "#/definitions/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
@@ -551,10 +449,7 @@ exports[`renders correctly with minimal/default props 1`] = `
               "Schema One": JsonSchemaAllOfGroup {
                 "entries": Array [
                   JsonSchema {
-                    "parserConfig": Object {
-                      "anyOf": Object {},
-                      "oneOf": Object {},
-                    },
+                    "parserConfig": Object {},
                     "schema": Object {
                       "properties": Object {
                         "Item One": Object {},
@@ -575,10 +470,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                         RefScope {
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -590,10 +482,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -605,10 +494,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -617,10 +503,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -632,10 +515,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "#/definitions/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -646,10 +526,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                             RefScope {
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -657,10 +534,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -670,10 +544,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               },
                               "internalRefs": Map {
                                 "#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -690,10 +561,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                         RefScope {
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -701,10 +569,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -714,10 +579,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -729,10 +591,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                             RefScope {
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -744,10 +603,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -759,10 +615,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
@@ -771,10 +624,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               },
                               "internalRefs": Map {
                                 "#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -786,10 +636,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "#/definitions/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
@@ -810,10 +657,7 @@ exports[`renders correctly with minimal/default props 1`] = `
               "Schema Two": JsonSchemaAllOfGroup {
                 "entries": Array [
                   JsonSchema {
-                    "parserConfig": Object {
-                      "anyOf": Object {},
-                      "oneOf": Object {},
-                    },
+                    "parserConfig": Object {},
                     "schema": Object {
                       "properties": Object {
                         "Item Three": Object {
@@ -830,10 +674,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                         RefScope {
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -845,10 +686,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -860,10 +698,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -872,10 +707,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -887,10 +719,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "#/definitions/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -901,10 +730,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                             RefScope {
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -912,10 +738,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -925,10 +748,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               },
                               "internalRefs": Map {
                                 "#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -945,10 +765,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                         RefScope {
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -956,10 +773,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -969,10 +783,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -984,10 +795,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                             RefScope {
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -999,10 +807,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -1014,10 +819,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
@@ -1026,10 +828,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               },
                               "internalRefs": Map {
                                 "#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -1041,10 +840,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "#/definitions/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
@@ -1087,10 +883,7 @@ exports[`renders correctly with minimal/default props 1`] = `
               "Schema One": JsonSchemaAllOfGroup {
                 "entries": Array [
                   JsonSchema {
-                    "parserConfig": Object {
-                      "anyOf": Object {},
-                      "oneOf": Object {},
-                    },
+                    "parserConfig": Object {},
                     "schema": Object {
                       "properties": Object {
                         "Item One": Object {},
@@ -1111,10 +904,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                         RefScope {
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1126,10 +916,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1141,10 +928,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -1153,10 +937,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1168,10 +949,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "#/definitions/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -1182,10 +960,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                             RefScope {
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -1193,10 +968,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -1206,10 +978,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               },
                               "internalRefs": Map {
                                 "#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -1226,10 +995,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                         RefScope {
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1237,10 +1003,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1250,10 +1013,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1265,10 +1025,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                             RefScope {
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -1280,10 +1037,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -1295,10 +1049,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
@@ -1307,10 +1058,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               },
                               "internalRefs": Map {
                                 "#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -1322,10 +1070,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "#/definitions/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
@@ -1346,10 +1091,7 @@ exports[`renders correctly with minimal/default props 1`] = `
               "Schema Two": JsonSchemaAllOfGroup {
                 "entries": Array [
                   JsonSchema {
-                    "parserConfig": Object {
-                      "anyOf": Object {},
-                      "oneOf": Object {},
-                    },
+                    "parserConfig": Object {},
                     "schema": Object {
                       "properties": Object {
                         "Item Three": Object {
@@ -1366,10 +1108,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                         RefScope {
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1381,10 +1120,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1396,10 +1132,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -1408,10 +1141,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                 "definitions": Object {
@@ -1423,10 +1153,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "#/definitions/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                               },
@@ -1437,10 +1164,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                             RefScope {
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -1448,10 +1172,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -1461,10 +1182,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               },
                               "internalRefs": Map {
                                 "#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                     "title": "Title: Main React Component",
@@ -1481,10 +1199,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                         RefScope {
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1492,10 +1207,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1505,10 +1217,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "internalRefs": Map {
                             "#" => JsonSchema {
-                              "parserConfig": Object {
-                                "anyOf": Object {},
-                                "oneOf": Object {},
-                              },
+                              "parserConfig": Object {},
                               "schema": Object {
                                 "$id": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                 "title": "Title: Main React Component",
@@ -1520,10 +1229,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                             RefScope {
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -1535,10 +1241,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -1550,10 +1253,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
@@ -1562,10 +1262,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               },
                               "internalRefs": Map {
                                 "#" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                     "definitions": Object {
@@ -1577,10 +1274,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                                   "scope": [Circular],
                                 },
                                 "#/definitions/react-inspector" => JsonSchema {
-                                  "parserConfig": Object {
-                                    "anyOf": Object {},
-                                    "oneOf": Object {},
-                                  },
+                                  "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },

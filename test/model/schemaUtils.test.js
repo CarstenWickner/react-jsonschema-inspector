@@ -46,11 +46,10 @@ describe("createGroupFromSchema()", () => {
     `("returns allOf group for schema containing $groupName", ({
         groupName, GroupClass
     }) => {
-        const parserConfig = { [groupName]: {} };
-        it(`with single nested ${groupName} group and parserConfig.${groupName}`, () => {
+        it(`with single nested ${groupName} group`, () => {
             const schema = new JsonSchema({
                 [groupName]: [rawFooSchema, rawBarSchema]
-            }, parserConfig);
+            });
             const result = createGroupFromSchema(schema);
             expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
             expect(result.entries).toHaveLength(2);
@@ -62,14 +61,14 @@ describe("createGroupFromSchema()", () => {
             expect(result.entries[1].entries[1]).toBeInstanceOf(JsonSchema);
             expect(result.entries[1].entries[1].schema).toEqual(rawBarSchema);
         });
-        it(`with multiple nested ${groupName} groups and parserConfig.${groupName}`, () => {
+        it(`with multiple nested ${groupName} groups`, () => {
             const rawFoobarSchema = { type: "object" };
             const nestedOptionalSchema = {
                 [groupName]: [rawBarSchema, rawFoobarSchema]
             };
             const schema = new JsonSchema({
                 [groupName]: [rawFooSchema, nestedOptionalSchema]
-            }, parserConfig);
+            });
             const result = createGroupFromSchema(schema);
             // top level: allOf: [ schema, anyOf/oneOf ]
             expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
@@ -105,12 +104,8 @@ describe("createGroupFromSchema()", () => {
             oneOf: [rawQuxSchema, rawQuuxSchema]
         };
 
-        it("including oneOf and anyOf if both are present (and parserConfig.anyOf/oneOf)", () => {
-            const parserConfig = {
-                anyOf: {},
-                oneOf: {}
-            };
-            const schema = new JsonSchema(rawTargetSchema, parserConfig);
+        it("including oneOf and anyOf if both are present", () => {
+            const schema = new JsonSchema(rawTargetSchema);
             const result = createGroupFromSchema(schema);
             expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
             expect(result.entries).toHaveLength(5);
@@ -255,9 +250,6 @@ describe("getPropertiesFromSchemaGroup()", () => {
         ${"anyOf"}
         ${"oneOf"}
     `("$groupName with 'asAdditionalColumn' setting:", ({ groupName }) => {
-        const parserConfig = {
-            [groupName]: {}
-        };
         const rawFooSchema = { description: "Description Text" };
         const rawBarSchema = { title: "Title Value" };
         const schema = new JsonSchema({
@@ -269,7 +261,7 @@ describe("getPropertiesFromSchemaGroup()", () => {
                     properties: { bar: rawBarSchema }
                 }
             ]
-        }, parserConfig);
+        });
         it("ignored if no optionIndex provided", () => {
             const result = getPropertiesFromSchemaGroup(createGroupFromSchema(schema));
             expect(result).toEqual({});
@@ -293,11 +285,11 @@ describe("getOptionsInSchemaGroup()", () => {
         static getDefaultGroupTitle() {
             return "mocked";
         }
-        constructor(treatAsAdditionalColumn = false) {
+        constructor(considerAsSeparateOptions = false) {
             super();
-            this.treatAsAdditionalColumn = treatAsAdditionalColumn;
+            this.considerAsSeparateOptions = considerAsSeparateOptions;
         }
-        considerSchemasAsSeparateOptions() { return this.treatAsAdditionalColumn; }
+        considerSchemasAsSeparateOptions() { return this.considerAsSeparateOptions; }
     }
 
     describe("when considerSchemasAsSeparateOptions() === false", () => {
@@ -660,9 +652,6 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
                 }
             ]
         };
-        const parserConfig = {
-            [groupName]: {}
-        };
 
         it.each`
             testTitle                       | optionIndexes | expectedResult
@@ -670,7 +659,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             ${"one-level optionTarget (2)"} | ${[1]}        | ${{ description: "bar" }}
             ${"two-level optionTarget"}     | ${[2, 1]}     | ${{ type: "object" }}
         `("$testTitle", ({ optionIndexes, expectedResult }) => {
-            const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, parserConfig)), optionIndexes);
+            const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)), optionIndexes);
             expect(result).toBeInstanceOf(JsonSchema);
             expect(result.schema).toEqual(expectedResult);
         });
@@ -681,7 +670,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             ${"too high optionTarget"}                                   | ${[3]}
             ${"existing optionTarget without `items`/`additionalItems`"} | ${[2, 0]}
         `("returning undefined for $testTitle", ({ optionIndexes }) => {
-            const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, parserConfig)), optionIndexes);
+            const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)), optionIndexes);
             expect(result).toBeUndefined();
         });
     });

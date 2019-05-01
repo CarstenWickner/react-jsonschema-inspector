@@ -382,41 +382,21 @@ describe("createFilterFunctionForSchema()", () => {
             };
 
             it.each`
-                parserConfigDescription | parserConfig                | resultTwoIncl | resultThreeIncl | resultFourIncl | resultFive
-                ${"empty parserConfig"} | ${{}}                       | ${false}      | ${false}        | ${false}       | ${false}
-                ${"oneOf"}              | ${{ oneOf: {} }}            | ${true}       | ${false}        | ${false}       | ${true}
-                ${"anyOf"}              | ${{ anyOf: {} }}            | ${false}      | ${true}         | ${false}       | ${false}
-                ${"oneOf and anyOf"}    | ${{ oneOf: {}, anyOf: {} }} | ${true}       | ${true}         | ${true}        | ${true}
-            `("with $parserConfigDescription", ({
-                parserConfig, resultTwoIncl, resultThreeIncl, resultFourIncl, resultFive
-            }) => {
-                const { scope } = new JsonSchema(rawSchema, parserConfig);
-                const filterFunction = createFilterFunctionForSchema(rawSubSchema => rawSubSchema.title === "Match", parserConfig);
+                pathToMatch                                               | subSchema  | resultWhenExcludingOptionals | resultWhenIncludingOptionals
+                ${"'items'"}                                              | ${"One"}   | ${true}                      | ${true}
+                ${"'oneOf' > [1] > 'properties' > 'bar'"}                 | ${"Two"}   | ${false}                     | ${true}
+                ${"'anyOf' > [0]"}                                        | ${"Three"} | ${false}                     | ${true}
+                ${"'anyOf' > [0] > 'oneOf' > [1] > 'properties' > 'bar'"} | ${"Four"}  | ${false}                     | ${true}
+                ${"'items' > 'oneOf' > [0]"}                              | ${"Five"}  | ${true}                      | ${true}
+            `("with match under $testDescription", ({ subSchema, resultWhenExcludingOptionals, resultWhenIncludingOptionals }) => {
+                const { scope } = new JsonSchema(rawSchema);
+                const filterFunction = createFilterFunctionForSchema(rawSubSchema => rawSubSchema.title === "Match");
 
                 // with "includeNestedOptionalsForMainSchema" flag set to false, it does not matter whether anyOf/oneOf are generally included
-                // path to match: > "items"
-                expect(filterFunction(scope.find("#/definitions/One"), false)).toBe(true);
-                // path to match: > "oneOf" > ...
-                expect(filterFunction(scope.find("#/definitions/Two"), false)).toBe(false);
-                // path to match: > "anyOf" > ...
-                expect(filterFunction(scope.find("#/definitions/Three"), false)).toBe(false);
-                // path to match: > "anyOf" > ...
-                expect(filterFunction(scope.find("#/definitions/Four"), false)).toBe(false);
-
-                // with "includeNestedOptionalsForMainSchema" flag set to true, it depends on the parserConfig whether anyOf/oneOf are considered
-                // path to match: > "items"
-                expect(filterFunction(scope.find("#/definitions/One"), true)).toBe(true);
-                // path to match: > "oneOf" > [1] > "properties" > "bar"
-                expect(filterFunction(scope.find("#/definitions/Two"), true)).toBe(resultTwoIncl);
-                // path to match: > "anyOf" > [0]
-                expect(filterFunction(scope.find("#/definitions/Three"), true)).toBe(resultThreeIncl);
-                // path to match: > "anyOf" > [0] > "oneOf" > [1] > "properties" > "bar"
-                expect(filterFunction(scope.find("#/definitions/Four"), true)).toBe(resultFourIncl);
-
-                // when the match is in a property, an "includeNestedOptionalsForMainSchema" false does not hide it (only parserConfig is relevant)
-                // path to match: > "items" > "oneOf" > [0]
-                expect(filterFunction(scope.find("#/definitions/Five"), false)).toBe(resultFive);
-                expect(filterFunction(scope.find("#/definitions/Five"), true)).toBe(resultFive);
+                // when the match is in a property, an "includeNestedOptionalsForMainSchema" false does not hide it
+                expect(filterFunction(scope.find(`#/definitions/${subSchema}`), false)).toBe(resultWhenExcludingOptionals);
+                // with "includeNestedOptionalsForMainSchema" flag set to true, both anyOf and oneOf parts are being considered
+                expect(filterFunction(scope.find(`#/definitions/${subSchema}`), true)).toBe(resultWhenIncludingOptionals);
             });
         });
 
@@ -436,10 +416,6 @@ describe("createFilterFunctionForSchema()", () => {
                     { maxProperties: 7 }
                 ]
             };
-            const parserConfig = {
-                anyOf: {},
-                oneOf: {}
-            };
 
             it.each`
                 testTitle                                      | flatSearchFilter                  | includeOptionals | result
@@ -452,8 +428,8 @@ describe("createFilterFunctionForSchema()", () => {
                 ${"in oneOf part (incl. optionals)"}           | ${sub => sub.maxProperties === 7} | ${true}          | ${true}
                 ${"in oneOf part (excl. optionals)"}           | ${sub => sub.maxProperties === 7} | ${false}         | ${false}
             `("$testTitle", ({ flatSearchFilter, includeOptionals, result }) => {
-                const schema = new JsonSchema(rawSchema, parserConfig);
-                const filterFunction = createFilterFunctionForSchema(flatSearchFilter, parserConfig);
+                const schema = new JsonSchema(rawSchema);
+                const filterFunction = createFilterFunctionForSchema(flatSearchFilter);
                 expect(filterFunction(schema, includeOptionals)).toBe(result);
             });
         });

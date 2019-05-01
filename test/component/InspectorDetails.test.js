@@ -126,10 +126,7 @@ describe("renders correctly", () => {
                 }
             ]
         };
-        const parserConfig = {
-            oneOf: {}
-        };
-        const { columnData: columnDataProp } = buildColumnData({ Foo: schema }, [], ["Foo", [0]], parserConfig);
+        const { columnData: columnDataProp } = buildColumnData({ Foo: schema }, [], ["Foo", [0]]);
 
         it("show InspectorDetailsContent by default", () => {
             const component = shallow(

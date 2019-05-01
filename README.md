@@ -37,10 +37,10 @@ npm i react-jsonschema-inspector
 | `onSelect` | Function: call-back being invoked after the selection changed. Receives two parameters: (1) the selection - as per the `defaultSelectedItems`, (2) an object containing the "columnData" - the full render information for all visible columns |
 | `buildArrayProperties` | Function: accepting a `JsonSchema` instance representing an array's declared type of items and returning an object listing the available properties to offer with either `JsonSchema` or raw JSON Schemas as values. The default, providing access to the array's items, is: `arrayItemSchema => ({ "[0]": arrayItemSchema })` |
 | `parserConfig` | Object: enabling the inclusion/exclusion of optional parts of a JSON Schema – both for the inclusion of properties and their attributes as well as in the search. |
-| `parserConfig.anyOf` | Object: enabling the inclusion/exclusion of JSON Schema parts wrapped in `anyOf`. |
+| `parserConfig.anyOf` | Object: specifying details of the inclusion of JSON Schema parts wrapped in `anyOf`. |
 | `parserConfig.anyOf.groupTitle` | String: alternative title to show in option selection column – defaults to `"any of"` |
 | `parserConfig.anyOf.optionNameForIndex` | Function: providing the name/label to show for a single option – defaults to ``(optionIndexes) => `Option ${optionIndexes.map(index => index + 1).join("-")}` ``, resulting in e.g. "Option 1", "Option 2-1", "Option 3" |
-| `parserConfig.oneOf` | Object: enabling the inclusion/exclusion of JSON Schema parts wrapped in `oneOf`. |
+| `parserConfig.oneOf` | Object: specifying details of the inclusion of JSON Schema parts wrapped in `oneOf`. |
 | `parserConfig.oneOf.groupTitle` | String: alternative title to show in option selection column – defaults to `"one of"` |
 | `parserConfig.oneOf.optionNameForIndex` | Function: providing the name/label to show for a single option – defaults to ``(optionIndexes) => `Option ${optionIndexes.map(index => index + 1).join("-")}` ``, resulting in e.g. "Option 1", "Option 2-1", "Option 3" |
 | `breadcrumbs` | Object: enabling the definition of options for the breadcrumbs feature in the footer (can be disabled by setting to `null`) |

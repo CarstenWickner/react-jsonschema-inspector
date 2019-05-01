@@ -33,10 +33,10 @@ function isOptionIndexValidForOptions(optionIndexes, options) {
  *
  * @param {Object} schemas - named raw schemas to list in root `columnData` entry
  * @param {Array.<Object>} referenceSchemas - additional schemas that may be referenced
- * @param {*} parserConfig - settings determining how a json schema is being traversed/parsed
+ * @param {?Object} parserConfig - settings determining how a json schema is being traversed/parsed
  * @returns {Object.<string, JsonSchemaGroup>} named schema groups, derived from the provided raw schemas
  */
-function createRootColumnData(schemas, referenceSchemas, parserConfig) {
+function createRootColumnData(schemas, referenceSchemas, parserConfig = {}) {
     // first prepare those schemas that may be referenced by the displayed ones or each other
     const referenceScopes = [];
     referenceSchemas.forEach((rawRefSchema) => {
@@ -123,7 +123,7 @@ function buildNextColumn(schemaGroup, optionIndexes, buildArrayProperties = buil
  * @param {Object.<string, Object>} param0 - mapped raw schemas to be listed in the root column
  * @param {Array.<Object>} param1 - additional raw schemas that may be referenced but are not listed (directly) in the root column
  * @param {Array.<string|Array.<number>>} param2 - currently selected elements in the respective columns
- * @param {Object} param3 - `parserConfig` object indicating how the schemas should be traversed/parsed
+ * @param {?Object} param3 - `parserConfig` object indicating how the schemas should be traversed/parsed
  * @param {?ArrayPropertiesBuilder} param4 - function for building an array's properties
  * @returns {{columnData: Array.<Object>}} render data
  */
@@ -281,7 +281,7 @@ function trailingSelectionValidator({ selectedItem, trailingSelection }) {
  * PropType validation of the `filteredItems` prop.
  *
  * @param {Object} param0 - props
- * @param {?Array.<string>|Array.<Array.<number>>} param0.filteredItems - names of properties/options/array-item-accessors matchign the search filter
+ * @param {?Array.<string>|Array.<Array.<number>>} param0.filteredItems - names of properties/options/array-item-accessors matching the search filter
  * @param {?Object} param0.options - representation of options within the `contextGroup`
  * @param {?Object} param0.items - list of selectable entries being listed (i.e. properties/options/array-item-accessors)
  * @returns {?Error} validation error or null if validation is successful
