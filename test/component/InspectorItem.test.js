@@ -22,16 +22,13 @@ describe("renders correctly", () => {
         ${"with nested items"}    | ${[0]}        | ${true}
         ${"without nested items"} | ${[1]}        | ${false}
     `("representing option $testTitle", ({ optionIndexes, hasNestedItems }) => {
-        const parserConfig = {
-            oneOf: { type: "asAdditionalColumn" }
-        };
-        const schemaGroup = new JsonSchemaOneOfGroup(parserConfig)
+        const schemaGroup = new JsonSchemaOneOfGroup()
             .with(new JsonSchema({
                 properties: { foo: true }
-            }, parserConfig))
+            }))
             .with(new JsonSchema({
                 title: "bar"
-            }, parserConfig));
+            }));
         const component = shallow(
             <InspectorItem
                 name="Foobar"

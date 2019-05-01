@@ -104,7 +104,7 @@ function createGroupFromRawSchemaArray(GroupClass, { parserConfig, scope }, rawS
  * @returns {JsonSchemaAllOfGroup} group of sub-schemas that may define properties about their children
  */
 export function createGroupFromSchema(schema) {
-    const { schema: rawSchema, parserConfig, scope } = schema;
+    const { schema: rawSchema, scope } = schema;
     if (!isNonEmptyObject(rawSchema)) {
         return new JsonSchemaAllOfGroup();
     }
@@ -117,10 +117,10 @@ export function createGroupFromSchema(schema) {
     if (rawSchema.allOf) {
         result.with(createGroupFromRawSchemaArray(JsonSchemaAllOfGroup, schema, rawSchema.allOf));
     }
-    if (rawSchema.anyOf && parserConfig && parserConfig.anyOf) {
+    if (rawSchema.anyOf) {
         result.with(createGroupFromRawSchemaArray(JsonSchemaAnyOfGroup, schema, rawSchema.anyOf));
     }
-    if (rawSchema.oneOf && parserConfig && parserConfig.oneOf) {
+    if (rawSchema.oneOf) {
         result.with(createGroupFromRawSchemaArray(JsonSchemaOneOfGroup, schema, rawSchema.oneOf));
     }
     return result;

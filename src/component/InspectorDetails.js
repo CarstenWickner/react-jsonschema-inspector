@@ -11,17 +11,22 @@ const InspectorDetails = ({
     const selectionColumnIndex = columnData.length - (lastColumnContainsSelection ? 1 : 2);
     const trailingSelectionColumn = selectionColumnIndex < 0 ? null : columnData[selectionColumnIndex];
     let itemSchemaGroup;
+    let optionIndexes;
     if (trailingSelectionColumn) {
         itemSchemaGroup = trailingSelectionColumn.items
             ? trailingSelectionColumn.items[trailingSelectionColumn.selectedItem]
             : trailingSelectionColumn.contextGroup;
+        if (trailingSelectionColumn.options) {
+            optionIndexes = trailingSelectionColumn.selectedItem;
+        }
     }
     return (
         <div className="jsonschema-inspector-details">
             {itemSchemaGroup && renderSelectionDetails && renderSelectionDetails({
                 itemSchemaGroup,
                 selectionColumnIndex,
-                columnData
+                columnData,
+                optionIndexes
             })}
             {itemSchemaGroup && !renderSelectionDetails && (
                 <InspectorDetailsContent

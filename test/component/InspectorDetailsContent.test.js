@@ -15,7 +15,7 @@ describe("renders correctly", () => {
                 description: "Text"
             }
         };
-        const { columnData } = buildColumnData(schemas, [], ["Schema One"], {});
+        const { columnData } = buildColumnData(schemas, [], ["Schema One"]);
         const component = shallow(
             <InspectorDetailsContent
                 columnData={columnData}
@@ -35,7 +35,7 @@ describe("renders correctly", () => {
             items: { $ref: "#/definitions/itemSchema" },
             definitions: { itemSchema: arrayItemSchema }
         };
-        const { columnData } = buildColumnData({ "Schema One": schema }, [], ["Schema One"], {});
+        const { columnData } = buildColumnData({ "Schema One": schema }, [], ["Schema One"]);
         const component = shallow(
             <InspectorDetailsContent
                 columnData={columnData}
@@ -51,16 +51,13 @@ describe("renders correctly", () => {
         ]);
     });
     it("with option selection", () => {
-        const parserConfig = {
-            oneOf: { type: "asAdditionalColumn" }
-        };
         const schema = {
             oneOf: [
                 { title: "Foo" },
                 { title: "Bar" }
             ]
         };
-        const { columnData } = buildColumnData({ Foo: schema }, [], ["Foo", [1]], parserConfig);
+        const { columnData } = buildColumnData({ Foo: schema }, [], ["Foo", [1]]);
         const component = shallow(
             <InspectorDetailsContent
                 columnData={columnData}
@@ -94,7 +91,7 @@ describe("collectFormFields()", () => {
     `("includes `$field` – single value", ({ field, rowValue, labelText }) => {
         const { columnData } = buildColumnData({
             Foo: { [field]: rowValue }
-        }, [], ["Foo"], {});
+        }, [], ["Foo"]);
         const itemSchemaGroup = columnData[0].items.Foo;
         expect(collectFormFields(itemSchemaGroup, columnData, 0))
             .toEqual([{ labelText, rowValue }]);
@@ -121,7 +118,7 @@ describe("collectFormFields()", () => {
                     { [field]: modelValueTwo }
                 ]
             }
-        }, [], ["Foo"], {});
+        }, [], ["Foo"]);
         const itemSchemaGroup = columnData[0].items.Foo;
         expect(collectFormFields(itemSchemaGroup, columnData, 0))
             .toEqual([{ labelText, rowValue }]);
@@ -133,7 +130,7 @@ describe("collectFormFields()", () => {
                 Bar: { title: "Foobar" }
             }
         }];
-        const { columnData } = buildColumnData({ Foo: { $ref: "external-id#/definitions/Bar" } }, referenceSchemas, ["Foo"], {});
+        const { columnData } = buildColumnData({ Foo: { $ref: "external-id#/definitions/Bar" } }, referenceSchemas, ["Foo"]);
         const itemSchemaGroup = columnData[0].items.Foo;
         expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
             {
@@ -151,19 +148,15 @@ describe("collectFormFields()", () => {
                         description: "Required Property",
                         oneOf: [
                             { title: "Qux" },
-                            { title: "Quux" }
+                            { required: ["Foobar"] }
                         ]
                     }
-                },
-                anyOf: [
-                    { required: ["Foobar"] },
-                    true
-                ]
+                }
             }
         };
 
         it("from main schema", () => {
-            const { columnData } = buildColumnData(schemas, [], ["Foo", "Bar"], {});
+            const { columnData } = buildColumnData(schemas, [], ["Foo", "Bar"]);
             const itemSchemaGroup = columnData[1].items.Bar;
             expect(collectFormFields(itemSchemaGroup, columnData, 1)).toEqual([
                 {
@@ -177,10 +170,7 @@ describe("collectFormFields()", () => {
             ]);
         });
         it("from optional sub schema", () => {
-            const parserConfig = {
-                oneOf: { type: "asAdditionalColumn" }
-            };
-            const { columnData } = buildColumnData(schemas, [], ["Foo", "Bar", [0]], parserConfig);
+            const { columnData } = buildColumnData(schemas, [], ["Foo", "Bar", [0]]);
             const itemSchemaGroup = columnData[1].items.Bar;
             expect(collectFormFields(itemSchemaGroup, columnData, 2)).toEqual([
                 {
@@ -198,12 +188,9 @@ describe("collectFormFields()", () => {
             ]);
         });
         it("from property in optional sub schema", () => {
-            const parserConfig = {
-                anyOf: { type: "asAdditionalColumn" }
-            };
-            const { columnData } = buildColumnData(schemas, [], ["Foo", [0], "Foobar"], parserConfig);
-            const itemSchemaGroup = columnData[2].items.Foobar;
-            expect(collectFormFields(itemSchemaGroup, columnData, 2)).toEqual([
+            const { columnData } = buildColumnData(schemas, [], ["Foo", "Bar", [1], "Foobar"]);
+            const itemSchemaGroup = columnData[3].items.Foobar;
+            expect(collectFormFields(itemSchemaGroup, columnData, 3)).toEqual([
                 {
                     labelText: "Required",
                     rowValue: "Yes"

@@ -27,7 +27,7 @@ Or try it out and [![Edit on CodeSandbox][codesandbox-image]][codesandbox-url]
 npm i react-jsonschema-inspector
 ```
 
-### React Component Props
+### React Component Props of `<Inspector>`
 
 | Prop | Description |
 | --- | --- |
@@ -37,19 +37,17 @@ npm i react-jsonschema-inspector
 | `onSelect` | Function: call-back being invoked after the selection changed. Receives two parameters: (1) the selection - as per the `defaultSelectedItems`, (2) an object containing the "columnData" - the full render information for all visible columns |
 | `buildArrayProperties` | Function: accepting a `JsonSchema` instance representing an array's declared type of items and returning an object listing the available properties to offer with either `JsonSchema` or raw JSON Schemas as values. The default, providing access to the array's items, is: `arrayItemSchema => ({ "[0]": arrayItemSchema })` |
 | `parserConfig` | Object: enabling the inclusion/exclusion of optional parts of a JSON Schema – both for the inclusion of properties and their attributes as well as in the search. |
-| `parserConfig.anyOf` | Object: enabling the inclusion/exclusion of JSON Schema parts wrapped in `anyOf`. |
-| `parserConfig.anyOf.type` | String: can be `"likeAllOf"` or `"asAdditionalColumn"` (the latter being the default if no `parserConfig` is provided). |
-| `parserConfig.anyOf.groupTitle` | String: alternative title to show in option selection column (only relevant if `type: "asAdditionalColumn"`) – defaults to `"any of"` |
-| `parserConfig.anyOf.optionNameForIndex` | Function: providing the name/label to show for a single option (only relevant if `type: "asAdditionalColumn"`) – defaults to ``(optionIndexes) => `Option ${optionIndexes.map(index => index + 1).join("-")}` ``, resulting in e.g. "Option 1", "Option 2-1", "Option 3" |
-| `parserConfig.oneOf` | Object: enabling the inclusion/exclusion of JSON Schema parts wrapped in `oneOf`. |
-| `parserConfig.oneOf.type` | String: can be `"likeAllOf"` or `"asAdditionalColumn"` (the latter being the default if no `parserConfig` is provided). |
-| `parserConfig.oneOf.groupTitle` | String: alternative title to show in option selection column (only relevant if `type: "asAdditionalColumn"`) – defaults to `"one of"` |
-| `parserConfig.oneOf.optionNameForIndex` | Function: providing the name/label to show for a single option (only relevant if `type: "asAdditionalColumn"`) – defaults to ``(optionIndexes) => `Option ${optionIndexes.map(index => index + 1).join("-")}` ``, resulting in e.g. "Option 1", "Option 2-1", "Option 3" |
+| `parserConfig.anyOf` | Object: specifying details of the inclusion of JSON Schema parts wrapped in `anyOf`. |
+| `parserConfig.anyOf.groupTitle` | String: alternative title to show in option selection column – defaults to `"any of"` |
+| `parserConfig.anyOf.optionNameForIndex` | Function: providing the name/label to show for a single option – defaults to ``(optionIndexes) => `Option ${optionIndexes.map(index => index + 1).join("-")}` ``, resulting in e.g. "Option 1", "Option 2-1", "Option 3" |
+| `parserConfig.oneOf` | Object: specifying details of the inclusion of JSON Schema parts wrapped in `oneOf`. |
+| `parserConfig.oneOf.groupTitle` | String: alternative title to show in option selection column – defaults to `"one of"` |
+| `parserConfig.oneOf.optionNameForIndex` | Function: providing the name/label to show for a single option – defaults to ``(optionIndexes) => `Option ${optionIndexes.map(index => index + 1).join("-")}` ``, resulting in e.g. "Option 1", "Option 2-1", "Option 3" |
 | `breadcrumbs` | Object: enabling the definition of options for the breadcrumbs feature in the footer (can be disabled by setting to `null`) |
 | `breadcrumbs.prefix` | String: to be shown in front of the root selection (e.g. "//" or "./") – defaults to `""` |
 | `breadcrumbs.separator` | String: to be shown in front of any non-root selection (e.g. "/") – defaults to `"."` |
 | `breadcrumbs.skipSeparator` | Function: expecting a `JsonSchema` as input and should return an object containing `JsonSchema` or raw JSON Schemas as values – defaults to excluding `"[0]"` |
-| `breadcrumbs.mutateName` | Function: expecting two inputs: (1) the selected item's name, (2) the full information for the respective column and (3) the index of the respective column; a column's breadcrumb can be skipped by returning `null` |
+| `breadcrumbs.mutateName` | Function: expecting the following inputs: (1) the selected item's name, (2) the full information for the respective column and (3) the index of the respective column; a column's breadcrumb can be skipped by returning `null` |
 | `breadcrumbs.preventNavigation` | Boolean: set to `true` in order to turn-off the default behaviour of discarding any following selections when double-clicking on a breadcrumbs item |
 | `searchOptions` | Object: enabling the definition of options for the search/filter feature in the header (is disabled by default) – either `searchOptions.fields` or `searchOptions.filterBy` needs to be specified to enable it. the component itself will take care of looking-up sub-schemas (e.g. in `properties`) and also respects `$ref`-erences and has no problem with circular references. |
 | `searchOptions.fields`| Array of strings: each referring to the name of a text field in a JSON Schema (e.g. `["title", "description"]`) in which to search/filter – this applies a case-insensitive contains() check on each of the given fields |
@@ -58,8 +56,25 @@ npm i react-jsonschema-inspector
 | `searchOptions.debounceWait` | Number indicating the delay in milliseconds between the last change to the search term being entered and it actually being applied. This defaults to `200` but may be increased when used with exceptionally large schemas and you experience performance issues. Please refer to the documentation on [`lodash.debounce`](https://lodash.com/docs/4.17.11#debounce). |
 | `searchOptions.debounceMaxWait` | Number indicating the maximum delay in milliseconds after the search term was changed. This defaults to `500`. Please refer to the documentation on [`lodash.debounce`](https://lodash.com/docs/4.17.11#debounce). |
 | `renderItemContent` | Function: custom render function for name of single property/sub-schema in a column. Receives one parameter: object with the following properties: "name", "hasNestedItems", "selected", "schemaGroup" |
-| `renderSelectionDetails` | Function: custom render function for the "Details" block on the right for the single property/sub-schema being selected. Receives one parameter: object with the following properties: "itemSchemaGroup", "columnData", "selectionColumnIndex" |
+| `renderSelectionDetails` | Function: custom render function for the "Details" block on the right for the single property/sub-schema being selected. Receives one parameter: object with the following properties: "itemSchemaGroup", "columnData", "selectionColumnIndex", "optionIndexes" |
 | `renderEmptyDetails` | Function: custom render function for the "Details" block on the right if nothing is selected yet. Receives one parameter, which is an object with the "rootColumnSchemas" property, which holds the array of top-level schemas (as derived from the `schemas` prop and augmented by any given `referenceSchemas`)
+
+### Additional Helper Functions
+
+Besides the main `<Inspector>` component, there are additional named helper functions being provided in the scope of this library:
+- `getFieldValueArrayFromSchemaGroup()` – listing all values of the targeted field in an array (skipping `undefined` and `null` values)
+- `getCommonFieldValuesFromSchemaGroup()` – listing only those values of the targeted field in an array that are included in all occurrences of the field not being `undefined` or `null`
+- `getMinimumFieldValueFromSchemaGroup()` – expecting numeric values in the targeted field and returning the single lowest value (ignoring `undefined` and `null` values)
+- `getMaximumFieldValueFromSchemaGroup()` – expecting numeric values in the targeted field and returning the single highest value (ignoring `undefined` and `null` values)
+
+All four of these are intended to be used within props enabling the customisation of an `<Inspector>` instance, e.g. in `onSelect`, `buildArrayProperties`, `breadcrumbs.mutateName`, `renderItemContent`, `renderSelectionDetails`, `renderEmptyDetails`.
+All four helper functions expect the same input parameters:
+1. `schemaGroup` – a group object representing a single schema with all its parts, as provided to the various call-back functions mentioned above
+2. `fieldName` – textual name of the targeted field in the schema (group), e.g. `"title"`, `"maximum"`, `"minLength"`
+3. `defaultValue` – value to return if there is no value for the targeted field; or as initial/base value for the `Array.reduce()` being performed for the encountered values
+4. `optionIndexes` – only provided if the `schemaGroup` contains optional parts (i.e. `anyOf`/`oneOf`); used to identify the particular optional path within the `anyOf`/`oneOf` part(s) – this is also provided in one way or another in those call-back functions listed above
+
+As output, the respective helper functions either return a single value or – in case of multiple values – an array.
 
 
 ## Compatibility
@@ -83,8 +98,8 @@ It is also backwards-compatible with Drafts 4 and 6.
 | `items`| Partially | used to look-up `properties` of single kind of items in an array; however if `items` is an array of multiple sub-schemas they are being *ignored* |
 | `additionalItems`| Yes | used to look-up `properties` of kind of items in an array if `items` is not present or defined as an array (which is not supported itself), otherwise `additionalItems` are being *ignored* |
 | `allOf` | Yes | used to combine sub-schemas transparently |
-| `anyOf` | Yes | used to combine sub-schemas (transparently via `parserConfig.anyOf.type === "likeAllOf"` or explicitly via `parserConfig.anyOf.type === "asAdditionalColumn"`) |
-| `oneOf` | Yes | used to combine sub-schemas (transparently via `parserConfig.oneOf.type === "likeAllOf"` or explicitly via `parserConfig.oneOf.type === "asAdditionalColumn"`) |
+| `anyOf` | Yes | used to combine sub-schemas |
+| `oneOf` | Yes | used to combine sub-schemas |
 | `not` | - | *ignored* |
 | `contains` | - | *ignored* |
 | `dependencies` | - | *ignored* |

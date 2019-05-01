@@ -130,7 +130,7 @@ class Inspector extends Component {
      * @return {Object} return wrapper object for the column data (for the sake of future extensibility)
      * @return {Array.<Object>} return.columnData
      * @return {?Object.<String, JsonSchemaGroup>} return.columnData[].items named schemas to list in the respective column
-     * @return {?Object} return.columnData[].options representation of a schema's hierarchy in case of optionals being included `"asAdditionalColumn"`
+     * @return {?Object} return.columnData[].options representation of a schema's hierarchy in case of optionals being included
      * @return {?JsonSchemaGroup} return.columnData[].contextGroup the schema group containing the `options`
      * @return {?String} return.columnData[].selectedItem name of the currently selected item (may be null)
      * @return {?Boolean} return.columnData[].trailingSelection flag indicating whether this column's selection is the last
@@ -232,22 +232,20 @@ Inspector.propTypes = {
      */
     defaultSelectedItems: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.number)])),
     /**
-     * Options for the traversing/parsing of JSON schemas. Enabling the inclusion of optional part of a schema.
+     * Options for the traversing/parsing of JSON schemas. Defining how optional parts of a schema should be represented.
      */
     parserConfig: PropTypes.shape({
         /**
-         * Setting indicating whether/how to include schema parts wrapped in "anyOf".
+         * Setting indicating how to include schema parts wrapped in "anyOf".
          */
         anyOf: PropTypes.shape({
-            type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"]).isRequired,
             groupTitle: PropTypes.string,
             optionNameForIndex: PropTypes.func
         }),
         /**
-         * Setting indicating whether/how to include schema parts wrapped in "oneOf".
+         * Setting indicating how to include schema parts wrapped in "oneOf".
          */
         oneOf: PropTypes.shape({
-            type: PropTypes.oneOf(["likeAllOf", "asAdditionalColumn"]).isRequired,
             groupTitle: PropTypes.string,
             optionNameForIndex: PropTypes.func
         })
@@ -326,10 +324,7 @@ Inspector.propTypes = {
 Inspector.defaultProps = {
     referenceSchemas: [],
     defaultSelectedItems: [],
-    parserConfig: {
-        oneOf: { type: "asAdditionalColumn" },
-        anyOf: { type: "asAdditionalColumn" }
-    },
+    parserConfig: {},
     buildArrayProperties: undefined,
     breadcrumbs: {
         skipSeparator: fieldName => (fieldName === "[0]")

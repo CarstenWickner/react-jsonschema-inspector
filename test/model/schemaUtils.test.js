@@ -40,62 +40,16 @@ describe("createGroupFromSchema()", () => {
         expect(result.entries[0].schema).toEqual(rawFooSchema);
     });
     describe.each`
-        groupName  | parserConfigDescription                                | parserConfig
-        ${"allOf"} | ${"(with empty parserConfig)"}                         | ${{}}
-        ${"anyOf"} | ${"(when parserConfig.anyOf = { type: 'likeAllOf' })"} | ${{ anyOf: { type: "likeAllOf" } }}
-        ${"oneOf"} | ${"(when parserConfig.oneOf = { type: 'likeAllOf' })"} | ${{ oneOf: { type: "likeAllOf" } }}
-    `("returns allOf group for schema containing $groupName, flattening entries $parserConfigDescription", ({
-        groupName, parserConfig
-    }) => {
-        it("for one nested level", () => {
-            const schema = new JsonSchema({
-                [groupName]: [rawFooSchema, rawBarSchema]
-            }, parserConfig);
-            const result = createGroupFromSchema(schema);
-            expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
-            expect(result.entries).toHaveLength(3);
-            expect(result.entries[0]).toBe(schema);
-            expect(result.entries[1]).toBeInstanceOf(JsonSchema);
-            expect(result.entries[1].schema).toEqual(rawFooSchema);
-            expect(result.entries[2]).toBeInstanceOf(JsonSchema);
-            expect(result.entries[2].schema).toEqual(rawBarSchema);
-        });
-        it("for three nested levels", () => {
-            const rawFoobarSchema = { type: "object" };
-            const rawSecondLevelSchema = {
-                [groupName]: [rawBarSchema, rawFoobarSchema]
-            };
-            const schema = new JsonSchema({
-                [groupName]: [rawFooSchema, rawSecondLevelSchema]
-            }, parserConfig);
-            const result = createGroupFromSchema(schema);
-            expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
-            expect(result.entries).toHaveLength(5);
-            expect(result.entries[0]).toBe(schema);
-            expect(result.entries[1]).toBeInstanceOf(JsonSchema);
-            expect(result.entries[1].schema).toEqual(rawFooSchema);
-            expect(result.entries[2]).toBeInstanceOf(JsonSchema);
-            expect(result.entries[2].schema).toEqual(rawSecondLevelSchema);
-            expect(result.entries[3]).toBeInstanceOf(JsonSchema);
-            expect(result.entries[3].schema).toEqual(rawBarSchema);
-            expect(result.entries[4]).toBeInstanceOf(JsonSchema);
-            expect(result.entries[4].schema).toEqual(rawFoobarSchema);
-        });
-    });
-    describe.each`
         groupName  | GroupClass
         ${"anyOf"} ] ${JsonSchemaAnyOfGroup}
         ${"oneOf"} ] ${JsonSchemaOneOfGroup}
     `("returns allOf group for schema containing $groupName", ({
         groupName, GroupClass
     }) => {
-        const parserConfig = {
-            [groupName]: { type: "asAdditionalColumn" }
-        };
-        it(`with single nested ${groupName} group (when parserConfig.${groupName}.type === 'asAdditionalColumn')`, () => {
+        it(`with single nested ${groupName} group`, () => {
             const schema = new JsonSchema({
                 [groupName]: [rawFooSchema, rawBarSchema]
-            }, parserConfig);
+            });
             const result = createGroupFromSchema(schema);
             expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
             expect(result.entries).toHaveLength(2);
@@ -107,14 +61,14 @@ describe("createGroupFromSchema()", () => {
             expect(result.entries[1].entries[1]).toBeInstanceOf(JsonSchema);
             expect(result.entries[1].entries[1].schema).toEqual(rawBarSchema);
         });
-        it(`with multiple nested ${groupName} groups (when parserConfig.${groupName}.type === 'asAdditionalColumn')`, () => {
+        it(`with multiple nested ${groupName} groups`, () => {
             const rawFoobarSchema = { type: "object" };
             const nestedOptionalSchema = {
                 [groupName]: [rawBarSchema, rawFoobarSchema]
             };
             const schema = new JsonSchema({
                 [groupName]: [rawFooSchema, nestedOptionalSchema]
-            }, parserConfig);
+            });
             const result = createGroupFromSchema(schema);
             // top level: allOf: [ schema, anyOf/oneOf ]
             expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
@@ -150,67 +104,8 @@ describe("createGroupFromSchema()", () => {
             oneOf: [rawQuxSchema, rawQuuxSchema]
         };
 
-        it("flattening entries (when parserConfig.anyOf/oneOf.type = 'likeAllOf')", () => {
-            const parserConfig = {
-                anyOf: { type: "likeAllOf" },
-                oneOf: { type: "likeAllOf" }
-            };
-            const schema = new JsonSchema(rawTargetSchema, parserConfig);
-            const result = createGroupFromSchema(schema);
-            expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
-            expect(result.entries).toHaveLength(7);
-            expect(result.entries[0]).toBe(schema);
-            expect(result.entries[1].schema).toEqual(rawFooSchema);
-            expect(result.entries[2].schema).toEqual(rawBarSchema);
-            expect(result.entries[3].schema).toEqual(rawFoobarSchema);
-            expect(result.entries[4].schema).toEqual(rawBazSchema);
-            expect(result.entries[5].schema).toEqual(rawQuxSchema);
-            expect(result.entries[6].schema).toEqual(rawQuuxSchema);
-        });
-        it("with nested anyOf group (when parserConfig.anyOf.type = 'asAdditionalColumn' and oneOf.type = 'likeAllOf')", () => {
-            const parserConfig = {
-                anyOf: { type: "asAdditionalColumn" },
-                oneOf: { type: "likeAllOf" }
-            };
-            const schema = new JsonSchema(rawTargetSchema, parserConfig);
-            const result = createGroupFromSchema(schema);
-            expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
-            expect(result.entries).toHaveLength(6);
-            expect(result.entries[0]).toBe(schema);
-            expect(result.entries[1].schema).toEqual(rawFooSchema);
-            expect(result.entries[2].schema).toEqual(rawBarSchema);
-            expect(result.entries[3]).toBeInstanceOf(JsonSchemaAnyOfGroup);
-            expect(result.entries[3].entries).toHaveLength(2);
-            expect(result.entries[3].entries[0].schema).toEqual(rawFoobarSchema);
-            expect(result.entries[3].entries[1].schema).toEqual(rawBazSchema);
-            expect(result.entries[4].schema).toEqual(rawQuxSchema);
-            expect(result.entries[5].schema).toEqual(rawQuuxSchema);
-        });
-        it("with nested oneOf group (when parserConfig.anyOf.type = 'likeAllOf' and oneOf.type = 'asAdditionalColumn')", () => {
-            const parserConfig = {
-                anyOf: { type: "likeAllOf" },
-                oneOf: { type: "asAdditionalColumn" }
-            };
-            const schema = new JsonSchema(rawTargetSchema, parserConfig);
-            const result = createGroupFromSchema(schema);
-            expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
-            expect(result.entries).toHaveLength(6);
-            expect(result.entries[0]).toBe(schema);
-            expect(result.entries[1].schema).toEqual(rawFooSchema);
-            expect(result.entries[2].schema).toEqual(rawBarSchema);
-            expect(result.entries[3].schema).toEqual(rawFoobarSchema);
-            expect(result.entries[4].schema).toEqual(rawBazSchema);
-            expect(result.entries[5]).toBeInstanceOf(JsonSchemaOneOfGroup);
-            expect(result.entries[5].entries).toHaveLength(2);
-            expect(result.entries[5].entries[0].schema).toEqual(rawQuxSchema);
-            expect(result.entries[5].entries[1].schema).toEqual(rawQuuxSchema);
-        });
-        it("including oneOf and anyOf if both are present (when parserConfig.anyOf/oneOf.type = 'asAdditionalColumn')", () => {
-            const parserConfig = {
-                anyOf: { type: "asAdditionalColumn" },
-                oneOf: { type: "asAdditionalColumn" }
-            };
-            const schema = new JsonSchema(rawTargetSchema, parserConfig);
+        it("including oneOf and anyOf if both are present", () => {
+            const schema = new JsonSchema(rawTargetSchema);
             const result = createGroupFromSchema(schema);
             expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
             expect(result.entries).toHaveLength(5);
@@ -355,9 +250,6 @@ describe("getPropertiesFromSchemaGroup()", () => {
         ${"anyOf"}
         ${"oneOf"}
     `("$groupName with 'asAdditionalColumn' setting:", ({ groupName }) => {
-        const parserConfig = {
-            [groupName]: { type: "asAdditionalColumn" }
-        };
         const rawFooSchema = { description: "Description Text" };
         const rawBarSchema = { title: "Title Value" };
         const schema = new JsonSchema({
@@ -369,7 +261,7 @@ describe("getPropertiesFromSchemaGroup()", () => {
                     properties: { bar: rawBarSchema }
                 }
             ]
-        }, parserConfig);
+        });
         it("ignored if no optionIndex provided", () => {
             const result = getPropertiesFromSchemaGroup(createGroupFromSchema(schema));
             expect(result).toEqual({});
@@ -393,11 +285,11 @@ describe("getOptionsInSchemaGroup()", () => {
         static getDefaultGroupTitle() {
             return "mocked";
         }
-        constructor(treatAsAdditionalColumn = false) {
+        constructor(considerAsSeparateOptions = false) {
             super();
-            this.treatAsAdditionalColumn = treatAsAdditionalColumn;
+            this.considerAsSeparateOptions = considerAsSeparateOptions;
         }
-        considerSchemasAsSeparateOptions() { return this.treatAsAdditionalColumn; }
+        considerSchemasAsSeparateOptions() { return this.considerAsSeparateOptions; }
     }
 
     describe("when considerSchemasAsSeparateOptions() === false", () => {
@@ -650,103 +542,6 @@ describe("getFieldValueFromSchemaGroup()", () => {
             });
         });
     });
-    const likeAllOfConfig = { type: "likeAllOf" };
-    describe.each`
-        groupName
-        ${"anyOf"}
-        ${"oneOf"}
-    `("$groupName (type in parserConfig = 'likeAllOf'):", ({ groupName }) => {
-        const parserConfig = { [groupName]: likeAllOfConfig };
-        it("finds single value", () => {
-            const schema = {
-                [groupName]: [
-                    { description: "foo" },
-                    { title: "bar" },
-                    { type: "object" }
-                ]
-            };
-            const schemaGroup = createGroupFromSchema(new JsonSchema(schema, parserConfig));
-            expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toBe("bar");
-        });
-        it("finds single value in $ref-erenced group", () => {
-            const { scope } = new JsonSchema({
-                definitions: {
-                    foo: {
-                        [groupName]: [
-                            { description: "bar" },
-                            {
-                                [groupName]: [
-                                    { title: "baz" },
-                                    { type: "object" }
-                                ]
-                            }
-                        ]
-                    }
-                }
-            }, parserConfig);
-            const schema = { $ref: "#/definitions/foo" };
-            const schemaGroup = createGroupFromSchema(new JsonSchema(schema, parserConfig, scope));
-            expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toBe("baz");
-        });
-        describe("merging multiple values", () => {
-            const schema = { $ref: "#/definitions/foo" };
-            const { scope } = new JsonSchema({
-                definitions: {
-                    foo: {
-                        [groupName]: [
-                            { $ref: "#/definitions/bar" },
-                            { title: "foobar" }
-                        ]
-                    },
-                    bar: { title: "baz" }
-                }
-            }, parserConfig);
-            const schemaGroup = createGroupFromSchema(new JsonSchema(schema, parserConfig, scope));
-
-            it("list values by default", () => {
-                expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toEqual(["baz", "foobar"]);
-            });
-            it("applies custom mergeFunction", () => {
-                // custom merge function always overrides result with last encountered value
-                const mergeFunction = (first, second) => (isDefined(second) ? second : first);
-                expect(getFieldValueFromSchemaGroup(schemaGroup, "title", mergeFunction)).toBe("foobar");
-            });
-        });
-        it("merging with value from allOf", () => {
-            const schema = {
-                [groupName]: [
-                    { description: "foo" },
-                    { title: "bar" }
-                ],
-                allOf: [
-                    { title: "baz" },
-                    { type: "object" }
-                ]
-            };
-            const schemaGroup = createGroupFromSchema(new JsonSchema(schema, parserConfig));
-            expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toEqual(["baz", "bar"]);
-        });
-    });
-    it.each`
-        parserConfig                                          | result            | testTitle
-        ${{ anyOf: likeAllOfConfig, oneOf: likeAllOfConfig }} | ${["baz", "bar"]} | ${"both anyOf and oneOf considered when 'likeAllOf'"}
-        ${{ oneOf: likeAllOfConfig }}                         | ${"bar"}          | ${"only oneOf ('likeAllOf') returned if anyOf ignored"}
-        ${{ anyOf: likeAllOfConfig }}                         | ${"baz"}          | ${"only anyOf ('likeAllOf') returned if oneOf ignored"}
-    `("$testTitle", ({ parserConfig, result }) => {
-        const schema = {
-            oneOf: [
-                { description: "foo" },
-                { title: "bar" },
-                { type: "object" }
-            ],
-            anyOf: [
-                { title: "baz" },
-                { type: "object" }
-            ]
-        };
-        const schemaGroup = createGroupFromSchema(new JsonSchema(schema, parserConfig));
-        expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toEqual(result);
-    });
     it.each`
         fieldName
         ${"items"}
@@ -857,9 +652,6 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
                 }
             ]
         };
-        const parserConfig = {
-            [groupName]: { type: "asAdditionalColumn" }
-        };
 
         it.each`
             testTitle                       | optionIndexes | expectedResult
@@ -867,7 +659,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             ${"one-level optionTarget (2)"} | ${[1]}        | ${{ description: "bar" }}
             ${"two-level optionTarget"}     | ${[2, 1]}     | ${{ type: "object" }}
         `("$testTitle", ({ optionIndexes, expectedResult }) => {
-            const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, parserConfig)), optionIndexes);
+            const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)), optionIndexes);
             expect(result).toBeInstanceOf(JsonSchema);
             expect(result.schema).toEqual(expectedResult);
         });
@@ -878,7 +670,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             ${"too high optionTarget"}                                   | ${[3]}
             ${"existing optionTarget without `items`/`additionalItems`"} | ${[2, 0]}
         `("returning undefined for $testTitle", ({ optionIndexes }) => {
-            const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, parserConfig)), optionIndexes);
+            const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)), optionIndexes);
             expect(result).toBeUndefined();
         });
     });
