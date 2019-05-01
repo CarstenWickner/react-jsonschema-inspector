@@ -23,7 +23,7 @@ describe("renders correctly", () => {
         ${"without nested items"} | ${[1]}        | ${false}
     `("representing option $testTitle", ({ optionIndexes, hasNestedItems }) => {
         const parserConfig = {
-            oneOf: { type: "asAdditionalColumn" }
+            oneOf: {}
         };
         const schemaGroup = new JsonSchemaOneOfGroup(parserConfig)
             .with(new JsonSchema({

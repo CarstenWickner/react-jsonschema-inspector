@@ -52,7 +52,7 @@ describe("renders correctly", () => {
     });
     it("with option selection", () => {
         const parserConfig = {
-            oneOf: { type: "asAdditionalColumn" }
+            oneOf: {}
         };
         const schema = {
             oneOf: [
@@ -178,7 +178,7 @@ describe("collectFormFields()", () => {
         });
         it("from optional sub schema", () => {
             const parserConfig = {
-                oneOf: { type: "asAdditionalColumn" }
+                oneOf: {}
             };
             const { columnData } = buildColumnData(schemas, [], ["Foo", "Bar", [0]], parserConfig);
             const itemSchemaGroup = columnData[1].items.Bar;
@@ -199,7 +199,7 @@ describe("collectFormFields()", () => {
         });
         it("from property in optional sub schema", () => {
             const parserConfig = {
-                anyOf: { type: "asAdditionalColumn" }
+                anyOf: {}
             };
             const { columnData } = buildColumnData(schemas, [], ["Foo", [0], "Foobar"], parserConfig);
             const itemSchemaGroup = columnData[2].items.Foobar;

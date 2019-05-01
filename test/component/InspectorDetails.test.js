@@ -127,7 +127,7 @@ describe("renders correctly", () => {
             ]
         };
         const parserConfig = {
-            oneOf: { type: "asAdditionalColumn" }
+            oneOf: {}
         };
         const { columnData: columnDataProp } = buildColumnData({ Foo: schema }, [], ["Foo", [0]], parserConfig);
 

@@ -261,9 +261,7 @@ describe("createRenderDataBuilder()", () => {
                 }
             };
             const parserConfig = {
-                oneOf: {
-                    type: "asAdditionalColumn"
-                }
+                oneOf: {}
             };
             const { columnData } = getRenderData(rootSchemas, [], ["bar", [0], "get(0)"], parserConfig, buildArrayProperties);
             expect(columnData).toHaveLength(4);
@@ -319,8 +317,8 @@ describe("createRenderDataBuilder()", () => {
             }
         };
         const parserConfig = {
-            oneOf: { type: "asAdditionalColumn" },
-            anyOf: { type: "asAdditionalColumn" }
+            oneOf: {},
+            anyOf: {}
         };
         const expectedOptions = {
             groupTitle: "one of",
@@ -690,9 +688,6 @@ describe("createFilterFunctionForColumn()", () => {
         });
     });
     describe("returning filter function for schema with optionals", () => {
-        const likeAllOf = { type: "likeAllOf" };
-        const asColumn = { type: "asAdditionalColumn" };
-
         describe("finding match via circular reference to parent schema", () => {
             const rawSchema = {
                 title: "Match",
@@ -732,13 +727,11 @@ describe("createFilterFunctionForColumn()", () => {
             };
 
             it.each`
-                parserConfigDescription         | parserConfig                            | result
-                ${"empty parserConfig"}         | ${{}}                                   | ${["I-One"]}
-                ${"oneOf 'likeAllOf'"}          | ${{ oneOf: likeAllOf }}                 | ${["I-One", "I-Two"]}
-                ${"oneOf 'asAdditionalColumn'"} | ${{ oneOf: asColumn }}                  | ${["I-One", "I-Two"]}
-                ${"anyOf 'likeAllOf'"}          | ${{ anyOf: likeAllOf }}                 | ${["I-One", "I-Three"]}
-                ${"anyOf 'likeAllOf'"}          | ${{ anyOf: asColumn }}                  | ${["I-One", "I-Three"]}
-                ${"oneOf and anyOf"}            | ${{ oneOf: asColumn, anyOf: asColumn }} | ${["I-One", "I-Two", "I-Three", "I-Four"]}
+                parserConfigDescription | parserConfig                | result
+                ${"empty parserConfig"} | ${{}}                       | ${["I-One"]}
+                ${"oneOf"}              | ${{ oneOf: {} }}            | ${["I-One", "I-Two"]}
+                ${"anyOf"}              | ${{ anyOf: {} }}            | ${["I-One", "I-Three"]}
+                ${"oneOf and anyOf"}    | ${{ oneOf: {}, anyOf: {} }} | ${["I-One", "I-Two", "I-Three", "I-Four"]}
             `("with $parserConfigDescription", ({ parserConfig, result }) => {
                 const schema = new JsonSchema(rawSchema, parserConfig);
                 const columnInput = {
@@ -803,12 +796,11 @@ describe("createFilterFunctionForColumn()", () => {
                 ]
             };
 
-            const bothAsColumn = { oneOf: asColumn, anyOf: asColumn };
             it.each`
-                parserConfigDescription                   | parserConfig           | result
-                ${"oneOf 'asAdditionalColumn'"}           | ${{ oneOf: asColumn }} | ${[[1], [2, 0]]}
-                ${"anyOf 'likeAllOf'"}                    | ${{ anyOf: asColumn }} | ${[[0], [2, 1]]}
-                ${"oneOf and anyOf 'asAdditionalColumn'"} | ${bothAsColumn}        | ${[[0, 0], [0, 2, 1], [0, 3, 0], [1, 1], [1, 2, 0], [1, 3, 1]]}
+                parserConfigDescription | parserConfig                  | result
+                ${"oneOf"}              | ${{ oneOf: {} }}              | ${[[1], [2, 0]]}
+                ${"anyOf"}              | ${{ anyOf: {} }}              | ${[[0], [2, 1]]}
+                ${"oneOf and anyOf"}    | ${{ oneOf: {}, anyOf: {} }}   | ${[[0, 0], [0, 2, 1], [0, 3, 0], [1, 1], [1, 2, 0], [1, 3, 1]]}
             `("with $parserConfigDescription", ({ parserConfig, result }) => {
                 const schema = new JsonSchema(rawSchema, parserConfig);
                 const contextGroup = createGroupFromSchema(schema);

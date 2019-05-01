@@ -90,7 +90,7 @@ describe("renders correctly", () => {
     });
     describe("with option selection", () => {
         const parserConfig = {
-            oneOf: { type: "asAdditionalColumn" }
+            oneOf: {}
         };
         const schema = {
             oneOf: [

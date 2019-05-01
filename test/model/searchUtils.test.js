@@ -183,19 +183,81 @@ describe("collectReferencedSubSchemas", () => {
         const schema = new JsonSchema({ title: "No Reference" });
         expect(collectReferencedSubSchemas(schema)).toEqual(new Map());
     });
-    it("returns Map with a single referenced sub-schema", () => {
+    describe.each`
+        fieldName
+        ${"anyOf"}
+        ${"oneOf"}
+    `("for reference in '$fieldName'", ({ fieldName }) => {
         const rawSubSchema = {
             title: "Reference Target"
         };
         const schema = new JsonSchema({
-            definitions: { Sub: rawSubSchema },
-            items: { $ref: "#/definitions/Sub" }
+            definitions: { Foo: rawSubSchema },
+            [fieldName]: [{}, { $ref: "#/definitions/Foo" }]
+        }, { [fieldName]: {} });
+
+        it("returns empty Map when includeNestedOptionals === false", () => {
+            const result = collectReferencedSubSchemas(schema, false);
+            expect(result.size).toBe(0);
         });
-        const result = collectReferencedSubSchemas(schema);
-        expect(result.size).toBe(1);
-        const [subSchema, includingNestedOptionals] = Array.from(result.entries())[0];
-        expect(subSchema.schema).toEqual(rawSubSchema);
-        expect(includingNestedOptionals).toBe(true);
+        it("returns Map with a single referenced sub-schema when includeNestedOptionals === true", () => {
+            const result = collectReferencedSubSchemas(schema, true);
+            expect(result.size).toBe(1);
+            const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
+            expect(subSchema.schema).toEqual(rawSubSchema);
+            expect(resultIncludingNestedOptionals).toBe(true);
+        });
+    });
+    describe.each`
+        includeNestedOptionals
+        ${true}
+        ${false}
+    `("returns Map with a single referenced sub-schema (when includeNestedOptionals === $includeNestedOptionals)", ({ includeNestedOptionals }) => {
+        const rawSubSchema = {
+            title: "Reference Target"
+        };
+        it.each`
+            fieldName            | referencingSchemaPart
+            ${"properties"}      | ${{ bar: { $ref: "#/definitions/Foo" } }}
+            ${"items"}           | ${{ $ref: "#/definitions/Foo" }}
+            ${"additionalItems"} | ${{ $ref: "#/definitions/Foo" }}
+        `("returning true as mapped result value for reference in '$fieldName'", ({ fieldName, referencingSchemaPart }) => {
+            const schema = new JsonSchema({
+                definitions: { Foo: rawSubSchema },
+                [fieldName]: referencingSchemaPart
+            });
+            const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
+            expect(result.size).toBe(1);
+            const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
+            expect(subSchema.schema).toEqual(rawSubSchema);
+            expect(resultIncludingNestedOptionals).toBe(true);
+        });
+        it("returning includeNestedOptionals flag as mapped result value for reference in 'allOf'", () => {
+            const schema = new JsonSchema({
+                definitions: { Foo: rawSubSchema },
+                allOf: [{}, { $ref: "#/definitions/Foo" }]
+            });
+            const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
+            expect(result.size).toBe(1);
+            const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
+            expect(subSchema.schema).toEqual(rawSubSchema);
+            expect(resultIncludingNestedOptionals).toBe(includeNestedOptionals);
+        });
+        it.each`
+            testDescription                                          | allOf
+            ${"directly in 'allOf' (first) and as 'items' (second)"} | ${[{ $ref: "#/definitions/Foo" }, { items: { $ref: "#/definitions/Foo" } }]}
+            ${"directly in 'allOf' (second) and as 'items' (first)"} | ${[{ items: { $ref: "#/definitions/Foo" } }, { $ref: "#/definitions/Foo" }]}
+        `("returning true as mapped result value if same reference occurs $testDescription", ({ allOf }) => {
+            const schema = new JsonSchema({
+                definitions: { Foo: rawSubSchema },
+                allOf
+            });
+            const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
+            expect(result.size).toBe(1);
+            const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
+            expect(subSchema.schema).toEqual(rawSubSchema);
+            expect(resultIncludingNestedOptionals).toBe(true);
+        });
     });
     it("returns Map with multiple referenced sub-schemas", () => {
         const schema = new JsonSchema({
@@ -277,9 +339,6 @@ describe("createFilterFunctionForSchema()", () => {
         });
     });
     describe("returning filter function for schema with optionals", () => {
-        const likeAllOf = { type: "likeAllOf" };
-        const asColumn = { type: "asAdditionalColumn" };
-
         describe("finding match via circular reference to parent schema", () => {
             const rawSchema = {
                 title: "Match",
@@ -287,7 +346,8 @@ describe("createFilterFunctionForSchema()", () => {
                     "Array of Main Schema": { $ref: "#/definitions/One" },
                     "OneOf with Main Schema as Property in Option": { $ref: "#/definitions/Two" },
                     "AnyOf with Main Schema as Option": { $ref: "#/definitions/Three" },
-                    "AnyOf with OneOf as Option, which has Main Schema as Property": { $ref: "#/definitions/Four" }
+                    "AnyOf with OneOf as Option, which has Main Schema as Property": { $ref: "#/definitions/Four" },
+                    "Array of Objects with Main Schema as Option": { $ref: "#/definitions/Five" }
                 },
                 definitions: {
                     One: {
@@ -314,31 +374,49 @@ describe("createFilterFunctionForSchema()", () => {
                             { $ref: "#/definitions/Two" },
                             { title: "Qux" }
                         ]
+                    },
+                    Five: {
+                        items: { $ref: "#/definitions/Two" }
                     }
                 }
             };
 
             it.each`
-                parserConfigDescription         | parserConfig                            | resultIncluding | resultExcluding
-                ${"empty parserConfig"}         | ${{}}                                   | ${[1, 0, 0, 0]} | ${[1, 0, 0, 0]}
-                ${"oneOf 'likeAllOf'"}          | ${{ oneOf: likeAllOf }}                 | ${[1, 1, 0, 0]} | ${[1, 1, 0, 0]}
-                ${"oneOf 'asAdditionalColumn'"} | ${{ oneOf: asColumn }}                  | ${[1, 1, 0, 0]} | ${[1, 0, 0, 0]}
-                ${"anyOf 'likeAllOf'"}          | ${{ anyOf: likeAllOf }}                 | ${[1, 0, 1, 0]} | ${[1, 0, 1, 0]}
-                ${"anyOf 'asAdditionalColumn'"} | ${{ anyOf: asColumn }}                  | ${[1, 0, 1, 0]} | ${[1, 0, 0, 0]}
-                ${"oneOf and anyOf"}            | ${{ oneOf: asColumn, anyOf: asColumn }} | ${[1, 1, 1, 1]} | ${[1, 0, 0, 0]}
-            `("with $parserConfigDescription", ({ parserConfig, resultIncluding, resultExcluding }) => {
+                parserConfigDescription | parserConfig                | resultTwoIncl | resultThreeIncl | resultFourIncl | resultFive
+                ${"empty parserConfig"} | ${{}}                       | ${false}      | ${false}        | ${false}       | ${false}
+                ${"oneOf"}              | ${{ oneOf: {} }}            | ${true}       | ${false}        | ${false}       | ${true}
+                ${"anyOf"}              | ${{ anyOf: {} }}            | ${false}      | ${true}         | ${false}       | ${false}
+                ${"oneOf and anyOf"}    | ${{ oneOf: {}, anyOf: {} }} | ${true}       | ${true}         | ${true}        | ${true}
+            `("with $parserConfigDescription", ({
+                parserConfig, resultTwoIncl, resultThreeIncl, resultFourIncl, resultFive
+            }) => {
                 const { scope } = new JsonSchema(rawSchema, parserConfig);
                 const filterFunction = createFilterFunctionForSchema(rawSubSchema => rawSubSchema.title === "Match", parserConfig);
 
-                expect(filterFunction(scope.find("#/definitions/One"), true)).toBe(!!resultIncluding[0]);
-                expect(filterFunction(scope.find("#/definitions/Two"), true)).toBe(!!resultIncluding[1]);
-                expect(filterFunction(scope.find("#/definitions/Three"), true)).toBe(!!resultIncluding[2]);
-                expect(filterFunction(scope.find("#/definitions/Four"), true)).toBe(!!resultIncluding[3]);
+                // with "includeNestedOptionalsForMainSchema" flag set to false, it does not matter whether anyOf/oneOf are generally included
+                // path to match: > "items"
+                expect(filterFunction(scope.find("#/definitions/One"), false)).toBe(true);
+                // path to match: > "oneOf" > ...
+                expect(filterFunction(scope.find("#/definitions/Two"), false)).toBe(false);
+                // path to match: > "anyOf" > ...
+                expect(filterFunction(scope.find("#/definitions/Three"), false)).toBe(false);
+                // path to match: > "anyOf" > ...
+                expect(filterFunction(scope.find("#/definitions/Four"), false)).toBe(false);
 
-                expect(filterFunction(scope.find("#/definitions/One"), false)).toBe(!!resultExcluding[0]);
-                expect(filterFunction(scope.find("#/definitions/Two"), false)).toBe(!!resultExcluding[1]);
-                expect(filterFunction(scope.find("#/definitions/Three"), false)).toBe(!!resultExcluding[2]);
-                expect(filterFunction(scope.find("#/definitions/Four"), false)).toBe(!!resultExcluding[3]);
+                // with "includeNestedOptionalsForMainSchema" flag set to true, it depends on the parserConfig whether anyOf/oneOf are considered
+                // path to match: > "items"
+                expect(filterFunction(scope.find("#/definitions/One"), true)).toBe(true);
+                // path to match: > "oneOf" > [1] > "properties" > "bar"
+                expect(filterFunction(scope.find("#/definitions/Two"), true)).toBe(resultTwoIncl);
+                // path to match: > "anyOf" > [0]
+                expect(filterFunction(scope.find("#/definitions/Three"), true)).toBe(resultThreeIncl);
+                // path to match: > "anyOf" > [0] > "oneOf" > [1] > "properties" > "bar"
+                expect(filterFunction(scope.find("#/definitions/Four"), true)).toBe(resultFourIncl);
+
+                // when the match is in a property, an "includeNestedOptionalsForMainSchema" false does not hide it (only parserConfig is relevant)
+                // path to match: > "items" > "oneOf" > [0]
+                expect(filterFunction(scope.find("#/definitions/Five"), false)).toBe(resultFive);
+                expect(filterFunction(scope.find("#/definitions/Five"), true)).toBe(resultFive);
             });
         });
 
@@ -359,8 +437,8 @@ describe("createFilterFunctionForSchema()", () => {
                 ]
             };
             const parserConfig = {
-                anyOf: asColumn,
-                oneOf: asColumn
+                anyOf: {},
+                oneOf: {}
             };
 
             it.each`

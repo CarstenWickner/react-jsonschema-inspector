@@ -12,8 +12,8 @@ import JsonSchemaOneOfGroup from "../../src/model/JsonSchemaOneOfGroup";
 describe("renders correctly", () => {
     const oneOfOptionNameForIndex = optionIndexes => `Exclusive Option ${optionIndexes.map(index => index + 1).join("-")}`;
     const parserConfig = {
-        anyOf: { type: "asAdditionalColumn" },
-        oneOf: { type: "asAdditionalColumn", optionNameForIndex: oneOfOptionNameForIndex }
+        anyOf: {},
+        oneOf: { optionNameForIndex: oneOfOptionNameForIndex }
     };
     const contextGroup = new JsonSchemaAllOfGroup()
         .with(new JsonSchema({ description: "Foobar" }))
@@ -89,7 +89,7 @@ describe("renders correctly", () => {
 describe("calls onSelect", () => {
     const onSelect = jest.fn(() => { });
     const parserConfig = {
-        oneOf: { type: "asAdditionalColumn" }
+        oneOf: {}
     };
     const contextGroup = new JsonSchemaAllOfGroup()
         .with(new JsonSchema({ description: "Foobar" }, parserConfig))

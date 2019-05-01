@@ -90,14 +90,11 @@ exports[`renders correctly with minimal/default props 1`] = `
                         },
                       },
                     ],
-                    "settings": Object {
-                      "type": "asAdditionalColumn",
-                    },
+                    "settings": Object {},
                   },
                 ],
                 "settings": Object {
                   "optionNameForIndex": [Function],
-                  "type": "asAdditionalColumn",
                 },
               },
             ],
@@ -193,14 +190,11 @@ exports[`renders correctly with minimal/default props 1`] = `
                             },
                           },
                         ],
-                        "settings": Object {
-                          "type": "asAdditionalColumn",
-                        },
+                        "settings": Object {},
                       },
                     ],
                     "settings": Object {
                       "optionNameForIndex": [Function],
-                      "type": "asAdditionalColumn",
                     },
                   },
                 ],
@@ -282,14 +276,11 @@ exports[`renders correctly with minimal/default props 1`] = `
                             },
                           },
                         ],
-                        "settings": Object {
-                          "type": "asAdditionalColumn",
-                        },
+                        "settings": Object {},
                       },
                     ],
                     "settings": Object {
                       "optionNameForIndex": [Function],
-                      "type": "asAdditionalColumn",
                     },
                   },
                 ],

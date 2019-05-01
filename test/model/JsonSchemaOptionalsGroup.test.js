@@ -1,11 +1,11 @@
 import JsonSchemaOptionalsGroup from "../../src/model/JsonSchemaOptionalsGroup";
 
-describe("constructor", () => {
-    class MockJsonSchemaOptionalsGroup extends JsonSchemaOptionalsGroup {
-        static getDefaultGroupTitle() {
-            return "mocked";
-        }
+class MockJsonSchemaOptionalsGroup extends JsonSchemaOptionalsGroup {
+    static getDefaultGroupTitle() {
+        return "mocked";
     }
+}
+describe("constructor", () => {
     describe("in 'development' mode", () => {
         let mode;
         beforeAll(() => {
@@ -16,16 +16,11 @@ describe("constructor", () => {
             process.env.NODE_ENV = mode;
         });
 
-        it.each`
-            testType                              | GroupClass                      | parameters
-            ${"instantiated directly"}            | ${JsonSchemaOptionalsGroup}     | ${[{ type: "likeAllOf" }]}
-            ${"providing no settings parameters"} | ${MockJsonSchemaOptionalsGroup} | ${[]}
-            ${"providing no settings.type field"} | ${MockJsonSchemaOptionalsGroup} | ${[{}]}
-        `("throws error when $testType", ({ GroupClass, parameters }) => {
-            expect(() => new GroupClass(...parameters)).toThrow();
+        it("throws error when instantiated directly", () => {
+            expect(() => new JsonSchemaOptionalsGroup({})).toThrow();
         });
-        it("throws no error when providing JsonSchema constructor and settings.type", () => {
-            expect(new MockJsonSchemaOptionalsGroup({ type: "likeAllOf" }))
+        it("throws no error when getDefaultGroupTitle() is implemented", () => {
+            expect(new MockJsonSchemaOptionalsGroup({}))
                 .toBeInstanceOf(MockJsonSchemaOptionalsGroup);
         });
     });
@@ -39,34 +34,16 @@ describe("constructor", () => {
             process.env.NODE_ENV = mode;
         });
 
-        it.each`
-            testType                              | GroupClass                      | parameters
-            ${"instantiated directly"}            | ${JsonSchemaOptionalsGroup}     | ${[{ type: "likeAllOf" }]}
-            ${"providing no settings parameter"}  | ${MockJsonSchemaOptionalsGroup} | ${[]}
-            ${"providing no settings.type field"} | ${MockJsonSchemaOptionalsGroup} | ${[{}]}
-        `("throws no error when $testType", ({ GroupClass, parameters }) => {
-            expect(new GroupClass(...parameters)).toBeInstanceOf(GroupClass);
+        it("throws no error when instantiated directly", () => {
+            expect(() => new JsonSchemaOptionalsGroup({})).not.toThrow();
         });
     });
 });
 
-class MockJsonSchemaOptionalsGroup extends JsonSchemaOptionalsGroup {
-    static getDefaultGroupTitle() {
-        return "mocked";
-    }
-    constructor(settings = { type: "likeAllOf" }) {
-        super(settings);
-    }
-}
-
 describe("considerSchemasAsSeparateOptions()", () => {
     it("returns true if type is 'asAdditionalColumn'", () => {
-        const group = new MockJsonSchemaOptionalsGroup({ type: "asAdditionalColumn" });
+        const group = new MockJsonSchemaOptionalsGroup({});
         expect(group.considerSchemasAsSeparateOptions()).toBe(true);
-    });
-    it("returns false if type is not 'asAdditionalColumn'", () => {
-        const group = new MockJsonSchemaOptionalsGroup({ type: "likeAllOf" });
-        expect(group.considerSchemasAsSeparateOptions()).toBe(false);
     });
 });
 describe("createOptionsRepresentation()", () => {
@@ -86,8 +63,7 @@ describe("createOptionsRepresentation()", () => {
     });
     it("returns wrapper object for array with length === 2 (with title from settings)", () => {
         const group = new MockJsonSchemaOptionalsGroup({
-            groupTitle: "custom title",
-            type: "asAdditionalColumn"
+            groupTitle: "custom title"
         });
         expect(group.createOptionsRepresentation(twoOptions)).toEqual({
             groupTitle: "custom title",

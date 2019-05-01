@@ -41,8 +41,10 @@ export function createRecursiveFilterFunction(flatSearchFilter) {
             return true;
         }
         const searchInOptionals = groupKey => (
-            rawSchema[groupKey] && parserConfig && parserConfig[groupKey]
-            && (parserConfig[groupKey].type === "likeAllOf" || includeNestedOptionals)
+            rawSchema[groupKey]
+            && parserConfig
+            && parserConfig[groupKey]
+            && includeNestedOptionals
             && rawSchema[groupKey].some(filterRawSubSchemaConsideringOptionals)
         );
         if (searchInOptionals("oneOf") || searchInOptionals("anyOf")) {
@@ -87,7 +89,9 @@ export function collectReferencedSubSchemas(schema, includeNestedOptionals) {
         if (rawSubSchema.$ref) {
             // add referenced schema to the result set
             const targetSchema = schema.scope.find(rawSubSchema.$ref);
-            references.set(targetSchema, isIncludingOptionals || (references.get(targetSchema) === true));
+            if (references.get(targetSchema) !== true) {
+                references.set(targetSchema, isIncludingOptionals);
+            }
         }
         // always return false in order to iterate through all non-referenced sub-schemas
         return false;
