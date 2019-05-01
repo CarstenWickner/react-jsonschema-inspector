@@ -232,7 +232,7 @@ Inspector.propTypes = {
      */
     defaultSelectedItems: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.number)])),
     /**
-     * Options for the traversing/parsing of JSON schemas. Enabling the inclusion of optional parts of a schema.
+     * Options for the traversing/parsing of JSON schemas. Defining how optional parts of a schema should be represented.
      */
     parserConfig: PropTypes.shape({
         /**

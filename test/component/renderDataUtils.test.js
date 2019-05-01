@@ -5,7 +5,7 @@ import { createRenderDataBuilder, getColumnDataPropTypeShape, createFilterFuncti
 import JsonSchema from "../../src/model/JsonSchema";
 import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
 import { createGroupFromSchema, getOptionsInSchemaGroup, getFieldValueFromSchemaGroup } from "../../src/model/schemaUtils";
-import { isDefined } from "../../src/model/utils";
+import { maximumValue } from "../../src/model/utils";
 
 describe("createRenderDataBuilder()", () => {
     const onSelectInColumn = jest.fn(columnIndex => () => columnIndex);
@@ -236,20 +236,11 @@ describe("createRenderDataBuilder()", () => {
             expect(fourthColumn.trailingSelection).toBe(true);
         });
         it("calls provided buildArrayItemProperties() with array schema and option indexes", () => {
-            const getMaxDefined = (a, b) => {
-                if (!isDefined(b)) {
-                    return a;
-                }
-                if (!isDefined(a)) {
-                    return b;
-                }
-                return Math.max(a, b);
-            };
             const buildArrayProperties = (arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
                 "get(0)": arrayItemSchema,
                 "size()": {
                     type: "number",
-                    minItems: getFieldValueFromSchemaGroup(arraySchemaGroup, "minItems", getMaxDefined, 0, null, optionIndexes)
+                    minimum: getFieldValueFromSchemaGroup(arraySchemaGroup, "minItems", maximumValue, 0, null, optionIndexes)
                 }
             });
             const rootSchemas = {
@@ -281,7 +272,7 @@ describe("createRenderDataBuilder()", () => {
             expect(thirdColumn.items["get(0)"].entries[0].schema).toEqual(fooSchema);
             expect(thirdColumn.items["size()"].entries[0].schema).toEqual({
                 type: "number",
-                minItems: 3
+                minimum: 3
             });
             expect(thirdColumn.selectedItem).toBe("get(0)");
             expect(thirdColumn.options).toBeUndefined();

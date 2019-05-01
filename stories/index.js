@@ -6,7 +6,7 @@ import {
     array as knobsArray, boolean as knobsBoolean, object as knobsObject, text as knobsText, withKnobs
 } from "@storybook/addon-knobs";
 
-import { Inspector, getFieldValueFromSchemaGroup } from "../src/index";
+import { Inspector, getMaximumFieldValueFromSchemaGroup, getFieldValueArrayFromSchemaGroup } from "../src/index";
 
 import metaSchema from "./schema-meta.json";
 import hyperMetaSchema from "./schema-hyper-meta.json";
@@ -38,16 +38,7 @@ storiesOf("Inspector", module)
                 length: {
                     title: "Number of Items",
                     type: "number",
-                    minValue: getFieldValueFromSchemaGroup(arraySchemaGroup, "minItems",
-                        (a, b) => {
-                            if (b === undefined) {
-                                return a;
-                            }
-                            if (a === undefined) {
-                                return b;
-                            }
-                            return Math.min(a, b);
-                        }, 0, null, optionIndexes)
+                    minimum: getMaximumFieldValueFromSchemaGroup(arraySchemaGroup, "minItems", 0, optionIndexes)
                 }
             })}
             renderEmptyDetails={({ rootColumnSchemas }) => (
@@ -92,21 +83,26 @@ storiesOf("Inspector", module)
             })}
             defaultSelectedItems={["Shop", "inventory"]}
             breadcrumbs={null}
-            renderSelectionDetails={({ itemSchemaGroup, columnData, selectionColumnIndex }) => (
-                <div style={{ padding: "1em", backgroundColor: "#80cbc4" }}>
-                    <h3>Custom Details</h3>
-                    <p>
-                        {getFieldValueFromSchemaGroup(itemSchemaGroup, "description")}
-                    </p>
-                    <h4>Selection Path</h4>
-                    <code style={{ wordBreak: "break-word" }}>
-                        {`//${columnData
-                            .filter((_column, index) => index <= selectionColumnIndex)
-                            .map(column => column.selectedItem)
-                            .join("/")}`}
-                    </code>
-                </div>
-            )}
+            renderSelectionDetails={(parameters) => {
+                const {
+                    itemSchemaGroup, columnData, selectionColumnIndex, optionIndexes
+                } = parameters;
+                return (
+                    <div style={{ padding: "1em", backgroundColor: "#80cbc4" }}>
+                        <h3>Custom Details</h3>
+                        <p>
+                            {getFieldValueArrayFromSchemaGroup(itemSchemaGroup, "description", null, optionIndexes)}
+                        </p>
+                        <h4>Selection Path</h4>
+                        <code style={{ wordBreak: "break-word" }}>
+                            {`//${columnData
+                                .filter((_column, index) => index <= selectionColumnIndex)
+                                .map(column => column.selectedItem)
+                                .join("/")}`}
+                        </code>
+                    </div>
+                );
+            }}
             onSelect={action("onSelect")}
         />
     ))

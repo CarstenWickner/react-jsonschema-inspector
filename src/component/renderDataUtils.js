@@ -70,6 +70,8 @@ function buildDefaultArrayProperties(arrayItemSchema) {
  * @name ArrayPropertiesBuilder
  * @function
  * @param {JsonSchema} param0 - declared type of the array's items
+ * @param {JsonSchemaGroup} param1 - schema group representing the array
+ * @param {?Array.<Array.<number>>} param2 - selected optionIndexes in `param1` (if the array's schema group contains options)
  * @returns {Object.<string, JsonSchema|Object} object containing the selectable items for an array, e.g. for accessing an item
  */
 /**
