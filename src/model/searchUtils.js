@@ -9,12 +9,16 @@ import { isNonEmptyObject } from "./utils";
  * Creating a function that accepts a single raw schema definition and applies the given filter function on itself and all contained sub-schemas.
  * Any $ref-erences are being ignored here and expected to be handled independently
  *
- * @param {Function} flatSearchFilter - function that checks whether a given raw schema
- * @param {Object} flatSearchFilter.value - expected input parameter is a raw schema definition
+ * @param {?Function} flatSearchFilter - function that checks whether a given raw schema matches some search criteria
+ * @param {Object} flatSearchFilter.param0 - first input parameter is a raw schema definition
+ * @param {?boolean} flatSearchFilter.param1 - second input parameter: flag indicating whether nested optionals should be considered (default: true)
  * @param {*} flatSearchFilter.return - expected output is a truthy/falsy value, whether the given schema matches the filter (ignoring sub-schemas)
+ * @param {?Function} propertyNameCheck - check whether a given property name alone already satisfies the search criteria
+ * @param {string} propertyNameCheck.param0 - input parameter is the property name to check
+ * @param {*} propertyNameCheck.return - expected output is a truthy/falsy value, whether the property name matches some search criteria
  * @returns {Function} created filter function for a `JsonSchema`; returning whether the given schema or any of its sub-schemas matches the filter
  */
-export function createRecursiveFilterFunction(flatSearchFilter) {
+export function createRecursiveFilterFunction(flatSearchFilter, propertyNameCheck) {
     const recursiveFilterFunction = (target, includeNestedOptionals = true) => {
         if (!target) {
             return false;
@@ -25,7 +29,7 @@ export function createRecursiveFilterFunction(flatSearchFilter) {
             return false;
         }
         // check the schema itself whether it matches the provided flat filter function
-        if (flatSearchFilter(rawSchema, includeNestedOptionals)) {
+        if (flatSearchFilter && flatSearchFilter(rawSchema, includeNestedOptionals)) {
             return true;
         }
         if (rawSchema.$ref) {
@@ -50,7 +54,8 @@ export function createRecursiveFilterFunction(flatSearchFilter) {
         );
         // otherwise recursively check the schemas of any contained properties
         if (isNonEmptyObject(rawSchema.properties)
-            && Object.values(rawSchema.properties).some(filterRawSubSchemaIncludingOptionals)) {
+            && ((propertyNameCheck && Object.keys(rawSchema.properties).some(propertyNameCheck))
+                || Object.values(rawSchema.properties).some(filterRawSubSchemaIncludingOptionals))) {
             return true;
         }
         // alternatively check the defined value schema for an array's items
@@ -106,13 +111,17 @@ export function collectReferencedSubSchemas(schema, includeNestedOptionals) {
 /**
  * Build the function for determining the "filteredItems" for a given Object.<String, JsonSchema>.
  *
- * @param {Function} flatSearchFilter - filter to apply on a single raw json schema
- * @param {Object} flatSearchFilter.param0 - raw JSON schema to filter (without considering any sub-structures like `properties` or `allOf`)
- * @param {boolean} flatSearchFilter.return - whether there is a direct match in the given schema (e.g. in its `title` or `description`)
+ * @param {?Function} flatSearchFilter - function that checks whether a given raw schema matches some search criteria
+ * @param {Object} flatSearchFilter.param0 - first input parameter is a raw schema definition
+ * @param {?boolean} flatSearchFilter.param1 - second input parameter: flag indicating whether nested optionals should be considered (default: true)
+ * @param {*} flatSearchFilter.return - expected output is a truthy/falsy value, whether the given schema matches the filter (ignoring sub-schemas)
+ * @param {?Function} propertyNameCheck - check whether a given property name alone already satisfies the search criteria
+ * @param {string} propertyNameCheck.param0 - input parameter is the property name to check
+ * @param {*} propertyNameCheck.return - expected output is a truthy/falsy value, whether the property name matches some search criteria
  * @returns {FilterFunctionForSchema} function to apply for filtering
  */
-export function createFilterFunctionForSchema(flatSearchFilter) {
-    const recursiveSearchFilter = createRecursiveFilterFunction(flatSearchFilter);
+export function createFilterFunctionForSchema(flatSearchFilter, propertyNameCheck) {
+    const recursiveSearchFilter = createRecursiveFilterFunction(flatSearchFilter, propertyNameCheck);
     // cache definitive search results for the individual sub-schemas in a Map.<JsonSchema, boolean>
     const schemaMatchResultsExclOptionals = new Map();
     const schemaMatchResultsInclOptionals = new Map();
@@ -208,13 +217,13 @@ export function createFilterFunctionForSchema(flatSearchFilter) {
 }
 
 /**
- * Build the function for determining the "filteredItems" for a given Object.<String, JsonSchema>.
+ * Build the function for determining whether the value in at least one of the indicated fields matches the filter text for a schema.
  *
  * @param {Array.<string>} searchFields - names of the fields in a schema to check for a (partial) match with the entered searchFilter text
  * @param {string} searchFilter - entered search filter text
  * @returns {?Function} return producing either a function to apply for filtering or undefined if the search feature is turned off
  * @returns {Object.<string, JsonSchema>} return.value expected input is an object representing a view column's items
- * @returns {Array.<string|Array.<number>>} return.return output is an array of "filteredItems"
+ * @returns {boolean} return.return - output is the indication whether the given schema is deemed to be a match
  */
 export const filteringByFields = memoize((searchFields, searchFilter) => {
     if (searchFields && searchFields.length && searchFilter) {
@@ -224,3 +233,20 @@ export const filteringByFields = memoize((searchFields, searchFilter) => {
     }
     return undefined;
 }, isDeepEqual);
+
+/**
+ * Build the function for determining whether a particular property's name is a (partial) match for the filter text.
+ *
+ * @param {string} searchFilter - entered search filter text
+ * @returns {?Function} return - producing either a function to apply for filtering or undefined if the search feature is turned off
+ * @returns {string} return.value - expected input is a property's name
+ * @returns {boolean} return.return - output is the indication whether the given property name is deemed to be a match
+ */
+export const filteringByPropertyName = memoize((searchFilter) => {
+    if (searchFilter) {
+        // use case-insensitive flag "i" in regular expression for value matching
+        const regex = new RegExp(escapeRegExp(searchFilter), "i");
+        return regex.test.bind(regex);
+    }
+    return undefined;
+});

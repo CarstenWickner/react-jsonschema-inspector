@@ -333,16 +333,20 @@ export function getColumnDataPropTypeShape(includeOnSelect = true) {
 /**
  * Create a function that returns the list of `filteredItems` for a given entry in the standard `columnData` array.
  *
- * @param {Function} flatSearchFilter - function determining whether a given raw json schema matches some search filter
- * @param {Object} flatSearchFilter.param0 - raw json schema
- * @param {boolean} flatSearchFilter.return - indication whether raw json schema is matching search filter
+ * @param {?Function} flatSchemaFilterFunction - function that checks whether a given raw schema matches some search criteria
+ * @param {Object} flatSchemaFilterFunction.param0 - first input parameter is a raw schema definition
+ * @param {?boolean} flatSchemaFilterFunction.param1 - second input parameter: flag indicating whether nested optionals should be considered
+ * @param {*} flatSchemaFilterFunction.return - output is a truthy/falsy value, whether the given schema matches the filter (ignoring sub-schemas)
+ * @param {?Function} propertyNameFilterFunction - check whether a given property name alone already satisfies the search criteria
+ * @param {string} propertyNameFilterFunction.param0 - input parameter is the property name to check
+ * @param {*} propertyNameFilterFunction.return - output is a truthy/falsy value, whether the property name matches some search criteria
  * @returns {FilterFunctionForColumn} function that returns the list of `filteredItems` for a given entry in the standard `columnData` array
  */
-export function createFilterFunctionForColumn(flatSearchFilter) {
-    const containsMatchingItems = createFilterFunctionForSchema(flatSearchFilter);
+export function createFilterFunctionForColumn(flatSchemaFilterFunction, propertyNameFilterFunction = () => false) {
+    const containsMatchingItems = createFilterFunctionForSchema(flatSchemaFilterFunction, propertyNameFilterFunction);
     return ({ items, options, contextGroup }) => {
         if (isNonEmptyObject(items)) {
-            return Object.keys(items).filter(key => items[key].someEntry(containsMatchingItems));
+            return Object.keys(items).filter(key => propertyNameFilterFunction(key) || items[key].someEntry(containsMatchingItems));
         }
         return getIndexPermutationsForOptions(options)
             .filter(optionIndexes => contextGroup.someEntry(containsMatchingItems, createOptionTargetArrayFromIndexes(optionIndexes)));
