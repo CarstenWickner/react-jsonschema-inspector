@@ -14,7 +14,7 @@ import JsonSchemaPropType from "./JsonSchemaPropType";
 
 import { createRenderDataBuilder, createFilterFunctionForColumn } from "./renderDataUtils";
 import createBreadcrumbBuilder from "../model/breadcrumbsUtils";
-import { filteringByFields } from "../model/searchUtils";
+import { filteringByFields, filteringByPropertyName } from "../model/searchUtils";
 
 class Inspector extends Component {
     /**
@@ -144,21 +144,23 @@ class Inspector extends Component {
      * Thanks to 'memoize', exactly one set of previous search results will be preserved if the options and filter value are unchanged.
      *
      * @param {?Object} searchOptions
-     * @param {?Function} searchOptions.filterBy custom filter function to apply (expecting the `searchFilter` as input)
-     * @param {?Array.<String>} searchOptions.fields alternative to `filterBy`, generating a filter function checking the listed fields' contents
-     * @param {?String} searchFilter entered value from the search input field to filter by
-     * @return {Function} return function to apply for setting/clearing the `filteredItems` in an entry of the 'columnData' array
-     * @return {Object} return.param0 entry of the 'columnData' array to set/clear the `filteredItems` in
+     * @param {?Function} searchOptions.filterBy - custom filter function to apply (expecting the `searchFilter` as input)
+     * @param {?Array.<String>} searchOptions.fields - alternative to `filterBy`, generating a filter function checking the listed fields' contents
+     * @param {?Boolean} searchOptions.byPropertyName - alternative to `filterBy`, whether to consider matching property names (besides `fields`)
+     * @param {?String} searchFilter - entered value from the search input field to filter by
+     * @return {Function} return - function to apply for setting/clearing the `filteredItems` in an entry of the 'columnData' array
+     * @return {Object} return.param0 - entry of the 'columnData' array to set/clear the `filteredItems` in
      */
     setFilteredItemsForColumn = memoize((searchOptions, searchFilter) => {
         if (searchOptions && searchFilter) {
             // search feature is enabled
-            const { filterBy, fields } = searchOptions;
+            const { filterBy, fields, byPropertyName } = searchOptions;
             // if `filterBy` is defined, `fields` are being ignored
-            const flatFilterFunction = filterBy ? filterBy(searchFilter) : filteringByFields(fields, searchFilter);
-            if (flatFilterFunction) {
+            const flatSchemaFilterFunction = filterBy ? filterBy(searchFilter) : filteringByFields(fields, searchFilter);
+            const propertyNameFilterFunction = byPropertyName ? filteringByPropertyName(searchFilter) : undefined;
+            if (flatSchemaFilterFunction || propertyNameFilterFunction) {
                 // search feature is being used, so we set the filteredItems accordingly
-                const getFilteredItemsForColumn = createFilterFunctionForColumn(flatFilterFunction);
+                const getFilteredItemsForColumn = createFilterFunctionForColumn(flatSchemaFilterFunction, propertyNameFilterFunction);
                 return (column) => {
                     // eslint-disable-next-line no-param-reassign
                     column.filteredItems = getFilteredItemsForColumn(column);
@@ -181,7 +183,10 @@ class Inspector extends Component {
         const { columnData } = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties);
         // apply search filter if enabled or clear (potentially left-over) search results
         columnData.forEach(this.setFilteredItemsForColumn(searchOptions, appliedSearchFilter));
-        const searchFeatureEnabled = searchOptions && ((searchOptions.fields && searchOptions.fields.length) || searchOptions.filterBy);
+        const searchFeatureEnabled = searchOptions
+            && (searchOptions.byPropertyName
+                || (searchOptions.fields && searchOptions.fields.length)
+                || searchOptions.filterBy);
         return (
             <div className="jsonschema-inspector">
                 {searchFeatureEnabled && (
@@ -276,13 +281,15 @@ Inspector.propTypes = {
     }),
     /**
      * Options for the search input shown in the header and its impact on the displayed columns – set to `null` to turn it off.
+     * - "byPropertyName": Flag indicating whether property names should be considered when searching/filtering
      * - "fields": Array of strings: each referring to a textual field in a JSON Schema (e.g. `["title", "description"]`) in which to search/filter
-     * - "filterBy": Custom search/filter logic, if present: overriding behaviour based on "fields" (either one must be set)
+     * - "filterBy": Custom search/filter logic, if present: overriding behaviour based on "byPropertyName" and "fields"
      * - "inputPlaceholder": Hint text to display in the search input field (defaults to "Search")
      * - "debounceWait": Number indicating the delay in milliseconds since the last change to the search term before applying it. Defaults to `200`.
      * - "debounceMaxWait": Number indicating the maximum delay in milliseconds before a newly entered search is being applied. Defaults to `500`.
      */
     searchOptions: PropTypes.shape({
+        byPropertyName: PropTypes.bool,
         fields: PropTypes.arrayOf(PropTypes.string),
         filterBy: PropTypes.func,
         inputPlaceholder: PropTypes.string,
@@ -330,6 +337,7 @@ Inspector.defaultProps = {
         skipSeparator: fieldName => (fieldName === "[0]")
     },
     searchOptions: {
+        byPropertyName: true,
         fields: ["title", "description"]
     },
     onSelect: undefined,

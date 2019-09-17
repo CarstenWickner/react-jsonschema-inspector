@@ -31,7 +31,8 @@ storiesOf("Inspector", module)
             }}
             referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
             searchOptions={{
-                fields: ["title", "description"]
+                fields: ["title", "description"],
+                byPropertyName: true
             }}
             buildArrayProperties={(arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
                 "[0]": arrayItemSchema,
@@ -138,7 +139,8 @@ storiesOf("Inspector", module)
             defaultSelectedItems={["Person", "friends", "[0]", "friends"]}
             searchOptions={{
                 fields: knobsArray("Search Fields", ["title", "description"]),
-                inputPlaceholder: knobsText("Input Placeholder", "Find in Title or Description…")
+                inputPlaceholder: knobsText("Input Placeholder", "Find in Title/Description (or property name)…"),
+                byPropertyName: knobsBoolean("Filter by Property Name?", true)
             }}
             onSelect={action("onSelect")}
         />

@@ -75,7 +75,7 @@ describe("renders correctly", () => {
             expect(filteredItems).toHaveLength(2);
             expect(filteredItems).toEqual(["Schema One", "Schema Two"]);
         });
-        it("filtering by fields with non-default debounce times", () => {
+        it("filtering via custom filterBy function", () => {
             const component = shallow(
                 <Inspector
                     schemas={schemas}
@@ -96,6 +96,27 @@ describe("renders correctly", () => {
             expect(filteredItems).toHaveLength(2);
             expect(filteredItems[0]).toEqual("Schema One", "Schema Two");
         });
+        it("filtering by property names", () => {
+            const component = shallow(
+                <Inspector
+                    schemas={schemas}
+                    referenceSchemas={referenceSchemas}
+                    searchOptions={{
+                        byPropertyName: true
+                    }}
+                />
+            );
+            const onSearchFilterChange = component.find("InspectorSearchField").prop("onSearchFilterChange");
+            // trigger change of search filter (looking for all top-level properties containing 'Schema Two')
+            onSearchFilterChange("Schema Two");
+            // flush based on default debounce times
+            component.instance().debouncedApplySearchFilter(200, 500).flush();
+            expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("Schema Two");
+            const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
+            expect(filteredItems).toBeDefined();
+            expect(filteredItems).toHaveLength(1);
+            expect(filteredItems[0]).toEqual("Schema Two");
+        });
         it("filtering only when at least 3 characters were entered", () => {
             const component = shallow(
                 <Inspector
@@ -103,6 +124,7 @@ describe("renders correctly", () => {
                     referenceSchemas={referenceSchemas}
                     searchOptions={{
                         filterBy: searchFilter => (searchFilter.length < 3 ? undefined : () => true),
+                        byPropertyName: false,
                         debounceWait: 100
                     }}
                 />

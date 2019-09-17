@@ -1,5 +1,5 @@
 import {
-    createRecursiveFilterFunction, collectReferencedSubSchemas, createFilterFunctionForSchema, filteringByFields
+    createRecursiveFilterFunction, collectReferencedSubSchemas, createFilterFunctionForSchema, filteringByFields, filteringByPropertyName
 } from "../../src/model/searchUtils";
 
 import JsonSchema from "../../src/model/JsonSchema";
@@ -497,6 +497,37 @@ describe("filteringByFields()", () => {
             const filterFunction = filteringByFields(["fieldName"], "value");
             const schema = { fieldName: "something else" };
             expect(filterFunction(schema)).toBe(false);
+        });
+    });
+});
+describe("filteringByPropertyName()", () => {
+    describe("returning undefined", () => {
+        it("for undefined searchFilter parameter", () => {
+            expect(filteringByPropertyName(undefined)).toBeUndefined();
+        });
+        it("for null searchFilter parameter", () => {
+            expect(filteringByPropertyName(null)).toBeUndefined();
+        });
+        it("for empty searchFilter parameter", () => {
+            expect(filteringByPropertyName("")).toBeUndefined();
+        });
+    });
+    describe("finding", () => {
+        it("exact match", () => {
+            const filterFunction = filteringByPropertyName("propertyName");
+            expect(filterFunction("propertyName")).toBe(true);
+        });
+        it("partial match", () => {
+            const filterFunction = filteringByPropertyName("Name");
+            expect(filterFunction("propertyName")).toBe(true);
+        });
+        it("case-insensitive match", () => {
+            const filterFunction = filteringByPropertyName("PeRTynA");
+            expect(filterFunction("propertyName")).toBe(true);
+        });
+        it("no match if property name different", () => {
+            const filterFunction = filteringByPropertyName("Title");
+            expect(filterFunction("propertyName")).toBe(false);
         });
     });
 });
