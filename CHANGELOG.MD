@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - enabling new `searchOptions.byPropertyName` prop in default `searchOptions`
+- style-fix: let long item names break over multiple lines within a column
+- style-fix: disable the "outline" on `column` and `colview` (they were only shown in some browsers)
 
 ## [2.1.0] - 2019-05-01
 ### Added
