@@ -36,6 +36,7 @@
         display: flex;
         overflow-x: auto;
         margin-right: -1px;
+        outline: none;
     }
     &-item {
         flex-shrink: 0;
@@ -65,11 +66,15 @@
             display: block;
             flex-grow: 1;
             padding: $verticalItemSpacingInside $spacingInside $verticalItemSpacingInside $leadItemSpacingInside;
+            word-break: break-word;
         }
         &-icon {
             display: block;
             flex-grow: 0;
             width: 1em;
+            min-width: 1em;
+            height: 1.69em;
+            margin-top: auto;
         }
         &.has-nested-items > &-content > &-icon {
             background-color: #7f7f7f;
@@ -86,6 +91,7 @@
             min-width: $columnWidth;
             border-right: $innerBorder;
             overflow-y: auto;
+            outline: none;
         }
         &-placeholder {
             opacity: 0;
