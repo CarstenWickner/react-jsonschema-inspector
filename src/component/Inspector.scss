@@ -36,6 +36,7 @@
         display: flex;
         overflow-x: auto;
         margin-right: -1px;
+        outline: none;
     }
     &-item {
         flex-shrink: 0;
@@ -90,6 +91,7 @@
             min-width: $columnWidth;
             border-right: $innerBorder;
             overflow-y: auto;
+            outline: none;
         }
         &-placeholder {
             opacity: 0;
