@@ -146,7 +146,7 @@ class Inspector extends Component {
      * @param {?Object} searchOptions
      * @param {?Function} searchOptions.filterBy - custom filter function to apply (expecting the `searchFilter` as input)
      * @param {?Array.<String>} searchOptions.fields - alternative to `filterBy`, generating a filter function checking the listed fields' contents
-     * @param {?Boolean} searchOptions.byPropertyName - alternative to `filterBy`, whether to consider matching property names (besides `fields`)
+     * @param {?Boolean} searchOptions.byPropertyName - addition to `fields`/`filterBy`, whether to consider matching property names
      * @param {?String} searchFilter - entered value from the search input field to filter by
      * @return {Function} return - function to apply for setting/clearing the `filteredItems` in an entry of the 'columnData' array
      * @return {Object} return.param0 - entry of the 'columnData' array to set/clear the `filteredItems` in
@@ -283,7 +283,7 @@ Inspector.propTypes = {
      * Options for the search input shown in the header and its impact on the displayed columns – set to `null` to turn it off.
      * - "byPropertyName": Flag indicating whether property names should be considered when searching/filtering
      * - "fields": Array of strings: each referring to a textual field in a JSON Schema (e.g. `["title", "description"]`) in which to search/filter
-     * - "filterBy": Custom search/filter logic, if present: overriding behaviour based on "byPropertyName" and "fields"
+     * - "filterBy": Custom search/filter logic, if present: overriding behaviour based on "fields"
      * - "inputPlaceholder": Hint text to display in the search input field (defaults to "Search")
      * - "debounceWait": Number indicating the delay in milliseconds since the last change to the search term before applying it. Defaults to `200`.
      * - "debounceMaxWait": Number indicating the maximum delay in milliseconds before a newly entered search is being applied. Defaults to `500`.
