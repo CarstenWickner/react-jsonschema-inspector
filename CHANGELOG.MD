@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - enabling new `searchOptions.byPropertyName` prop in default `searchOptions`
+- providing `column` object and column `index` as additional parameter to `breadcrumbs.skipSeparator` function (i.e. same input as for `breadcrumbs.mutateName`)
 - style-fix: let long item names break over multiple lines within a column
 - style-fix: disable the "outline" on `column` and `colview` (they were only shown in some browsers)
 - style-fix: make nested-item indicator white (instead of grey) on currently selected (blue) item
