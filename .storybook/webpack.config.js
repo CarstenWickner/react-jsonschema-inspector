@@ -12,5 +12,10 @@ module.exports = async ({ config }) => {
         loaders: ["style-loader", "css-loader", "sass-loader"],
         include: path.resolve(__dirname, "../")
     });
+    config.module.rules.push({
+        test: /\.css$/,
+        loaders: ["style-loader", "css-loader"],
+        include: path.resolve(__dirname, "stories")
+    });
     return config;
 };

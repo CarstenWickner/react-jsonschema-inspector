@@ -1,0 +1,8 @@
+/* Allow for more than the default 800px width */
+div.css-1dm44cd {
+    max-width: 1000px;
+}
+/* Avoid overflow of components inside DocsContent */
+.css-1enb6fx > * {
+    max-width: 100%;
+}
