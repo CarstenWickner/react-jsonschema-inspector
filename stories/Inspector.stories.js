@@ -55,32 +55,12 @@ export const showCase = () => (
 );
 showCase.story = { name: "show-case" };
 
-export const breadcrumbs = () => (
-    <Inspector
-        schemas={{
-            "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
-            "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
-            "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
-        }}
-        referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
-        defaultSelectedItems={["Meta Hyper JSON Schema", "allOf"]}
-        breadcrumbs={{
-            prefix: "Selection: ",
-            separator: "/",
-            preventNavigation: false
-        }}
-        onSelect={action("onSelect")}
-    />
-);
-breadcrumbs.story = { name: "with custom breadcrumbs" };
-
-export const customDetailsNoBreadcrumbs = () => (
+export const customSelectionDetails = () => (
     <Inspector
         schemas={{
             Shop: shopSelectionSchema
         }}
         defaultSelectedItems={["Shop", "inventory"]}
-        breadcrumbs={null}
         renderSelectionDetails={(parameters) => {
             const {
                 itemSchemaGroup, columnData, selectionColumnIndex, optionIndexes
@@ -104,7 +84,7 @@ export const customDetailsNoBreadcrumbs = () => (
         onSelect={action("onSelect")}
     />
 );
-customDetailsNoBreadcrumbs.story = { name: "with custom Details and no breadcrumbs" };
+customSelectionDetails.story = { name: "with custom selection details" };
 
 export const customItems = () => (
     <Inspector
@@ -112,7 +92,7 @@ export const customItems = () => (
             Person: personSchema,
             Shop: shopSelectionSchema
         }}
-        defaultSelectedItems={["Person", "friends", "[0]", "friends"]}
+        defaultSelectedItems={["Person", "friends"]}
         renderItemContent={({
             name, hasNestedItems, selected, focused
         }) => {
@@ -130,20 +110,3 @@ export const customItems = () => (
     />
 );
 customItems.story = { name: "with custom items" };
-
-export const search = () => (
-    <Inspector
-        schemas={{
-            Person: personSchema,
-            Shop: shopSelectionSchema
-        }}
-        defaultSelectedItems={["Person", "friends", "[0]", "friends"]}
-        searchOptions={{
-            fields: ["title", "description"],
-            inputPlaceholder: "Find in Title/Description (or property name)…",
-            byPropertyName: true
-        }}
-        onSelect={action("onSelect")}
-    />
-);
-search.story = { name: "with search" };
