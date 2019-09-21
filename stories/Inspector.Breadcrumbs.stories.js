@@ -8,7 +8,7 @@ import hyperMetaSchema from "./schema-hyper-meta.json";
 import linksMetaSchema from "./schema-links-meta.json";
 
 export default {
-    title: "Inspector/Breadcrumbs",
+    title: "Inspector (breadcrumbs)",
     component: Inspector
 };
 
@@ -66,10 +66,10 @@ export const breadcrumbsSkippedSeparator = () => (
             "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
         }}
         referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
-        defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
+        defaultSelectedItems={["Meta Hyper JSON Schema", "contains", "allOf", "[0]"]}
         breadcrumbs={{
-            // this is actually the default skipSeparator function
-            skipSeparator: fieldName => (fieldName === "[0]")
+            // the default skipSeparator function only ignored "{0}"
+            skipSeparator: (fieldName, _column, index) => (fieldName === "[0]" || index % 2 === 0)
         }}
     />
 );

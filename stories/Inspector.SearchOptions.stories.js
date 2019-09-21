@@ -7,7 +7,7 @@ import personSchema from "./schema-person.json";
 import shopSelectionSchema from "./schema-shop-selection.json";
 
 export default {
-    title: "Inspector/Search",
+    title: "Inspector (searchOptions)",
     component: Inspector
 };
 
