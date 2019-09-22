@@ -87,11 +87,11 @@ describe("renders correctly", () => {
         expect(component.find("button").hasClass("not-matching-filter")).toBe(true);
     });
     it("with custom rendered content", () => {
-        const itemGroup = new JsonSchemaGroup();
+        const group = new JsonSchemaGroup();
         const component = shallow(
             <InspectorItem
                 name="Qux"
-                schemaGroup={itemGroup}
+                schemaGroup={group}
                 onSelect={() => { }}
                 optionIndexes={[0]}
                 renderContent={({
@@ -101,7 +101,7 @@ describe("renders correctly", () => {
                     schemaGroup,
                     optionIndexes
                 }) => (
-                    <span className="custom-content">{`${name}, ${hasNestedItems}, ${selected}, ${schemaGroup === itemGroup}, ${optionIndexes}`}</span>
+                    <span className="custom-content">{`${name}, ${hasNestedItems}, ${selected}, ${schemaGroup === group}, ${optionIndexes}`}</span>
                 )}
             />
         );
