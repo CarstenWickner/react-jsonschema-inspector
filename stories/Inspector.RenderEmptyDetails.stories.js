@@ -1,19 +1,18 @@
 import React from "react";
-import { action } from "@storybook/addon-actions";
 import "./style-overrides.css";
 
-import { Inspector, getMaximumFieldValueFromSchemaGroup } from "../src/index";
+import { Inspector } from "../src/index";
 
 import metaSchema from "./schema-meta.json";
 import hyperMetaSchema from "./schema-hyper-meta.json";
 import linksMetaSchema from "./schema-links-meta.json";
 
 export default {
-    title: "Inspector",
+    title: "Inspector (renderEmptyDetails)",
     component: Inspector
 };
 
-export const showCase = () => (
+export const withEmptyDetailsDisplay = () => (
     <Inspector
         schemas={{
             "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
@@ -21,20 +20,8 @@ export const showCase = () => (
             "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
         }}
         referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
-        searchOptions={{
-            fields: ["title", "description"],
-            byPropertyName: true
-        }}
-        buildArrayProperties={(arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
-            "[0]": arrayItemSchema,
-            length: {
-                title: "Number of Items",
-                type: "number",
-                minimum: getMaximumFieldValueFromSchemaGroup(arraySchemaGroup, "minItems", 0, optionIndexes)
-            }
-        })}
         renderEmptyDetails={({ rootColumnSchemas }) => (
-            <div style={{ padding: "0.5em 1em 0" }}>
+            <div style={{ padding: "0.5em 1em 0", backgroundColor: "#80cbc4", height: "100%" }}>
                 <h3>JSON Schema Inspector</h3>
                 <p>
                     {`Just click on one of the ${Object.keys(rootColumnSchemas).length} schema titles
@@ -48,7 +35,6 @@ export const showCase = () => (
                 />
             </div>
         )}
-        onSelect={action("onSelect")}
     />
 );
-showCase.story = { name: "show-case" };
+withEmptyDetailsDisplay.story = { name: "with display for empty selection" };
