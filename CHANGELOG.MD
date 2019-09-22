@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.2.0] - 2019-09-22
 ### Added
 - enabling search by matching property name, via new `searchOptions.byPropertyName` prop
 - providing `column` object and column `index` as additional parameter to `breadcrumbs.skipSeparator` function (i.e. same input as for `breadcrumbs.mutateName`)
@@ -70,6 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2019-03-03
 - initial implementation
 
+[Unreleased]: https://github.com/CarstenWickner/react-jsonschema-inspector/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/CarstenWickner/react-jsonschema-inspector/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/CarstenWickner/react-jsonschema-inspector/compare/v2.0.1...v2.1.0
 [2.0.1]: https://github.com/CarstenWickner/react-jsonschema-inspector/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/CarstenWickner/react-jsonschema-inspector/compare/v1.2.1...v2.0.0
