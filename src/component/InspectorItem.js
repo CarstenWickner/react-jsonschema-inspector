@@ -27,7 +27,8 @@ const InspectorItem = ({
                 name,
                 hasNestedItems,
                 selected,
-                schemaGroup
+                schemaGroup,
+                optionIndexes
             })}
             {!renderContent && (
                 <div className="jsonschema-inspector-item-content">

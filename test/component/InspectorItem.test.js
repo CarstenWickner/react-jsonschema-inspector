@@ -87,17 +87,25 @@ describe("renders correctly", () => {
         expect(component.find("button").hasClass("not-matching-filter")).toBe(true);
     });
     it("with custom rendered content", () => {
+        const itemGroup = new JsonSchemaGroup();
         const component = shallow(
             <InspectorItem
                 name="Qux"
-                schemaGroup={new JsonSchemaGroup()}
+                schemaGroup={itemGroup}
                 onSelect={() => { }}
-                renderContent={() => (
-                    <span className="custom-content">Custom content</span>
+                optionIndexes={[0]}
+                renderContent={({
+                    name,
+                    hasNestedItems,
+                    selected,
+                    schemaGroup,
+                    optionIndexes
+                }) => (
+                    <span className="custom-content">{`${name}, ${hasNestedItems}, ${selected}, ${schemaGroup === itemGroup}, ${optionIndexes}`}</span>
                 )}
             />
         );
-        expect(component.find(".custom-content").text()).toEqual("Custom content");
+        expect(component.find(".custom-content").text()).toEqual("Qux, false, false, true, 0");
     });
 });
 describe("calls onSelect", () => {
