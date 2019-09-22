@@ -7,11 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - enabling search by matching property name, via new `searchOptions.byPropertyName` prop
+- providing `column` object and column `index` as additional parameter to `breadcrumbs.skipSeparator` function (i.e. same input as for `breadcrumbs.mutateName`)
+- providing `optionIndexes` as additional parameter to `renderItemContent` prop function
 
 ### Changed
 - enabling new `searchOptions.byPropertyName` prop in default `searchOptions`
 - style-fix: let long item names break over multiple lines within a column
 - style-fix: disable the "outline" on `column` and `colview` (they were only shown in some browsers)
+- style-fix: make nested-item indicator white (instead of grey) on currently selected (blue) item
 
 ## [2.1.0] - 2019-05-01
 ### Added
@@ -65,3 +68,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - allow alternative configuration of field names to search in, e.g. `["title", "description"]`
 
 ## [1.0.0] - 2019-03-03
+- initial implementation
+
+[2.1.0]: https://github.com/CarstenWickner/react-jsonschema-inspector/compare/v2.0.1...v2.1.0
+[2.0.1]: https://github.com/CarstenWickner/react-jsonschema-inspector/compare/v2.0.0...v2.0.1
+[2.0.0]: https://github.com/CarstenWickner/react-jsonschema-inspector/compare/v1.2.1...v2.0.0
+[1.2.1]: https://github.com/CarstenWickner/react-jsonschema-inspector/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/CarstenWickner/react-jsonschema-inspector/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/CarstenWickner/react-jsonschema-inspector/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/CarstenWickner/react-jsonschema-inspector/releases/tag/v1.0.0

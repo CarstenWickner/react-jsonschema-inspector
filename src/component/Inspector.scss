@@ -8,6 +8,7 @@
     $detailsWidth: 20em;
     $selectionColor: #dcdcdc;
     $trailingSelectionColor: #276bd2;
+    $trailingSelectionFontColor: #fff;
     $backgroundColor: #fff;
     $innerBorderColor: #e0e0e0;
     $outerBorderColor: #cbcbcb;
@@ -108,10 +109,10 @@
     }
     &-column.trailing-selection &-item.selected {
         background-color: $trailingSelectionColor;
-        color: white;
+        color: $trailingSelectionFontColor;
     }
-    &-column.trailing-selection &-item.selected &-item-icon:after {
-        color: inherit;
+    &-column.trailing-selection &-item.selected &-item-icon {
+        background-color: $trailingSelectionFontColor;
     }
     &-details {
         width: $detailsWidth;

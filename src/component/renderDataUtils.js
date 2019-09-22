@@ -212,7 +212,8 @@ function hasSchemaNestedItems(schema) {
  */
 export function hasSchemaGroupNestedItems(schemaGroup, optionIndexes) {
     return schemaGroup.someEntry(hasSchemaNestedItems, createOptionTargetArrayFromIndexes(optionIndexes))
-        || (!optionIndexes && getOptionsInSchemaGroup(schemaGroup).options);
+        || (!optionIndexes && getOptionsInSchemaGroup(schemaGroup).options)
+        || false;
 }
 
 const optionShape = {

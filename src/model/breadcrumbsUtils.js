@@ -35,7 +35,7 @@ const createBreadcrumbBuilder = (breadcrumbsOptions) => {
         if (index === 0) {
             return prefix + name;
         }
-        if (skipSeparator && skipSeparator(name)) {
+        if (skipSeparator && skipSeparator(name, column, index)) {
             return name;
         }
         return separator + name;
