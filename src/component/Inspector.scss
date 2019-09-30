@@ -111,7 +111,7 @@
         background-color: $trailingSelectionColor;
         color: $trailingSelectionFontColor;
     }
-    &-column.trailing-selection &-item.selected &-item-icon {
+    &-column.trailing-selection &-item.selected.has-nested-items &-item-icon {
         background-color: $trailingSelectionFontColor;
     }
     &-details {
