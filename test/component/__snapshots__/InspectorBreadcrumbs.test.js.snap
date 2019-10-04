@@ -1,18 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders correctly with minimal/default props 1`] = `
-<div
-  className="jsonschema-inspector-breadcrumbs"
->
-  <span
-    className="jsonschema-inspector-breadcrumbs-icon"
-  />
-  <span
-    className="jsonschema-inspector-breadcrumbs-item has-nested-items"
-    key="0"
-    onDoubleClick={[Function]}
+<Fragment>
+  <div
+    className="jsonschema-inspector-breadcrumbs"
   >
-    foobar
-  </span>
-</div>
+    <span
+      className="jsonschema-inspector-breadcrumbs-icon"
+    />
+    <span
+      className="jsonschema-inspector-breadcrumbs-item has-nested-items"
+      key="0"
+      onDoubleClick={[Function]}
+    >
+      foobar
+    </span>
+  </div>
+</Fragment>
 `;
