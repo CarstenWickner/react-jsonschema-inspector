@@ -1,5 +1,6 @@
 import React from "react";
 import "./style-overrides.css";
+import classNames from "classnames";
 
 import { Inspector } from "../src/index";
 
@@ -127,6 +128,53 @@ export const breadcrumbsNoNavigation = () => (
     />
 );
 breadcrumbsNoNavigation.story = { name: "without navigation on double-click" };
+
+export const breadcrumbsCustomRendering = () => (
+    <Inspector
+        schemas={{
+            "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
+            "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
+            "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
+        }}
+        referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+        defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
+        breadcrumbs={{
+            // if this is NOT set to true, double-clicking on an item in the breadcrumbs changes the current selection
+            renderItem: (breadcrumbText, hasNestedItems, column, index) => (
+                <span
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={index}
+                    className={classNames({
+                        "jsonschema-inspector-breadcrumbs-item": true,
+                        "has-nested-items": hasNestedItems
+                    })}
+                    style={{ backgroundColor: hasNestedItems ? "#a5d6a7" : "#e8f5e9" }}
+                >
+                    {breadcrumbText}
+                </span>
+            ),
+            renderTrailingContent: breadcrumbTexts => (
+                <div style={{ flexGrow: 1 }}>
+                    <button
+                        type="button"
+                        style={{
+                            backgroundColor: "#276bd2",
+                            color: "#fff",
+                            float: "right",
+                            margin: ".5em",
+                            height: "2.5em"
+                        }}
+                        // eslint-disable-next-line no-alert
+                        onClick={() => window.alert(`E.g. could have copied current breadcrumbs to clipboard:\n\n\t"${breadcrumbTexts.join("")}"`)}
+                    >
+                        {"Copy"}
+                    </button>
+                </div>
+            )
+        }}
+    />
+);
+breadcrumbsCustomRendering.story = { name: "with custom items and extra content" };
 
 export const disabledBreadcrumbs = () => (
     <Inspector

@@ -271,13 +271,24 @@ Inspector.propTypes = {
      * - "skipSeparator": Function to identify breadcrumb names that should not be prepended with a "separator"
      * - "mutateName": Function to derive the selected item's representation in the breadcrumbs from their name
      * - "preventNavigation": Flag indicating whether double-clicking an item should preserve subsequent selections, otherwise they are discarded
+     * - "renderItem": Custom render function for a single breadcrumb item, expecting four parameters:
+     *   1. The textual representation of the respective column's selected item (after mutateName() was applied)
+     *   2. Flag indicating whether the respective column's selection contains some more nested items
+     *   3. The standard columnData entry representing the associated column
+     *   4. The index of the respective column
+     * - "renderTrailingContent": Custom render function for adding extra elements (e.g. a "Copy to Clipboard" button) after the breadcrumbs,
+     *   expecting two parameters:
+     *   1. Array of breadcrumbs texts
+     *   2. The whole standard columnData object
      */
     breadcrumbs: PropTypes.shape({
         prefix: PropTypes.string,
         separator: PropTypes.string,
         skipSeparator: PropTypes.func,
         mutateName: PropTypes.func,
-        preventNavigation: PropTypes.bool
+        preventNavigation: PropTypes.bool,
+        renderItem: PropTypes.func,
+        renderTrailingContent: PropTypes.func
     }),
     /**
      * Options for the search input shown in the header and its impact on the displayed columns – set to `null` to turn it off.

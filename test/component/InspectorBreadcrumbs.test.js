@@ -129,17 +129,66 @@ describe("renders correctly", () => {
             expect(component.text()).toEqual("foo");
         });
     });
-    it("with navigation by default", () => {
-        const { columnData } = buildColumnData({ foo: {} }, [], ["foo"]);
+    describe("with custom item render function", () => {
+        const { columnData } = buildColumnData(
+            {
+                foo: {
+                    properties: {
+                        bar: {}
+                    }
+                }
+            },
+            [],
+            ["foo", "bar"],
+            {}
+        );
+        const renderItem = (breadcrumbText, hasNestedItems, column, index) => (
+            <span key={index} className="custom-breadcrumbs-item">
+                {`${index + 1}. ${breadcrumbText} (${columnData[index] === column})${hasNestedItems ? " >" : ""}`}
+            </span>
+        );
         const component = shallow(
             <InspectorBreadcrumbs
                 columnData={columnData}
-                breadcrumbsOptions={{}}
+                breadcrumbsOptions={{ renderItem }}
             />
         );
-        const selectedRootItem = component.find(".jsonschema-inspector-breadcrumbs-item");
-        expect(selectedRootItem).toHaveLength(1);
-        expect(selectedRootItem.prop("onDoubleClick")).toBeDefined();
+        expect(component.find(".jsonschema-inspector-breadcrumbs-icon").exists()).toBe(true);
+        expect(component.find(".jsonschema-inspector-breadcrumbs-item").exists()).toBe(false);
+        const customItems = component.find(".custom-breadcrumbs-item");
+        expect(customItems).toHaveLength(2);
+        expect(customItems.at(0).text()).toEqual("1. foo (true) >");
+        expect(customItems.at(1).text()).toEqual("2. .bar (true)");
+    });
+    describe("with custom item render function", () => {
+        const { columnData } = buildColumnData(
+            {
+                foo: {
+                    properties: {
+                        bar: {}
+                    }
+                }
+            },
+            [],
+            ["foo", "bar"],
+            {}
+        );
+        const renderTrailingContent = (breadcrumbTexts, columnDataParam) => (columnDataParam !== columnData ? null : (
+            <button type="button">
+                {`Copy to Clipboard: ${breadcrumbTexts.join("")}`}
+            </button>
+        ));
+        const component = shallow(
+            <InspectorBreadcrumbs
+                columnData={columnData}
+                breadcrumbsOptions={{ renderTrailingContent }}
+            />
+        );
+        expect(component.find(".jsonschema-inspector-breadcrumbs-icon").exists()).toBe(true);
+        expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
+        const trailingButton = component.find("button");
+        expect(trailingButton.exists()).toBe(true);
+        expect(trailingButton.text()).toEqual("Copy to Clipboard: foo.bar");
     });
 });
 describe("handles double-click navigation", () => {
