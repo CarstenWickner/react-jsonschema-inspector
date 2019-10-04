@@ -139,7 +139,7 @@ export const breadcrumbsCustomRendering = () => (
         referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
         defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
         breadcrumbs={{
-            // if this is NOT set to true, double-clicking on an item in the breadcrumbs changes the current selection
+            // custom rendering for individual breadcrumb items
             renderItem: (breadcrumbText, hasNestedItems, column, index) => (
                 <span
                     // eslint-disable-next-line react/no-array-index-key
@@ -153,6 +153,7 @@ export const breadcrumbsCustomRendering = () => (
                     {breadcrumbText}
                 </span>
             ),
+            // custom rendering of an additional "Copy" button to the right of the breadcrumbs
             renderTrailingContent: breadcrumbTexts => (
                 <div style={{ flexGrow: 1 }}>
                     <button
