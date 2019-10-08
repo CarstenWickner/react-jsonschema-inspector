@@ -11,14 +11,15 @@
     },
     "scripts": {
         "start": "start-storybook -p 9001 -c .storybook",
-        "build": "webpack",
+        "build": "rollup -c",
         "lint": "eslint src stories test && stylelint src stories/**/*.*css stories/**/*.js",
         "test": "jest",
-        "predeploy": "npm run lint && npm run test --bail && build-storybook -c .storybook -o docs",
+        "predeploy": "rm -rf docs && npm run lint && npm run test --bail && build-storybook -c .storybook -o docs",
         "deploy": "gh-pages -d docs",
-        "prepublishOnly": "npm run lint && npm run test --bail && npm run build"
+        "prepublishOnly": "rm -rf build && npm run lint && npm run test --bail && npm run build"
     },
     "main": "build/index.js",
+    "module": "build/index.es.js",
     "files": [
         "/build"
     ],
@@ -41,7 +42,6 @@
         "babel-eslint": "^10.0.1",
         "babel-jest": "^24.5.0",
         "babel-loader": "^8.0.5",
-        "circular-dependency-plugin": "^5.0.2",
         "coveralls": "^3.0.3",
         "css-loader": "^2.1.1",
         "enzyme": "^3.9.0",
@@ -58,12 +58,19 @@
         "identity-obj-proxy": "^3.0.0",
         "jest": "^24.5.0",
         "node-sass": "^4.11.0",
+        "rollup": "^1.23.1",
+        "rollup-plugin-babel": "^4.3.3",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-peer-deps-external": "^2.2.0",
+        "rollup-plugin-postcss": "^2.0.3",
+        "rollup-plugin-terser": "^5.1.2",
+        "rollup-plugin-uglify": "^6.0.3",
         "sass-loader": "^7.1.0",
         "style-loader": "^0.23.1",
         "stylelint": "^9.10.1",
         "stylelint-config-recommended-scss": "^3.2.0",
-        "stylelint-scss": "^3.5.4",
-        "webpack-cli": "^3.3.0"
+        "stylelint-scss": "^3.5.4"
     },
     "dependencies": {
         "classnames": "^2.2.6",
