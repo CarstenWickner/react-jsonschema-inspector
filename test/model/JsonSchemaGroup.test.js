@@ -143,7 +143,7 @@ describe("extractValues()/extractValuesFromEntry()", () => {
                     .with(new JsonSchema({ title: "foo" }))
                     .with(new JsonSchema({ description: "bar" })));
             const extractFromSchema = ({ schema }) => schema;
-            const mergeResults = (combined, nextValue) => Object.assign({}, combined, nextValue);
+            const mergeResults = (combined, nextValue) => ({ ...combined, ...nextValue });
             const defaultValue = {};
             expect(group.extractValues(extractFromSchema, mergeResults, defaultValue)).toEqual({
                 title: "foo",

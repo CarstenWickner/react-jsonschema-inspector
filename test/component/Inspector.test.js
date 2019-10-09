@@ -81,7 +81,7 @@ describe("renders correctly", () => {
                     schemas={schemas}
                     referenceSchemas={referenceSchemas}
                     searchOptions={{
-                        filterBy: searchFilter => rawSchema => !!rawSchema[searchFilter]
+                        filterBy: (searchFilter) => (rawSchema) => !!rawSchema[searchFilter]
                     }}
                 />
             );
@@ -123,7 +123,7 @@ describe("renders correctly", () => {
                     schemas={schemas}
                     referenceSchemas={referenceSchemas}
                     searchOptions={{
-                        filterBy: searchFilter => (searchFilter.length < 3 ? undefined : () => true),
+                        filterBy: (searchFilter) => (searchFilter.length < 3 ? undefined : () => true),
                         byPropertyName: false,
                         debounceWait: 100
                     }}
@@ -447,7 +447,7 @@ describe("calls onSelect", () => {
     it("with extra information (including breadcrumbs)", () => {
         const breadcrumbs = {
             prefix: "this.",
-            mutateName: selectedItem => selectedItem && selectedItem.replace(/\s/g, "")
+            mutateName: (selectedItem) => selectedItem && selectedItem.replace(/\s/g, "")
         };
         const component = shallow(
             <Inspector

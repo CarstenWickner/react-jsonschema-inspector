@@ -28,8 +28,8 @@ describe("createBreadcrumbBuilder()", () => {
         const buildBreadcrumb = createBreadcrumbBuilder({
             prefix: "//",
             separator: "/",
-            skipSeparator: selectedItem => (selectedItem === "without-separator"),
-            mutateName: selectedItem => (selectedItem === "null" ? null : selectedItem.replace(/\s/g, "-"))
+            skipSeparator: (selectedItem) => (selectedItem === "without-separator"),
+            mutateName: (selectedItem) => (selectedItem === "null" ? null : selectedItem.replace(/\s/g, "-"))
         });
         it.each`
                 type          | name                   | index | expected

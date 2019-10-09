@@ -34,14 +34,14 @@ const InspectorBreadcrumbs = ({ columnData, breadcrumbsOptions }) => {
                                 "jsonschema-inspector-breadcrumbs-item": true,
                                 "has-nested-items": hasNestedItems
                             })}
-                            onDoubleClick={preventNavigation ? undefined : event => onSelect(event, selectedItem)}
+                            onDoubleClick={preventNavigation ? undefined : (event) => onSelect(event, selectedItem)}
                         >
                             {breadcrumbText}
                         </span>
                     );
                 })}
             </div>
-            {renderTrailingContent && renderTrailingContent(columnData.map(buildBreadcrumb).filter(b => !!b), columnData)}
+            {renderTrailingContent && renderTrailingContent(columnData.map(buildBreadcrumb).filter((b) => !!b), columnData)}
         </>
     );
 };

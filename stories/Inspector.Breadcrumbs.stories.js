@@ -154,7 +154,7 @@ export const breadcrumbsCustomRendering = () => (
                 </span>
             ),
             // custom rendering of an additional "Copy" button to the right of the breadcrumbs
-            renderTrailingContent: breadcrumbTexts => (
+            renderTrailingContent: (breadcrumbTexts) => (
                 <div style={{ flexGrow: 1 }}>
                     <button
                         type="button"

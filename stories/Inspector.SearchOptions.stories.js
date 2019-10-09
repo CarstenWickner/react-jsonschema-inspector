@@ -66,7 +66,7 @@ export const perCustomLogic = () => (
         defaultSelectedItems={["Shop", "inventory", "[0]"]}
         searchOptions={{
             // filtering by defined JSON schema fields – should ideally declare returned inner function separately
-            filterBy: enteredSearchValue => rawSchema => rawSchema[enteredSearchValue] !== undefined
+            filterBy: (enteredSearchValue) => (rawSchema) => rawSchema[enteredSearchValue] !== undefined
         }}
     />
 );

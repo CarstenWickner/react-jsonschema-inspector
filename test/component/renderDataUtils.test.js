@@ -8,7 +8,7 @@ import { createGroupFromSchema, getOptionsInSchemaGroup, getFieldValueFromSchema
 import { maximumValue } from "../../src/model/utils";
 
 describe("createRenderDataBuilder()", () => {
-    const onSelectInColumn = jest.fn(columnIndex => () => columnIndex);
+    const onSelectInColumn = jest.fn((columnIndex) => () => columnIndex);
     const getRenderData = createRenderDataBuilder(onSelectInColumn);
 
     describe("without arrays or optionals", () => {
@@ -611,7 +611,7 @@ describe("createFilterFunctionForColumn()", () => {
             expect(filterFunction(columnInput)).toEqual(["one", "other"]);
         });
         it("finding match in some column entries", () => {
-            const filterFunction = createFilterFunctionForColumn(rawSchema => rawSchema.title === "value");
+            const filterFunction = createFilterFunctionForColumn((rawSchema) => rawSchema.title === "value");
             const columnInput = {
                 items: {
                     one: createGroupFromSchema(new JsonSchema({ description: "value" })),
@@ -663,7 +663,7 @@ describe("createFilterFunctionForColumn()", () => {
             }
         };
         it("finding match via circular reference to parent schema", () => {
-            const filterFunction = createFilterFunctionForColumn(rawSchema => rawSchema.title === "Match");
+            const filterFunction = createFilterFunctionForColumn((rawSchema) => rawSchema.title === "Match");
             expect(filterFunction(columnInput)).toEqual(["Item One", "Item Three"]);
         });
         it("avoiding endless loop even if no match can be found", () => {
@@ -718,7 +718,7 @@ describe("createFilterFunctionForColumn()", () => {
                     "I-Four": createGroupFromSchema(schema.scope.find("#/definitions/Four"))
                 }
             };
-            const filterFunction = createFilterFunctionForColumn(rawSubSchema => rawSubSchema.title === "Match");
+            const filterFunction = createFilterFunctionForColumn((rawSubSchema) => rawSubSchema.title === "Match");
             expect(filterFunction(columnInput)).toEqual(["I-One", "I-Two", "I-Three", "I-Four"]);
         });
         describe("finding matches in options", () => {
@@ -776,7 +776,7 @@ describe("createFilterFunctionForColumn()", () => {
                 contextGroup,
                 options: getOptionsInSchemaGroup(contextGroup)
             };
-            const filterFunction = createFilterFunctionForColumn(rawSubSchema => rawSubSchema.title === "Match");
+            const filterFunction = createFilterFunctionForColumn((rawSubSchema) => rawSubSchema.title === "Match");
             // stringify to more easily detect differences in case of test failure
             expect(JSON.stringify(filterFunction(columnInput))).toEqual(JSON.stringify([
                 [0, 0],

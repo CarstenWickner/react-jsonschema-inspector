@@ -13,7 +13,7 @@ export default class JsonSchemaAllOfGroup extends JsonSchemaGroup {
     with(schemaOrGroup) {
         if (schemaOrGroup instanceof JsonSchemaGroup && schemaOrGroup.shouldTreatEntriesAsOne()) {
             // unwrap entries to avoid an AllOfGroup being nested in an AllOfGroup
-            schemaOrGroup.entries.forEach(entry => this.with(entry));
+            schemaOrGroup.entries.forEach((entry) => this.with(entry));
             return this;
         }
         // other groups or single schemas should just be added to the entries array

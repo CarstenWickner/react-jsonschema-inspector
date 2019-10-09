@@ -5,7 +5,7 @@ import {
 import JsonSchema from "../../src/model/JsonSchema";
 
 describe("createRecursiveFilterFunction()", () => {
-    const flatSearchFilter = jest.fn(rawSchema => rawSchema.default);
+    const flatSearchFilter = jest.fn((rawSchema) => rawSchema.default);
     let recursiveFilterFunction;
     beforeEach(() => {
         recursiveFilterFunction = createRecursiveFilterFunction(flatSearchFilter);
@@ -286,7 +286,7 @@ describe("createFilterFunctionForSchema()", () => {
             expect(filterFunction(new JsonSchema({ title: "foo" }), true)).toBe(true);
         });
         it("finding match in some column entries", () => {
-            const filterFunction = createFilterFunctionForSchema(rawSchema => rawSchema.title === "bar");
+            const filterFunction = createFilterFunctionForSchema((rawSchema) => rawSchema.title === "bar");
             expect(filterFunction(new JsonSchema({ title: "foo" }), true)).toBe(false);
             expect(filterFunction(new JsonSchema({ title: "bar" }), true)).toBe(true);
             expect(filterFunction(new JsonSchema({ description: "bar" }), true)).toBe(false);
@@ -326,7 +326,7 @@ describe("createFilterFunctionForSchema()", () => {
         const schemaThree = schema.scope.find("#/definitions/Three");
 
         it("finding match via circular reference to parent schema", () => {
-            const filterFunction = createFilterFunctionForSchema(rawSchema => rawSchema.title === "Match");
+            const filterFunction = createFilterFunctionForSchema((rawSchema) => rawSchema.title === "Match");
             expect(filterFunction(schemaOne, true)).toBe(true);
             expect(filterFunction(schemaTwo, true)).toBe(false);
             expect(filterFunction(schemaThree, true)).toBe(true);
@@ -390,7 +390,7 @@ describe("createFilterFunctionForSchema()", () => {
                 ${"'items' > 'oneOf' > [0]"}                              | ${"Five"}  | ${true}                      | ${true}
             `("with match under $testDescription", ({ subSchema, resultWhenExcludingOptionals, resultWhenIncludingOptionals }) => {
                 const { scope } = new JsonSchema(rawSchema);
-                const filterFunction = createFilterFunctionForSchema(rawSubSchema => rawSubSchema.title === "Match");
+                const filterFunction = createFilterFunctionForSchema((rawSubSchema) => rawSubSchema.title === "Match");
 
                 // with "includeNestedOptionalsForMainSchema" flag set to false, it does not matter whether anyOf/oneOf are generally included
                 // when the match is in a property, an "includeNestedOptionalsForMainSchema" false does not hide it
@@ -419,14 +419,14 @@ describe("createFilterFunctionForSchema()", () => {
 
             it.each`
                 testTitle                                      | flatSearchFilter                  | includeOptionals | result
-                ${"directly on main schema (incl. optionals)"} | ${sub => sub.minProperties === 1} | ${true}          | ${true}
-                ${"directly on main schema (excl. optionals)"} | ${sub => sub.minProperties === 1} | ${false}         | ${true}
-                ${"in allOf part (incl. optionals)"}           | ${sub => sub.title === "Foo"}     | ${true}          | ${true}
-                ${"in allOf part (excl. optionals)"}           | ${sub => sub.title === "Foo"}     | ${false}         | ${true}
-                ${"in anyOf part (incl. optionals)"}           | ${sub => sub.type === "object"}   | ${true}          | ${true}
-                ${"in anyOf part (excl. optionals)"}           | ${sub => sub.type === "object"}   | ${false}         | ${false}
-                ${"in oneOf part (incl. optionals)"}           | ${sub => sub.maxProperties === 7} | ${true}          | ${true}
-                ${"in oneOf part (excl. optionals)"}           | ${sub => sub.maxProperties === 7} | ${false}         | ${false}
+                ${"directly on main schema (incl. optionals)"} | ${(sub) => sub.minProperties === 1} | ${true}          | ${true}
+                ${"directly on main schema (excl. optionals)"} | ${(sub) => sub.minProperties === 1} | ${false}         | ${true}
+                ${"in allOf part (incl. optionals)"}           | ${(sub) => sub.title === "Foo"}     | ${true}          | ${true}
+                ${"in allOf part (excl. optionals)"}           | ${(sub) => sub.title === "Foo"}     | ${false}         | ${true}
+                ${"in anyOf part (incl. optionals)"}           | ${(sub) => sub.type === "object"}   | ${true}          | ${true}
+                ${"in anyOf part (excl. optionals)"}           | ${(sub) => sub.type === "object"}   | ${false}         | ${false}
+                ${"in oneOf part (incl. optionals)"}           | ${(sub) => sub.maxProperties === 7} | ${true}          | ${true}
+                ${"in oneOf part (excl. optionals)"}           | ${(sub) => sub.maxProperties === 7} | ${false}         | ${false}
             `("$testTitle", ({ flatSearchFilter, includeOptionals, result }) => {
                 const schema = new JsonSchema(rawSchema);
                 const filterFunction = createFilterFunctionForSchema(flatSearchFilter);

@@ -195,7 +195,7 @@ describe("handles double-click navigation", () => {
     const onSelectOne = jest.fn(() => { });
     const onSelectTwo = jest.fn(() => { });
     const { columnData } = createRenderDataBuilder(
-        index => (index === 0 ? onSelectOne : onSelectTwo)
+        (index) => (index === 0 ? onSelectOne : onSelectTwo)
     )(
         {
             foo: {

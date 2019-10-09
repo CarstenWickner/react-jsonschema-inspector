@@ -20,14 +20,14 @@ const InspectorColumn = (props) => {
             role="presentation"
             tabIndex={-1}
         >
-            {Object.keys(items).sort().map(name => (
+            {Object.keys(items).sort().map((name) => (
                 <InspectorItem
                     key={name}
                     name={name}
                     schemaGroup={items[name]}
                     selected={name === selectedItem}
                     matchesFilter={filteredItems ? filteredItems.includes(name) : undefined}
-                    onSelect={event => onSelect(event, name)}
+                    onSelect={(event) => onSelect(event, name)}
                     renderContent={renderItemContent}
                 />
             ))}
