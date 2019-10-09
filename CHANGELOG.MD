@@ -6,10 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- use rollup instead of webpack for generating bundles
+- use rollup instead of webpack for generating bundle
+- provide ES module instead of CommonJS bundle
 - reduced bundle size
-- provide source maps
-- provide ES Module in addition to CommonJS bundle
 
 ## [2.3.0] - 2019-10-05
 ### Added
