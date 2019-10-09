@@ -1,5 +1,6 @@
 # React JSON Schema Inspector
 
+[![npm version][npm-image]][npm-url]
 [![Build Status][travis-ci-image]][travis-ci-url]
 [![Coverage Status][coverage-image]][coverage-url]
 [![dependencies Status][david-dm-dep-image]][david-dm-dep-url]
@@ -139,6 +140,8 @@ It is also backwards-compatible with Drafts 4 and 6.
 
 
 [main-logo-image]: https://raw.githubusercontent.com/CarstenWickner/react-jsonschema-inspector/master/logo.svg?sanitize=true
+[npm-image]: https://badge.fury.io/js/react-jsonschema-inspector.svg
+[npm-url]: https://www.npmjs.com/package/react-jsonschema-inspector
 [travis-ci-image]: https://travis-ci.org/CarstenWickner/react-jsonschema-inspector.svg
 [travis-ci-url]: https://travis-ci.org/CarstenWickner/react-jsonschema-inspector
 [coverage-image]: https://coveralls.io/repos/github/CarstenWickner/react-jsonschema-inspector/badge.svg?branch=master

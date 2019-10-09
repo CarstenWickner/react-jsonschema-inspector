@@ -168,7 +168,7 @@ export const breadcrumbsCustomRendering = () => (
                         // eslint-disable-next-line no-alert
                         onClick={() => window.alert(`E.g. could have copied current breadcrumbs to clipboard:\n\n\t"${breadcrumbTexts.join("")}"`)}
                     >
-                        {"Copy"}
+                        Copy
                     </button>
                 </div>
             )
