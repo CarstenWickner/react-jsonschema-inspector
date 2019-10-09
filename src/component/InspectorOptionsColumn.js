@@ -7,7 +7,7 @@ import InspectorItem from "./InspectorItem";
 import { getColumnDataPropTypeShape } from "./renderDataUtils";
 
 class InspectorOptionsColumn extends Component {
-    static defaultOptionNameForIndex = optionIndexes => `Option ${optionIndexes.map(index => index + 1).join("-")}`;
+    static defaultOptionNameForIndex = (optionIndexes) => `Option ${optionIndexes.map((index) => index + 1).join("-")}`;
 
     renderSingleOption(optionIndexes, name) {
         const {
@@ -19,8 +19,8 @@ class InspectorOptionsColumn extends Component {
                 schemaGroup={contextGroup}
                 optionIndexes={optionIndexes}
                 selected={isDeepEqual(optionIndexes, selectedItem)}
-                matchesFilter={filteredItems ? filteredItems.some(filteredOption => isDeepEqual(filteredOption, optionIndexes)) : undefined}
-                onSelect={event => onSelect(event, optionIndexes)}
+                matchesFilter={filteredItems ? filteredItems.some((filteredOption) => isDeepEqual(filteredOption, optionIndexes)) : undefined}
+                onSelect={(event) => onSelect(event, optionIndexes)}
                 renderContent={renderItemContent}
             />
         );

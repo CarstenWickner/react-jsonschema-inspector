@@ -10,7 +10,7 @@ import JsonSchemaAnyOfGroup from "../../src/model/JsonSchemaAnyOfGroup";
 import JsonSchemaOneOfGroup from "../../src/model/JsonSchemaOneOfGroup";
 
 describe("renders correctly", () => {
-    const oneOfOptionNameForIndex = optionIndexes => `Exclusive Option ${optionIndexes.map(index => index + 1).join("-")}`;
+    const oneOfOptionNameForIndex = (optionIndexes) => `Exclusive Option ${optionIndexes.map((index) => index + 1).join("-")}`;
     const parserConfig = {
         oneOf: { optionNameForIndex: oneOfOptionNameForIndex }
     };

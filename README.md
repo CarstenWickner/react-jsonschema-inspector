@@ -1,10 +1,10 @@
 # React JSON Schema Inspector
 
 [![npm version][npm-image]][npm-url]
+[![Greenkeeper badge][greenkeeper-image]][greenkeeper-url]
+
 [![Build Status][travis-ci-image]][travis-ci-url]
 [![Coverage Status][coverage-image]][coverage-url]
-[![dependencies Status][david-dm-dep-image]][david-dm-dep-url]
-[![peerDependencies Status][david-dm-peerDep-image]][david-dm-peerDep-url]
 
 ![Logo][main-logo-image]
 
@@ -142,14 +142,12 @@ It is also backwards-compatible with Drafts 4 and 6.
 [main-logo-image]: https://raw.githubusercontent.com/CarstenWickner/react-jsonschema-inspector/master/logo.svg?sanitize=true
 [npm-image]: https://badge.fury.io/js/react-jsonschema-inspector.svg
 [npm-url]: https://www.npmjs.com/package/react-jsonschema-inspector
+[greenkeeper-image]: https://badges.greenkeeper.io/CarstenWickner/react-jsonschema-inspector.svg
+[greenkeeper-url]: https://greenkeeper.io/
 [travis-ci-image]: https://travis-ci.org/CarstenWickner/react-jsonschema-inspector.svg
 [travis-ci-url]: https://travis-ci.org/CarstenWickner/react-jsonschema-inspector
 [coverage-image]: https://coveralls.io/repos/github/CarstenWickner/react-jsonschema-inspector/badge.svg?branch=master
 [coverage-url]: https://coveralls.io/github/CarstenWickner/react-jsonschema-inspector?branch=master
-[david-dm-dep-image]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector/status.svg
-[david-dm-dep-url]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector
-[david-dm-peerDep-image]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector/peer-status.svg
-[david-dm-peerDep-url]: https://david-dm.org/CarstenWickner/react-jsonschema-inspector?type=peer
 [storybook-image]: https://raw.githubusercontent.com/storybooks/storybook/next/docs/src/design/homepage/storybook-logo.svg?sanitize=true
 [storybook-url]: https://carstenwickner.github.io/react-jsonschema-inspector
 [codesandbox-image]: https://codesandbox.io/static/img/play-codesandbox.svg

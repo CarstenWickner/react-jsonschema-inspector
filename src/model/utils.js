@@ -24,9 +24,9 @@ export function isNonEmptyObject(target) {
 /**
  * Create a shallow copy of the given object and apply the given mapping function on each of its values.
  *
- * @param {Object} original - object to copy while mapping its values
+ * @param {object} original - object to copy while mapping its values
  * @param {Function} mappingFunction - conversion to perform
- * @returns {Object} cloned object with same keys as the original, but with mapped values
+ * @returns {object} cloned object with same keys as the original, but with mapped values
  */
 export function mapObjectValues(original, mappingFunction) {
     const mappedObject = {};
@@ -127,7 +127,7 @@ export const commonValues = nullAwareReduce(
         } else if (Array.isArray(combined)) {
             if (Array.isArray(nextValue)) {
                 // both "combined" and "nextValue" are arrays already
-                mergeResult = combined.filter(existingValue => nextValue.includes(existingValue));
+                mergeResult = combined.filter((existingValue) => nextValue.includes(existingValue));
                 // unwrap array containing single value
                 mergeResult = mergeResult.length === 1 ? mergeResult[0] : mergeResult;
             } else {

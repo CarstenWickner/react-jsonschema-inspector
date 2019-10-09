@@ -14,7 +14,7 @@ export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
     /**
      * Constructor for the representation of a schema's grouping property, e.g. `anyOf` or `oneOf`.
      *
-     * @param {Object} settings - configuration object determining how the represented schema part should be interpreted
+     * @param {object} settings - configuration object determining how the represented schema part should be interpreted
      * @param {?string} settings.groupTitle - group title to show instead of the default provided by `getDefaultGroupTitle()`
      * @param {?Function} settings.optionNameForIndex - function for deriving an option's name/label from an 'optionIndexes' array
      */
@@ -42,8 +42,8 @@ export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
      * Extension of method from super class for creating a representation of this group's given options.
      * Additionally adding the `settings.groupTitle` (or fall-back value from `getDefaultGroupTitle()`) if no other `groupTitle` is present yet.
      *
-     * @param {Array.<{groupTitle: ?string, options: ?Array.<Object>}>} containedOptions - nested option representations
-     * @returns {{groupTitle: ?string, options: ?Array.<Object>}} representation of this group's contained optional hierarchy
+     * @param {Array.<{groupTitle: ?string, options: ?Array.<object>}>} containedOptions - nested option representations
+     * @returns {{groupTitle: ?string, options: ?Array.<object>}} representation of this group's contained optional hierarchy
      */
     createOptionsRepresentation(containedOptions) {
         const result = super.createOptionsRepresentation(containedOptions);

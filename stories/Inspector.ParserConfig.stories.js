@@ -22,11 +22,11 @@ export const defaultParserConfig = () => (
         parserConfig={{
             anyOf: {
                 groupTitle: "any of",
-                optionNameForIndex: optionIndexes => `Option ${optionIndexes.map(index => index + 1).join("-")}`
+                optionNameForIndex: (optionIndexes) => `Option ${optionIndexes.map((index) => index + 1).join("-")}`
             },
             oneOf: {
                 groupTitle: "one of",
-                optionNameForIndex: optionIndexes => `Option ${optionIndexes.map(index => index + 1).join("-")}`
+                optionNameForIndex: (optionIndexes) => `Option ${optionIndexes.map((index) => index + 1).join("-")}`
             }
         }}
     />
@@ -63,10 +63,10 @@ export const optionNames = () => (
         // ideally, these functions should be declared separately to avoid unnecessary re-rendering
         parserConfig={{
             anyOf: {
-                optionNameForIndex: optionIndexes => `– ${optionIndexes.map(index => String.fromCharCode(65 + index)).join(".")}`
+                optionNameForIndex: (optionIndexes) => `– ${optionIndexes.map((index) => String.fromCharCode(65 + index)).join(".")}`
             },
             oneOf: {
-                optionNameForIndex: optionIndexes => `- ${optionIndexes.map(index => String.fromCharCode(65 + index)).join(".")}`
+                optionNameForIndex: (optionIndexes) => `- ${optionIndexes.map((index) => String.fromCharCode(65 + index)).join(".")}`
             }
         }}
     />

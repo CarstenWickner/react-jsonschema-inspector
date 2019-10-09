@@ -28,7 +28,7 @@ export default class JsonSchemaGroup {
     shouldTreatEntriesAsOne() {
         let filteredEntries = this.entries;
         if (!this.considerSchemasAsSeparateOptions()) {
-            filteredEntries = filteredEntries.filter(entry => entry instanceof JsonSchemaGroup && !entry.shouldTreatEntriesAsOne());
+            filteredEntries = filteredEntries.filter((entry) => entry instanceof JsonSchemaGroup && !entry.shouldTreatEntriesAsOne());
         }
         return filteredEntries.length < 2;
     }
@@ -118,8 +118,8 @@ export default class JsonSchemaGroup {
     /**
      * Create representation of this group's given options.
      *
-     * @param {Array.<{groupTitle: ?string, options: ?Array.<Object>, nameForIndex: ?Function}>} containedOptions - nested option representations
-     * @returns {{groupTitle: ?string, options: ?Array.<Object>, nameForIndex: ?Function}} representation of the given group's top level options
+     * @param {Array.<{groupTitle: ?string, options: ?Array.<object>, nameForIndex: ?Function}>} containedOptions - nested option representations
+     * @returns {{groupTitle: ?string, options: ?Array.<object>, nameForIndex: ?Function}} representation of the given group's top level options
      */
     // eslint-disable-next-line class-methods-use-this
     createOptionsRepresentation(containedOptions) {

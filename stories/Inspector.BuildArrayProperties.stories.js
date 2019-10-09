@@ -19,7 +19,7 @@ export const defaultArrayProperties = () => (
         }}
         defaultSelectedItems={["Person", "friends"]}
         // the default props (i.e. same as if you leave them out)
-        buildArrayProperties={arrayItemSchema => ({ "[0]": arrayItemSchema })}
+        buildArrayProperties={(arrayItemSchema) => ({ "[0]": arrayItemSchema })}
     />
 );
 defaultArrayProperties.story = { name: "default" };

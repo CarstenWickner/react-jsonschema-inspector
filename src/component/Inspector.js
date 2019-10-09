@@ -21,8 +21,8 @@ class Inspector extends Component {
      * Avoid constant/immediate re-rendering while the search filter is being entered by using debounce.
      * This is wrapped into memoize() to allow setting the wait times via props.
      *
-     * @param {number} debounceWait the number of milliseconds to delay before applying the new filter value
-     * @param {number} debounceMaxWait the maximum time the filter re-evaluation is allowed to be delayed before it's invoked
+     * @param {number} debounceWait - the number of milliseconds to delay before applying the new filter value
+     * @param {number} debounceMaxWait - the maximum time the filter re-evaluation is allowed to be delayed before it's invoked
      * @returns {Function} return debounced function to set applied filter
      * @returns {string} return.value input parameter is the new search filter value to apply
      */
@@ -66,11 +66,11 @@ class Inspector extends Component {
      * Create an onSelect function for a particular column.
      *
      * @param {number} columnIndex - the index of the column to create the onSelect function for
-     * @returns {Function} return the onSelect function to be used in that given column (for either setting or clearing its selection)
-     * @returns {*} return.param0.event the originally triggered event (e.g. onClick, onDoubleClick, onKeyDown, etc.)
-     * @returns {string} return.param0.selectedItem the item to select (or `null` to discard any selection in this column – and all subsequent ones)
+     * @returns {Function} return - the onSelect function to be used in that given column (for either setting or clearing its selection)
+     * {*} return.param0.event - the originally triggered event (e.g. onClick, onDoubleClick, onKeyDown, etc.)
+     * {string} return.param0.selectedItem - the item to select (or `null` to discard any selection in this column – and all subsequent ones)
      */
-    onSelectInColumn = columnIndex => (event, selectedItem) => {
+    onSelectInColumn = (columnIndex) => (event, selectedItem) => {
         // the lowest child component accepting the click/selection event should consume it
         event.stopPropagation();
         const { selectedItems, appendEmptyColumn } = this.state;
@@ -112,7 +112,7 @@ class Inspector extends Component {
             onSelectProp
                 // due to the two-step process, the newRenderData will NOT include the filteredItems
                 ? () => onSelectProp(newSelection, newRenderData,
-                    breadcrumbsOptions && columnData.map(createBreadcrumbBuilder(breadcrumbsOptions)).filter(value => value))
+                    breadcrumbsOptions && columnData.map(createBreadcrumbBuilder(breadcrumbsOptions)).filter((value) => value))
                 // no call-back provided via props, nothing to do
                 : undefined
         );
@@ -122,19 +122,19 @@ class Inspector extends Component {
      * Collect the data to provide as props to the sub components.
      * Thanks to 'memoize', all this logic will only be executed again if the provided parameters changed.
      *
-     * @param {Object.<String, Object>} schemas object containing the top-level JsonSchema definitions as values
-     * @param {?Array.<Object>} referenceSchemas
-     * @param {?Array.<String>} selectedItems array of strings identifying the selected properties per column
-     * @param {?Object} parserConfig configuration affecting how the JSON schemas are being traversed/parsed
-     * @param {?Function} buildArrayProperties function to derive the properties to list for an array, based on a given `JsonSchema` of the items
-     * @return {Object} return wrapper object for the column data (for the sake of future extensibility)
-     * @return {Array.<Object>} return.columnData
-     * @return {?Object.<String, JsonSchemaGroup>} return.columnData[].items named schemas to list in the respective column
-     * @return {?Object} return.columnData[].options representation of a schema's hierarchy in case of optionals being included
-     * @return {?JsonSchemaGroup} return.columnData[].contextGroup the schema group containing the `options`
-     * @return {?String} return.columnData[].selectedItem name of the currently selected item (may be null)
-     * @return {?Boolean} return.columnData[].trailingSelection flag indicating whether this column's selection is the last
-     * @return {Function} return.columnData[].onSelect callback expecting an event and the name of the selected item in that column as parameters
+     * @param {object.<string, object>} schemas - object containing the top-level JsonSchema definitions as values
+     * @param {?Array.<object>} referenceSchemas - additional schemas that may be referenced from within main "schemas"
+     * @param {?Array.<string>} selectedItems - array of strings identifying the selected properties per column
+     * @param {?object} parserConfig - configuration affecting how the JSON schemas are being traversed/parsed
+     * @param {?Function} buildArrayProperties - function to derive the properties to list for an array, based on a given `JsonSchema` of the items
+     * @returns {object} return - wrapper object for the column data (for the sake of future extensibility)
+     * {Array.<object>} return.columnData - collected/prepared data for rendering
+     * {?object.<string, JsonSchemaGroup>} return.columnData[].items - named schemas to list in the respective column
+     * {?object} return.columnData[].options - representation of a schema's hierarchy in case of optionals being included
+     * {?JsonSchemaGroup} return.columnData[].contextGroup - the schema group containing the `options`
+     * {?string} return.columnData[].selectedItem - name of the currently selected item (may be null)
+     * {?boolean} return.columnData[].trailingSelection - flag indicating whether this column's selection is the last
+     * {Function} return.columnData[].onSelect - callback expecting an event and the name of the selected item in that column as parameters
      */
     getRenderDataForSelection = memoize(createRenderDataBuilder(this.onSelectInColumn), isDeepEqual);
 
@@ -143,13 +143,13 @@ class Inspector extends Component {
      * `searchOptions` (prop) and entered `searchFilter` value (from search input field).
      * Thanks to 'memoize', exactly one set of previous search results will be preserved if the options and filter value are unchanged.
      *
-     * @param {?Object} searchOptions
+     * @param {?object} searchOptions - prop containing various options for steering search behaviour
      * @param {?Function} searchOptions.filterBy - custom filter function to apply (expecting the `searchFilter` as input)
-     * @param {?Array.<String>} searchOptions.fields - alternative to `filterBy`, generating a filter function checking the listed fields' contents
-     * @param {?Boolean} searchOptions.byPropertyName - addition to `fields`/`filterBy`, whether to consider matching property names
-     * @param {?String} searchFilter - entered value from the search input field to filter by
-     * @return {Function} return - function to apply for setting/clearing the `filteredItems` in an entry of the 'columnData' array
-     * @return {Object} return.param0 - entry of the 'columnData' array to set/clear the `filteredItems` in
+     * @param {?Array.<string>} searchOptions.fields - alternative to `filterBy`, generating a filter function checking the listed fields' contents
+     * @param {?boolean} searchOptions.byPropertyName - addition to `fields`/`filterBy`, whether to consider matching property names
+     * @param {?string} searchFilter - entered value from the search input field to filter by
+     * @returns {Function} return - function to apply for setting/clearing the `filteredItems` in an entry of the 'columnData' array
+     * {object} return.param0 - entry of the 'columnData' array to set/clear the `filteredItems` in
      */
     setFilteredItemsForColumn = memoize((searchOptions, searchFilter) => {
         if (searchOptions && searchFilter) {
@@ -169,7 +169,7 @@ class Inspector extends Component {
         }
         // if the search feature is disabled or currently unused, we should ensure that there are no left-over filteredItems
         // eslint-disable-next-line no-param-reassign
-        return column => delete column.filteredItems;
+        return (column) => delete column.filteredItems;
     }, isDeepEqual);
 
     render() {
@@ -272,14 +272,14 @@ Inspector.propTypes = {
      * - "mutateName": Function to derive the selected item's representation in the breadcrumbs from their name
      * - "preventNavigation": Flag indicating whether double-clicking an item should preserve subsequent selections, otherwise they are discarded
      * - "renderItem": Custom render function for a single breadcrumb item, expecting four parameters:
-     *   1. The textual representation of the respective column's selected item (after mutateName() was applied)
-     *   2. Flag indicating whether the respective column's selection contains some more nested items
-     *   3. The standard columnData entry representing the associated column
-     *   4. The index of the respective column
+     * 1. The textual representation of the respective column's selected item (after mutateName() was applied)
+     * 2. Flag indicating whether the respective column's selection contains some more nested items
+     * 3. The standard columnData entry representing the associated column
+     * 4. The index of the respective column
      * - "renderTrailingContent": Custom render function for adding extra elements (e.g. a "Copy to Clipboard" button) after the breadcrumbs,
-     *   expecting two parameters:
-     *   1. Array of breadcrumbs texts
-     *   2. The whole standard columnData object
+     * expecting two parameters:
+     * 1. Array of breadcrumbs texts
+     * 2. The whole standard columnData object
      */
     breadcrumbs: PropTypes.shape({
         prefix: PropTypes.string,
@@ -345,7 +345,7 @@ Inspector.defaultProps = {
     parserConfig: {},
     buildArrayProperties: undefined,
     breadcrumbs: {
-        skipSeparator: fieldName => (fieldName === "[0]")
+        skipSeparator: (fieldName) => (fieldName === "[0]")
     },
     searchOptions: {
         byPropertyName: true,

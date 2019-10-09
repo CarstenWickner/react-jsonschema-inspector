@@ -7,7 +7,7 @@ export default class JsonSchema {
     /**
      * Raw JSON Schema.
      *
-     * @type {Object}
+     * @type {object}
      */
     schema;
 
@@ -26,8 +26,8 @@ export default class JsonSchema {
     /**
      * Constructor for a JsonSchema (wrapper).
      *
-     * @param {Object} schema - the JSON Schema to represent
-     * @param {Object} parserConfig - configuration affecting how the json schema is being traversed/parsed
+     * @param {object} schema - the JSON Schema to represent
+     * @param {object} parserConfig - configuration affecting how the json schema is being traversed/parsed
      * @param {?RefScope} scope - collection of available $ref targets (will be generated based on `schema` if not provided)
      */
     constructor(schema, parserConfig, scope) {
