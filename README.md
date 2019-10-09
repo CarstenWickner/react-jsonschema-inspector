@@ -1,5 +1,7 @@
 # React JSON Schema Inspector
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/CarstenWickner/react-jsonschema-inspector.svg)](https://greenkeeper.io/)
+
 [![npm version][npm-image]][npm-url]
 [![Build Status][travis-ci-image]][travis-ci-url]
 [![Coverage Status][coverage-image]][coverage-url]
