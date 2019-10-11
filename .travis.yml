@@ -1,10 +1,12 @@
 language: node_js
 node_js:
-  - "8"
+  - "10"
 script:
   - npm run lint
   - npm run test -- --ci --coverage --coverageReporters=text-lcov | coveralls
   - npm run test -- --ci --bail
+  - build-storybook -c .storybook -o docs
+  - npm run build
 branches:
   only:
   - master
