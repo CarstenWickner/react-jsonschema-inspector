@@ -1,6 +1,6 @@
 {
     "name": "react-jsonschema-inspector",
-    "version": "3.1.1-SNAPSHOT",
+    "version": "4.0.0-SNAPSHOT",
     "description": "View component for traversing/searching in a JSON Schema",
     "homepage": "https://CarstenWickner.github.io/react-jsonschema-inspector",
     "author": "Carsten Wickner",
@@ -23,6 +23,7 @@
     "files": [
         "/build"
     ],
+    "types": "/build/index.d.ts",
     "browserslist": [
         ">0.2%",
         "not dead",
@@ -39,6 +40,8 @@
         "@storybook/addon-docs": "~5.2.3",
         "@storybook/addon-options": "~5.2.3",
         "@storybook/react": "~5.2.3",
+        "@types/react": "^16.9.5",
+        "@types/react-dom": "^16.9.2",
         "babel-eslint": "~10.0.3",
         "babel-jest": "~24.9.0",
         "babel-loader": "~8.0.6",
@@ -54,6 +57,7 @@
         "eslint-plugin-jsdoc": "~15.11.0",
         "eslint-plugin-jsx-a11y": "~6.2.3",
         "eslint-plugin-react": "~7.16.0",
+        "eslint-plugin-react-hooks": "~2.1.2",
         "gh-pages": "~2.1.1",
         "identity-obj-proxy": "~3.0.0",
         "jest": "~24.9.0",
@@ -64,12 +68,15 @@
         "rollup-plugin-node-resolve": "~5.2.0",
         "rollup-plugin-postcss": "~2.0.3",
         "rollup-plugin-terser": "~5.1.2",
+        "rollup-plugin-typescript2": "~0.24.3",
         "rollup-plugin-uglify": "~6.0.3",
         "sass-loader": "~8.0.0",
         "style-loader": "~1.0.0",
         "stylelint": "~11.1.1",
         "stylelint-config-recommended-scss": "~4.0.0",
-        "stylelint-scss": "~3.11.1"
+        "stylelint-scss": "~3.11.1",
+        "ts-loader": "~6.2.0",
+        "typescript": "~3.6.4"
     },
     "dependencies": {
         "classnames": "^2.2.6",
@@ -80,8 +87,8 @@
     },
     "peerDependencies": {
         "prop-types": "^15.7.2",
-        "react": "^16.8.3",
-        "react-dom": "^16.8.3"
+        "react": "^16.9.5",
+        "react-dom": "^16.9.2"
     },
     "jest": {
         "testEnvironment": "jsdom",

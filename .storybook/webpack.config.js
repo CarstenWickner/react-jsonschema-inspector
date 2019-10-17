@@ -17,5 +17,18 @@ module.exports = async ({ config }) => {
         loaders: ["style-loader", "css-loader"],
         include: path.resolve(__dirname, "stories")
     });
+    config.module.rules.push({
+        test: /\.tsx?$/,
+        use: {
+            loader: "ts-loader",
+            options: {
+                configFile: "../tsconfig.json",
+                transpileOnly: true
+            }
+        },
+        exclude: /node_modules/
+    });
+    config.resolve.extensions.push(".ts");
+    config.resolve.extensions.push(".tsx");
     return config;
 };

@@ -5,11 +5,23 @@ import isDeepEqual from "lodash.isequal";
 
 import InspectorItem from "./InspectorItem";
 import { getColumnDataPropTypeShape } from "./renderDataUtils";
+import { RenderItemContentFunction, RenderOptions, RenderColumnOnSelectFunction } from "../types/Inspector";
+import JsonSchemaOptionalsGroup from "../model/JsonSchemaOptionalsGroup";
 
-class InspectorOptionsColumn extends Component {
-    static defaultOptionNameForIndex = (optionIndexes) => `Option ${optionIndexes.map((index) => index + 1).join("-")}`;
+const columnDataPropTypeShape = getColumnDataPropTypeShape(true);
 
-    renderSingleOption(optionIndexes, name) {
+class InspectorOptionsColumn extends Component<{
+    options: RenderOptions,
+    contextGroup?: JsonSchemaOptionalsGroup,
+    selectedItem?: Array<number>,
+    filteredItems?: Array<Array<number>>,
+    trailingSelection?: boolean,
+    onSelect: RenderColumnOnSelectFunction,
+    renderItemContent?: RenderItemContentFunction
+}> {
+    static defaultOptionNameForIndex = (optionIndexes: Array<number>) => `Option ${optionIndexes.map((index) => index + 1).join("-")}`;
+
+    renderSingleOption(optionIndexes: Array<number>, name: string) {
         const {
             contextGroup, selectedItem, filteredItems, renderItemContent, onSelect
         } = this.props;
@@ -26,17 +38,21 @@ class InspectorOptionsColumn extends Component {
         );
     }
 
-    renderGroupOfOptions({ groupTitle, options, optionNameForIndex = InspectorOptionsColumn.defaultOptionNameForIndex }, parentOptionIndexes = []) {
-        return [
-            groupTitle && (
-                <div
-                    key="group-title"
-                    className="optional-group-title"
-                >
-                    <span>{groupTitle}</span>
-                </div>
-            ),
-            (
+    renderGroupOfOptions({
+        groupTitle,
+        options,
+        optionNameForIndex = InspectorOptionsColumn.defaultOptionNameForIndex
+    }: RenderOptions, parentOptionIndexes: Array<number> = []) {
+        return (
+            <>
+                {groupTitle && (
+                    <div
+                        key="group-title"
+                        className="optional-group-title"
+                    >
+                        <span>{groupTitle}</span>
+                    </div>
+                )}
                 <ul key="list-of-options">
                     {options.map((optionOrNestedGroup, index) => {
                         const optionIndexes = parentOptionIndexes.concat([index]);
@@ -48,8 +64,8 @@ class InspectorOptionsColumn extends Component {
                         );
                     })}
                 </ul>
-            )
-        ];
+            </>
+        );
     }
 
     render() {
@@ -72,24 +88,24 @@ class InspectorOptionsColumn extends Component {
             </div>
         );
     }
-}
 
-const columnDataPropTypeShape = getColumnDataPropTypeShape(false);
-InspectorOptionsColumn.propTypes = {
-    options: columnDataPropTypeShape.options.isRequired,
-    // eslint-disable-next-line react/require-default-props
-    contextGroup: columnDataPropTypeShape.contextGroup,
-    selectedItem: PropTypes.arrayOf(PropTypes.number),
-    filteredItems: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
-    trailingSelection: columnDataPropTypeShape.trailingSelection,
-    onSelect: columnDataPropTypeShape.onSelect.isRequired,
-    renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
-};
-InspectorOptionsColumn.defaultProps = {
-    selectedItem: null,
-    trailingSelection: false,
-    filteredItems: null,
-    renderItemContent: null
-};
+    static propTypes = {
+        options: columnDataPropTypeShape.options.isRequired,
+        // eslint-disable-next-line react/require-default-props
+        contextGroup: columnDataPropTypeShape.contextGroup,
+        selectedItem: PropTypes.arrayOf(PropTypes.number),
+        filteredItems: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
+        trailingSelection: columnDataPropTypeShape.trailingSelection,
+        onSelect: columnDataPropTypeShape.onSelect,
+        renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
+    };
+
+    static defaultProps = {
+        selectedItem: null,
+        trailingSelection: false,
+        filteredItems: null,
+        renderItemContent: null
+    };
+}
 
 export default InspectorOptionsColumn;

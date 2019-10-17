@@ -1,13 +1,12 @@
 import { listValues } from "./utils";
+import { RenderOptions } from "../types/Inspector";
+import JsonSchema from "./JsonSchema";
 
 /**
  * Representation of an array of schemas (e.g. `allOf`, `anyOf`, `oneOf`), offering a number of convenience functions for extracting information.
  */
 export default class JsonSchemaGroup {
-    /**
-     * @type {Array.<JsonSchema|JsonSchemaGroup>}
-     */
-    entries = [];
+    entries: Array<JsonSchema | JsonSchemaGroup> = [];
 
     /**
      * Determine whether an entry of type `JsonSchema` should be treated as a separate selectable option (i.e. like a `JsonSchemaGroup`).
@@ -60,7 +59,7 @@ export default class JsonSchemaGroup {
      * @param {number} optionTarget[].index - mutable index, a value of `0` marks the optional schema part to be considered
      * @returns {boolean} whether `checkEntry` returned 'true' for any item in this group's `entries`
      */
-    someEntry(checkEntry, optionTarget) {
+    someEntry(checkEntry: (schema: JsonSchema, includeNestedGroups: boolean) => boolean, optionTarget?: Array<{index: number}>): boolean {
         const considerSchemasAsOptions = this.considerSchemasAsSeparateOptions();
         const treatEntriesAsSingleSchema = this.shouldTreatEntriesAsOne();
         return this.entries.some((entry) => {
@@ -122,7 +121,7 @@ export default class JsonSchemaGroup {
      * @returns {{groupTitle: ?string, options: ?Array.<object>, nameForIndex: ?Function}} representation of the given group's top level options
      */
     // eslint-disable-next-line class-methods-use-this
-    createOptionsRepresentation(containedOptions) {
+    createOptionsRepresentation(containedOptions: Array<RenderOptions>): RenderOptions {
         let result;
         if (containedOptions.length === 0) {
             result = {};

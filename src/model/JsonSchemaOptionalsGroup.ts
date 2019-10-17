@@ -1,4 +1,5 @@
 import JsonSchemaGroup from "./JsonSchemaGroup";
+import { SchemaPartParserConfig, RenderOptions } from "../types/Inspector";
 
 /**
  * Representation of an array of schemas that are not mandatory (e.g. `anyOf`, `oneOf`).
@@ -9,7 +10,7 @@ export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
      *
      * @type {{groupTitle: ?string, optionNameForIndex: ?Function}}
      */
-    settings;
+    settings: SchemaPartParserConfig;
 
     /**
      * Constructor for the representation of a schema's grouping property, e.g. `anyOf` or `oneOf`.
@@ -18,13 +19,8 @@ export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
      * @param {?string} settings.groupTitle - group title to show instead of the default provided by `getDefaultGroupTitle()`
      * @param {?Function} settings.optionNameForIndex - function for deriving an option's name/label from an 'optionIndexes' array
      */
-    constructor(settings = {}) {
+    constructor(settings: SchemaPartParserConfig) {
         super();
-        if (process.env.NODE_ENV === "development") {
-            if (typeof this.constructor.getDefaultGroupTitle !== "function") {
-                throw new Error("JsonSchemaOptionalsGroup is abstract and expects static getDefaultGroupTitle() to be implemented by sub-class");
-            }
-        }
         this.settings = settings;
     }
 
@@ -40,15 +36,15 @@ export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
 
     /**
      * Extension of method from super class for creating a representation of this group's given options.
-     * Additionally adding the `settings.groupTitle` (or fall-back value from `getDefaultGroupTitle()`) if no other `groupTitle` is present yet.
+     * Additionally adding the `settings.groupTitle` if no other `groupTitle` is present yet.
      *
-     * @param {Array.<{groupTitle: ?string, options: ?Array.<object>}>} containedOptions - nested option representations
-     * @returns {{groupTitle: ?string, options: ?Array.<object>}} representation of this group's contained optional hierarchy
+     * @param {Array.<RenderOptions} containedOptions - nested option representations
+     * @returns {RenderOptions} representation of this group's contained optional hierarchy
      */
-    createOptionsRepresentation(containedOptions) {
+    createOptionsRepresentation(containedOptions: Array<RenderOptions>): RenderOptions {
         const result = super.createOptionsRepresentation(containedOptions);
         if (result.options && !result.groupTitle) {
-            result.groupTitle = this.settings.groupTitle === undefined ? this.constructor.getDefaultGroupTitle() : this.settings.groupTitle;
+            result.groupTitle = this.settings.groupTitle;
         }
         if (result.options) {
             result.optionNameForIndex = this.settings.optionNameForIndex;

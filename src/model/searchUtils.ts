@@ -18,7 +18,7 @@ import { isNonEmptyObject } from "./utils";
  * @param {*} propertyNameCheck.return - expected output is a truthy/falsy value, whether the property name matches some search criteria
  * @returns {Function} created filter function for a `JsonSchema`; returning whether the given schema or any of its sub-schemas matches the filter
  */
-export function createRecursiveFilterFunction(flatSearchFilter, propertyNameCheck) {
+export function createRecursiveFilterFunction(flatSearchFilter, propertyNameCheck?) {
     const recursiveFilterFunction = (target, includeNestedOptionals = true) => {
         if (!target) {
             return false;

@@ -4,6 +4,9 @@ import JsonSchemaAllOfGroup from "./JsonSchemaAllOfGroup";
 import JsonSchemaAnyOfGroup from "./JsonSchemaAnyOfGroup";
 import JsonSchemaOneOfGroup from "./JsonSchemaOneOfGroup";
 import { isNonEmptyObject, listValues, mapObjectValues } from "./utils";
+import RefScope from "./RefScope";
+import { RawJsonSchema } from "../types/RawJsonSchema";
+import { RenderOptions } from "../types/Inspector";
 
 /**
  * Determines optional paths in this schema group.
@@ -11,7 +14,7 @@ import { isNonEmptyObject, listValues, mapObjectValues } from "./utils";
  * @param {JsonSchemaGroup} schemaGroup - schema group for which optional paths should be determined
  * @returns {{groupTitle: ?string, options: ?Array.<object>, nameForIndex: ?Function}} representation of the given group's top level options
  */
-export function getOptionsInSchemaGroup(schemaGroup) {
+export function getOptionsInSchemaGroup(schemaGroup: JsonSchemaGroup): any {
     let containedOptions;
     if (schemaGroup.shouldTreatEntriesAsOne()) {
         containedOptions = schemaGroup.entries
@@ -37,10 +40,10 @@ export function getOptionsInSchemaGroup(schemaGroup) {
  *
  * @param {object} param0 - representation of the hierarchical structure of options in a schema group
  * @param {Array.<object>} param0.options - nested options (that may have further nested options of their own)
- * @returns {Array.<Array<number>>} all possible `optionIndexes` for the given input
+ * @returns {Array.<Array.<number>>} all possible `optionIndexes` for the given input
  */
-export function getIndexPermutationsForOptions({ options }) {
-    const recursivelyCollectOptionIndexes = (entry, index) => (
+export function getIndexPermutationsForOptions({ options }: RenderOptions): Array<Array<number>> {
+    const recursivelyCollectOptionIndexes = (entry: any, index: number) => (
         isNonEmptyObject(entry)
             ? getIndexPermutationsForOptions(entry).map((nestedOptions) => [index, ...nestedOptions])
             : [index]
@@ -62,9 +65,9 @@ export function getIndexPermutationsForOptions({ options }) {
  * @param {?Array.<number>|Array.<{index: number}>} optionIndexes - non-negative indexes of selected option(s); or already result array
  * @returns {?Array.<{index: number}>} array of mutable objects containing the given index values
  */
-export function createOptionTargetArrayFromIndexes(optionIndexes = []) {
+export function createOptionTargetArrayFromIndexes(optionIndexes = []): Array<{index: number}> {
     if (Array.isArray(optionIndexes) && optionIndexes.length && typeof optionIndexes[0] === "number") {
-        return optionIndexes.map((index) => ({ index }));
+        return optionIndexes.map((index: number) => ({ index }));
     }
     return optionIndexes;
 }
@@ -78,13 +81,18 @@ export function createOptionTargetArrayFromIndexes(optionIndexes = []) {
  * @param {Array.<JsonSchema>} rawSchemaArray - grouped raw schema definitions to represent
  * @returns {JsonSchemaGroup} created group
  */
-function createGroupFromRawSchemaArray(GroupClass, { parserConfig, scope }, rawSchemaArray) {
+function createGroupFromRawSchemaArray(
+    GroupClass,
+    { parserConfig, scope }: JsonSchema,
+    rawSchemaArray: Array<boolean | RawJsonSchema>
+): JsonSchemaGroup {
     // create group representation
     const group = new GroupClass(parserConfig);
     rawSchemaArray
+        .filter((rawSchemaPart) => typeof rawSchemaPart !== "boolean")
         // convert each part in the group to a JsonSchema instance and (recursively) get its group information
         // eslint-disable-next-line no-use-before-define
-        .map((rawSchemaPart) => createGroupFromSchema(new JsonSchema(rawSchemaPart, parserConfig, scope)))
+        .map((rawSchemaPart) => createGroupFromSchema(new JsonSchema(rawSchemaPart as RawJsonSchema, parserConfig, scope)))
         // add group info from each schema part to the created group representation
         .forEach(group.with.bind(group));
     return group;
@@ -103,7 +111,7 @@ function createGroupFromRawSchemaArray(GroupClass, { parserConfig, scope }, rawS
  * @param {JsonSchema} schema - single JsonSchema for which to create the equivalent JsonSchemaGroup
  * @returns {JsonSchemaAllOfGroup} group of sub-schemas that may define properties about their children
  */
-export function createGroupFromSchema(schema) {
+export function createGroupFromSchema(schema: JsonSchema): JsonSchemaGroup {
     const { schema: rawSchema, scope } = schema;
     if (!isNonEmptyObject(rawSchema)) {
         return new JsonSchemaAllOfGroup();
@@ -138,7 +146,7 @@ export function createGroupFromSchema(schema) {
  * @param {?RefScope} mappingFunction.param2 - scope from given 'schema'
  * @returns {*} return looked-up field value (possibly changed by 'mappingFunction'
  */
-function getFieldValueFromSchema(schema, fieldName, mappingFunction) {
+function getFieldValueFromSchema(schema: JsonSchema, fieldName: string, mappingFunction?: (any, ParserConfig, RefScope) => any): any {
     const { schema: rawSchema } = schema;
     const rawValue = rawSchema[fieldName];
     if (mappingFunction) {
@@ -303,7 +311,7 @@ export function getPropertiesFromSchemaGroup(schemaGroup, optionIndexes) {
     // convert any remaining non-schema values (e.g. booleans) into schema wrappers
     result = mapObjectValues(result, (value) => (
         // no need to forward any parserConfig or scope to this (dummy/empty) schema
-        value instanceof JsonSchema ? value : new JsonSchema(value)
+        value instanceof JsonSchema ? value : new JsonSchema(value, undefined, undefined)
     ));
     return result;
 }

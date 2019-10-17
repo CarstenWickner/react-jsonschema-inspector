@@ -4,7 +4,7 @@
  * @param {*} target - value to confirm
  * @returns {boolean} whether the target is neither undefined nor null
  */
-export function isDefined(target) {
+export function isDefined(target: any): boolean {
     return target !== undefined && target !== null;
 }
 
@@ -14,7 +14,7 @@ export function isDefined(target) {
  * @param {*} target - value to confirm as non-empty object
  * @returns {boolean} whether the target is a non-empty object
  */
-export function isNonEmptyObject(target) {
+export function isNonEmptyObject(target: any): boolean {
     return isDefined(target)
         && typeof target === "object"
         && !Array.isArray(target)
@@ -28,8 +28,8 @@ export function isNonEmptyObject(target) {
  * @param {Function} mappingFunction - conversion to perform
  * @returns {object} cloned object with same keys as the original, but with mapped values
  */
-export function mapObjectValues(original, mappingFunction) {
-    const mappedObject = {};
+export function mapObjectValues<S, T>(original: { [key: string]: S }, mappingFunction: (S) => T): { [key: string]: T } {
+    const mappedObject: { [key: string]: T } = {};
     Object.keys(original).forEach((key) => {
         mappedObject[key] = mappingFunction(original[key]);
     });
@@ -44,9 +44,9 @@ export function mapObjectValues(original, mappingFunction) {
  * @param {*} mergeDefinedValues.param1 - single value to merge with first parameter (guaranteed to be defined and not null)
  * @returns {Function} also expecting two parameters: (1) the temporary result of previous reduce steps and (2) the single value to add/merge with
  */
-function nullAwareReduce(mergeDefinedValues) {
-    return (combined, nextValue) => {
-        let mergeResult;
+function nullAwareReduce<S, T>(mergeDefinedValues: (combined: S, nextValue: T) => S | T): (S, T) => S | T {
+    return (combined: S, nextValue: T) => {
+        let mergeResult: S | T;
         if (!isDefined(combined)) {
             mergeResult = nextValue;
         } else if (!isDefined(nextValue)) {
@@ -66,7 +66,7 @@ function nullAwareReduce(mergeDefinedValues) {
  * @param {?number} nextValue - next value to compare with
  * @returns {?number} lowest encountered value
  */
-export const minimumValue = nullAwareReduce((a, b) => (a < b ? a : b));
+export const minimumValue: (combined?: number, nextValue?: number) => number = nullAwareReduce((a, b) => (a < b ? a : b));
 
 /**
  * Generic function to be used in Array.reduce() – returning the highest encountered value.
@@ -76,7 +76,7 @@ export const minimumValue = nullAwareReduce((a, b) => (a < b ? a : b));
  * @param {?number} nextValue - next value to compare with
  * @returns {?number} highest encountered value
  */
-export const maximumValue = nullAwareReduce((a, b) => (a > b ? a : b));
+export const maximumValue: (combined?: number, nextValue?: number) => number = nullAwareReduce((a, b) => (a > b ? a : b));
 
 /**
  * Generic function to be used in Array.reduce() – returning all encountered values.
@@ -87,7 +87,7 @@ export const maximumValue = nullAwareReduce((a, b) => (a > b ? a : b));
  * @returns {?*|Array.<*>} either single (defined) value or array of multiple (defined) values
  */
 export const listValues = nullAwareReduce(
-    (combined, nextValue) => {
+    (combined: any, nextValue: any) => {
         let mergeResult;
         if (combined === nextValue) {
             mergeResult = combined;
@@ -120,7 +120,7 @@ export const listValues = nullAwareReduce(
  * @returns {?*|Array.<*>} either single (defined) value, array of multiple (defined) values, or empty array if encountered values do not intersect
  */
 export const commonValues = nullAwareReduce(
-    (combined, nextValue) => {
+    (combined: any, nextValue: any) => {
         let mergeResult;
         if (combined === nextValue) {
             mergeResult = combined;

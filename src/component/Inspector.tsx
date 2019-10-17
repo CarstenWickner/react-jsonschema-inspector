@@ -11,12 +11,39 @@ import InspectorDetails from "./InspectorDetails";
 import InspectorBreadcrumbs from "./InspectorBreadcrumbs";
 import InspectorSearchField from "./InspectorSearchField";
 import JsonSchemaPropType from "./JsonSchemaPropType";
-
 import { createRenderDataBuilder, createFilterFunctionForColumn } from "./renderDataUtils";
+
 import createBreadcrumbBuilder from "../model/breadcrumbsUtils";
 import { filteringByFields, filteringByPropertyName } from "../model/searchUtils";
 
-class Inspector extends Component {
+import {
+    SearchOptions, RenderItemsColumn, RenderOptionsColumn, ParserConfig, BuildArrayPropertiesFunction, BreadcrumbsOptions, OnSelectCallback,
+    RenderItemContentFunction, RenderSelectionDetailsFunction, RenderEmptyDetailsFunction
+} from "../types/Inspector";
+import { RawJsonSchema } from "../types/RawJsonSchema";
+
+interface InspectorProps {
+    schemas: { [key: string]: RawJsonSchema },
+    referenceSchemas?: Array<RawJsonSchema>,
+    defaultSelectedItems?: Array<string | Array<number>>,
+    parserConfig?: ParserConfig,
+    buildArrayProperties?: BuildArrayPropertiesFunction,
+    breadcrumbs?: BreadcrumbsOptions,
+    searchOptions?: SearchOptions,
+    onSelect?: OnSelectCallback,
+    renderItemContent?: RenderItemContentFunction,
+    renderSelectionDetails?: RenderSelectionDetailsFunction,
+    renderEmptyDetails?: RenderEmptyDetailsFunction
+};
+
+interface InspectorState {
+    selectedItems: Array<string | Array<number>>,
+    appendEmptyColumn: boolean,
+    enteredSearchFilter: string,
+    appliedSearchFilter: string
+};
+
+class Inspector extends Component<InspectorProps, InspectorState> {
     /**
      * Avoid constant/immediate re-rendering while the search filter is being entered by using debounce.
      * This is wrapped into memoize() to allow setting the wait times via props.
@@ -55,7 +82,7 @@ class Inspector extends Component {
      *
      * @param {string} enteredSearchFilter - the newly entered search filter in its respective input field
      */
-    onSearchFilterChange = (enteredSearchFilter) => {
+    onSearchFilterChange = (enteredSearchFilter: string) => {
         this.setState({ enteredSearchFilter });
         const { searchOptions } = this.props;
         const { debounceWait = 200, debounceMaxWait = 500 } = searchOptions;
@@ -70,7 +97,7 @@ class Inspector extends Component {
      * {*} return.param0.event - the originally triggered event (e.g. onClick, onDoubleClick, onKeyDown, etc.)
      * {string} return.param0.selectedItem - the item to select (or `null` to discard any selection in this column – and all subsequent ones)
      */
-    onSelectInColumn = (columnIndex) => (event, selectedItem) => {
+    onSelectInColumn = (columnIndex: number) => (event: any, selectedItem: string | Array<number>) => {
         // the lowest child component accepting the click/selection event should consume it
         event.stopPropagation();
         const { selectedItems, appendEmptyColumn } = this.state;
@@ -151,7 +178,7 @@ class Inspector extends Component {
      * @returns {Function} return - function to apply for setting/clearing the `filteredItems` in an entry of the 'columnData' array
      * {object} return.param0 - entry of the 'columnData' array to set/clear the `filteredItems` in
      */
-    setFilteredItemsForColumn = memoize((searchOptions, searchFilter) => {
+    setFilteredItemsForColumn = memoize((searchOptions: SearchOptions, searchFilter: string) => {
         if (searchOptions && searchFilter) {
             // search feature is enabled
             const { filterBy, fields, byPropertyName } = searchOptions;
@@ -161,7 +188,7 @@ class Inspector extends Component {
             if (flatSchemaFilterFunction || propertyNameFilterFunction) {
                 // search feature is being used, so we set the filteredItems accordingly
                 const getFilteredItemsForColumn = createFilterFunctionForColumn(flatSchemaFilterFunction, propertyNameFilterFunction);
-                return (column) => {
+                return (column: RenderItemsColumn | RenderOptionsColumn) => {
                     // eslint-disable-next-line no-param-reassign
                     column.filteredItems = getFilteredItemsForColumn(column);
                 };
@@ -169,7 +196,7 @@ class Inspector extends Component {
         }
         // if the search feature is disabled or currently unused, we should ensure that there are no left-over filteredItems
         // eslint-disable-next-line no-param-reassign
-        return (column) => delete column.filteredItems;
+        return (column: RenderItemsColumn | RenderOptionsColumn) => delete column.filteredItems;
     }, isDeepEqual);
 
     render() {
@@ -221,140 +248,140 @@ class Inspector extends Component {
             </div>
         );
     }
-}
 
-Inspector.propTypes = {
-    /**
-     * Object containing names of root level items (as keys) each associated with their respective JSON Schema (as values).
-     */
-    schemas: PropTypes.objectOf(JsonSchemaPropType).isRequired,
-    /**
-     * Array of additional JSON Schemas that may be referenced by entries in `schemas` but are not shown (on the root level) themselves.
-     */
-    referenceSchemas: PropTypes.arrayOf(JsonSchemaPropType),
-    /**
-     * Array of (default) selected items – each item representing the selection in one displayed column.
-     */
-    defaultSelectedItems: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.number)])),
-    /**
-     * Options for the traversing/parsing of JSON schemas. Defining how optional parts of a schema should be represented.
-     */
-    parserConfig: PropTypes.shape({
+    static propTypes = {
         /**
-         * Setting indicating how to include schema parts wrapped in "anyOf".
+         * Object containing names of root level items (as keys) each associated with their respective JSON Schema (as values).
          */
-        anyOf: PropTypes.shape({
-            groupTitle: PropTypes.string,
-            optionNameForIndex: PropTypes.func
+        schemas: PropTypes.objectOf(JsonSchemaPropType).isRequired,
+        /**
+         * Array of additional JSON Schemas that may be referenced by entries in `schemas` but are not shown (on the root level) themselves.
+         */
+        referenceSchemas: PropTypes.arrayOf(JsonSchemaPropType),
+        /**
+         * Array of (default) selected items – each item representing the selection in one displayed column.
+         */
+        defaultSelectedItems: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.number)])),
+        /**
+         * Options for the traversing/parsing of JSON schemas. Defining how optional parts of a schema should be represented.
+         */
+        parserConfig: PropTypes.shape({
+            /**
+             * Setting indicating how to include schema parts wrapped in "anyOf".
+             */
+            anyOf: PropTypes.shape({
+                groupTitle: PropTypes.string,
+                optionNameForIndex: PropTypes.func
+            }),
+            /**
+             * Setting indicating how to include schema parts wrapped in "oneOf".
+             */
+            oneOf: PropTypes.shape({
+                groupTitle: PropTypes.string,
+                optionNameForIndex: PropTypes.func
+            })
         }),
         /**
-         * Setting indicating how to include schema parts wrapped in "oneOf".
+         * Function accepting a `JsonSchema` instance representing an array's declared type of items and returning an object listing the available
+         * properties to offer. The default, providing access to the array's items, is: `arrayItemSchema => ({ "[0]": arrayItemSchema })`
+         * Provided inputs are (1) a `JsonSchema` representing the declared type of array items, (2) a `JsonSchemaGroup` representing the surrounding
+         * array's type, (3) an `Array.<number>` indicating the 'optionIndexes' selected in the array (i.e. #2), which may be undefined.
+         * The expected values of the expected object being returned may be either `JsonSchema`, plain/raw json schema definitions, or a mix of them.
+         * E.g. `arrayItemSchema => ({ "[0]": arrayItemSchema, "length": { type: "number" } })` is valid here as well.
          */
-        oneOf: PropTypes.shape({
-            groupTitle: PropTypes.string,
-            optionNameForIndex: PropTypes.func
-        })
-    }),
-    /**
-     * Function accepting a `JsonSchema` instance representing an array's declared type of items and returning an object listing the available
-     * properties to offer. The default, providing access to the array's items, is: `arrayItemSchema => ({ "[0]": arrayItemSchema })`
-     * Provided inputs are (1) a `JsonSchema` representing the declared type of array items, (2) a `JsonSchemaGroup` representing the surrounding
-     * array's type, (3) an `Array.<number>` indicating the 'optionIndexes' selected in the array (i.e. #2), which may be undefined.
-     * The expected values of the expected object being returned may be either `JsonSchema`, plain/raw json schema definitions, or a mix of them.
-     * E.g. `arrayItemSchema => ({ "[0]": arrayItemSchema, "length": { type: "number" } })` is valid here as well.
-     */
-    buildArrayProperties: PropTypes.func,
-    /**
-     * Options for the breadcrumbs feature shown in the footer – set to `null` to turn it off.
-     * - "prefix": Text to show in front of root level selection, e.g. "//" or "./"
-     * - "separator": Text to add between the selected item names from adjacent columns, e.g. "." or "/"
-     * - "skipSeparator": Function to identify breadcrumb names that should not be prepended with a "separator"
-     * - "mutateName": Function to derive the selected item's representation in the breadcrumbs from their name
-     * - "preventNavigation": Flag indicating whether double-clicking an item should preserve subsequent selections, otherwise they are discarded
-     * - "renderItem": Custom render function for a single breadcrumb item, expecting four parameters:
-     * 1. The textual representation of the respective column's selected item (after mutateName() was applied)
-     * 2. Flag indicating whether the respective column's selection contains some more nested items
-     * 3. The standard columnData entry representing the associated column
-     * 4. The index of the respective column
-     * - "renderTrailingContent": Custom render function for adding extra elements (e.g. a "Copy to Clipboard" button) after the breadcrumbs,
-     * expecting two parameters:
-     * 1. Array of breadcrumbs texts
-     * 2. The whole standard columnData object
-     */
-    breadcrumbs: PropTypes.shape({
-        prefix: PropTypes.string,
-        separator: PropTypes.string,
-        skipSeparator: PropTypes.func,
-        mutateName: PropTypes.func,
-        preventNavigation: PropTypes.bool,
-        renderItem: PropTypes.func,
-        renderTrailingContent: PropTypes.func
-    }),
-    /**
-     * Options for the search input shown in the header and its impact on the displayed columns – set to `null` to turn it off.
-     * - "byPropertyName": Flag indicating whether property names should be considered when searching/filtering
-     * - "fields": Array of strings: each referring to a textual field in a JSON Schema (e.g. `["title", "description"]`) in which to search/filter
-     * - "filterBy": Custom search/filter logic, if present: overriding behaviour based on "fields"
-     * - "inputPlaceholder": Hint text to display in the search input field (defaults to "Search")
-     * - "debounceWait": Number indicating the delay in milliseconds since the last change to the search term before applying it. Defaults to `200`.
-     * - "debounceMaxWait": Number indicating the maximum delay in milliseconds before a newly entered search is being applied. Defaults to `500`.
-     */
-    searchOptions: PropTypes.shape({
-        byPropertyName: PropTypes.bool,
-        fields: PropTypes.arrayOf(PropTypes.string),
-        filterBy: PropTypes.func,
-        inputPlaceholder: PropTypes.string,
-        debounceWait: PropTypes.number,
-        debounceMaxWait: PropTypes.number
-    }),
-    /**
-     * Callback to invoke after the selection changed.
-     * Expects two inputs:
-     * 1. the string-array of selected items
-     * 2. object containing a "columnData" key, holding the full render information for all columns (except for currently applied search/filter)
-     */
-    onSelect: PropTypes.func,
-    /**
-     * Custom render function for the content of a single item in a column.
-     * Expects a single object as input with the following keys:
-     * - "name": providing the name of the respective item
-     * - "hasNestedItems": flag indicating whether selecting this item may display another column with further options to the right
-     * - "selected": flag indicating whether the item is currently selected
-     * - "schemaGroup": the full `JsonSchemaGroup` associated with the item
-     */
-    renderItemContent: PropTypes.func,
-    /**
-     * Custom render function for the details block on the right (only used if there is an actual selection).
-     * Expects a single object as input with the following keys:
-     * - "itemSchemaGroup": the full `JsonSchemaGroup` associated with the currently selected trailing item (i.e. right-most selection)
-     * - "columnData": the full render information for all columns
-     * - "selectionColumnIndex": indicating the index of the right-most column containing a selected item (for more convenient use of "columnData")
-     */
-    renderSelectionDetails: PropTypes.func,
-    /**
-     * Custom render function for the details block on the right (only used if there is no selection).
-     * Expects a single object as input with the following key:
-     * - "rootColumnSchemas": the full render information for the root column (since there is no selection, there are no other columns)
-     */
-    renderEmptyDetails: PropTypes.func
-};
+        buildArrayProperties: PropTypes.func,
+        /**
+         * Options for the breadcrumbs feature shown in the footer – set to `null` to turn it off.
+         * - "prefix": Text to show in front of root level selection, e.g. "//" or "./"
+         * - "separator": Text to add between the selected item names from adjacent columns, e.g. "." or "/"
+         * - "skipSeparator": Function to identify breadcrumb names that should not be prepended with a "separator"
+         * - "mutateName": Function to derive the selected item's representation in the breadcrumbs from their name
+         * - "preventNavigation": Flag indicating whether double-clicking an item should preserve subsequent selections, otherwise they are discarded
+         * - "renderItem": Custom render function for a single breadcrumb item, expecting four parameters:
+         * 1. The textual representation of the respective column's selected item (after mutateName() was applied)
+         * 2. Flag indicating whether the respective column's selection contains some more nested items
+         * 3. The standard columnData entry representing the associated column
+         * 4. The index of the respective column
+         * - "renderTrailingContent": Custom render function for adding extra elements (e.g. a "Copy to Clipboard" button) after the breadcrumbs,
+         * expecting two parameters:
+         * 1. Array of breadcrumbs texts
+         * 2. The whole standard columnData object
+         */
+        breadcrumbs: PropTypes.shape({
+            prefix: PropTypes.string,
+            separator: PropTypes.string,
+            skipSeparator: PropTypes.func,
+            mutateName: PropTypes.func,
+            preventNavigation: PropTypes.bool,
+            renderItem: PropTypes.func,
+            renderTrailingContent: PropTypes.func
+        }),
+        /**
+         * Options for the search input shown in the header and its impact on the displayed columns – set to `null` to turn it off.
+         * - "byPropertyName": Flag indicating whether property names should be considered when searching/filtering
+         * - "fields": Array of strings: each referring to a textual field in a JSON Schema (e.g. `["title", "description"]`) in which to search/filter
+         * - "filterBy": Custom search/filter logic, if present: overriding behaviour based on "fields"
+         * - "inputPlaceholder": Hint text to display in the search input field (defaults to "Search")
+         * - "debounceWait": Number indicating the delay in milliseconds since the last change to the search term before applying it. Defaults to `200`.
+         * - "debounceMaxWait": Number indicating the maximum delay in milliseconds before a newly entered search is being applied. Defaults to `500`.
+         */
+        searchOptions: PropTypes.shape({
+            byPropertyName: PropTypes.bool,
+            fields: PropTypes.arrayOf(PropTypes.string),
+            filterBy: PropTypes.func,
+            inputPlaceholder: PropTypes.string,
+            debounceWait: PropTypes.number,
+            debounceMaxWait: PropTypes.number
+        }),
+        /**
+         * Callback to invoke after the selection changed.
+         * Expects two inputs:
+         * 1. the string-array of selected items
+         * 2. object containing a "columnData" key, holding the full render information for all columns (except for currently applied search/filter)
+         */
+        onSelect: PropTypes.func,
+        /**
+         * Custom render function for the content of a single item in a column.
+         * Expects a single object as input with the following keys:
+         * - "name": providing the name of the respective item
+         * - "hasNestedItems": flag indicating whether selecting this item may display another column with further options to the right
+         * - "selected": flag indicating whether the item is currently selected
+         * - "schemaGroup": the full `JsonSchemaGroup` associated with the item
+         */
+        renderItemContent: PropTypes.func,
+        /**
+         * Custom render function for the details block on the right (only used if there is an actual selection).
+         * Expects a single object as input with the following keys:
+         * - "itemSchemaGroup": the full `JsonSchemaGroup` associated with the currently selected trailing item (i.e. right-most selection)
+         * - "columnData": the full render information for all columns
+         * - "selectionColumnIndex": indicating the index of the right-most column containing a selected item (for more convenient use of "columnData")
+         */
+        renderSelectionDetails: PropTypes.func,
+        /**
+         * Custom render function for the details block on the right (only used if there is no selection).
+         * Expects a single object as input with the following key:
+         * - "rootColumnSchemas": the full render information for the root column (since there is no selection, there are no other columns)
+         */
+        renderEmptyDetails: PropTypes.func
+    };
 
-Inspector.defaultProps = {
-    referenceSchemas: [],
-    defaultSelectedItems: [],
-    parserConfig: {},
-    buildArrayProperties: undefined,
-    breadcrumbs: {
-        skipSeparator: (fieldName) => (fieldName === "[0]")
-    },
-    searchOptions: {
-        byPropertyName: true,
-        fields: ["title", "description"]
-    },
-    onSelect: undefined,
-    renderItemContent: undefined,
-    renderSelectionDetails: undefined,
-    renderEmptyDetails: undefined
-};
+    static defaultProps = {
+        referenceSchemas: [],
+        defaultSelectedItems: [],
+        parserConfig: {},
+        buildArrayProperties: undefined,
+        breadcrumbs: {
+            skipSeparator: (fieldName) => (fieldName === "[0]")
+        },
+        searchOptions: {
+            byPropertyName: true,
+            fields: ["title", "description"]
+        },
+        onSelect: undefined,
+        renderItemContent: undefined,
+        renderSelectionDetails: undefined,
+        renderEmptyDetails: undefined
+    };
+}
 
 export default Inspector;

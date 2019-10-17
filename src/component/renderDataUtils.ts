@@ -8,6 +8,10 @@ import {
 } from "../model/schemaUtils";
 import { isDefined, isNonEmptyObject, mapObjectValues } from "../model/utils";
 import { createFilterFunctionForSchema } from "../model/searchUtils";
+import { BuildArrayPropertiesFunction, ParserConfig, RenderColumn, RenderColumnOnSelectFunction, RenderOptionsColumn, RenderItemsColumn } from "../types/Inspector";
+import { RawJsonSchema } from "../types/RawJsonSchema";
+import RefScope from "../model/RefScope";
+import JsonSchemaOptionalsGroup from "../model/JsonSchemaOptionalsGroup";
 
 /**
  * Check whether a given array of indexes corresponds to an existing path in the `options` hierarchy.
@@ -36,9 +40,13 @@ function isOptionIndexValidForOptions(optionIndexes, options) {
  * @param {?object} parserConfig - settings determining how a json schema is being traversed/parsed
  * @returns {object.<string, JsonSchemaGroup>} named schema groups, derived from the provided raw schemas
  */
-function createRootColumnData(schemas, referenceSchemas, parserConfig = {}) {
+function createRootColumnData(
+    schemas: { [key: string]: RawJsonSchema },
+    referenceSchemas?: Array<RawJsonSchema>,
+    parserConfig: ParserConfig = {}
+): RenderItemsColumn {
     // first prepare those schemas that may be referenced by the displayed ones or each other
-    const referenceScopes = [];
+    const referenceScopes: Array<RefScope> = [];
     referenceSchemas.forEach((rawRefSchema) => {
         const newReferenceScope = new JsonSchema(rawRefSchema, parserConfig).scope;
         referenceScopes.forEach((otherReferenceScope) => {
@@ -62,33 +70,26 @@ function createRootColumnData(schemas, referenceSchemas, parserConfig = {}) {
  * @param {JsonSchema} arrayItemSchema - declared type of items in an array (as per the respective json schema)
  * @returns {{"[0]": JsonSchema}} simple object allowing to access the array's item definition via a single entry
  */
-function buildDefaultArrayProperties(arrayItemSchema) {
+function buildDefaultArrayProperties(arrayItemSchema: JsonSchema) {
     return { "[0]": arrayItemSchema };
 }
 
-/**
- * @name ArrayPropertiesBuilder
- * @function
- * @param {JsonSchema} param0 - declared type of the array's items
- * @param {JsonSchemaGroup} param1 - schema group representing the array
- * @param {?Array.<Array.<number>>} param2 - selected optionIndexes in `param1` (if the array's schema group contains options)
- * @returns {object.<string, JsonSchema|object>} object containing the selectable items for an array, e.g. for accessing an item
- */
 /**
  * Create an entry for the standard `columnData` array.
  *
  * @param {JsonSchemaGroup} schemaGroup - selected schema group (in previous column)
  * @param {?Array.<number>} optionIndexes - selected option path in `schemaGroup`
- * @param {?ArrayPropertiesBuilder} buildArrayProperties - function for building dynamic sub schema based on declared array item type
+ * @param {?BuildArrayPropertiesFunction} buildArrayProperties - function for building dynamic sub schema based on declared array item type
  * @returns {object} `columnData` entry
  */
-function buildNextColumn(schemaGroup, optionIndexes, buildArrayProperties = buildDefaultArrayProperties) {
+function buildNextColumn(schemaGroup: JsonSchemaGroup, optionIndexes?: Array<number>,
+    buildArrayProperties: BuildArrayPropertiesFunction = buildDefaultArrayProperties): RenderColumn | {} {
     if (!optionIndexes) {
         const options = getOptionsInSchemaGroup(schemaGroup);
         if (options.options) {
             // next column should offer the selection of options within the schema group
             return {
-                contextGroup: schemaGroup,
+                contextGroup: schemaGroup as JsonSchemaOptionalsGroup,
                 options
             };
         }
@@ -137,54 +138,60 @@ function buildNextColumn(schemaGroup, optionIndexes, buildArrayProperties = buil
  * @param {Function} onSelectInColumn.return - onSelect call-back for the column at the indicated index
  * @returns {RenderDataBuilder} function for building the standard render data used throughout the component
  */
-export function createRenderDataBuilder(onSelectInColumn) {
-    return (schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties) => {
-        // the first column always lists all top-level schemas
-        let nextColumn = createRootColumnData(schemas, referenceSchemas, parserConfig);
-        let selectedSchemaGroup;
-        const columnData = selectedItems.map((selection, index) => {
-            const currentColumn = nextColumn;
-            const isOptionSelection = typeof selection !== "string";
-            let isValidSelection;
-            if (isOptionSelection && selectedSchemaGroup && currentColumn.options) {
-                isValidSelection = isOptionIndexValidForOptions(selection, currentColumn.options);
-            } else if (!isOptionSelection && currentColumn.items) {
-                selectedSchemaGroup = currentColumn.items[selection];
-                isValidSelection = isDefined(selectedSchemaGroup);
-            }
-            if (isValidSelection) {
-                nextColumn = buildNextColumn(selectedSchemaGroup, isOptionSelection ? selection : undefined, buildArrayProperties);
-                if (isOptionSelection) {
-                    selectedSchemaGroup = null;
-                }
-            } else {
-                nextColumn = {};
-            }
-            // name of the selected item (i.e. key in 'items') or int array of option indexes
-            currentColumn.selectedItem = isValidSelection ? selection : null;
-            currentColumn.onSelect = onSelectInColumn(index);
-            return currentColumn;
-        }).filter(({ items, options }) => items || options);
-        // set the flag for the last column containing a valid selection
-        const columnCount = columnData.length;
-        if (columnCount) {
-            // there is at least one column, check whether the last column has a valid selection
-            const selectedItemInLastColumn = columnData[columnCount - 1].selectedItem;
-            // if the last column has no valid selection, the second to last column must have one
-            if (selectedItemInLastColumn || columnCount > 1) {
-                // there is at least one column with a valid selection, mark the column with the trailing selection as such
-                columnData[selectedItemInLastColumn ? (columnCount - 1) : (columnCount - 2)].trailingSelection = true;
-            }
+export const createRenderDataBuilder = (
+    onSelectInColumn: (columnIndex: number) => RenderColumnOnSelectFunction
+) => (
+    schemas: { [key: string]: RawJsonSchema },
+    referenceSchemas: undefined | Array<RawJsonSchema>,
+    selectedItems: Array<string | Array<number>>,
+    parserConfig: ParserConfig,
+    buildArrayProperties: BuildArrayPropertiesFunction
+) => {
+    // the first column always lists all top-level schemas
+    let nextColumn: RenderColumn | {} = createRootColumnData(schemas, referenceSchemas, parserConfig);
+    let selectedSchemaGroup;
+    const columnData: Array<RenderColumn> = selectedItems.map((selection, index) => {
+        const currentColumn = nextColumn;
+        const isOptionSelection = typeof selection !== "string";
+        let isValidSelection;
+        if (isOptionSelection && selectedSchemaGroup && (currentColumn as RenderOptionsColumn).options) {
+            isValidSelection = isOptionIndexValidForOptions(selection, (currentColumn as RenderOptionsColumn).options);
+        } else if (!isOptionSelection && (currentColumn as RenderItemsColumn).items) {
+            selectedSchemaGroup = (currentColumn as RenderItemsColumn).items[selection as string];
+            isValidSelection = isDefined(selectedSchemaGroup);
         }
-        // append last column where there is no selection yet, unless the last selected item has no nested items or options of its own
-        if (isNonEmptyObject(nextColumn)) {
-            nextColumn.onSelect = onSelectInColumn(selectedItems.length);
-            columnData.push(nextColumn);
+        if (isValidSelection) {
+            nextColumn = buildNextColumn(selectedSchemaGroup, isOptionSelection ? (selection as Array<number>) : undefined, buildArrayProperties);
+            if (isOptionSelection) {
+                selectedSchemaGroup = null;
+            }
+        } else {
+            nextColumn = {};
         }
-        // wrap the result into a new object in order to make this more easily extensible in the future
-        return { columnData };
-    };
-}
+        // name of the selected item (i.e. key in 'items') or int array of option indexes
+        (currentColumn as RenderColumn).selectedItem = isValidSelection ? selection : null;
+        (currentColumn as RenderColumn).onSelect = onSelectInColumn(index);
+        return currentColumn as RenderColumn;
+    }).filter((column) => (column as RenderItemsColumn).items || (column as RenderOptionsColumn).options);
+    // set the flag for the last column containing a valid selection
+    const columnCount = columnData.length;
+    if (columnCount) {
+        // there is at least one column, check whether the last column has a valid selection
+        const selectedItemInLastColumn = columnData[columnCount - 1].selectedItem;
+        // if the last column has no valid selection, the second to last column must have one
+        if (selectedItemInLastColumn || columnCount > 1) {
+            // there is at least one column with a valid selection, mark the column with the trailing selection as such
+            columnData[selectedItemInLastColumn ? (columnCount - 1) : (columnCount - 2)].trailingSelection = true;
+        }
+    }
+    // append last column where there is no selection yet, unless the last selected item has no nested items or options of its own
+    if (isNonEmptyObject(nextColumn)) {
+        (nextColumn as RenderColumn).onSelect = onSelectInColumn(selectedItems.length);
+        columnData.push(nextColumn as RenderColumn);
+    }
+    // wrap the result into a new object in order to make this more easily extensible in the future
+    return { columnData };
+};
 
 /**
  * Check whether a given JsonSchema has any nested properties or is an array.
@@ -217,7 +224,8 @@ export function hasSchemaGroupNestedItems(schemaGroup, optionIndexes) {
 }
 
 const optionShape = {
-    groupTitle: PropTypes.string
+    groupTitle: PropTypes.string,
+    options: PropTypes.array.isRequired
 };
 optionShape.options = PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.shape({}), PropTypes.shape(optionShape)])).isRequired;
 
@@ -343,12 +351,14 @@ export function getColumnDataPropTypeShape(includeOnSelect = true) {
  * @param {*} propertyNameFilterFunction.return - output is a truthy/falsy value, whether the property name matches some search criteria
  * @returns {FilterFunctionForColumn} function that returns the list of `filteredItems` for a given entry in the standard `columnData` array
  */
-export function createFilterFunctionForColumn(flatSchemaFilterFunction, propertyNameFilterFunction = () => false) {
+export function createFilterFunctionForColumn(flatSchemaFilterFunction, propertyNameFilterFunction: (name: string) => boolean = () => false) {
     const containsMatchingItems = createFilterFunctionForSchema(flatSchemaFilterFunction, propertyNameFilterFunction);
-    return ({ items, options, contextGroup }) => {
+    return (column: RenderColumn) => {
+        const { items } = column as RenderItemsColumn;
         if (isNonEmptyObject(items)) {
             return Object.keys(items).filter((key) => propertyNameFilterFunction(key) || items[key].someEntry(containsMatchingItems));
         }
+        const { options, contextGroup } = column as RenderOptionsColumn;
         return getIndexPermutationsForOptions(options)
             .filter((optionIndexes) => contextGroup.someEntry(containsMatchingItems, createOptionTargetArrayFromIndexes(optionIndexes)));
     };
