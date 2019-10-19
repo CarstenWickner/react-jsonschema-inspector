@@ -1,6 +1,6 @@
 import React from "react";
 
-import JsonSchema from "../model/JsonSchema";
+import { JsonSchema } from "../model/JsonSchema";
 import JsonSchemaGroup from "../model/JsonSchemaGroup";
 import JsonSchemaOptionalsGroup from "../model/JsonSchemaOptionalsGroup";
 
@@ -28,16 +28,14 @@ export interface SchemaPartParserConfig {
     optionNameForIndex?: (indexes: Array<number>) => string | undefined
 };
 
-export interface BuildArrayPropertiesFunction {
-    (
-        // declared type of the array's items
-        schema: JsonSchema,
-        // schema group representing the array
-        schemaGroup: JsonSchemaGroup,
-        // selected optionIndexes in the array's JsonSchemaGroup (if it contains options)
-        optionIndexes?: Array<number>
-    ) => { [key: string]: JsonSchema | RawJsonSchema }
-};
+export type BuildArrayPropertiesFunction = (
+    // declared type of the array's items
+    schema: JsonSchema,
+    // schema group representing the array
+    schemaGroup: JsonSchemaGroup,
+    // selected optionIndexes in the array's JsonSchemaGroup (if it contains options)
+    optionIndexes?: Array<number>
+) => { [key: string]: JsonSchema | RawJsonSchema };
 
 export interface BreadcrumbsOptions {
     /*
@@ -70,46 +68,36 @@ export interface BreadcrumbsOptions {
     renderTrailingContent?: (props: { breadcrumbTexts: Array<string>, columnData: Array<RenderColumn> }) => React.ReactNode
 };
 
-export interface FilterFunction {
-    (rawSchema: RawJsonSchema) => boolean
-};
+export type FilterFunction = (rawSchema: RawJsonSchema) => boolean;
 
-export interface OnSelectCallback {
-    (
-        newSelection: Array<string | Array<number>>,
-        newRenderData: { columnData: Array<RenderColumn> },
-        breadcrumbsTexts?: Array<string>
-    ) => void
-};
+export type OnSelectCallback = (
+    newSelection: Array<string | Array<number>>,
+    newRenderData: { columnData: Array<RenderColumn> },
+    breadcrumbsTexts?: Array<string>
+) => void;
 
-export interface RenderItemContentFunction {
-    (props: {
-        name: string,
-        hasNestedItems: boolean,
-        selected: boolean,
-        schemaGroup: JsonSchemaGroup,
-        optionIndexes?: Array<number>
-    }) => React.ReactNode
-};
+export type RenderItemContentFunction = (props: {
+    name: string,
+    hasNestedItems: boolean,
+    selected: boolean,
+    schemaGroup: JsonSchemaGroup,
+    optionIndexes?: Array<number>
+}) => React.ReactNode;
 
-export interface RenderSelectionDetailsFunction {
-    (props: {
-        itemSchemaGroup: JsonSchemaGroup,
-        columnData: Array<RenderColumn>,
-        selectionColumnIndex: number,
-        optionIndexes?: Array<number>
-    }) => React.ReactNode
-};
+export type RenderSelectionDetailsFunction = (props: {
+    itemSchemaGroup: JsonSchemaGroup,
+    columnData: Array<RenderColumn>,
+    selectionColumnIndex: number,
+    optionIndexes?: Array<number>
+}) => React.ReactNode;
 
-export interface RenderEmptyDetailsFunction {
-    (props: {
-        rootColumnSchemas: { [key: string]: JsonSchemaGroup }
-    }) => React.ReactNode
-};
+export type RenderEmptyDetailsFunction = (props: {
+    rootColumnSchemas: { [key: string]: JsonSchemaGroup }
+}) => React.ReactNode;
 
 export interface SearchOptions {
     byPropertyName?: boolean,
-    fields?: Array<string>,
+    fields?: Array<keyof RawJsonSchema>,
     filterBy?: (enteredSearchFilter: string | null) => FilterFunction | undefined,
     inputPlaceholder?: string,
     debounceWait?: number,
@@ -123,9 +111,7 @@ interface RenderColumnDetails {
     onSelect?: RenderColumnOnSelectFunction
 };
 
-export interface RenderColumnOnSelectFunction {
-    (event: any, selectedItem?: string | Array<number>) => void
-};
+export type RenderColumnOnSelectFunction = (event: React.SyntheticEvent<any>, selectedItem?: string | Array<number>) => void;
 
 export interface RenderItemsColumn extends RenderColumnDetails {
     items: { [key: string]: JsonSchemaGroup }

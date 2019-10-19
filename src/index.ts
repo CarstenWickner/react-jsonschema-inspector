@@ -7,6 +7,7 @@ import {
 } from "./model/utils";
 
 import JsonSchemaGroup from "./model/JsonSchemaGroup";
+import { RawJsonSchema } from "./types/RawJsonSchema";
 
 /**
  * Main Inspector component (with numerous props).
@@ -25,9 +26,9 @@ export const Inspector = InspectorComponent;
  */
 export const getMinimumFieldValueFromSchemaGroup = (
     schemaGroup: JsonSchemaGroup,
-    fieldName: string,
+    fieldName: keyof RawJsonSchema,
     defaultValue: number,
-    optionIndexes: Array<number>
+    optionIndexes?: Array<number>
 ) => getFieldValueFromSchemaGroup(
     schemaGroup, fieldName, minimumValue, defaultValue, null, optionIndexes
 );
@@ -44,9 +45,9 @@ export const getMinimumFieldValueFromSchemaGroup = (
  */
 export const getMaximumFieldValueFromSchemaGroup = (
     schemaGroup: JsonSchemaGroup,
-    fieldName: string,
+    fieldName: keyof RawJsonSchema,
     defaultValue: number,
-    optionIndexes: Array<number>
+    optionIndexes?: Array<number>
 ) => getFieldValueFromSchemaGroup(
     schemaGroup, fieldName, maximumValue, defaultValue, null, optionIndexes
 );
@@ -63,12 +64,12 @@ export const getMaximumFieldValueFromSchemaGroup = (
  * @param {?Array.<number>} optionIndexes - indexes representing the (optional) selection path in the schema group
  * @returns {?*|Array.<*>} intersection of encountered values in schema parts in the given group (may be the `defaultValue`)
  */
-export const getCommonFieldValuesFromSchemaGroup = (
+export const getCommonFieldValuesFromSchemaGroup = <S, T extends S | Array<S>>(
     schemaGroup: JsonSchemaGroup,
-    fieldName: string,
-    defaultValue: number,
-    optionIndexes: Array<number>
-) => getFieldValueFromSchemaGroup(
+    fieldName: keyof RawJsonSchema,
+    defaultValue: T,
+    optionIndexes?: Array<number>
+): T => getFieldValueFromSchemaGroup(
     schemaGroup, fieldName, commonValues, defaultValue, null, optionIndexes
 );
 
@@ -86,9 +87,9 @@ export const getCommonFieldValuesFromSchemaGroup = (
  */
 export const getFieldValueArrayFromSchemaGroup = (
     schemaGroup: JsonSchemaGroup,
-    fieldName: string,
+    fieldName: keyof RawJsonSchema,
     defaultValue: number,
-    optionIndexes: Array<number>
+    optionIndexes?: Array<number>
 ) => getFieldValueFromSchemaGroup(
     schemaGroup, fieldName, listValues, defaultValue, null, optionIndexes
 );

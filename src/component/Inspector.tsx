@@ -22,18 +22,24 @@ import {
 } from "../types/Inspector";
 import { RawJsonSchema } from "../types/RawJsonSchema";
 
-interface InspectorProps {
-    schemas: { [key: string]: RawJsonSchema },
-    referenceSchemas?: Array<RawJsonSchema>,
-    defaultSelectedItems?: Array<string | Array<number>>,
-    parserConfig?: ParserConfig,
+interface InspectorDefaultProps {
+    referenceSchemas: Array<RawJsonSchema>,
+    defaultSelectedItems: Array<string | Array<number>>,
+    parserConfig: ParserConfig,
     buildArrayProperties?: BuildArrayPropertiesFunction,
-    breadcrumbs?: BreadcrumbsOptions,
-    searchOptions?: SearchOptions,
+    breadcrumbs: BreadcrumbsOptions | null,
+    searchOptions: SearchOptions | null,
     onSelect?: OnSelectCallback,
     renderItemContent?: RenderItemContentFunction,
     renderSelectionDetails?: RenderSelectionDetailsFunction,
     renderEmptyDetails?: RenderEmptyDetailsFunction
+}
+
+interface InspectorProps extends InspectorDefaultProps {
+    /**
+     * Object containing names of root level items (as keys) each associated with their respective JSON Schema (as values).
+     */
+    schemas: { [key: string]: RawJsonSchema },
 };
 
 interface InspectorState {
@@ -54,8 +60,8 @@ class Inspector extends Component<InspectorProps, InspectorState> {
      * @returns {string} return.value input parameter is the new search filter value to apply
      */
     debouncedApplySearchFilter = memoize(
-        (debounceWait, debounceMaxWait) => debounce(
-            (newSearchFilter) => {
+        (debounceWait: number, debounceMaxWait: number) => debounce(
+            (newSearchFilter: string) => {
                 this.setState({ appliedSearchFilter: newSearchFilter });
             },
             debounceWait,
@@ -63,7 +69,7 @@ class Inspector extends Component<InspectorProps, InspectorState> {
         )
     );
 
-    constructor(props) {
+    constructor(props: InspectorProps) {
         super(props);
         const { defaultSelectedItems } = props;
 
@@ -85,7 +91,7 @@ class Inspector extends Component<InspectorProps, InspectorState> {
     onSearchFilterChange = (enteredSearchFilter: string) => {
         this.setState({ enteredSearchFilter });
         const { searchOptions } = this.props;
-        const { debounceWait = 200, debounceMaxWait = 500 } = searchOptions;
+        const { debounceWait = 200, debounceMaxWait = 500 } = searchOptions as SearchOptions;
         this.debouncedApplySearchFilter(debounceWait, debounceMaxWait)(enteredSearchFilter);
     };
 
@@ -97,7 +103,7 @@ class Inspector extends Component<InspectorProps, InspectorState> {
      * {*} return.param0.event - the originally triggered event (e.g. onClick, onDoubleClick, onKeyDown, etc.)
      * {string} return.param0.selectedItem - the item to select (or `null` to discard any selection in this column – and all subsequent ones)
      */
-    onSelectInColumn = (columnIndex: number) => (event: any, selectedItem: string | Array<number>) => {
+    onSelectInColumn = (columnIndex: number) => (event: any, selectedItem?: string | Array<number>) => {
         // the lowest child component accepting the click/selection event should consume it
         event.stopPropagation();
         const { selectedItems, appendEmptyColumn } = this.state;
@@ -139,7 +145,7 @@ class Inspector extends Component<InspectorProps, InspectorState> {
             onSelectProp
                 // due to the two-step process, the newRenderData will NOT include the filteredItems
                 ? () => onSelectProp(newSelection, newRenderData,
-                    breadcrumbsOptions && columnData.map(createBreadcrumbBuilder(breadcrumbsOptions)).filter((value) => value))
+                    breadcrumbsOptions && columnData.map(createBreadcrumbBuilder(breadcrumbsOptions as BreadcrumbsOptions)).filter((value) => value))
                 // no call-back provided via props, nothing to do
                 : undefined
         );
@@ -365,7 +371,7 @@ class Inspector extends Component<InspectorProps, InspectorState> {
         renderEmptyDetails: PropTypes.func
     };
 
-    static defaultProps = {
+    static defaultProps: InspectorDefaultProps = {
         referenceSchemas: [],
         defaultSelectedItems: [],
         parserConfig: {},

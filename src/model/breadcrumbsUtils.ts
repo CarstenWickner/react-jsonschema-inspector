@@ -1,3 +1,5 @@
+import { BreadcrumbsOptions, RenderColumn, RenderOptionsColumn } from "../types/Inspector";
+
 /**
  * @name BreadcrumbBuilder
  * @function
@@ -17,17 +19,17 @@
  * @param {?Function} breadcrumbsOptions.mutateName - mutates name of selected item (e.g. for removing/replacing white-spaces)
  * @returns {BreadcrumbBuilder} function extracting breadcrumb text for one column
  */
-const createBreadcrumbBuilder = (breadcrumbsOptions) => {
+const createBreadcrumbBuilder = (breadcrumbsOptions: BreadcrumbsOptions) => {
     const {
         prefix = "", separator = ".", skipSeparator, mutateName
     } = breadcrumbsOptions;
-    return (column, index) => {
-        const { options, selectedItem } = column;
-        if (options) {
+    return (column: RenderColumn, index: number): string => {
+        if ((column as RenderOptionsColumn).options) {
             // no breadcrumb for option selection
             return null;
         }
-        const name = mutateName ? mutateName(selectedItem, column, index) : selectedItem;
+        const { selectedItem } = column;
+        const name = mutateName ? mutateName(selectedItem as string, column, index) : selectedItem as string;
         if (!name) {
             // if mutateName() returns a falsy value (undefined|null|empty), the whole breadcrumb should be skipped
             return null;

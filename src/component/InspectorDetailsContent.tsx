@@ -11,12 +11,16 @@ import {
     isDefined, listValues, commonValues, minimumValue, maximumValue
 } from "../model/utils";
 import { RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
+import { RawJsonSchema } from "../types/RawJsonSchema";
 
-function containsTrueOrReduce(allValues, reduceNonBooleans): boolean | undefined {
+function containsTrueOrReduce<T>(
+    allValues: T | Array<boolean | T>,
+    reduceNonBooleans: (combined: T, nextValue: T, index: number, all: Array<T>) => T
+): boolean | undefined {
     if (Array.isArray(allValues)) {
-        return allValues.includes(true) || !!allValues.reduce(reduceNonBooleans);
+        return (allValues as Array<any>).includes(true) || !!allValues.reduce(reduceNonBooleans);
     }
-    return allValues;
+    return isDefined(allValues) ? !!allValues : undefined;
 }
 
 class InspectorDetailsContent extends Component<{
@@ -59,7 +63,10 @@ class InspectorDetailsContent extends Component<{
         };
         const { selectedItem } = columnData[selectionColumnIndex];
         const optionIndexes = typeof selectedItem === "string" ? undefined : selectedItem;
-        const getValue = (fieldName, mergeValues = listValues) => getFieldValueFromSchemaGroup(
+        const getValue = <K extends keyof RawJsonSchema, T extends RawJsonSchema[K]>(
+            fieldName: K,
+            mergeValues: (combined: T, nextValue: RawJsonSchema[K]) => T = listValues
+        ): T => getFieldValueFromSchemaGroup(
             itemSchemaGroup, fieldName, mergeValues, undefined, undefined, optionIndexes
         );
 

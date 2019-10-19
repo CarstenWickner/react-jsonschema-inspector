@@ -6,19 +6,24 @@ import InspectorOptionsColumn from "./InspectorOptionsColumn";
 import { getColumnDataPropTypeShape } from "./renderDataUtils";
 import { RenderItemsColumn, RenderOptionsColumn, RenderItemContentFunction } from "../types/Inspector";
 
-class InspectorColView extends Component<{
-    columnData: Array<RenderItemsColumn | RenderOptionsColumn>,
+interface ColViewDefaultProps {
     appendEmptyColumn: boolean,
     renderItemContent: RenderItemContentFunction
-}> {
+};
+
+interface ColViewProps extends ColViewDefaultProps {
+    columnData: Array<RenderItemsColumn | RenderOptionsColumn>
+};
+
+class InspectorColView extends Component<ColViewProps> {
     private colViewContainerRef: React.RefObject<HTMLDivElement>;
 
-    constructor(props) {
+    constructor(props: ColViewProps) {
         super(props);
         this.colViewContainerRef = React.createRef();
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: ColViewProps) {
         const previousColumnCount = prevProps.columnData.length + (prevProps.appendEmptyColumn ? 1 : 0);
         const { columnData, appendEmptyColumn } = this.props;
         const currentColumnCount = columnData.length + (appendEmptyColumn ? 1 : 0);
@@ -83,7 +88,7 @@ class InspectorColView extends Component<{
         renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
     };
     
-    static defaultProps = {
+    static defaultProps: ColViewDefaultProps = {
         appendEmptyColumn: false,
         renderItemContent: null
     };

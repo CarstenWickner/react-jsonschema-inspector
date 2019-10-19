@@ -41,7 +41,9 @@ export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
      * @param {Array.<RenderOptions} containedOptions - nested option representations
      * @returns {RenderOptions} representation of this group's contained optional hierarchy
      */
-    createOptionsRepresentation(containedOptions: Array<RenderOptions>): RenderOptions {
+    createOptionsRepresentation(
+        containedOptions: Array<RenderOptions>
+    ): RenderOptions {
         const result = super.createOptionsRepresentation(containedOptions);
         if (result.options && !result.groupTitle) {
             result.groupTitle = this.settings.groupTitle;

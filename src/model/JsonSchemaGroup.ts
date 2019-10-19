@@ -1,6 +1,6 @@
 import { listValues } from "./utils";
 import { RenderOptions } from "../types/Inspector";
-import JsonSchema from "./JsonSchema";
+import { JsonSchema } from "./JsonSchema";
 
 /**
  * Representation of an array of schemas (e.g. `allOf`, `anyOf`, `oneOf`), offering a number of convenience functions for extracting information.
@@ -38,7 +38,9 @@ export default class JsonSchemaGroup {
      * @param {JsonSchema|JsonSchemaGroup} schemaOrGroup - entry to add to this group
      * @returns {JsonSchemaGroup} this (i.e. self-reference for chaining)
      */
-    with(schemaOrGroup) {
+    with(
+        schemaOrGroup: JsonSchema | JsonSchemaGroup
+    ): this {
         if (schemaOrGroup instanceof JsonSchemaGroup && schemaOrGroup.entries.length === 1) {
             // unwrap a group containing only a single entry
             this.entries.push(schemaOrGroup.entries[0]);
@@ -59,7 +61,10 @@ export default class JsonSchemaGroup {
      * @param {number} optionTarget[].index - mutable index, a value of `0` marks the optional schema part to be considered
      * @returns {boolean} whether `checkEntry` returned 'true' for any item in this group's `entries`
      */
-    someEntry(checkEntry: (schema: JsonSchema, includeNestedGroups: boolean) => boolean, optionTarget?: Array<{index: number}>): boolean {
+    someEntry(
+        checkEntry: (schema: JsonSchema, includeNestedGroups?: boolean) => boolean,
+        optionTarget?: Array<{index: number}>
+    ): boolean {
         const considerSchemasAsOptions = this.considerSchemasAsSeparateOptions();
         const treatEntriesAsSingleSchema = this.shouldTreatEntriesAsOne();
         return this.entries.some((entry) => {
@@ -102,10 +107,15 @@ export default class JsonSchemaGroup {
      * @param {number} optionTarget[].index - mutable index, a value of `0` marks the optional schema part to be considered
      * @returns {*} return combined extracted values from this schema group
      */
-    extractValues(extractFromSchema, mergeResults = listValues, defaultValue, optionTarget) {
+    extractValues<T>(
+        extractFromSchema: (schema: JsonSchema) => T,
+        mergeResults: (combined?: T, nextValue?: T) => T = listValues,
+        defaultValue?: T,
+        optionTarget?: Array<{ index: number }>
+    ): T {
         // collect schemas where we have both a boolean and a proper schema, favour the proper schema
-        const values = [];
-        const addToResultAndContinue = (entry) => {
+        const values: Array<T> = [];
+        const addToResultAndContinue = (entry: JsonSchema) => {
             values.push(extractFromSchema(entry));
             // indicate to continue traversing all entries
             return false;
@@ -121,8 +131,10 @@ export default class JsonSchemaGroup {
      * @returns {{groupTitle: ?string, options: ?Array.<object>, nameForIndex: ?Function}} representation of the given group's top level options
      */
     // eslint-disable-next-line class-methods-use-this
-    createOptionsRepresentation(containedOptions: Array<RenderOptions>): RenderOptions {
-        let result;
+    createOptionsRepresentation(
+        containedOptions: Array<RenderOptions>
+    ): RenderOptions {
+        let result: RenderOptions;
         if (containedOptions.length === 0) {
             result = {};
         } else if (containedOptions.length === 1) {

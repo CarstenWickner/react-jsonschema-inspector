@@ -1,17 +1,18 @@
 import PropTypes from "prop-types";
 
-import JsonSchema from "../model/JsonSchema";
+import { JsonSchema, RefScope } from "../model/JsonSchema";
 import JsonSchemaGroup from "../model/JsonSchemaGroup";
+import JsonSchemaOptionalsGroup from "../model/JsonSchemaOptionalsGroup";
 import {
     createGroupFromSchema, getPropertiesFromSchemaGroup, getTypeOfArrayItemsFromSchemaGroup,
     createOptionTargetArrayFromIndexes, getOptionsInSchemaGroup, getIndexPermutationsForOptions
 } from "../model/schemaUtils";
 import { isDefined, isNonEmptyObject, mapObjectValues } from "../model/utils";
 import { createFilterFunctionForSchema } from "../model/searchUtils";
-import { BuildArrayPropertiesFunction, ParserConfig, RenderColumn, RenderColumnOnSelectFunction, RenderOptionsColumn, RenderItemsColumn } from "../types/Inspector";
+import {
+    BuildArrayPropertiesFunction, ParserConfig, RenderColumn, RenderColumnOnSelectFunction, RenderOptionsColumn, RenderItemsColumn, RenderOptions
+} from "../types/Inspector";
 import { RawJsonSchema } from "../types/RawJsonSchema";
-import RefScope from "../model/RefScope";
-import JsonSchemaOptionalsGroup from "../model/JsonSchemaOptionalsGroup";
 
 /**
  * Check whether a given array of indexes corresponds to an existing path in the `options` hierarchy.
@@ -20,7 +21,10 @@ import JsonSchemaOptionalsGroup from "../model/JsonSchemaOptionalsGroup";
  * @param {{groupTitle: ?string, options: Array.<object>}} options - representation of the hierarchical structure of optional sub schemas
  * @returns {boolean} whether given `optionIndexes` represent a valid option path
  */
-function isOptionIndexValidForOptions(optionIndexes, options) {
+function isOptionIndexValidForOptions(
+    optionIndexes: Array<number>,
+    options: RenderOptions
+) {
     let optionsPart = options;
     optionIndexes.forEach((index) => {
         if (optionsPart && optionsPart.options && optionsPart.options.length > index) {
@@ -109,7 +113,9 @@ function buildNextColumn(schemaGroup: JsonSchemaGroup, optionIndexes?: Array<num
         const arrayProperties = mapObjectValues(
             buildArrayProperties(nestedArrayItemSchema, schemaGroup, optionIndexes),
             (propertyValue) => (
-                propertyValue instanceof JsonSchema ? propertyValue : new JsonSchema(propertyValue, nestedArrayItemSchema.parserConfig)
+                propertyValue instanceof JsonSchema
+                    ? (propertyValue as JsonSchema)
+                    : new JsonSchema(propertyValue, nestedArrayItemSchema.parserConfig)
             )
         );
 
@@ -145,17 +151,17 @@ export const createRenderDataBuilder = (
     referenceSchemas: undefined | Array<RawJsonSchema>,
     selectedItems: Array<string | Array<number>>,
     parserConfig: ParserConfig,
-    buildArrayProperties: BuildArrayPropertiesFunction
+    buildArrayProperties?: BuildArrayPropertiesFunction
 ) => {
     // the first column always lists all top-level schemas
     let nextColumn: RenderColumn | {} = createRootColumnData(schemas, referenceSchemas, parserConfig);
     let selectedSchemaGroup;
-    const columnData: Array<RenderColumn> = selectedItems.map((selection, index) => {
+    const columnData = selectedItems.map((selection, index) => {
         const currentColumn = nextColumn;
         const isOptionSelection = typeof selection !== "string";
-        let isValidSelection;
+        let isValidSelection: boolean;
         if (isOptionSelection && selectedSchemaGroup && (currentColumn as RenderOptionsColumn).options) {
-            isValidSelection = isOptionIndexValidForOptions(selection, (currentColumn as RenderOptionsColumn).options);
+            isValidSelection = isOptionIndexValidForOptions(selection as Array<number>, (currentColumn as RenderOptionsColumn).options);
         } else if (!isOptionSelection && (currentColumn as RenderItemsColumn).items) {
             selectedSchemaGroup = (currentColumn as RenderItemsColumn).items[selection as string];
             isValidSelection = isDefined(selectedSchemaGroup);

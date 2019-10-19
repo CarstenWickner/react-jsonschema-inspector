@@ -13,6 +13,9 @@ export default class JsonSchemaOneOfGroup extends JsonSchemaOptionalsGroup {
      * @param {ParserConfig} parserConfig - configuration object determining how particular parts of a schema are being interpreted
      */
     constructor(parserConfig: ParserConfig) {
-        super({ groupTitle: "one of", ...((parserConfig && parserConfig.oneOf) || {}) });
+        super({
+            groupTitle: "one of",
+            ...((parserConfig && parserConfig.oneOf) || {})
+        });
     }
 }

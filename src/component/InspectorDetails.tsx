@@ -6,11 +6,16 @@ import { getColumnDataPropTypeShape } from "./renderDataUtils";
 import { RenderColumn, RenderSelectionDetailsFunction, RenderEmptyDetailsFunction, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
 import JsonSchemaGroup from "../model/JsonSchemaGroup";
 
-class InspectorDetails extends Component<{
-    columnData: Array<RenderColumn>,
+interface InspectorDetailsDefaultProps {
     renderSelectionDetails: RenderSelectionDetailsFunction,
     renderEmptyDetails: RenderEmptyDetailsFunction
-}> {
+};
+
+interface InspectorDetailsProps extends InspectorDetailsDefaultProps {
+    columnData: Array<RenderColumn>
+};
+
+class InspectorDetails extends Component<InspectorDetailsProps> {
     render() {
         const {
             columnData, renderSelectionDetails, renderEmptyDetails
@@ -58,7 +63,7 @@ class InspectorDetails extends Component<{
         renderEmptyDetails: PropTypes.func
     };
 
-    static defaultProps = {
+    static defaultProps: InspectorDetailsDefaultProps = {
         renderSelectionDetails: null,
         renderEmptyDetails: null
     };
