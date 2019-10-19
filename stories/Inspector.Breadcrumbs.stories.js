@@ -140,21 +140,21 @@ export const breadcrumbsCustomRendering = () => (
         defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
         breadcrumbs={{
             // custom rendering for individual breadcrumb items
-            renderItem: (breadcrumbText, hasNestedItems, column, index) => (
+            renderItem: (renderProps) => (
                 <span
                     // eslint-disable-next-line react/no-array-index-key
-                    key={index}
+                    key={renderProps.index}
                     className={classNames({
                         "jsonschema-inspector-breadcrumbs-item": true,
-                        "has-nested-items": hasNestedItems
+                        "has-nested-items": renderProps.hasNestedItems
                     })}
-                    style={{ backgroundColor: hasNestedItems ? "#a5d6a7" : "#e8f5e9" }}
+                    style={{ backgroundColor: renderProps.hasNestedItems ? "#a5d6a7" : "#e8f5e9" }}
                 >
-                    {breadcrumbText}
+                    {renderProps.breadcrumbText}
                 </span>
             ),
             // custom rendering of an additional "Copy" button to the right of the breadcrumbs
-            renderTrailingContent: (breadcrumbTexts) => (
+            renderTrailingContent: (renderProps) => (
                 <div style={{ flexGrow: 1 }}>
                     <button
                         type="button"
@@ -166,7 +166,7 @@ export const breadcrumbsCustomRendering = () => (
                             height: "2.5em"
                         }}
                         // eslint-disable-next-line no-alert
-                        onClick={() => window.alert(`E.g. could have copied current breadcrumbs to clipboard:\n\n\t"${breadcrumbTexts.join("")}"`)}
+                        onClick={() => window.alert(`E.g. could have copied current breadcrumbs to clipboard:\n\n\t"${renderProps.breadcrumbTexts.join("")}"`)}
                     >
                         Copy
                     </button>

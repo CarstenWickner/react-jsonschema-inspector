@@ -40,8 +40,16 @@
         "@storybook/addon-docs": "~5.2.3",
         "@storybook/addon-options": "~5.2.3",
         "@storybook/react": "~5.2.3",
+        "@types/classnames": "^2.2.9",
+        "@types/jest": "24.0.0",
+        "@types/lodash.debounce": "^4.0.6",
+        "@types/lodash.escaperegexp": "^4.1.6",
+        "@types/lodash.isequal": "^4.5.5",
+        "@types/memoize-one": "^4.1.1",
+        "@types/prop-types": "^15.7.2",
         "@types/react": "^16.9.5",
         "@types/react-dom": "^16.9.2",
+        "awesome-typescript-loader": "~5.2.1",
         "babel-eslint": "~10.0.3",
         "babel-jest": "~24.9.0",
         "babel-loader": "~8.0.6",
@@ -60,8 +68,9 @@
         "eslint-plugin-react-hooks": "~2.1.2",
         "gh-pages": "~2.1.1",
         "identity-obj-proxy": "~3.0.0",
-        "jest": "~24.9.0",
+        "jest": "24.0.0",
         "node-sass": "~4.12.0",
+        "react-docgen-typescript-loader": "~3.3.0",
         "rollup": "~1.24.0",
         "rollup-plugin-babel": "~4.3.3",
         "rollup-plugin-commonjs": "~10.1.0",
@@ -75,7 +84,7 @@
         "stylelint": "~11.1.1",
         "stylelint-config-recommended-scss": "~4.0.0",
         "stylelint-scss": "~3.11.1",
-        "ts-loader": "~6.2.0",
+        "ts-jest": "~24.1.0",
         "typescript": "~3.6.4"
     },
     "dependencies": {
@@ -92,8 +101,15 @@
     },
     "jest": {
         "testEnvironment": "jsdom",
+        "roots": [
+            "<rootDir>/src",
+            "<rootDir>/test"
+        ],
+        "transform": {
+            "^.+\\.tsx?$": "ts-jest"
+        },
         "setupFilesAfterEnv": [
-            "<rootDir>/test/setupTests.js"
+            "<rootDir>/test/setupTests.ts"
         ],
         "snapshotSerializers": [
             "enzyme-to-json/serializer"

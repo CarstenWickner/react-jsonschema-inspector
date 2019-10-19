@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import Enzyme from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
+import * as Enzyme from "enzyme";
+import * as Adapter from "enzyme-adapter-react-16";
 
 Enzyme.configure({
     adapter: new Adapter()
@@ -15,8 +15,3 @@ console.error = (message) => {
 console.warn = (message) => {
     throw (message instanceof Error ? message : new Error(message));
 };
-
-/**
- * Enable additional assertions only present in development mode
- */
-process.env.NODE_ENV = "development";

@@ -19,13 +19,17 @@ module.exports = async ({ config }) => {
     });
     config.module.rules.push({
         test: /\.tsx?$/,
-        use: {
-            loader: "ts-loader",
-            options: {
-                configFile: "../tsconfig.json",
-                transpileOnly: true
+        use: [
+            {
+                loader: "awesome-typescript-loader",
+                options: {
+                    configFile: "../tsconfig.json"
+                }
+            },
+            {
+                loader: "react-docgen-typescript-loader",
             }
-        },
+        ],
         exclude: /node_modules/
     });
     config.resolve.extensions.push(".ts");

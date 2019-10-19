@@ -4,18 +4,37 @@
         "declaration": true,
         "declarationDir": "./build",
         "forceConsistentCasingInFileNames": true,
+        "jsx": "react",
+        "lib": [
+            "es2017",
+            "dom"
+        ],
         "module": "es6",
+        "moduleResolution": "node",
         "noImplicitAny": false,
         "noImplicitReturns": true,
         "noUnusedLocals": true,
         "outDir": "./build",
-        "jsx": "react",
-        "target": "es5"
+        "strict": false,
+        "target": "es5",
+        "types": [
+            "classnames",
+            "jest",
+            "lodash.debounce",
+            "lodash.escaperegexp",
+            "lodash.isequal",
+            "memoize-one",
+            "prop-types",
+            "react",
+            "react-dom"
+        ]
     },
     "include": [
         "src/**/*"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "build",
+        "docs"
     ]
 }
