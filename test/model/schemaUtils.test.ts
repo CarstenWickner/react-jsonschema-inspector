@@ -3,7 +3,7 @@ import {
     getFieldValueFromSchemaGroup, getPropertiesFromSchemaGroup, getTypeOfArrayItemsFromSchemaGroup
 } from "../../src/model/schemaUtils";
 
-import JsonSchema from "../../src/model/JsonSchema";
+import { JsonSchema } from "../../src/model/JsonSchema";
 import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
 import JsonSchemaAllOfGroup from "../../src/model/JsonSchemaAllOfGroup";
 import JsonSchemaAnyOfGroup from "../../src/model/JsonSchemaAnyOfGroup";
@@ -14,11 +14,11 @@ describe("createGroupFromSchema()", () => {
     const rawFooSchema = { title: "Foo" };
     const rawBarSchema = { description: "Bar" };
     it("returns empty allOf group for empty schema", () => {
-        expect(createGroupFromSchema(new JsonSchema({})))
+        expect(createGroupFromSchema(new JsonSchema({}, {})))
             .toEqual(new JsonSchemaAllOfGroup());
     });
     it("returns empty allOf group for boolean schema", () => {
-        expect(createGroupFromSchema(new JsonSchema(true)))
+        expect(createGroupFromSchema(new JsonSchema(true, {})))
             .toEqual(new JsonSchemaAllOfGroup());
     });
     it("returns allOf group with single entry for simple schema", () => {
@@ -31,7 +31,7 @@ describe("createGroupFromSchema()", () => {
     it("returns allOf group with referenced entry for simple schema", () => {
         const { scope } = new JsonSchema({
             definitions: { Foo: rawFooSchema }
-        });
+        }, {});
         const schema = new JsonSchema({ $ref: "#/definitions/Foo" }, {}, scope);
         const result = createGroupFromSchema(schema);
         expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
@@ -49,7 +49,7 @@ describe("createGroupFromSchema()", () => {
         it(`with single nested ${groupName} group`, () => {
             const schema = new JsonSchema({
                 [groupName]: [rawFooSchema, rawBarSchema]
-            });
+            }, {});
             const result = createGroupFromSchema(schema);
             expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
             expect(result.entries).toHaveLength(2);
@@ -68,7 +68,7 @@ describe("createGroupFromSchema()", () => {
             };
             const schema = new JsonSchema({
                 [groupName]: [rawFooSchema, nestedOptionalSchema]
-            });
+            }, {});
             const result = createGroupFromSchema(schema);
             // top level: allOf: [ schema, anyOf/oneOf ]
             expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
@@ -105,7 +105,7 @@ describe("createGroupFromSchema()", () => {
         };
 
         it("including oneOf and anyOf if both are present", () => {
-            const schema = new JsonSchema(rawTargetSchema);
+            const schema = new JsonSchema(rawTargetSchema, {});
             const result = createGroupFromSchema(schema);
             expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
             expect(result.entries).toHaveLength(5);
@@ -128,7 +128,7 @@ describe("createGroupFromSchema()", () => {
                 foo: { title: "foo" },
                 bar: { title: "bar" }
             }
-        });
+        }, {});
         const schema = { $ref: "#/definitions/baz" };
         expect(() => createGroupFromSchema(new JsonSchema(schema, {}, scope)))
             .toThrowError("Cannot resolve $ref: \"#/definitions/baz\"");
@@ -171,7 +171,7 @@ describe("getPropertiesFromSchemaGroup()", () => {
                 foo: rawFooSchema,
                 bar: rawBarSchema
             }
-        });
+        }, {});
         const result = getPropertiesFromSchemaGroup(createGroupFromSchema(schema));
         expect(Object.keys(result)).toHaveLength(2);
         expect(result.foo).toBeInstanceOf(JsonSchema);
@@ -180,13 +180,13 @@ describe("getPropertiesFromSchemaGroup()", () => {
         expect(result.bar.schema).toEqual(rawBarSchema);
     });
     it("returns empty object for empty schema", () => {
-        const schemaGroup = createGroupFromSchema(new JsonSchema({}));
+        const schemaGroup = createGroupFromSchema(new JsonSchema({}, {}));
         expect(getPropertiesFromSchemaGroup(schemaGroup)).toEqual({});
     });
     it("returns `required` from simple schema", () => {
         const simpleSchema = new JsonSchema({
             required: ["Foo", "Bar"]
-        });
+        }, {});
         const schemaGroup = createGroupFromSchema(simpleSchema);
         const result = getPropertiesFromSchemaGroup(schemaGroup);
         expect(result.Foo).toBeInstanceOf(JsonSchema);
@@ -203,7 +203,7 @@ describe("getPropertiesFromSchemaGroup()", () => {
                 Foo: rawFooSchema,
                 Bar: rawBarSchema
             }
-        });
+        }, {});
         const schemaGroup = createGroupFromSchema(simpleSchema);
         const result = getPropertiesFromSchemaGroup(schemaGroup);
         expect(result.Foo).toBeInstanceOf(JsonSchema);
@@ -233,7 +233,7 @@ describe("getPropertiesFromSchemaGroup()", () => {
                     }
                 }
             ]
-        });
+        }, {});
         const schemaGroup = createGroupFromSchema(mainSchema);
         const result = getPropertiesFromSchemaGroup(schemaGroup);
         expect(result.Foo).toBeInstanceOf(JsonSchema);
@@ -261,7 +261,7 @@ describe("getPropertiesFromSchemaGroup()", () => {
                     properties: { bar: rawBarSchema }
                 }
             ]
-        });
+        }, {});
         it("ignored if no optionIndex provided", () => {
             const result = getPropertiesFromSchemaGroup(createGroupFromSchema(schema));
             expect(result).toEqual({});
@@ -295,16 +295,16 @@ describe("getOptionsInSchemaGroup()", () => {
     describe("when considerSchemasAsSeparateOptions() === false", () => {
         it("ignores JsonSchema entries", () => {
             const group = new MockJsonSchemaGroup(false)
-                .with(new JsonSchema())
-                .with(new JsonSchema());
+                .with(new JsonSchema(true, {}))
+                .with(new JsonSchema(true, {}));
             expect(getOptionsInSchemaGroup(group)).toEqual({});
         });
         it("flattening single JsonSchemaGroup entry that contains options", () => {
             const group = new MockJsonSchemaGroup(false)
-                .with(new JsonSchema())
+                .with(new JsonSchema(true, {}))
                 .with(new MockJsonSchemaGroup(true)
-                    .with(new JsonSchema())
-                    .with(new JsonSchema()));
+                    .with(new JsonSchema(true, {}))
+                    .with(new JsonSchema(true, {})));
             expect(getOptionsInSchemaGroup(group)).toEqual({
                 options: [
                     {},
@@ -314,13 +314,13 @@ describe("getOptionsInSchemaGroup()", () => {
         });
         it("ignores JsonSchema entries while including parallel JsonSchemaGroup entries that contain options", () => {
             const group = new MockJsonSchemaGroup(false)
-                .with(new JsonSchema())
+                .with(new JsonSchema(true, {}))
                 .with(new MockJsonSchemaGroup(true)
-                    .with(new JsonSchema())
-                    .with(new JsonSchema()))
+                    .with(new JsonSchema(true, {}))
+                    .with(new JsonSchema(true, {})))
                 .with(new MockJsonSchemaGroup(true)
-                    .with(new JsonSchema())
-                    .with(new JsonSchema()));
+                    .with(new JsonSchema(true, {}))
+                    .with(new JsonSchema(true, {})));
             expect(getOptionsInSchemaGroup(group)).toEqual({
                 options: [
                     {
@@ -341,21 +341,21 @@ describe("getOptionsInSchemaGroup()", () => {
         it("ignores nested groups only containing JsonSchema entries when nested groups have considerSchemasAsSeparateOptions() === false", () => {
             const group = new MockJsonSchemaGroup(false)
                 .with(new MockJsonSchemaGroup(false)
-                    .with(new JsonSchema())
-                    .with(new JsonSchema()))
+                    .with(new JsonSchema(true, {}))
+                    .with(new JsonSchema(true, {})))
                 .with(new MockJsonSchemaGroup(false)
                     .with(new MockJsonSchemaGroup(false)
-                        .with(new JsonSchema())
-                        .with(new JsonSchema()))
-                    .with(new JsonSchema()));
+                        .with(new JsonSchema(true, {}))
+                        .with(new JsonSchema(true, {})))
+                    .with(new JsonSchema(true, {})));
             expect(getOptionsInSchemaGroup(group)).toEqual({});
         });
     });
     describe("when considerSchemasAsSeparateOptions() === true", () => {
         it("represents JsonSchema entries as empty arrays", () => {
             const group = new MockJsonSchemaGroup(true)
-                .with(new JsonSchema())
-                .with(new JsonSchema());
+                .with(new JsonSchema(true, {}))
+                .with(new JsonSchema(true, {}));
             expect(getOptionsInSchemaGroup(group)).toEqual({
                 options: [
                     {},
@@ -366,13 +366,13 @@ describe("getOptionsInSchemaGroup()", () => {
         it("represents hierarchy of nested groups that have considerSchemasAsSeparateOptions() === true", () => {
             const group = new MockJsonSchemaGroup(true)
                 .with(new MockJsonSchemaGroup(true)
-                    .with(new JsonSchema())
-                    .with(new JsonSchema()))
+                    .with(new JsonSchema(true, {}))
+                    .with(new JsonSchema(true, {})))
                 .with(new MockJsonSchemaGroup(true)
                     .with(new MockJsonSchemaGroup(true)
-                        .with(new JsonSchema())
-                        .with(new JsonSchema()))
-                    .with(new JsonSchema()));
+                        .with(new JsonSchema(true, {}))
+                        .with(new JsonSchema(true, {})))
+                    .with(new JsonSchema(true, {})));
             expect(getOptionsInSchemaGroup(group)).toEqual({
                 options: [
                     {
@@ -399,13 +399,13 @@ describe("getOptionsInSchemaGroup()", () => {
     it("represents hierarchy of nested groups with mixed considerSchemasAsSeparateOptions() – 1", () => {
         const group = new MockJsonSchemaGroup(true)
             .with(new MockJsonSchemaGroup(false)
-                .with(new JsonSchema())
-                .with(new JsonSchema()))
+                .with(new JsonSchema(true, {}))
+                .with(new JsonSchema(true, {})))
             .with(new MockJsonSchemaGroup(false)
                 .with(new MockJsonSchemaGroup(true)
-                    .with(new JsonSchema())
-                    .with(new JsonSchema()))
-                .with(new JsonSchema()));
+                    .with(new JsonSchema(true, {}))
+                    .with(new JsonSchema(true, {})))
+                .with(new JsonSchema(true, {})));
         expect(getOptionsInSchemaGroup(group)).toEqual({
             options: [
                 {},
@@ -421,13 +421,13 @@ describe("getOptionsInSchemaGroup()", () => {
     it("represents hierarchy of nested groups with mixed considerSchemasAsSeparateOptions() – 2", () => {
         const group = new MockJsonSchemaGroup(false)
             .with(new MockJsonSchemaGroup(true)
-                .with(new JsonSchema())
-                .with(new JsonSchema()))
+                .with(new JsonSchema(true, {}))
+                .with(new JsonSchema(true, {})))
             .with(new MockJsonSchemaGroup(true)
                 .with(new MockJsonSchemaGroup(false)
-                    .with(new JsonSchema())
-                    .with(new JsonSchema()))
-                .with(new JsonSchema()));
+                    .with(new JsonSchema(true, {}))
+                    .with(new JsonSchema(true, {})))
+                .with(new JsonSchema(true, {})));
         expect(getOptionsInSchemaGroup(group)).toEqual({
             options: [
                 {
@@ -448,7 +448,7 @@ describe("getOptionsInSchemaGroup()", () => {
 });
 describe("getFieldValueFromSchemaGroup()", () => {
     it("finds single value in simple schema", () => {
-        const schemaGroup = createGroupFromSchema(new JsonSchema({ title: "Test" }));
+        const schemaGroup = createGroupFromSchema(new JsonSchema({ title: "Test" }, {}));
         expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toEqual("Test");
     });
     it.each`
@@ -459,7 +459,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
         ${{}}                | ${"empty schema"}
         ${{ title: "Test" }} | ${"schema without targeted field"}
     `("returns undefined for $rawSchema schema", ({ rawSchema }) => {
-        const schemaGroup = createGroupFromSchema(new JsonSchema(rawSchema));
+        const schemaGroup = createGroupFromSchema(new JsonSchema(rawSchema, {}));
         expect(getFieldValueFromSchemaGroup(schemaGroup, "description")).toBeUndefined();
     });
     it("find single value in $ref-erenced sub-schema", () => {
@@ -467,7 +467,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
             definitions: {
                 foo: { title: "foobar" }
             }
-        });
+        }, {});
         const schema = { $ref: "#/definitions/foo" };
         const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}, scope));
         expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toBe("foobar");
@@ -477,7 +477,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
             definitions: {
                 bar: { title: "baz" }
             }
-        });
+        }, {});
         const schema = {
             title: "foo",
             $ref: "#/definitions/bar"
@@ -494,7 +494,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
                     { type: "object" }
                 ]
             };
-            const schemaGroup = createGroupFromSchema(new JsonSchema(schema));
+            const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
             expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toBe("bar");
         });
         it("finds single value in $ref-erenced group", () => {
@@ -512,7 +512,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
                         ]
                     }
                 }
-            });
+            }, {});
             const schema = { $ref: "#/definitions/foo" };
             const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}, scope));
             expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toBe("baz");
@@ -528,7 +528,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
                     },
                     bar: { title: "baz" }
                 }
-            });
+            }, {});
             const schema = { $ref: "#/definitions/foo" };
             const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}, scope));
 
@@ -550,7 +550,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
         const schema = {
             [fieldName]: { title: "Array-Entry-Title" }
         };
-        const schemaGroup = createGroupFromSchema(new JsonSchema(schema));
+        const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
         expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toBeUndefined();
     });
 });
@@ -558,21 +558,21 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
     it("finds `items` in simple schema", () => {
         const itemSchema = { title: "Test" };
         const schema = { items: itemSchema };
-        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
+        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, {})));
         expect(result).toBeInstanceOf(JsonSchema);
         expect(result.schema).toEqual(itemSchema);
     });
     it("finds `additionalItems` in simple schema", () => {
         const additionalItemSchema = { description: "Value" };
         const schema = { additionalItems: additionalItemSchema };
-        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
+        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, {})));
         expect(result).toBeInstanceOf(JsonSchema);
         expect(result.schema).toEqual(additionalItemSchema);
     });
     it("ignores boolean `additionalItems`", () => {
         const additionalItemSchema = true;
         const schema = { additionalItems: additionalItemSchema };
-        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
+        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, {})));
         expect(result).toBeUndefined();
     });
     it("prefers `items` over `additionalItems` in simple schema", () => {
@@ -582,7 +582,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             items: itemSchema,
             additionalItems: additionalItemSchema
         };
-        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
+        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, {})));
         expect(result).toBeInstanceOf(JsonSchema);
         expect(result.schema).toEqual(itemSchema);
     });
@@ -593,7 +593,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             items: itemSchema,
             additionalItems: additionalItemSchema
         };
-        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
+        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, {})));
         expect(result).toBeInstanceOf(JsonSchema);
         expect(result.schema).toEqual(additionalItemSchema);
     });
@@ -607,7 +607,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             items: itemSchemaArray,
             additionalItems: additionalItemSchema
         };
-        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
+        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, {})));
         expect(result).toBeInstanceOf(JsonSchema);
         expect(result.schema).toEqual(additionalItemSchema);
     });
@@ -615,7 +615,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
         const schema = {
             type: "array"
         };
-        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
+        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, {})));
         expect(result).toBeUndefined();
     });
     it("picks first of multiple `items` in complex schema", () => {
@@ -631,7 +631,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
                 }
             ]
         };
-        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)));
+        const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, {})));
         expect(result).toBeInstanceOf(JsonSchema);
         expect(result.schema).toEqual({ title: "foo" });
     });
@@ -659,7 +659,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             ${"one-level optionTarget (2)"} | ${[1]}        | ${{ description: "bar" }}
             ${"two-level optionTarget"}     | ${[2, 1]}     | ${{ type: "object" }}
         `("$testTitle", ({ optionIndexes, expectedResult }) => {
-            const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)), optionIndexes);
+            const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, {})), optionIndexes);
             expect(result).toBeInstanceOf(JsonSchema);
             expect(result.schema).toEqual(expectedResult);
         });
@@ -670,7 +670,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
             ${"too high optionTarget"}                                   | ${[3]}
             ${"existing optionTarget without `items`/`additionalItems`"} | ${[2, 0]}
         `("returning undefined for $testTitle", ({ optionIndexes }) => {
-            const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema)), optionIndexes);
+            const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, {})), optionIndexes);
             expect(result).toBeUndefined();
         });
     });

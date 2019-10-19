@@ -2,7 +2,7 @@ import {
     createRecursiveFilterFunction, collectReferencedSubSchemas, createFilterFunctionForSchema, filteringByFields, filteringByPropertyName
 } from "../../src/model/searchUtils";
 
-import JsonSchema from "../../src/model/JsonSchema";
+import { JsonSchema } from "../../src/model/JsonSchema";
 
 describe("createRecursiveFilterFunction()", () => {
     const flatSearchFilter = jest.fn((rawSchema) => rawSchema.default);
@@ -25,20 +25,20 @@ describe("createRecursiveFilterFunction()", () => {
             expect(flatSearchFilter).not.toHaveBeenCalled();
         });
         it("empty schema", () => {
-            expect(recursiveFilterFunction(new JsonSchema())).toBe(false);
+            expect(recursiveFilterFunction(new JsonSchema(true, {}))).toBe(false);
             expect(flatSearchFilter).not.toHaveBeenCalled();
         });
     });
     describe("plain schema", () => {
         it("check once (match)", () => {
             const rawSchema = { default: true };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
+            expect(recursiveFilterFunction(new JsonSchema(rawSchema, {}))).toBe(true);
             expect(flatSearchFilter).toHaveBeenCalledTimes(1);
             expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema, true);
         });
         it("check once with $ref", () => {
             const rawSchema = { $ref: "something" };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(false);
+            expect(recursiveFilterFunction(new JsonSchema(rawSchema, {}))).toBe(false);
             expect(flatSearchFilter).toHaveBeenCalledTimes(1);
             expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema, true);
         });
@@ -58,7 +58,7 @@ describe("createRecursiveFilterFunction()", () => {
                     propertyTwo: subSchemaTwo
                 }
             };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
+            expect(recursiveFilterFunction(new JsonSchema(rawSchema, {}))).toBe(true);
             expect(flatSearchFilter).toHaveBeenCalledTimes(2);
             expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema, true);
             expect(flatSearchFilter).toHaveBeenCalledWith(allOfPart, true);
@@ -78,7 +78,7 @@ describe("createRecursiveFilterFunction()", () => {
                     propertyTwo: subSchemaTwo
                 }
             };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
+            expect(recursiveFilterFunction(new JsonSchema(rawSchema, {}))).toBe(true);
             expect(flatSearchFilter).toHaveBeenCalledTimes(2);
             expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema, true);
             expect(flatSearchFilter).toHaveBeenCalledWith(subSchemaOne, true);
@@ -95,7 +95,7 @@ describe("createRecursiveFilterFunction()", () => {
                     propertyTwo: subSchemaTwo
                 }
             };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
+            expect(recursiveFilterFunction(new JsonSchema(rawSchema, {}))).toBe(true);
             expect(flatSearchFilter).toHaveBeenCalledTimes(3);
             expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema, true);
             expect(flatSearchFilter).toHaveBeenCalledWith(subSchemaOne, true);
@@ -113,7 +113,7 @@ describe("createRecursiveFilterFunction()", () => {
                 properties: { property: propertySchema },
                 items: itemSchema
             };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
+            expect(recursiveFilterFunction(new JsonSchema(rawSchema, {}))).toBe(true);
             expect(flatSearchFilter).toHaveBeenCalledTimes(2);
             expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema, true);
             expect(flatSearchFilter).toHaveBeenCalledWith(propertySchema, true);
@@ -126,7 +126,7 @@ describe("createRecursiveFilterFunction()", () => {
             const rawSchema = {
                 items: itemSchema
             };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
+            expect(recursiveFilterFunction(new JsonSchema(rawSchema, {}))).toBe(true);
             expect(flatSearchFilter).toHaveBeenCalledTimes(2);
             expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema, true);
             expect(flatSearchFilter).toHaveBeenCalledWith(itemSchema, true);
@@ -143,7 +143,7 @@ describe("createRecursiveFilterFunction()", () => {
                 properties: { property: propertySchema },
                 additionalItems: additionalItemSchema
             };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
+            expect(recursiveFilterFunction(new JsonSchema(rawSchema, {}))).toBe(true);
             expect(flatSearchFilter).toHaveBeenCalledTimes(2);
             expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema, true);
             expect(flatSearchFilter).toHaveBeenCalledWith(propertySchema, true);
@@ -158,7 +158,7 @@ describe("createRecursiveFilterFunction()", () => {
                 items: itemSchema,
                 additionalItems: additionalItemSchema
             };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(false);
+            expect(recursiveFilterFunction(new JsonSchema(rawSchema, {}))).toBe(false);
             expect(flatSearchFilter).toHaveBeenCalledTimes(2);
             expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema, true);
             expect(flatSearchFilter).toHaveBeenCalledWith(itemSchema, true);
@@ -171,7 +171,7 @@ describe("createRecursiveFilterFunction()", () => {
             const rawSchema = {
                 additionalItems: additionalItemSchema
             };
-            expect(recursiveFilterFunction(new JsonSchema(rawSchema))).toBe(true);
+            expect(recursiveFilterFunction(new JsonSchema(rawSchema, {}))).toBe(true);
             expect(flatSearchFilter).toHaveBeenCalledTimes(2);
             expect(flatSearchFilter).toHaveBeenCalledWith(rawSchema, true);
             expect(flatSearchFilter).toHaveBeenCalledWith(additionalItemSchema, true);
@@ -180,7 +180,7 @@ describe("createRecursiveFilterFunction()", () => {
 });
 describe("collectReferencedSubSchemas", () => {
     it("returns empty Map for simple schema", () => {
-        const schema = new JsonSchema({ title: "No Reference" });
+        const schema = new JsonSchema({ title: "No Reference" }, {});
         expect(collectReferencedSubSchemas(schema)).toEqual(new Map());
     });
     describe.each`
@@ -225,7 +225,7 @@ describe("collectReferencedSubSchemas", () => {
             const schema = new JsonSchema({
                 definitions: { Foo: rawSubSchema },
                 [fieldName]: referencingSchemaPart
-            });
+            }, {});
             const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
             expect(result.size).toBe(1);
             const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
@@ -236,7 +236,7 @@ describe("collectReferencedSubSchemas", () => {
             const schema = new JsonSchema({
                 definitions: { Foo: rawSubSchema },
                 allOf: [{}, { $ref: "#/definitions/Foo" }]
-            });
+            }, {});
             const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
             expect(result.size).toBe(1);
             const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
@@ -251,7 +251,7 @@ describe("collectReferencedSubSchemas", () => {
             const schema = new JsonSchema({
                 definitions: { Foo: rawSubSchema },
                 allOf
-            });
+            }, {});
             const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
             expect(result.size).toBe(1);
             const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
@@ -269,13 +269,13 @@ describe("collectReferencedSubSchemas", () => {
                 { $ref: "#/definitions/Sub1" },
                 { $ref: "#/definitions/Sub2" }
             ]
-        });
+        }, {});
         expect(collectReferencedSubSchemas(schema).size).toBe(2);
     });
     it("ignores self-reference", () => {
         const schema = new JsonSchema({
             items: { $ref: "#" }
-        });
+        }, {});
         expect(collectReferencedSubSchemas(schema)).toEqual(new Map());
     });
 });
@@ -283,18 +283,18 @@ describe("createFilterFunctionForSchema()", () => {
     describe("returning filter function for simple schema", () => {
         it("finding match in all column entries", () => {
             const filterFunction = createFilterFunctionForSchema(() => true);
-            expect(filterFunction(new JsonSchema({ title: "foo" }), true)).toBe(true);
+            expect(filterFunction(new JsonSchema({ title: "foo" }, {}), true)).toBe(true);
         });
         it("finding match in some column entries", () => {
             const filterFunction = createFilterFunctionForSchema((rawSchema) => rawSchema.title === "bar");
-            expect(filterFunction(new JsonSchema({ title: "foo" }), true)).toBe(false);
-            expect(filterFunction(new JsonSchema({ title: "bar" }), true)).toBe(true);
-            expect(filterFunction(new JsonSchema({ description: "bar" }), true)).toBe(false);
+            expect(filterFunction(new JsonSchema({ title: "foo" }, {}), true)).toBe(false);
+            expect(filterFunction(new JsonSchema({ title: "bar" }, {}), true)).toBe(true);
+            expect(filterFunction(new JsonSchema({ description: "bar" }, {}), true)).toBe(false);
         });
         it("returning empty array if no match can be found", () => {
             const filterFunction = createFilterFunctionForSchema(() => false);
-            expect(filterFunction(new JsonSchema({ title: "foo" }), true)).toBe(false);
-            expect(filterFunction(new JsonSchema({ description: "bar" }), true)).toBe(false);
+            expect(filterFunction(new JsonSchema({ title: "foo" }, {}), true)).toBe(false);
+            expect(filterFunction(new JsonSchema({ description: "bar" }, {}), true)).toBe(false);
         });
     });
     describe("returning filter function for complex schema", () => {
@@ -320,7 +320,7 @@ describe("createFilterFunctionForSchema()", () => {
                     ]
                 }
             }
-        });
+        }, {});
         const schemaOne = schema.scope.find("#/definitions/One");
         const schemaTwo = schema.scope.find("#/definitions/Two");
         const schemaThree = schema.scope.find("#/definitions/Three");
@@ -389,7 +389,7 @@ describe("createFilterFunctionForSchema()", () => {
                 ${"'anyOf' > [0] > 'oneOf' > [1] > 'properties' > 'bar'"} | ${"Four"}  | ${false}                     | ${true}
                 ${"'items' > 'oneOf' > [0]"}                              | ${"Five"}  | ${true}                      | ${true}
             `("with match under $testDescription", ({ subSchema, resultWhenExcludingOptionals, resultWhenIncludingOptionals }) => {
-                const { scope } = new JsonSchema(rawSchema);
+                const { scope } = new JsonSchema(rawSchema, {});
                 const filterFunction = createFilterFunctionForSchema((rawSubSchema) => rawSubSchema.title === "Match");
 
                 // with "includeNestedOptionalsForMainSchema" flag set to false, it does not matter whether anyOf/oneOf are generally included
@@ -428,7 +428,7 @@ describe("createFilterFunctionForSchema()", () => {
                 ${"in oneOf part (incl. optionals)"}           | ${(sub) => sub.maxProperties === 7} | ${true}          | ${true}
                 ${"in oneOf part (excl. optionals)"}           | ${(sub) => sub.maxProperties === 7} | ${false}         | ${false}
             `("$testTitle", ({ flatSearchFilter, includeOptionals, result }) => {
-                const schema = new JsonSchema(rawSchema);
+                const schema = new JsonSchema(rawSchema, {});
                 const filterFunction = createFilterFunctionForSchema(flatSearchFilter);
                 expect(filterFunction(schema, includeOptionals)).toBe(result);
             });

@@ -1,6 +1,6 @@
 import JsonSchemaAllOfGroup from "../../src/model/JsonSchemaAllOfGroup";
 import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
-import JsonSchema from "../../src/model/JsonSchema";
+import { JsonSchema } from "../../src/model/JsonSchema";
 
 describe("with()", () => {
     /**

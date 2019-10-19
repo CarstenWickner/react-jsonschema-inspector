@@ -72,7 +72,7 @@ describe("isNonEmptyObject()", () => {
 describe("mapObjectValues()", () => {
     it("returns new empty object for empty input", () => {
         const inputObject = {};
-        const outputObject = mapObjectValues(inputObject);
+        const outputObject = mapObjectValues(inputObject, (value) => value);
         expect(outputObject).toEqual({});
         expect(outputObject === inputObject).toBe(false);
     });

@@ -2,10 +2,11 @@ import PropTypes from "prop-types";
 
 import { createRenderDataBuilder, getColumnDataPropTypeShape, createFilterFunctionForColumn } from "../../src/component/renderDataUtils";
 
-import JsonSchema from "../../src/model/JsonSchema";
+import { JsonSchema } from "../../src/model/JsonSchema";
 import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
 import { createGroupFromSchema, getOptionsInSchemaGroup, getFieldValueFromSchemaGroup } from "../../src/model/schemaUtils";
 import { maximumValue } from "../../src/model/utils";
+import { RenderItemsColumn } from "../../build/types/Inspector";
 
 describe("createRenderDataBuilder()", () => {
     const onSelectInColumn = jest.fn((columnIndex) => () => columnIndex);
@@ -64,8 +65,6 @@ describe("createRenderDataBuilder()", () => {
             expect(onSelectInColumn.mock.calls).toHaveLength(1);
             expect(onSelectInColumn.mock.calls[0][0]).toBe(0);
 
-            expect(rootColumn.options).toBeUndefined();
-            expect(rootColumn.contextGroup).toBeUndefined();
             expect(rootColumn.onSelect).toBeDefined();
             expect(rootColumn.onSelect()).toBe(0);
             expect(rootColumn.selectedItem).toBeFalsy();
@@ -95,8 +94,6 @@ describe("createRenderDataBuilder()", () => {
             expect(columnData).toHaveLength(1);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(3);
-            expect(rootColumn.options).toBeUndefined();
-            expect(rootColumn.contextGroup).toBeUndefined();
             expect(rootColumn.onSelect).toBeDefined();
             expect(rootColumn.onSelect()).toBe(0);
             expect(rootColumn.selectedItem).toBeFalsy();
@@ -107,10 +104,8 @@ describe("createRenderDataBuilder()", () => {
             expect(columnData).toHaveLength(1);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(3);
-            expect(rootColumn.options).toBeUndefined();
-            expect(rootColumn.contextGroup).toBeUndefined();
             expect(rootColumn.onSelect).toBeDefined();
-            expect(rootColumn.onSelect()).toBe(0);
+            expect(rootColumn.onSelect(null, null)).toBe(0);
             expect(rootColumn.selectedItem).toBe("foo");
             expect(rootColumn.trailingSelection).toBe(true);
         });
@@ -119,8 +114,6 @@ describe("createRenderDataBuilder()", () => {
             expect(columnData).toHaveLength(2);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(3);
-            expect(rootColumn.options).toBeUndefined();
-            expect(rootColumn.contextGroup).toBeUndefined();
             expect(rootColumn.onSelect).toBeDefined();
             expect(rootColumn.onSelect()).toBe(0);
             expect(rootColumn.selectedItem).toBe("foobar");
@@ -132,7 +125,6 @@ describe("createRenderDataBuilder()", () => {
             expect(secondColumn.items["Item Three"].entries[0]).toBeInstanceOf(JsonSchema);
             expect(secondColumn.items["Item Three"].entries[0].schema).toEqual(quxSchema);
             expect(secondColumn.options).toBeUndefined();
-            expect(secondColumn.contextGroup).toBeUndefined();
             expect(secondColumn.onSelect).toBeDefined();
             expect(secondColumn.onSelect()).toBe(1);
             expect(secondColumn.selectedItem).toBeFalsy();
@@ -143,8 +135,6 @@ describe("createRenderDataBuilder()", () => {
             expect(columnData).toHaveLength(2);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(3);
-            expect(rootColumn.options).toBeUndefined();
-            expect(rootColumn.contextGroup).toBeUndefined();
             expect(rootColumn.onSelect).toBeDefined();
             expect(rootColumn.onSelect()).toBe(0);
             expect(rootColumn.selectedItem).toBe("foobar");
@@ -152,8 +142,6 @@ describe("createRenderDataBuilder()", () => {
             const secondColumn = columnData[1];
             expect(Object.keys(secondColumn.items)).toHaveLength(1);
             expect(secondColumn.items["Item Three"]).toBeInstanceOf(JsonSchemaGroup);
-            expect(secondColumn.options).toBeUndefined();
-            expect(secondColumn.contextGroup).toBeUndefined();
             expect(secondColumn.onSelect).toBeDefined();
             expect(secondColumn.onSelect()).toBe(1);
             expect(secondColumn.selectedItem).toBe("Item Three");
@@ -192,8 +180,6 @@ describe("createRenderDataBuilder()", () => {
             expect(secondColumn.items["[0]"].entries).toHaveLength(1);
             expect(secondColumn.items["[0]"].entries[0]).toBeInstanceOf(JsonSchema);
             expect(secondColumn.items["[0]"].entries[0].schema).toEqual(fooSchema);
-            expect(secondColumn.options).toBeUndefined();
-            expect(secondColumn.contextGroup).toBeUndefined();
             expect(secondColumn.onSelect).toBeDefined();
             expect(secondColumn.onSelect()).toBe(1);
             expect(secondColumn.selectedItem).toBe("[0]");
@@ -218,8 +204,6 @@ describe("createRenderDataBuilder()", () => {
             expect(secondColumn.items["[0]"].entries).toHaveLength(1);
             expect(secondColumn.items["[0]"].entries[0]).toBeInstanceOf(JsonSchema);
             expect(secondColumn.items["[0]"].entries[0].schema).toEqual(barSchema);
-            expect(secondColumn.options).toBeUndefined();
-            expect(secondColumn.contextGroup).toBeUndefined();
             expect(secondColumn.onSelect).toBeDefined();
             expect(secondColumn.onSelect()).toBe(1);
             expect(secondColumn.selectedItem).toBe("[0]");
@@ -258,8 +242,7 @@ describe("createRenderDataBuilder()", () => {
             expect(rootColumn.items.bar).toBeInstanceOf(JsonSchemaGroup);
             expect(rootColumn.selectedItem).toBe("bar");
             expect(rootColumn.trailingSelection).toBeFalsy();
-            const secondColumn = columnData[1];
-            expect(secondColumn.items).toBeUndefined();
+            const secondColumn = columnData[1] as RenderOptionsColumn;
             expect(secondColumn.contextGroup.entries[0].schema).toEqual(rootSchemas.bar);
             expect(secondColumn.options).toEqual({
                 groupTitle: "one of",
@@ -267,7 +250,7 @@ describe("createRenderDataBuilder()", () => {
             });
             expect(secondColumn.selectedItem).toEqual([0]);
             expect(secondColumn.trailingSelection).toBeFalsy();
-            const thirdColumn = columnData[2];
+            const thirdColumn = columnData[2] as RenderItemsColumn;
             expect(Object.keys(thirdColumn.items)).toHaveLength(2);
             expect(thirdColumn.items["get(0)"].entries[0].schema).toEqual(fooSchema);
             expect(thirdColumn.items["size()"].entries[0].schema).toEqual({
@@ -275,8 +258,6 @@ describe("createRenderDataBuilder()", () => {
                 minimum: 3
             });
             expect(thirdColumn.selectedItem).toBe("get(0)");
-            expect(thirdColumn.options).toBeUndefined();
-            expect(thirdColumn.contextGroup).toBeUndefined();
             expect(thirdColumn.onSelect).toBeDefined();
             expect(thirdColumn.trailingSelection).toBe(true);
             const fourthColumn = columnData[3];
@@ -322,18 +303,15 @@ describe("createRenderDataBuilder()", () => {
             ${"without option selection"}           | ${["root"]}
             ${"ignoring invalid option selection"}  | ${["root", [3]]}
         `("offering the selected root schema's options ($testTitle)", ({ selectedItems }) => {
-            const { columnData } = getRenderData(schemas, [], selectedItems);
+            const { columnData } = getRenderData(schemas, [], selectedItems, {});
             expect(columnData).toHaveLength(2);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(1);
-            expect(rootColumn.options).toBeUndefined();
-            expect(rootColumn.contextGroup).toBeUndefined();
             expect(rootColumn.onSelect).toBeDefined();
             expect(rootColumn.onSelect()).toBe(0);
             expect(rootColumn.selectedItem).toBe("root");
             expect(rootColumn.trailingSelection).toBe(true);
             const secondColumn = columnData[1];
-            expect(secondColumn.items).toBeUndefined();
             expect(secondColumn.options).toEqual(expectedOptions);
             expect(secondColumn.contextGroup).toBeInstanceOf(JsonSchemaGroup);
             expect(secondColumn.contextGroup.entries).toHaveLength(2);
@@ -350,16 +328,13 @@ describe("createRenderDataBuilder()", () => {
             ${"valid selection"}                                      | ${["root", [0]]}
             ${"ignoring option selection where there are no options"} | ${["root", [0], [0]]}
         `("offering the selected option's properties", ({ selectedItems }) => {
-            const { columnData } = getRenderData(schemas, [], selectedItems);
+            const { columnData } = getRenderData(schemas, [], selectedItems, {});
             expect(columnData).toHaveLength(3);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(1);
-            expect(rootColumn.options).toBeUndefined();
-            expect(rootColumn.contextGroup).toBeUndefined();
             expect(rootColumn.selectedItem).toBe("root");
             expect(rootColumn.trailingSelection).toBeFalsy();
             const secondColumn = columnData[1];
-            expect(secondColumn.items).toBeUndefined();
             expect(secondColumn.options).toEqual(expectedOptions);
             expect(secondColumn.contextGroup).toBeInstanceOf(JsonSchemaGroup);
             expect(secondColumn.contextGroup.entries).toHaveLength(2);
@@ -374,22 +349,17 @@ describe("createRenderDataBuilder()", () => {
             expect(thirdColumn.items.foo.entries).toHaveLength(1);
             expect(thirdColumn.items.foo.entries[0]).toBeInstanceOf(JsonSchema);
             expect(thirdColumn.items.foo.entries[0].schema).toEqual({ title: "Foo" });
-            expect(thirdColumn.options).toBeUndefined();
-            expect(thirdColumn.contextGroup).toBeUndefined();
             expect(thirdColumn.selectedItem).toBeFalsy();
             expect(thirdColumn.trailingSelection).toBeFalsy();
         });
         it("ignoring an invalid option selection", () => {
-            const { columnData } = getRenderData(schemas, [], ["root", [0]]);
+            const { columnData } = getRenderData(schemas, [], ["root", [0]], {});
             expect(columnData).toHaveLength(3);
             const rootColumn = columnData[0];
             expect(Object.keys(rootColumn.items)).toHaveLength(1);
-            expect(rootColumn.options).toBeUndefined();
-            expect(rootColumn.contextGroup).toBeUndefined();
             expect(rootColumn.selectedItem).toBe("root");
             expect(rootColumn.trailingSelection).toBeFalsy();
             const secondColumn = columnData[1];
-            expect(secondColumn.items).toBeUndefined();
             expect(secondColumn.options).toEqual(expectedOptions);
             expect(secondColumn.contextGroup).toBeInstanceOf(JsonSchemaGroup);
             expect(secondColumn.contextGroup.entries).toHaveLength(2);
@@ -404,8 +374,6 @@ describe("createRenderDataBuilder()", () => {
             expect(thirdColumn.items.foo.entries).toHaveLength(1);
             expect(thirdColumn.items.foo.entries[0]).toBeInstanceOf(JsonSchema);
             expect(thirdColumn.items.foo.entries[0].schema).toEqual({ title: "Foo" });
-            expect(thirdColumn.options).toBeUndefined();
-            expect(thirdColumn.contextGroup).toBeUndefined();
             expect(thirdColumn.selectedItem).toBeFalsy();
             expect(thirdColumn.trailingSelection).toBeFalsy();
         });

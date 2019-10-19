@@ -1,5 +1,5 @@
 import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
-import JsonSchema from "../../src/model/JsonSchema";
+import { JsonSchema } from "../../src/model/JsonSchema";
 
 /**
  * Minimal implementation of JsonSchemaGroup
@@ -14,17 +14,17 @@ class MockJsonSchemaGroup extends JsonSchemaGroup {
 
 describe("with()", () => {
     it("adds given JsonSchema to entries", () => {
-        const schema = new JsonSchema();
+        const schema = new JsonSchema(true, {});
         const targetGroup = new JsonSchemaGroup();
         const returnedGroup = targetGroup.with(schema);
         expect(returnedGroup).toBe(targetGroup);
         expect(targetGroup.entries).toEqual([schema]);
-        const otherSchema = new JsonSchema();
+        const otherSchema = new JsonSchema(true, {});
         targetGroup.with(otherSchema);
         expect(targetGroup.entries).toEqual([schema, otherSchema]);
     });
     it("extracts single entry from given JsonSchemaGroup", () => {
-        const otherEntry = new JsonSchema();
+        const otherEntry = new JsonSchema(true, {});
         const otherGroup = new JsonSchemaGroup().with(otherEntry);
         const targetGroup = new JsonSchemaGroup();
         const returnedGroup = targetGroup.with(otherGroup);
@@ -33,8 +33,8 @@ describe("with()", () => {
     });
     it("adds given JsonSchemaGroup (with more than one entry) to this group's entries", () => {
         const otherGroup = new JsonSchemaGroup()
-            .with(new JsonSchema())
-            .with(new JsonSchema());
+            .with(new JsonSchema(true, {}))
+            .with(new JsonSchema(true, {}));
         const targetGroup = new JsonSchemaGroup();
         const returnedGroup = targetGroup.with(otherGroup);
         expect(returnedGroup).toBe(targetGroup);
@@ -44,8 +44,8 @@ describe("with()", () => {
 describe("someEntry()", () => {
     describe("on group with considerSchemasAsSeparateOptions() === true", () => {
         const group = new MockJsonSchemaGroup(true)
-            .with(new JsonSchema({ title: "Foo" }))
-            .with(new JsonSchema({ title: "Bar" }));
+            .with(new JsonSchema({ title: "Foo" }, {}))
+            .with(new JsonSchema({ title: "Bar" }, {}));
 
         it("includes sub-schema in leading option", () => {
             const checkEntry = ({ schema }) => schema.title === "Foo";
@@ -66,7 +66,7 @@ describe("someEntry()", () => {
         });
         it("supports nested group with considerSchemasAsSeparateOptions() === true", () => {
             const outerGroup = new MockJsonSchemaGroup(true)
-                .with(new JsonSchema({ title: "Foobar" }))
+                .with(new JsonSchema({ title: "Foobar" }, {}))
                 .with(group);
             const checkEntry = ({ schema }) => schema.title === "Foo";
             expect(outerGroup.someEntry(checkEntry)).toBe(true);
@@ -79,13 +79,13 @@ describe("someEntry()", () => {
     });
     describe("on group with considerSchemasAsSeparateOptions() === false", () => {
         const group = new JsonSchemaGroup()
-            .with(new JsonSchema({ title: "Foo" }))
+            .with(new JsonSchema({ title: "Foo" }, {}))
             .with(new MockJsonSchemaGroup(true)
-                .with(new JsonSchema({ title: "Bar" }))
-                .with(new JsonSchema(true)))
+                .with(new JsonSchema({ title: "Bar" }, {}))
+                .with(new JsonSchema(true, {})))
             .with(new MockJsonSchemaGroup(true)
-                .with(new JsonSchema(true))
-                .with(new JsonSchema({ title: "Foobar" })));
+                .with(new JsonSchema(true, {}))
+                .with(new JsonSchema({ title: "Foobar" }, {})));
 
         it("always including top-level schema", () => {
             const checkEntry = ({ schema }) => schema.title === "Foo";
@@ -122,7 +122,7 @@ describe("extractValues()/extractValuesFromEntry()", () => {
                 .mockReturnValueOnce(10)
                 .mockReturnValueOnce("foo")
                 .mockReturnValueOnce(false);
-            const entry = new JsonSchema(true);
+            const entry = new JsonSchema(true, {});
             const group = new JsonSchemaGroup().with(entry);
 
             expect(group.extractValues(extractFromSchema)).toBe(10);
@@ -140,8 +140,8 @@ describe("extractValues()/extractValuesFromEntry()", () => {
         it("calling extractValues() recursively on group entry", () => {
             const group = new JsonSchemaGroup()
                 .with(new JsonSchemaGroup()
-                    .with(new JsonSchema({ title: "foo" }))
-                    .with(new JsonSchema({ description: "bar" })));
+                    .with(new JsonSchema({ title: "foo" }, {}))
+                    .with(new JsonSchema({ description: "bar" }, {})));
             const extractFromSchema = ({ schema }) => schema;
             const mergeResults = (combined, nextValue) => ({ ...combined, ...nextValue });
             const defaultValue = {};
@@ -161,8 +161,8 @@ describe("extractValues()/extractValuesFromEntry()", () => {
             ${"has two item with index < 0"}   | ${[{ index: -2 }]} | ${[{ index: -4 }]}
         `("returns given defaultValue if optionTarget $conditionText", ({ optionTargetIn, optionTargetOut }) => {
             const group = new MockJsonSchemaGroup(true)
-                .with(new JsonSchema(true))
-                .with(new JsonSchema(true));
+                .with(new JsonSchema(true, {}))
+                .with(new JsonSchema(true, {}));
             expect(group.extractValues(
                 () => { },
                 // eslint-disable-next-line no-nested-ternary
@@ -174,10 +174,10 @@ describe("extractValues()/extractValuesFromEntry()", () => {
         });
         it("returns merged values when optionTarget index reaches 0", () => {
             const group = new MockJsonSchemaGroup(true)
-                .with(new JsonSchema(false))
+                .with(new JsonSchema(false, {}))
                 .with(new MockJsonSchemaGroup(true)
-                    .with(new JsonSchema({ title: "bar" }))
-                    .with(new JsonSchema({ title: "baz" })));
+                    .with(new JsonSchema({ title: "bar" }, {}))
+                    .with(new JsonSchema({ title: "baz" }, {})));
             const extractFromSchema = ({ schema }) => schema.title;
             const mergeResults = (combined, nextValue) => (
                 (combined && nextValue)

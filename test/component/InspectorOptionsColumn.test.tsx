@@ -4,7 +4,7 @@ import { shallow } from "enzyme";
 import InspectorOptionsColumn from "../../src/component/InspectorOptionsColumn";
 
 import { getOptionsInSchemaGroup } from "../../src/model/schemaUtils";
-import JsonSchema from "../../src/model/JsonSchema";
+import { JsonSchema } from "../../src/model/JsonSchema";
 import JsonSchemaAllOfGroup from "../../src/model/JsonSchemaAllOfGroup";
 import JsonSchemaAnyOfGroup from "../../src/model/JsonSchemaAnyOfGroup";
 import JsonSchemaOneOfGroup from "../../src/model/JsonSchemaOneOfGroup";

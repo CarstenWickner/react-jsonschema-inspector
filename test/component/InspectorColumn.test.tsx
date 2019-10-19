@@ -3,7 +3,7 @@ import { shallow } from "enzyme";
 
 import InspectorColumn from "../../src/component/InspectorColumn";
 
-import JsonSchema from "../../src/model/JsonSchema";
+import { JsonSchema } from "../../src/model/JsonSchema";
 import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
 
 describe("renders correctly", () => {

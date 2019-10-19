@@ -3,6 +3,7 @@ import { shallow } from "enzyme";
 
 import InspectorDetails from "../../src/component/InspectorDetails";
 import { createRenderDataBuilder } from "../../src/component/renderDataUtils";
+import { RenderItemsColumn } from "../../src/types/Inspector";
 
 describe("renders correctly", () => {
     const buildColumnData = createRenderDataBuilder(() => () => { });
@@ -92,7 +93,7 @@ describe("renders correctly", () => {
                 columnData, itemSchemaGroup, selectionColumnIndex
             } = component.find("InspectorDetailsContent").props();
             expect(columnData).toEqual(columnDataProp);
-            expect(itemSchemaGroup).toEqual(columnDataProp[1].items["[0]"]);
+            expect(itemSchemaGroup).toEqual((columnDataProp[1] as RenderItemsColumn).items["[0]"]);
             expect(selectionColumnIndex).toEqual(1);
         });
         it("applies custom renderSelectionDetails", () => {
@@ -109,7 +110,7 @@ describe("renders correctly", () => {
                 columnData, itemSchemaGroup, selectionColumnIndex
             } = renderSelectionDetails.mock.calls[0][0];
             expect(columnData).toEqual(columnDataProp);
-            expect(itemSchemaGroup).toEqual(columnDataProp[1].items["[0]"]);
+            expect(itemSchemaGroup).toEqual((columnDataProp[1] as RenderItemsColumn).items["[0]"]);
             expect(selectionColumnIndex).toBe(1);
         });
     });
@@ -126,7 +127,7 @@ describe("renders correctly", () => {
                 }
             ]
         };
-        const { columnData: columnDataProp } = buildColumnData({ Foo: schema }, [], ["Foo", [0]]);
+        const { columnData: columnDataProp } = buildColumnData({ Foo: schema }, [], ["Foo", [0]], {});
 
         it("show InspectorDetailsContent by default", () => {
             const component = shallow(

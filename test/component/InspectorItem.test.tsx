@@ -2,7 +2,7 @@ import React from "react";
 import { shallow } from "enzyme";
 
 import InspectorItem from "../../src/component/InspectorItem";
-import JsonSchema from "../../src/model/JsonSchema";
+import { JsonSchema } from "../../src/model/JsonSchema";
 import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
 import JsonSchemaOneOfGroup from "../../src/model/JsonSchemaOneOfGroup";
 
