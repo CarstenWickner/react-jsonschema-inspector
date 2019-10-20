@@ -41,7 +41,8 @@
         "@storybook/addon-options": "~5.2.3",
         "@storybook/react": "~5.2.3",
         "@types/classnames": "^2.2.9",
-        "@types/jest": "24.0.0",
+        "@types/enzyme": "~3.10.3",
+        "@types/jest": "24.0.19",
         "@types/lodash.debounce": "^4.0.6",
         "@types/lodash.escaperegexp": "^4.1.6",
         "@types/lodash.isequal": "^4.5.5",
@@ -107,6 +108,17 @@
         ],
         "transform": {
             "^.+\\.tsx?$": "ts-jest"
+        },
+        "globals": {
+            "ts-jest": {
+                "diagnostics": {
+                    "ignoreCodes": [
+                        2493,
+                        2532,
+                        18002
+                    ]
+                }
+            }
         },
         "setupFilesAfterEnv": [
             "<rootDir>/test/setupTests.ts"

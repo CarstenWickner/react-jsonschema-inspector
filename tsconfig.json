@@ -3,6 +3,7 @@
         "allowSyntheticDefaultImports": true,
         "declaration": true,
         "declarationDir": "./build",
+        "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "jsx": "react",
         "lib": [
@@ -16,6 +17,7 @@
         "noUnusedLocals": true,
         "outDir": "./build",
         "strict": false,
+        "strictNullChecks": false,
         "target": "es5",
         "types": [
             "classnames",
