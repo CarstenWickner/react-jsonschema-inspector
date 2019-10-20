@@ -1,8 +1,8 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+import * as PropTypes from "prop-types";
+import * as React from "react";
 
-import InspectorColumn from "./InspectorColumn";
-import InspectorOptionsColumn from "./InspectorOptionsColumn";
+import { InspectorColumn } from "./InspectorColumn";
+import { InspectorOptionsColumn } from "./InspectorOptionsColumn";
 import { getColumnDataPropTypeShape } from "./renderDataUtils";
 import { RenderItemsColumn, RenderOptionsColumn, RenderItemContentFunction } from "../types/Inspector";
 
@@ -11,11 +11,11 @@ interface ColViewDefaultProps {
     renderItemContent: RenderItemContentFunction
 };
 
-interface ColViewProps extends ColViewDefaultProps {
+export interface ColViewProps extends ColViewDefaultProps {
     columnData: Array<RenderItemsColumn | RenderOptionsColumn>
 };
 
-class InspectorColView extends Component<ColViewProps> {
+export class InspectorColView extends React.Component<ColViewProps> {
     private colViewContainerRef: React.RefObject<HTMLDivElement>;
 
     constructor(props: ColViewProps) {
@@ -93,5 +93,3 @@ class InspectorColView extends Component<ColViewProps> {
         renderItemContent: null
     };
 }
-
-export default InspectorColView;

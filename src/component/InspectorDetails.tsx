@@ -1,10 +1,12 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+import * as PropTypes from "prop-types";
+import * as React from "react";
 
-import InspectorDetailsContent from "./InspectorDetailsContent";
+import { InspectorDetailsContent } from "./InspectorDetailsContent";
 import { getColumnDataPropTypeShape } from "./renderDataUtils";
-import { RenderColumn, RenderSelectionDetailsFunction, RenderEmptyDetailsFunction, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
-import JsonSchemaGroup from "../model/JsonSchemaGroup";
+import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
+import {
+    RenderColumn, RenderSelectionDetailsFunction, RenderEmptyDetailsFunction, RenderItemsColumn, RenderOptionsColumn
+} from "../types/Inspector";
 
 interface InspectorDetailsDefaultProps {
     renderSelectionDetails: RenderSelectionDetailsFunction,
@@ -15,7 +17,7 @@ interface InspectorDetailsProps extends InspectorDetailsDefaultProps {
     columnData: Array<RenderColumn>
 };
 
-class InspectorDetails extends Component<InspectorDetailsProps> {
+export class InspectorDetails extends React.Component<InspectorDetailsProps> {
     render() {
         const {
             columnData, renderSelectionDetails, renderEmptyDetails
@@ -68,5 +70,3 @@ class InspectorDetails extends Component<InspectorDetailsProps> {
         renderEmptyDetails: null
     };
 }
-
-export default InspectorDetails;

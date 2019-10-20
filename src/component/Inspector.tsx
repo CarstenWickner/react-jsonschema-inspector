@@ -1,19 +1,19 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+import * as PropTypes from "prop-types";
+import * as React from "react";
 import memoize from "memoize-one";
 import debounce from "lodash.debounce";
 import isDeepEqual from "lodash.isequal";
 
 import "./Inspector.scss";
 
-import InspectorColView from "./InspectorColView";
-import InspectorDetails from "./InspectorDetails";
-import InspectorBreadcrumbs from "./InspectorBreadcrumbs";
-import InspectorSearchField from "./InspectorSearchField";
-import JsonSchemaPropType from "./JsonSchemaPropType";
+import { InspectorColView } from "./InspectorColView";
+import { InspectorDetails } from "./InspectorDetails";
+import { InspectorBreadcrumbs } from "./InspectorBreadcrumbs";
+import { InspectorSearchField } from "./InspectorSearchField";
+import { JsonSchemaPropType } from "./JsonSchemaPropType";
 import { createRenderDataBuilder, createFilterFunctionForColumn } from "./renderDataUtils";
 
-import createBreadcrumbBuilder from "../model/breadcrumbsUtils";
+import { createBreadcrumbBuilder } from "../model/breadcrumbsUtils";
 import { filteringByFields, filteringByPropertyName } from "../model/searchUtils";
 
 import {
@@ -21,6 +21,7 @@ import {
     RenderItemContentFunction, RenderSelectionDetailsFunction, RenderEmptyDetailsFunction
 } from "../types/Inspector";
 import { RawJsonSchema } from "../types/RawJsonSchema";
+import { RenderColumnOnSelectFunction } from "../types/Inspector";
 
 interface InspectorDefaultProps {
     referenceSchemas: Array<RawJsonSchema>,
@@ -49,7 +50,7 @@ interface InspectorState {
     appliedSearchFilter: string
 };
 
-class Inspector extends Component<InspectorProps, InspectorState> {
+export class Inspector extends React.Component<InspectorProps, InspectorState> {
     /**
      * Avoid constant/immediate re-rendering while the search filter is being entered by using debounce.
      * This is wrapped into memoize() to allow setting the wait times via props.
@@ -103,7 +104,7 @@ class Inspector extends Component<InspectorProps, InspectorState> {
      * {*} return.param0.event - the originally triggered event (e.g. onClick, onDoubleClick, onKeyDown, etc.)
      * {string} return.param0.selectedItem - the item to select (or `null` to discard any selection in this column – and all subsequent ones)
      */
-    onSelectInColumn = (columnIndex: number) => (event: any, selectedItem?: string | Array<number>) => {
+    onSelectInColumn = (columnIndex: number): RenderColumnOnSelectFunction => (event, selectedItem) => {
         // the lowest child component accepting the click/selection event should consume it
         event.stopPropagation();
         const { selectedItems, appendEmptyColumn } = this.state;
@@ -389,5 +390,3 @@ class Inspector extends Component<InspectorProps, InspectorState> {
         renderEmptyDetails: undefined
     };
 }
-
-export default Inspector;

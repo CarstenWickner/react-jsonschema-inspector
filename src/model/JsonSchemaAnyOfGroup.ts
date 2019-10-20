@@ -1,10 +1,10 @@
-import JsonSchemaOptionalsGroup from "./JsonSchemaOptionalsGroup";
+import { JsonSchemaOptionalsGroup } from "./JsonSchemaOptionalsGroup";
 import { ParserConfig } from "../types/Inspector";
 
 /**
  * Representation of an `anyOf` element in a json schema.
  */
-export default class JsonSchemaAnyOfGroup extends JsonSchemaOptionalsGroup {
+export class JsonSchemaAnyOfGroup extends JsonSchemaOptionalsGroup {
 
     /**
      * Constructor for the representation of a schema's `anyOf` property.

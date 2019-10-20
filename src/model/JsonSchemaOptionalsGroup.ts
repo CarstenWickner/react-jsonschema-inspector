@@ -1,10 +1,10 @@
-import JsonSchemaGroup from "./JsonSchemaGroup";
+import { JsonSchemaGroup } from "./JsonSchemaGroup";
 import { SchemaPartParserConfig, RenderOptions } from "../types/Inspector";
 
 /**
  * Representation of an array of schemas that are not mandatory (e.g. `anyOf`, `oneOf`).
  */
-export default class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
+export class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
     /**
      * Configuration object determining how a particular part of a schema is being interpreted.
      *

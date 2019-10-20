@@ -19,7 +19,7 @@ import { BreadcrumbsOptions, RenderColumn, RenderOptionsColumn } from "../types/
  * @param {?Function} breadcrumbsOptions.mutateName - mutates name of selected item (e.g. for removing/replacing white-spaces)
  * @returns {BreadcrumbBuilder} function extracting breadcrumb text for one column
  */
-const createBreadcrumbBuilder = (breadcrumbsOptions: BreadcrumbsOptions) => {
+export const createBreadcrumbBuilder = (breadcrumbsOptions: BreadcrumbsOptions) => {
     const {
         prefix = "", separator = ".", skipSeparator, mutateName
     } = breadcrumbsOptions;
@@ -43,5 +43,3 @@ const createBreadcrumbBuilder = (breadcrumbsOptions: BreadcrumbsOptions) => {
         return separator + name;
     };
 };
-
-export default createBreadcrumbBuilder;

@@ -1,12 +1,10 @@
-import InspectorComponent from "./component/Inspector";
-import {
-    getFieldValueFromSchemaGroup
-} from "./model/schemaUtils";
+import { Inspector as InspectorComponent } from "./component/Inspector";
+import { getFieldValueFromSchemaGroup } from "./model/schemaUtils";
 import {
     minimumValue, maximumValue, commonValues, listValues
 } from "./model/utils";
 
-import JsonSchemaGroup from "./model/JsonSchemaGroup";
+import { JsonSchemaGroup } from "./model/JsonSchemaGroup";
 import { RawJsonSchema } from "./types/RawJsonSchema";
 
 /**

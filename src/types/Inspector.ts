@@ -1,8 +1,7 @@
-import React from "react";
+import * as React from "react";
 
 import { JsonSchema } from "../model/JsonSchema";
-import JsonSchemaGroup from "../model/JsonSchemaGroup";
-import JsonSchemaOptionalsGroup from "../model/JsonSchemaOptionalsGroup";
+import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 
 import { RawJsonSchema } from "./RawJsonSchema";
 
@@ -119,7 +118,7 @@ export interface RenderItemsColumn extends RenderColumnDetails {
 
 export interface RenderOptionsColumn extends RenderColumnDetails {
     options: RenderOptions,
-    contextGroup: JsonSchemaOptionalsGroup
+    contextGroup: JsonSchemaGroup
 }
 
 export type RenderColumn = RenderItemsColumn | RenderOptionsColumn;

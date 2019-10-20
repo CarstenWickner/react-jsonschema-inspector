@@ -1,18 +1,18 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+import * as PropTypes from "prop-types";
+import * as React from "react";
 import classNames from "classnames";
 import isDeepEqual from "lodash.isequal";
 
-import InspectorItem from "./InspectorItem";
+import { InspectorItem } from "./InspectorItem";
 import { getColumnDataPropTypeShape } from "./renderDataUtils";
+import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 import { RenderItemContentFunction, RenderOptions, RenderColumnOnSelectFunction } from "../types/Inspector";
-import JsonSchemaOptionalsGroup from "../model/JsonSchemaOptionalsGroup";
 
 const columnDataPropTypeShape = getColumnDataPropTypeShape(true);
 
-class InspectorOptionsColumn extends Component<{
+export class InspectorOptionsColumn extends React.Component<{
     options: RenderOptions,
-    contextGroup?: JsonSchemaOptionalsGroup,
+    contextGroup?: JsonSchemaGroup,
     selectedItem?: Array<number>,
     filteredItems?: Array<Array<number>>,
     trailingSelection?: boolean,
@@ -107,5 +107,3 @@ class InspectorOptionsColumn extends Component<{
         renderItemContent: null
     };
 }
-
-export default InspectorOptionsColumn;

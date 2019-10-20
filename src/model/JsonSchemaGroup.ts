@@ -1,11 +1,11 @@
+import { JsonSchema } from "./JsonSchema";
 import { listValues } from "./utils";
 import { RenderOptions } from "../types/Inspector";
-import { JsonSchema } from "./JsonSchema";
 
 /**
  * Representation of an array of schemas (e.g. `allOf`, `anyOf`, `oneOf`), offering a number of convenience functions for extracting information.
  */
-export default class JsonSchemaGroup {
+export class JsonSchemaGroup {
     entries: Array<JsonSchema | JsonSchemaGroup> = [];
 
     /**

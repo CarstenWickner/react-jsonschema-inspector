@@ -1,14 +1,3 @@
-
-enum SimpleType {
-    string = "string",
-    integer = "integer",
-    number = "number",
-    object = "object",
-    array = "array",
-    boolean = "boolean",
-    null = "null"
-};
-
 /**
  * PropType for describing fields expected as per JSON Schema Draft 7 (with backwards-compatibility down to Draft 4).
  * Some dynamic fields/validations are not supported as they only make sense against an actual data instance and not when looking at the schema alone.
@@ -26,7 +15,7 @@ export interface RawJsonSchema {
     description?: string,
     examples?: Array<any>,
     default?: any,
-    type?: SimpleType | Array<SimpleType>,
+    type?: string | Array<string>,
 
     // "enum" of allowed values
     enum?: Array<any>,
@@ -54,7 +43,7 @@ export interface RawJsonSchema {
     minProperties?: number,
     maxProperties?: number,
     // these two fields describe placeholders for dynamic fields which may only be mentioned in the "Details"
-    additionalProperties?: { [key: string]: boolean | RawJsonSchema },
+    additionalProperties?: boolean | { [key: string]: boolean | RawJsonSchema },
     patternProperties?: { [key: string]: boolean | RawJsonSchema },
 
     // the following options are only applicable if the "type" includes the value "array"

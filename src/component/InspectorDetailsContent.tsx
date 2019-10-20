@@ -1,11 +1,11 @@
 /* eslint-disable react/no-array-index-key */
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+import * as PropTypes from "prop-types";
+import * as React from "react";
 
-import InspectorDetailsForm from "./InspectorDetailsForm";
+import { InspectorDetailsForm } from "./InspectorDetailsForm";
 import { getColumnDataPropTypeShape } from "./renderDataUtils";
 
-import JsonSchemaGroup from "../model/JsonSchemaGroup";
+import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 import { createOptionTargetArrayFromIndexes, getFieldValueFromSchemaGroup } from "../model/schemaUtils";
 import {
     isDefined, listValues, commonValues, minimumValue, maximumValue
@@ -23,8 +23,10 @@ function containsTrueOrReduce<T>(
     return isDefined(allValues) ? !!allValues : undefined;
 }
 
-class InspectorDetailsContent extends Component<{
-    itemSchemaGroup: JsonSchemaGroup, selectionColumnIndex: number, columnData: Array<RenderColumn>
+export class InspectorDetailsContent extends React.Component<{
+    itemSchemaGroup: JsonSchemaGroup,
+    selectionColumnIndex: number,
+    columnData: Array<RenderColumn>
 }, {}> {
     checkIfIsRequired(selectionColumnIndex: number): boolean {
         if (selectionColumnIndex < 1) {
@@ -156,5 +158,3 @@ class InspectorDetailsContent extends Component<{
         selectionColumnIndex: undefined
     };
 }
-
-export default InspectorDetailsContent;

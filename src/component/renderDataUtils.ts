@@ -1,8 +1,8 @@
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 
 import { JsonSchema, RefScope } from "../model/JsonSchema";
-import JsonSchemaGroup from "../model/JsonSchemaGroup";
-import JsonSchemaOptionalsGroup from "../model/JsonSchemaOptionalsGroup";
+import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
+import { JsonSchemaOptionalsGroup } from "../model/JsonSchemaOptionalsGroup";
 import {
     createGroupFromSchema, getPropertiesFromSchemaGroup, getTypeOfArrayItemsFromSchemaGroup,
     createOptionTargetArrayFromIndexes, getOptionsInSchemaGroup, getIndexPermutationsForOptions
@@ -205,13 +205,13 @@ export const createRenderDataBuilder = (
  * @param {JsonSchema} schema - single schema instance to check in (ignoring any nested sub schemas, e.g. `allOf`/`oneOf`/`anyOf`)
  * @returns {boolean} whether any properties are mentioned or `schema` represents an array with items of a certain type
  */
-function hasSchemaNestedItems(schema) {
+function hasSchemaNestedItems(schema: JsonSchema): boolean {
     const { schema: rawSchema } = schema;
     const {
         properties, required, items, additionalItems
     } = rawSchema;
     return isNonEmptyObject(properties)
-        || required
+        || !!required
         || isNonEmptyObject(items)
         || isNonEmptyObject(additionalItems);
 }
@@ -223,10 +223,9 @@ function hasSchemaNestedItems(schema) {
  * @param {Array.<number>} optionIndexes - indexes of selected options
  * @returns {boolean} whether any properties are mentioned, it represents an array with items of a certain type or contains selectable options
  */
-export function hasSchemaGroupNestedItems(schemaGroup, optionIndexes) {
+export function hasSchemaGroupNestedItems(schemaGroup: JsonSchemaGroup, optionIndexes?: Array<number>): boolean {
     return schemaGroup.someEntry(hasSchemaNestedItems, createOptionTargetArrayFromIndexes(optionIndexes))
-        || (!optionIndexes && getOptionsInSchemaGroup(schemaGroup).options)
-        || false;
+        || (!optionIndexes && !!getOptionsInSchemaGroup(schemaGroup).options);
 }
 
 const optionShape = {
@@ -244,7 +243,11 @@ optionShape.options = PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.shape({})
  * @param {?object} param0.items - list of selectable entries being listed (i.e. properties/options/array-item-accessors)
  * @returns {?Error} validation error or null if validation is successful
  */
-function contextGroupValidator({ contextGroup, options, items }) {
+function contextGroupValidator({ contextGroup, options, items }: {
+    contextGroup?: JsonSchemaGroup,
+    options?: RenderOptions,
+    items?: { [key: string]: JsonSchemaGroup }
+}): Error {
     if (isDefined(contextGroup) && !(contextGroup instanceof JsonSchemaGroup)) {
         return new Error("`contextGroup` is not a JsonSchemaGroup");
     }
@@ -264,7 +267,9 @@ function contextGroupValidator({ contextGroup, options, items }) {
  * @param {?string|Array.<number>} param0.selectedItem - name of the selected property/array-item-accessor or array of option indexes
  * @returns {?Error} validation error or null if validation is successful
  */
-function selectedItemValidator({ selectedItem }) {
+function selectedItemValidator({ selectedItem }: {
+    selectedItem?: string | Array<number>
+}): Error {
     if (isDefined(selectedItem)
         && typeof selectedItem !== "string"
         && !(
@@ -284,7 +289,10 @@ function selectedItemValidator({ selectedItem }) {
  * @param {?boolean} param0.trailingSelection - flag indicating whether the `selectedItem` is the last selection (i.e. in the right-most column)
  * @returns {?Error} validation error or null if validation is successful
  */
-function trailingSelectionValidator({ selectedItem, trailingSelection }) {
+function trailingSelectionValidator({ selectedItem, trailingSelection }: {
+    selectedItem?: string | Array<number>,
+    trailingSelection?: boolean
+}): Error {
     if (isDefined(trailingSelection) && typeof trailingSelection !== "boolean") {
         return new Error("`trailingSelection` is not a boolean");
     }
@@ -303,15 +311,19 @@ function trailingSelectionValidator({ selectedItem, trailingSelection }) {
  * @param {?object} param0.items - list of selectable entries being listed (i.e. properties/options/array-item-accessors)
  * @returns {?Error} validation error or null if validation is successful
  */
-function filteredItemsValidator({ items, options, filteredItems }) {
+function filteredItemsValidator({ items, options, filteredItems }: {
+    items?:  { [key: string]: JsonSchemaGroup },
+    options?: RenderOptions
+    filteredItems?: Array<string> | Array<Array<number>>
+}): Error {
     if (isDefined(filteredItems)) {
         if (!Array.isArray(filteredItems)) {
             return new Error("`filteredItems` is not an `array`");
         }
-        if (items && filteredItems.some((singleItem) => !items[singleItem])) {
+        if (items && (filteredItems as Array<string>).some((singleItem) => !items[singleItem])) {
             return new Error("`filteredItems` are not all part of `items`");
         }
-        if (options && !filteredItems.every((singleOption) => isOptionIndexValidForOptions(singleOption, options))) {
+        if (options && !(filteredItems as Array<Array<number>>).every((singleOption) => isOptionIndexValidForOptions(singleOption, options))) {
             return new Error("`filteredItems` are not all part of index combinations derived from `options`");
         }
     }

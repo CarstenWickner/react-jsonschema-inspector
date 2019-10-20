@@ -1,10 +1,10 @@
-import JsonSchemaGroup from "./JsonSchemaGroup";
+import { JsonSchemaGroup } from "./JsonSchemaGroup";
 import { JsonSchema } from "./JsonSchema";
 
 /**
  * Representation of an `allOf` element in a Json Schema.
  */
-export default class JsonSchemaAllOfGroup extends JsonSchemaGroup {
+export class JsonSchemaAllOfGroup extends JsonSchemaGroup {
     /**
      * Extension of method from super class for adding a given Json Schema or group to this group.
      *

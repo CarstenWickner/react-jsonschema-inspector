@@ -1,10 +1,10 @@
-import JsonSchemaOptionalsGroup from "./JsonSchemaOptionalsGroup";
+import { JsonSchemaOptionalsGroup } from "./JsonSchemaOptionalsGroup";
 import { ParserConfig } from "../types/Inspector";
 
 /**
  * Representation of an `oneOf` element in a json schema.
  */
-export default class JsonSchemaOneOfGroup extends JsonSchemaOptionalsGroup {
+export class JsonSchemaOneOfGroup extends JsonSchemaOptionalsGroup {
 
     /**
      * Constructor for the representation of a schema's `oneOf` property.

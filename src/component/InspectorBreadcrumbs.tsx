@@ -1,9 +1,9 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+import * as PropTypes from "prop-types";
+import * as React from "react";
 import classNames from "classnames";
 
 import { getColumnDataPropTypeShape } from "./renderDataUtils";
-import createBreadcrumbBuilder from "../model/breadcrumbsUtils";
+import { createBreadcrumbBuilder } from "../model/breadcrumbsUtils";
 import { BreadcrumbsOptions, RenderColumn, RenderOptionsColumn } from "../types/Inspector";
 
 interface InspectorBreadcrumbsProps {
@@ -11,7 +11,7 @@ interface InspectorBreadcrumbsProps {
     breadcrumbsOptions: BreadcrumbsOptions
 }
 
-class InspectorBreadcrumbs extends Component<InspectorBreadcrumbsProps> {
+export class InspectorBreadcrumbs extends React.Component<InspectorBreadcrumbsProps> {
     render() {
         const { columnData, breadcrumbsOptions } = this.props;
         const buildBreadcrumb = createBreadcrumbBuilder(breadcrumbsOptions);
@@ -74,5 +74,3 @@ class InspectorBreadcrumbs extends Component<InspectorBreadcrumbsProps> {
         }).isRequired
     };
 }
-
-export default InspectorBreadcrumbs;

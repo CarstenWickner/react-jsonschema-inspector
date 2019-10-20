@@ -1,7 +1,7 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+import * as PropTypes from "prop-types";
+import * as React from "react";
 
-class InspectorSearchField extends Component<{
+export class InspectorSearchField extends React.Component<{
     searchFilter: string,
     onSearchFilterChange: (newFilterValue: string) => void,
     placeholder: string
@@ -36,5 +36,3 @@ class InspectorSearchField extends Component<{
         placeholder: "Search"
     };
 }
-
-export default InspectorSearchField;

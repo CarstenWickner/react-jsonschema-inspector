@@ -1,18 +1,18 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+import * as PropTypes from "prop-types";
+import * as React from "react";
 import classNames from "classnames";
 
-import InspectorItem from "./InspectorItem";
+import { InspectorItem } from "./InspectorItem";
 import { getColumnDataPropTypeShape } from "./renderDataUtils";
+import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 import { RenderItemContentFunction, RenderColumnOnSelectFunction } from "../types/Inspector";
-import JsonSchemaGroup from "../model/JsonSchemaGroup";
 
 const {
     items: itemsPropType,
     onSelect: onSelectPropType
 } = getColumnDataPropTypeShape(true);
 
-class InspectorColumn extends Component<{
+export class InspectorColumn extends React.Component<{
     items: { [key: string]: JsonSchemaGroup },
     selectedItem?: string,
     filteredItems?: Array<string>,
@@ -66,5 +66,3 @@ class InspectorColumn extends Component<{
         renderItemContent: null
     };
 }
-
-export default InspectorColumn;

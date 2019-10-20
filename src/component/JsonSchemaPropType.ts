@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+import * as PropTypes from "prop-types";
 import { RawJsonSchema } from "../types/RawJsonSchema";
 
 const simpleTypes = PropTypes.oneOf(["string", "integer", "number", "object", "array", "boolean", "null"]);
@@ -53,7 +53,11 @@ const jsonSchemaShape: { [key in keyof RawJsonSchema]: PropTypes.Requireable<any
     maxItems: PropTypes.number,
     uniqueItems: PropTypes.bool
 };
-const JsonSchemaPropType = PropTypes.shape(jsonSchemaShape);
+/**
+ * PropType for describing fields expected as per JSON Schema Draft 7 (with backwards-compatibility down to Draft 4).
+ * Some dynamic fields/validations are not supported as they only make sense against an actual data instance and not when looking at the schema alone.
+ */
+export const JsonSchemaPropType = PropTypes.shape(jsonSchemaShape);
 
 // cater for recursive structure of object properties being described as JsonSchema
 jsonSchemaShape.properties = PropTypes.objectOf(PropTypes.oneOfType([PropTypes.bool, JsonSchemaPropType]));
@@ -89,9 +93,3 @@ jsonSchemaShape.oneOf = PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.bool, J
     jsonSchemaShape.then = JsonSchemaPropType;
     jsonSchemaShape.else = JsonSchemaPropType;
 */
-
-/**
- * PropType for describing fields expected as per JSON Schema Draft 7 (with backwards-compatibility down to Draft 4).
- * Some dynamic fields/validations are not supported as they only make sense against an actual data instance and not when looking at the schema alone.
- */
-export default JsonSchemaPropType;

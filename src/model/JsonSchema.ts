@@ -3,38 +3,36 @@ import { isNonEmptyObject } from "./utils";
 import { RawJsonSchema } from "../types/RawJsonSchema";
 import { ParserConfig } from "../types/Inspector";
 
+const createRawSchemaFromBoolean = (value: boolean): RawJsonSchema => value ? {} : { not: {} };
+
 /**
  * Representation of a Json Schema, offering a number of convenient functions for traversing and extracting information.
  */
 export class JsonSchema {
     /**
      * Raw JSON Schema.
-     *
-     * @type {object}
      */
-    schema: RawJsonSchema;
+    readonly schema: RawJsonSchema;
 
     /**
      * Configuration steering how the json schema is being traversed/parsed.
-     *
-     * @type {{oneOf: ?{groupTitle: ?string}, anyOf: ?{groupTitle: ?string}}}
      */
-    parserConfig: ParserConfig;
+    readonly parserConfig: ParserConfig;
 
     /**
-     * @type {RefScope}
+     * Collection of allowed references to other schemas/parts.
      */
-    scope: RefScope;
+    readonly scope: RefScope;
 
     /**
      * Constructor for a JsonSchema (wrapper).
      *
-     * @param {object} schema - the JSON Schema to represent
-     * @param {object} parserConfig - configuration affecting how the json schema is being traversed/parsed
+     * @param {boolean|RawJsonSchema} schema - the JSON Schema to represent
+     * @param {ParserConfig} parserConfig - configuration affecting how the json schema is being traversed/parsed
      * @param {?RefScope} scope - collection of available $ref targets (will be generated based on `schema` if not provided)
      */
     constructor(schema: boolean | RawJsonSchema, parserConfig: ParserConfig, scope?: RefScope) {
-        this.schema = (typeof schema === "boolean" ? {} : schema) as RawJsonSchema;
+        this.schema = typeof schema === "boolean" ? createRawSchemaFromBoolean(schema) : schema as RawJsonSchema;
         this.parserConfig = parserConfig;
         this.scope = scope || new RefScope(this);
     }
@@ -47,22 +45,16 @@ export class JsonSchema {
 export class RefScope {
     /**
      * Collection of available sub-schema to be referenced via "$ref" within the originating schema.
-     *
-     * @type {Map.<string, JsonSchema>}
      */
-    internalRefs: Map<string, JsonSchema> = new Map();
+    readonly internalRefs: Map<string, JsonSchema> = new Map();
 
     /**
      * Collection of available sub-schema to be referenced via "$ref" within the originating schema or from other schemas.
-     *
-     * @type {Map.<string, JsonSchema>}
      */
-    externalRefs: Map<string, JsonSchema> = new Map();
+    readonly externalRefs: Map<string, JsonSchema> = new Map();
 
     /**
      * Array of other scopes (e.g. in case of separate schemas being provided for that purpose).
-     *
-     * @type {Array.<RefScope>}
      */
     otherScopes: Array<RefScope> = [];
 

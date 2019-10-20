@@ -1,8 +1,8 @@
 import { JsonSchema, RefScope } from "./JsonSchema";
-import JsonSchemaGroup from "./JsonSchemaGroup";
-import JsonSchemaAllOfGroup from "./JsonSchemaAllOfGroup";
-import JsonSchemaAnyOfGroup from "./JsonSchemaAnyOfGroup";
-import JsonSchemaOneOfGroup from "./JsonSchemaOneOfGroup";
+import { JsonSchemaGroup } from "./JsonSchemaGroup";
+import { JsonSchemaAllOfGroup } from "./JsonSchemaAllOfGroup";
+import { JsonSchemaAnyOfGroup } from "./JsonSchemaAnyOfGroup";
+import { JsonSchemaOneOfGroup } from "./JsonSchemaOneOfGroup";
 import { isNonEmptyObject, listValues, mapObjectValues } from "./utils";
 import { RawJsonSchema } from "../types/RawJsonSchema";
 import { ParserConfig, RenderOptions } from "../types/Inspector";
@@ -337,14 +337,14 @@ export function getPropertiesFromSchemaGroup(
     optionIndexes?: Array<number>
 ) {
     const optionTarget = createOptionTargetArrayFromIndexes(optionIndexes);
-    let result = schemaGroup.extractValues(
+    const extractedValues = schemaGroup.extractValues(
         getPropertiesFromSchema,
         mergeSchemas,
         {},
         optionTarget
     );
     // convert any remaining non-schema values (e.g. booleans) into schema wrappers
-    result = mapObjectValues(result, (value) => (
+    const result = mapObjectValues(extractedValues, (value) => (
         // no need to forward any parserConfig or scope to this (dummy/empty) schema
         value instanceof JsonSchema ? value : new JsonSchema(value as RawJsonSchema, {}, undefined)
     ));

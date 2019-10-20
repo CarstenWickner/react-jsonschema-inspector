@@ -1,13 +1,13 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+import * as PropTypes from "prop-types";
+import * as React from "react";
 import classNames from "classnames";
 
-import JsonSchemaGroup from "../model/JsonSchemaGroup";
+import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 import { hasSchemaGroupNestedItems } from "./renderDataUtils";
 import { isDefined } from "../model/utils";
 import { RenderItemContentFunction, RenderColumnOnSelectFunction } from "../types/Inspector";
 
-class InspectorItem extends Component<{
+export class InspectorItem extends React.Component<{
     name: string,
     schemaGroup: JsonSchemaGroup,
     optionIndexes?: Array<number>,
@@ -74,5 +74,3 @@ class InspectorItem extends Component<{
         renderContent: null
     };
 }
-
-export default InspectorItem;
