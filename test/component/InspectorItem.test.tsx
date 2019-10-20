@@ -1,10 +1,10 @@
-import React from "react";
+import * as React from "react";
 import { shallow } from "enzyme";
 
-import InspectorItem from "../../src/component/InspectorItem";
+import { InspectorItem } from "../../src/component/InspectorItem";
 import { JsonSchema } from "../../src/model/JsonSchema";
-import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
-import JsonSchemaOneOfGroup from "../../src/model/JsonSchemaOneOfGroup";
+import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
+import { JsonSchemaOneOfGroup } from "../../src/model/JsonSchemaOneOfGroup";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {
@@ -22,13 +22,13 @@ describe("renders correctly", () => {
         ${"with nested items"}    | ${[0]}        | ${true}
         ${"without nested items"} | ${[1]}        | ${false}
     `("representing option $testTitle", ({ optionIndexes, hasNestedItems }) => {
-        const schemaGroup = new JsonSchemaOneOfGroup()
+        const schemaGroup = new JsonSchemaOneOfGroup({})
             .with(new JsonSchema({
                 properties: { foo: true }
-            }))
+            }, {}))
             .with(new JsonSchema({
                 title: "bar"
-            }));
+            }, {}));
         const component = shallow(
             <InspectorItem
                 name="Foobar"
@@ -45,7 +45,7 @@ describe("renders correctly", () => {
                 name="Foo"
                 schemaGroup={new JsonSchemaGroup().with(new JsonSchema({
                     properties: { bar: true }
-                }))}
+                }, {}))}
                 onSelect={() => { }}
             />
         );

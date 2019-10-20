@@ -1,16 +1,16 @@
-import React from "react";
+import * as React from "react";
 import { shallow } from "enzyme";
 
-import InspectorColumn from "../../src/component/InspectorColumn";
+import { InspectorColumn } from "../../src/component/InspectorColumn";
 
 import { JsonSchema } from "../../src/model/JsonSchema";
-import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
+import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
 
 describe("renders correctly", () => {
     it("with minimal/default props (items)", () => {
         const { scope } = new JsonSchema({
             definitions: { Target: {} }
-        });
+        }, {});
         const component = shallow(
             <InspectorColumn
                 items={{

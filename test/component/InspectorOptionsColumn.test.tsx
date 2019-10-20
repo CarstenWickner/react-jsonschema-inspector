@@ -1,13 +1,13 @@
-import React from "react";
+import * as React from "react";
 import { shallow } from "enzyme";
 
-import InspectorOptionsColumn from "../../src/component/InspectorOptionsColumn";
+import { InspectorOptionsColumn } from "../../src/component/InspectorOptionsColumn";
 
 import { getOptionsInSchemaGroup } from "../../src/model/schemaUtils";
 import { JsonSchema } from "../../src/model/JsonSchema";
-import JsonSchemaAllOfGroup from "../../src/model/JsonSchemaAllOfGroup";
-import JsonSchemaAnyOfGroup from "../../src/model/JsonSchemaAnyOfGroup";
-import JsonSchemaOneOfGroup from "../../src/model/JsonSchemaOneOfGroup";
+import { JsonSchemaAllOfGroup } from "../../src/model/JsonSchemaAllOfGroup";
+import { JsonSchemaAnyOfGroup } from "../../src/model/JsonSchemaAnyOfGroup";
+import { JsonSchemaOneOfGroup } from "../../src/model/JsonSchemaOneOfGroup";
 
 describe("renders correctly", () => {
     const oneOfOptionNameForIndex = (optionIndexes) => `Exclusive Option ${optionIndexes.map((index) => index + 1).join("-")}`;
@@ -15,12 +15,12 @@ describe("renders correctly", () => {
         oneOf: { optionNameForIndex: oneOfOptionNameForIndex }
     };
     const contextGroup = new JsonSchemaAllOfGroup()
-        .with(new JsonSchema({ description: "Foobar" }))
+        .with(new JsonSchema({ description: "Foobar" }, {}))
         .with(new JsonSchemaOneOfGroup(parserConfig)
-            .with(new JsonSchema({ title: "Foo" }))
+            .with(new JsonSchema({ title: "Foo" }, {}))
             .with(new JsonSchemaAnyOfGroup(parserConfig)
-                .with(new JsonSchema({ title: "Bar" }))
-                .with(new JsonSchema({ description: "Baz" }))));
+                .with(new JsonSchema({ title: "Bar" }, {}))
+                .with(new JsonSchema({ description: "Baz" }, {}))));
     const options = getOptionsInSchemaGroup(contextGroup);
     it("with minimal/default props", () => {
         const component = shallow(
@@ -88,10 +88,10 @@ describe("renders correctly", () => {
 describe("calls onSelect", () => {
     const onSelect = jest.fn(() => { });
     const contextGroup = new JsonSchemaAllOfGroup()
-        .with(new JsonSchema({ description: "Foobar" }))
-        .with(new JsonSchemaOneOfGroup()
-            .with(new JsonSchema({ title: "Foo" }))
-            .with(new JsonSchema({ title: "Bar" })));
+        .with(new JsonSchema({ description: "Foobar" }, {}))
+        .with(new JsonSchemaOneOfGroup({})
+            .with(new JsonSchema({ title: "Foo" }, {}))
+            .with(new JsonSchema({ title: "Bar" }, {})));
     const options = {
         groupTitle: "one of",
         options: [{}, {}]

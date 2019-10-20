@@ -1,8 +1,8 @@
-import React from "react";
+import * as React from "react";
 import { mount, shallow } from "enzyme";
 
-import InspectorColView from "../../src/component/InspectorColView";
-import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
+import { InspectorColView } from "../../src/component/InspectorColView";
+import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {

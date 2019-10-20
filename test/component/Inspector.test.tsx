@@ -1,7 +1,10 @@
-import React from "react";
+import * as React from "react";
 import { shallow } from "enzyme";
 
-import Inspector from "../../src/component/Inspector";
+import { Inspector } from "../../src/component/Inspector";
+import { ColViewProps } from "../../src/component/InspectorColView";
+import { JsonSchema } from "../../src/model/JsonSchema";
+import { RenderColumn, RenderItemsColumn } from "../../src/types/Inspector";
 
 describe("renders correctly", () => {
     const schemas = {
@@ -63,14 +66,14 @@ describe("renders correctly", () => {
             let searchField = header.find("InspectorSearchField");
             expect(searchField.exists()).toBe(true);
             expect(searchField.prop("searchFilter")).toEqual("");
-            const onSearchFilterChange = searchField.prop("onSearchFilterChange");
+            const onSearchFilterChange: (newSearchFilter: string) => void = searchField.prop("onSearchFilterChange");
             // trigger change of search filter
             onSearchFilterChange("Title");
-            component.instance().debouncedApplySearchFilter(100, 1000).flush();
+            (component.instance() as Inspector).debouncedApplySearchFilter(100, 1000).flush();
             searchField = component.find("InspectorSearchField");
             expect(searchField.prop("searchFilter")).toEqual("Title");
             expect(searchField.prop("placeholder")).toEqual("Filter by Title");
-            const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
+            const { filteredItems } = (component.find("InspectorColView").prop("columnData") as Array<RenderColumn>)[0];
             expect(filteredItems).toBeDefined();
             expect(filteredItems).toHaveLength(2);
             expect(filteredItems).toEqual(["Schema One", "Schema Two"]);
@@ -85,16 +88,17 @@ describe("renders correctly", () => {
                     }}
                 />
             );
-            const onSearchFilterChange = component.find("InspectorSearchField").prop("onSearchFilterChange");
+            const onSearchFilterChange: (newSearchFilter: string) => void = component.find("InspectorSearchField").prop("onSearchFilterChange");
             // trigger change of search filter (looking for all schemas with a `properties` field)
             onSearchFilterChange("properties");
             // flush based on default debounce times
-            component.instance().debouncedApplySearchFilter(200, 500).flush();
+            (component.instance() as Inspector).debouncedApplySearchFilter(200, 500).flush();
             expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("properties");
-            const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
+            const { filteredItems } = (component.find("InspectorColView").prop("columnData") as Array<RenderColumn>)[0];
             expect(filteredItems).toBeDefined();
             expect(filteredItems).toHaveLength(2);
-            expect(filteredItems[0]).toEqual("Schema One", "Schema Two");
+            expect(filteredItems[0]).toEqual("Schema One");
+            expect(filteredItems[1]).toEqual("Schema Two");
         });
         it("filtering by property names", () => {
             const component = shallow(
@@ -106,13 +110,13 @@ describe("renders correctly", () => {
                     }}
                 />
             );
-            const onSearchFilterChange = component.find("InspectorSearchField").prop("onSearchFilterChange");
+            const onSearchFilterChange: (newSearchFilter: string) => void = component.find("InspectorSearchField").prop("onSearchFilterChange");
             // trigger change of search filter (looking for all top-level properties containing 'Schema Two')
             onSearchFilterChange("Schema Two");
             // flush based on default debounce times
-            component.instance().debouncedApplySearchFilter(200, 500).flush();
+            (component.instance() as Inspector).debouncedApplySearchFilter(200, 500).flush();
             expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("Schema Two");
-            const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
+            const { filteredItems } = (component.find("InspectorColView").prop("columnData") as Array<RenderColumn>)[0];
             expect(filteredItems).toBeDefined();
             expect(filteredItems).toHaveLength(1);
             expect(filteredItems[0]).toEqual("Schema Two");
@@ -129,13 +133,13 @@ describe("renders correctly", () => {
                     }}
                 />
             );
-            const onSearchFilterChange = component.find("InspectorSearchField").prop("onSearchFilterChange");
+            const onSearchFilterChange: (newSearchFilter: string) => void = component.find("InspectorSearchField").prop("onSearchFilterChange");
             // trigger change of search filter (but without any filtering being applied since there are only two characters)
             onSearchFilterChange("12");
             // flush based on default debounce maxWait
-            component.instance().debouncedApplySearchFilter(100, 500).flush();
+            (component.instance() as Inspector).debouncedApplySearchFilter(100, 500).flush();
             expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("12");
-            const { filteredItems } = component.find("InspectorColView").prop("columnData")[0];
+            const { filteredItems } = (component.find("InspectorColView").prop("columnData") as Array<RenderColumn>)[0];
             expect(filteredItems).toBeUndefined();
         });
     });
@@ -156,13 +160,13 @@ describe("renders correctly", () => {
                 defaultSelectedItems={[selectedSchema]}
             />
         );
-        const { columnData } = component.find("InspectorColView").props();
+        const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(2);
-        expect(columnData[0].items[selectedSchema].entries[0].schema).toEqual(schemas[selectedSchema]);
+        expect(((columnData[0] as RenderItemsColumn).items[selectedSchema].entries[0] as JsonSchema).schema).toEqual(schemas[selectedSchema]);
         expect(columnData[0].selectedItem).toBe(selectedSchema);
         expect(columnData[0].trailingSelection).toBe(true);
         expect(typeof columnData[0].onSelect).toBe("function");
-        expect(Object.keys(columnData[1].items)).toEqual(["Item One", "Item Two"]);
+        expect(Object.keys((columnData[1] as RenderItemsColumn).items)).toEqual(["Item One", "Item Two"]);
         expect(typeof columnData[1].onSelect).toBe("function");
     });
     it("with multi-column leaf selection", () => {
@@ -175,12 +179,12 @@ describe("renders correctly", () => {
                 defaultSelectedItems={[selectedSchema, selectedItem]}
             />
         );
-        const { columnData } = component.find("InspectorColView").props();
+        const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(2);
-        expect(columnData[0].items[selectedSchema].entries[0].schema).toEqual(schemas[selectedSchema]);
+        expect(((columnData[0] as RenderItemsColumn).items[selectedSchema].entries[0] as JsonSchema).schema).toEqual(schemas[selectedSchema]);
         expect(columnData[0].selectedItem).toBe(selectedSchema);
         expect(typeof columnData[0].onSelect).toBe("function");
-        expect(Object.keys(columnData[1].items)).toEqual(["Item Three"]);
+        expect(Object.keys((columnData[1] as RenderItemsColumn).items)).toEqual(["Item Three"]);
         expect(columnData[1].selectedItem).toBe(selectedItem);
         expect(columnData[1].trailingSelection).toBe(true);
         expect(typeof columnData[1].onSelect).toBe("function");
@@ -194,13 +198,13 @@ describe("renders correctly", () => {
                 defaultSelectedItems={[selectedSchema, selectedItem]}
             />
         );
-        const { columnData } = component.find("InspectorColView").props();
+        const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(3);
-        expect(Object.keys(columnData[1].items)).toEqual(["Item One", "Item Two"]);
+        expect(Object.keys((columnData[1] as RenderItemsColumn).items)).toEqual(["Item One", "Item Two"]);
         expect(columnData[1].selectedItem).toBe(selectedItem);
         expect(columnData[1].trailingSelection).toBe(true);
         expect(typeof columnData[1].onSelect).toBe("function");
-        expect(Object.keys(columnData[2].items)).toEqual(["[0]"]);
+        expect(Object.keys((columnData[2] as RenderItemsColumn).items)).toEqual(["[0]"]);
         expect(typeof columnData[2].onSelect).toBe("function");
     });
     it("ignores invalid root selection", () => {
@@ -210,7 +214,7 @@ describe("renders correctly", () => {
                 defaultSelectedItems={["Schema X"]}
             />
         );
-        const { columnData } = component.find("InspectorColView").props();
+        const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(1);
         expect(columnData[0].selectedItem).toBe(null);
     });
@@ -221,7 +225,7 @@ describe("renders correctly", () => {
                 defaultSelectedItems={["Schema One", "Item X"]}
             />
         );
-        const { columnData } = component.find("InspectorColView").props();
+        const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(2);
         expect(columnData[0].trailingSelection).toBe(true);
         expect(columnData[1].selectedItem).toBe(null);
@@ -233,7 +237,7 @@ describe("renders correctly", () => {
                 defaultSelectedItems={["Schema One", "Item X", "Property X"]}
             />
         );
-        const { columnData } = component.find("InspectorColView").props();
+        const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(2);
         expect(columnData[0].trailingSelection).toBe(true);
         expect(columnData[1].selectedItem).toBe(null);

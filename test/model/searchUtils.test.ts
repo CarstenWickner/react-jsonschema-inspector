@@ -443,59 +443,56 @@ describe("filteringByFields()", () => {
         it("for null searchFields parameter", () => {
             expect(filteringByFields(null, "filter")).toBeUndefined();
         });
-        it("for empty string searchFields parameter", () => {
-            expect(filteringByFields("", "filter")).toBeUndefined();
-        });
         it("for empty array searchFields parameter", () => {
             expect(filteringByFields([], "filter")).toBeUndefined();
         });
         it("for undefined searchFilter parameter", () => {
-            expect(filteringByFields(["field-name"], undefined)).toBeUndefined();
+            expect(filteringByFields(["const"], undefined)).toBeUndefined();
         });
         it("for null searchFilter parameter", () => {
-            expect(filteringByFields(["field-name"], null)).toBeUndefined();
+            expect(filteringByFields(["const"], null)).toBeUndefined();
         });
         it("for empty searchFilter parameter", () => {
-            expect(filteringByFields(["field-name"], "")).toBeUndefined();
+            expect(filteringByFields(["const"], "")).toBeUndefined();
         });
     });
     describe("finding", () => {
         it("exact match in specified field", () => {
-            const filterFunction = filteringByFields(["fieldName"], "fieldValue");
-            expect(filterFunction({ fieldName: "fieldValue" })).toBe(true);
+            const filterFunction = filteringByFields(["const"], "fieldValue");
+            expect(filterFunction({ const: "fieldValue" })).toBe(true);
         });
         it("partial match in specified field", () => {
-            const filterFunction = filteringByFields(["fieldName"], "Value");
-            expect(filterFunction({ fieldName: "fieldValuePart" })).toBe(true);
+            const filterFunction = filteringByFields(["const"], "Value");
+            expect(filterFunction({ const: "fieldValuePart" })).toBe(true);
         });
         it("case-insensitive match in specified field", () => {
-            const filterFunction = filteringByFields(["fieldName"], "vALUEpART");
-            expect(filterFunction({ fieldName: "fieldValuePart" })).toBe(true);
+            const filterFunction = filteringByFields(["const"], "vALUEpART");
+            expect(filterFunction({ const: "fieldValuePart" })).toBe(true);
         });
         it("match in first specified field", () => {
-            const filterFunction = filteringByFields(["fieldNameOne", "fieldNameTwo"], "value");
+            const filterFunction = filteringByFields(["title", "description"], "value");
             const schema = {
-                fieldNameOne: "value",
-                fieldNameTwo: "something else"
+                title: "value",
+                description: "something else"
             };
             expect(filterFunction(schema)).toBe(true);
         });
         it("match in second specified field", () => {
-            const filterFunction = filteringByFields(["fieldNameOne", "fieldNameTwo"], "value");
+            const filterFunction = filteringByFields(["title", "description"], "value");
             const schema = {
-                fieldNameOne: "something else",
-                fieldNameTwo: "value"
+                title: "something else",
+                description: "value"
             };
             expect(filterFunction(schema)).toBe(true);
         });
         it("no match if field not present", () => {
-            const filterFunction = filteringByFields(["fieldName"], "value");
-            const schema = { otherField: "value" };
+            const filterFunction = filteringByFields(["const"], "value");
+            const schema = { title: "value" };
             expect(filterFunction(schema)).toBe(false);
         });
         it("no match if field value different", () => {
-            const filterFunction = filteringByFields(["fieldName"], "value");
-            const schema = { fieldName: "something else" };
+            const filterFunction = filteringByFields(["const"], "value");
+            const schema = { const: "something else" };
             expect(filterFunction(schema)).toBe(false);
         });
     });

@@ -1,7 +1,7 @@
-import React from "react";
+import * as React from "react";
 import { shallow } from "enzyme";
 
-import InspectorSearchField from "../../src/component/InspectorSearchField";
+import { InspectorSearchField } from "../../src/component/InspectorSearchField";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {

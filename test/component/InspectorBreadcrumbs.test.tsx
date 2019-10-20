@@ -1,8 +1,9 @@
-import React from "react";
+import * as React from "react";
 import { shallow } from "enzyme";
 
-import InspectorBreadcrumbs from "../../src/component/InspectorBreadcrumbs";
+import { InspectorBreadcrumbs } from "../../src/component/InspectorBreadcrumbs";
 import { createRenderDataBuilder } from "../../src/component/renderDataUtils";
+import { RenderColumn } from "../../src/types/Inspector";
 
 describe("renders correctly", () => {
     const buildColumnData = createRenderDataBuilder(() => () => { });
@@ -13,7 +14,7 @@ describe("renders correctly", () => {
                 bar: true
             }
         };
-        const { columnData } = buildColumnData({ foobar: schema }, [], ["foobar"]);
+        const { columnData } = buildColumnData({ foobar: schema }, [], ["foobar"], {});
         const component = shallow(
             <InspectorBreadcrumbs
                 columnData={columnData}
@@ -23,7 +24,7 @@ describe("renders correctly", () => {
         expect(component).toMatchSnapshot();
     });
     it("without selection", () => {
-        const { columnData } = buildColumnData({ foo: {} }, [], []);
+        const { columnData } = buildColumnData({ foo: {} }, [], [], {});
         const component = shallow(
             <InspectorBreadcrumbs
                 columnData={columnData}
@@ -35,7 +36,7 @@ describe("renders correctly", () => {
         expect(component.text()).toEqual("");
     });
     it("with prefix", () => {
-        const { columnData } = buildColumnData({ foo: {} }, [], ["foo"]);
+        const { columnData } = buildColumnData({ foo: {} }, [], ["foo"], {});
         const component = shallow(
             <InspectorBreadcrumbs
                 columnData={columnData}
@@ -63,7 +64,7 @@ describe("renders correctly", () => {
             ${"array selection"}      | ${["foo", "[0]"]}        | ${2}      | ${"foo.[0]"}
             ${"array item selection"} | ${["foo", "[0]", "bar"]} | ${3}      | ${"foo.[0].bar"}
         `("$testTitle", ({ selectedItems, itemCount, breadcrumbsText }) => {
-            const { columnData } = buildColumnData(schemas, [], selectedItems);
+            const { columnData } = buildColumnData(schemas, [], selectedItems, {});
             const component = shallow(
                 <InspectorBreadcrumbs
                     columnData={columnData}
@@ -74,7 +75,7 @@ describe("renders correctly", () => {
             expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(itemCount);
         });
         it("with custom separator", () => {
-            const { columnData } = buildColumnData(schemas, [], ["foo", "[0]", "bar"]);
+            const { columnData } = buildColumnData(schemas, [], ["foo", "[0]", "bar"], {});
             const component = shallow(
                 <InspectorBreadcrumbs
                     columnData={columnData}
@@ -101,7 +102,7 @@ describe("renders correctly", () => {
         };
 
         it("is skipping option selection", () => {
-            const { columnData } = buildColumnData({ foo: schema }, [], ["foo", [1], "baz"]);
+            const { columnData } = buildColumnData({ foo: schema }, [], ["foo", [1], "baz"], {});
             const component = shallow(
                 <InspectorBreadcrumbs
                     columnData={columnData}
@@ -116,7 +117,7 @@ describe("renders correctly", () => {
             ${"indicates on previous breadcrumb when selected option has no nested items"} | ${[0]}        | ${false}
             ${"indicates on previous breadcrumb when selected option has nested property"} | ${[1]}        | ${true}
         `("$testTitle", ({ optionIndexes, hasNestedItems }) => {
-            const { columnData } = buildColumnData({ foo: schema }, [], ["foo", optionIndexes]);
+            const { columnData } = buildColumnData({ foo: schema }, [], ["foo", optionIndexes], {});
             const component = shallow(
                 <InspectorBreadcrumbs
                     columnData={columnData}
@@ -142,7 +143,12 @@ describe("renders correctly", () => {
             ["foo", "bar"],
             {}
         );
-        const renderItem = (breadcrumbText, hasNestedItems, column, index) => (
+        const renderItem = ({ breadcrumbText, hasNestedItems, column, index }: {
+            breadcrumbText: string,
+            hasNestedItems: boolean,
+            column: RenderColumn,
+            index: number
+        }) => (
             <span key={index} className="custom-breadcrumbs-item">
                 {`${index + 1}. ${breadcrumbText} (${columnData[index] === column})${hasNestedItems ? " >" : ""}`}
             </span>
@@ -173,7 +179,10 @@ describe("renders correctly", () => {
             ["foo", "bar"],
             {}
         );
-        const renderTrailingContent = (breadcrumbTexts, columnDataParam) => (columnDataParam !== columnData ? null : (
+        const renderTrailingContent = ({ breadcrumbTexts, columnData: columnDataParam }: {
+            breadcrumbTexts: Array<string>,
+            columnData: Array<RenderColumn>
+        }) => (columnDataParam !== columnData ? null : (
             <button type="button">
                 {`Copy to Clipboard: ${breadcrumbTexts.join("")}`}
             </button>

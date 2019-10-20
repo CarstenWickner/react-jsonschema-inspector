@@ -1,11 +1,12 @@
-import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
+import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
 import { JsonSchema } from "../../src/model/JsonSchema";
 
 /**
  * Minimal implementation of JsonSchemaGroup
  */
 class MockJsonSchemaGroup extends JsonSchemaGroup {
-    constructor(treatAsAdditionalColumn) {
+    private treatAsAdditionalColumn: boolean;
+    constructor(treatAsAdditionalColumn: boolean) {
         super();
         this.treatAsAdditionalColumn = treatAsAdditionalColumn;
     }
@@ -164,7 +165,7 @@ describe("extractValues()/extractValuesFromEntry()", () => {
                 .with(new JsonSchema(true, {}))
                 .with(new JsonSchema(true, {}));
             expect(group.extractValues(
-                () => { },
+                ():string  => undefined,
                 // eslint-disable-next-line no-nested-ternary
                 (combined, nextValue) => (!combined ? nextValue : (nextValue ? `${combined}, ${nextValue}` : combined)),
                 "foobar",

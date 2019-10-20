@@ -1,9 +1,11 @@
-import React from "react";
+import * as React from "react";
 import { shallow } from "enzyme";
 
-import InspectorDetails from "../../src/component/InspectorDetails";
+import { InspectorDetails } from "../../src/component/InspectorDetails";
 import { createRenderDataBuilder } from "../../src/component/renderDataUtils";
-import { RenderItemsColumn } from "../../src/types/Inspector";
+import { JsonSchema } from "../../src/model/JsonSchema";
+import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
+import { RenderItemsColumn, RenderColumn } from "../../src/types/Inspector";
 
 describe("renders correctly", () => {
     const buildColumnData = createRenderDataBuilder(() => () => { });
@@ -91,9 +93,13 @@ describe("renders correctly", () => {
             );
             const {
                 columnData, itemSchemaGroup, selectionColumnIndex
-            } = component.find("InspectorDetailsContent").props();
+            } = component.find("InspectorDetailsContent").props() as {
+                itemSchemaGroup: JsonSchemaGroup,
+                columnData: Array<RenderColumn>,
+                selectionColumnIndex: number
+            };
             expect(columnData).toEqual(columnDataProp);
-            expect(itemSchemaGroup).toEqual((columnDataProp[1] as RenderItemsColumn).items["[0]"]);
+            expect(itemSchemaGroup).toEqual((columnDataProp[1] as unknown as RenderItemsColumn).items["[0]"]);
             expect(selectionColumnIndex).toEqual(1);
         });
         it("applies custom renderSelectionDetails", () => {
@@ -108,9 +114,13 @@ describe("renders correctly", () => {
             expect(renderSelectionDetails.mock.calls).toHaveLength(1);
             const {
                 columnData, itemSchemaGroup, selectionColumnIndex
-            } = renderSelectionDetails.mock.calls[0][0];
+            } = renderSelectionDetails.mock.calls[0][0] as {
+                itemSchemaGroup: JsonSchemaGroup,
+                columnData: Array<RenderColumn>,
+                selectionColumnIndex: number
+            };
             expect(columnData).toEqual(columnDataProp);
-            expect(itemSchemaGroup).toEqual((columnDataProp[1] as RenderItemsColumn).items["[0]"]);
+            expect(itemSchemaGroup).toEqual((columnDataProp[1] as unknown as RenderItemsColumn).items["[0]"]);
             expect(selectionColumnIndex).toBe(1);
         });
     });
@@ -137,9 +147,13 @@ describe("renders correctly", () => {
             );
             const {
                 columnData, itemSchemaGroup, selectionColumnIndex
-            } = component.find("InspectorDetailsContent").props();
+            } = component.find("InspectorDetailsContent").props() as {
+                itemSchemaGroup: JsonSchemaGroup,
+                columnData: Array<RenderColumn>,
+                selectionColumnIndex: number
+            };
             expect(columnData).toEqual(columnDataProp);
-            expect(itemSchemaGroup.entries[0].schema).toEqual(schema);
+            expect((itemSchemaGroup.entries[0] as JsonSchema).schema).toEqual(schema);
             expect(selectionColumnIndex).toEqual(1);
         });
         it("applies custom renderSelectionDetails", () => {
@@ -154,9 +168,13 @@ describe("renders correctly", () => {
             expect(renderSelectionDetails.mock.calls).toHaveLength(1);
             const {
                 columnData, itemSchemaGroup, selectionColumnIndex
-            } = renderSelectionDetails.mock.calls[0][0];
+            } = renderSelectionDetails.mock.calls[0][0] as {
+                itemSchemaGroup: JsonSchemaGroup,
+                columnData: Array<RenderColumn>,
+                selectionColumnIndex: number
+            };
             expect(columnData).toEqual(columnDataProp);
-            expect(itemSchemaGroup.entries[0].schema).toEqual(schema);
+            expect((itemSchemaGroup.entries[0] as JsonSchema).schema).toEqual(schema);
             expect(selectionColumnIndex).toBe(1);
         });
     });

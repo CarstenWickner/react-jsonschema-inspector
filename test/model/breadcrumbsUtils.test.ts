@@ -1,8 +1,10 @@
-import createBreadcrumbBuilder from "../../src/model/breadcrumbsUtils";
+import { createBreadcrumbBuilder } from "../../src/model/breadcrumbsUtils";
 import { JsonSchema } from "../../src/model/JsonSchema";
+import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
+import { RenderOptionsColumn, RenderItemsColumn } from "../../src/types/Inspector";
 
 describe("createBreadcrumbBuilder()", () => {
-    const simpleSchema = new JsonSchema({ title: "value" });
+    const simpleSchema = new JsonSchemaGroup().with(new JsonSchema({ title: "value" }, {}));
     describe("with default options", () => {
         const buildBreadcrumb = createBreadcrumbBuilder({});
         it.each`
@@ -10,16 +12,22 @@ describe("createBreadcrumbBuilder()", () => {
                 ${"root"}     | ${0}  | ${"root"}
                 ${"non root"} | ${1}  | ${".non root"}
             `("$name item", ({ name, index, expected }) => {
-            const column = {
-                items: { [name]: simpleSchema },
-                selectedItem: name
+            const column: RenderItemsColumn = {
+                items: { [name as string]: simpleSchema },
+                selectedItem: name as string
             };
-            expect(buildBreadcrumb(column, index)).toBe(expected);
+            expect(buildBreadcrumb(column, index as number)).toBe(expected);
         });
         it("skipping option selection", () => {
-            const column = {
-                options: [[0], [1]],
-                selectedItem: [1]
+            const column: RenderOptionsColumn = {
+                options: {
+                    options: [
+                        {},
+                        {}
+                    ]
+                },
+                selectedItem: [1],
+                contextGroup: new JsonSchemaGroup()
             };
             expect(buildBreadcrumb(column, 1)).toBe(null);
         });
@@ -38,16 +46,22 @@ describe("createBreadcrumbBuilder()", () => {
                 ${"simple"}   | ${"without separator"} | ${1}  | ${"without-separator"}
                 ${"skipping"} | ${"null"}              | ${1}  | ${null}
             `("$type $name item", ({ name, index, expected }) => {
-            const column = {
-                items: { [name]: simpleSchema },
-                selectedItem: name
+            const column: RenderItemsColumn = {
+                items: { [name as string]: simpleSchema },
+                selectedItem: name as string
             };
-            expect(buildBreadcrumb(column, index)).toBe(expected);
+            expect(buildBreadcrumb(column, index as number)).toBe(expected);
         });
         it("skipping option selection", () => {
-            const column = {
-                options: [[0], [1]],
-                selectedItem: [1]
+            const column: RenderOptionsColumn = {
+                options: {
+                    options: [
+                        {},
+                        {}
+                    ]
+                },
+                selectedItem: [1],
+                contextGroup: new JsonSchemaGroup()
             };
             expect(buildBreadcrumb(column, 1)).toBe(null);
         });

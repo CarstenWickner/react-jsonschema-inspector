@@ -4,10 +4,10 @@ import {
 } from "../../src/model/schemaUtils";
 
 import { JsonSchema } from "../../src/model/JsonSchema";
-import JsonSchemaGroup from "../../src/model/JsonSchemaGroup";
-import JsonSchemaAllOfGroup from "../../src/model/JsonSchemaAllOfGroup";
-import JsonSchemaAnyOfGroup from "../../src/model/JsonSchemaAnyOfGroup";
-import JsonSchemaOneOfGroup from "../../src/model/JsonSchemaOneOfGroup";
+import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
+import { JsonSchemaAllOfGroup } from "../../src/model/JsonSchemaAllOfGroup";
+import { JsonSchemaAnyOfGroup } from "../../src/model/JsonSchemaAnyOfGroup";
+import { JsonSchemaOneOfGroup } from "../../src/model/JsonSchemaOneOfGroup";
 import { isDefined } from "../../src/model/utils";
 
 describe("createGroupFromSchema()", () => {
@@ -22,7 +22,7 @@ describe("createGroupFromSchema()", () => {
             .toEqual(new JsonSchemaAllOfGroup());
     });
     it("returns allOf group with single entry for simple schema", () => {
-        const schema = new JsonSchema(rawFooSchema);
+        const schema = new JsonSchema(rawFooSchema, {});
         const result = createGroupFromSchema(schema);
         expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
         expect(result.entries).toHaveLength(1);
@@ -34,10 +34,9 @@ describe("createGroupFromSchema()", () => {
         }, {});
         const schema = new JsonSchema({ $ref: "#/definitions/Foo" }, {}, scope);
         const result = createGroupFromSchema(schema);
-        expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
         expect(result.entries).toHaveLength(1);
         expect(result.entries[0]).toBeInstanceOf(JsonSchema);
-        expect(result.entries[0].schema).toEqual(rawFooSchema);
+        expect((result.entries[0] as JsonSchema).schema).toEqual(rawFooSchema);
     });
     describe.each`
         groupName  | GroupClass
@@ -51,15 +50,15 @@ describe("createGroupFromSchema()", () => {
                 [groupName]: [rawFooSchema, rawBarSchema]
             }, {});
             const result = createGroupFromSchema(schema);
-            expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
             expect(result.entries).toHaveLength(2);
             expect(result.entries[0]).toBe(schema);
             expect(result.entries[1]).toBeInstanceOf(GroupClass);
-            expect(result.entries[1].entries).toHaveLength(2);
-            expect(result.entries[1].entries[0]).toBeInstanceOf(JsonSchema);
-            expect(result.entries[1].entries[0].schema).toEqual(rawFooSchema);
-            expect(result.entries[1].entries[1]).toBeInstanceOf(JsonSchema);
-            expect(result.entries[1].entries[1].schema).toEqual(rawBarSchema);
+            const resultEntryTwo = result.entries[1] as JsonSchemaGroup;
+            expect(resultEntryTwo.entries).toHaveLength(2);
+            expect(resultEntryTwo.entries[0]).toBeInstanceOf(JsonSchema);
+            expect((resultEntryTwo.entries[0] as JsonSchema).schema).toEqual(rawFooSchema);
+            expect(resultEntryTwo.entries[1]).toBeInstanceOf(JsonSchema);
+            expect((resultEntryTwo.entries[1] as JsonSchema).schema).toEqual(rawBarSchema);
         });
         it(`with multiple nested ${groupName} groups`, () => {
             const rawFoobarSchema = { type: "object" };
@@ -71,26 +70,28 @@ describe("createGroupFromSchema()", () => {
             }, {});
             const result = createGroupFromSchema(schema);
             // top level: allOf: [ schema, anyOf/oneOf ]
-            expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
             expect(result.entries).toHaveLength(2);
             expect(result.entries[0]).toBe(schema);
             // second level: anyOf/oneOf: [ foo, allOf ]
             expect(result.entries[1]).toBeInstanceOf(GroupClass);
-            expect(result.entries[1].entries).toHaveLength(2);
-            expect(result.entries[1].entries[0]).toBeInstanceOf(JsonSchema);
-            expect(result.entries[1].entries[0].schema).toEqual(rawFooSchema);
+            const resultEntryTwoGroup = result.entries[1] as JsonSchemaGroup;
+            expect(resultEntryTwoGroup.entries).toHaveLength(2);
+            expect(resultEntryTwoGroup.entries[0]).toBeInstanceOf(JsonSchema);
+            expect((resultEntryTwoGroup.entries[0] as JsonSchema).schema).toEqual(rawFooSchema);
             // third level: allOf: [ secondLevel, anyOf/oneOf ]
-            expect(result.entries[1].entries[1]).toBeInstanceOf(JsonSchemaAllOfGroup);
-            expect(result.entries[1].entries[1].entries).toHaveLength(2);
-            expect(result.entries[1].entries[1].entries[0]).toBeInstanceOf(JsonSchema);
-            expect(result.entries[1].entries[1].entries[0].schema).toEqual(nestedOptionalSchema);
+            expect(resultEntryTwoGroup.entries[1]).toBeInstanceOf(JsonSchemaAllOfGroup);
+            const resultEntryTwoNestedGroup = resultEntryTwoGroup.entries[1] as JsonSchemaGroup;
+            expect(resultEntryTwoNestedGroup.entries).toHaveLength(2);
+            expect(resultEntryTwoNestedGroup.entries[0]).toBeInstanceOf(JsonSchema);
+            expect((resultEntryTwoNestedGroup.entries[0] as JsonSchema).schema).toEqual(nestedOptionalSchema);
             // fourth level: anyOf/oneOf: [ bar, foobar ]
-            expect(result.entries[1].entries[1].entries[1]).toBeInstanceOf(GroupClass);
-            expect(result.entries[1].entries[1].entries[1].entries).toHaveLength(2);
-            expect(result.entries[1].entries[1].entries[1].entries[0]).toBeInstanceOf(JsonSchema);
-            expect(result.entries[1].entries[1].entries[1].entries[0].schema).toEqual(rawBarSchema);
-            expect(result.entries[1].entries[1].entries[1].entries[1]).toBeInstanceOf(JsonSchema);
-            expect(result.entries[1].entries[1].entries[1].entries[1].schema).toEqual(rawFoobarSchema);
+            expect(resultEntryTwoNestedGroup.entries[1]).toBeInstanceOf(GroupClass);
+            const resultEntryNestedNestedGroup = resultEntryTwoNestedGroup.entries[1] as JsonSchemaGroup;
+            expect(resultEntryNestedNestedGroup.entries).toHaveLength(2);
+            expect(resultEntryNestedNestedGroup.entries[0]).toBeInstanceOf(JsonSchema);
+            expect((resultEntryNestedNestedGroup.entries[0] as JsonSchema).schema).toEqual(rawBarSchema);
+            expect(resultEntryNestedNestedGroup.entries[1]).toBeInstanceOf(JsonSchema);
+            expect((resultEntryNestedNestedGroup.entries[1] as JsonSchema).schema).toEqual(rawFoobarSchema);
         });
     });
     describe("returns allOf group for schema containing mixed groups", () => {
@@ -110,16 +111,18 @@ describe("createGroupFromSchema()", () => {
             expect(result).toBeInstanceOf(JsonSchemaAllOfGroup);
             expect(result.entries).toHaveLength(5);
             expect(result.entries[0]).toBe(schema);
-            expect(result.entries[1].schema).toEqual(rawFooSchema);
-            expect(result.entries[2].schema).toEqual(rawBarSchema);
+            expect((result.entries[1] as JsonSchema).schema).toEqual(rawFooSchema);
+            expect((result.entries[2] as JsonSchema).schema).toEqual(rawBarSchema);
             expect(result.entries[3]).toBeInstanceOf(JsonSchemaAnyOfGroup);
-            expect(result.entries[3].entries).toHaveLength(2);
-            expect(result.entries[3].entries[0].schema).toEqual(rawFoobarSchema);
-            expect(result.entries[3].entries[1].schema).toEqual(rawBazSchema);
+            const resultEntryFourGroup = result.entries[3] as JsonSchemaAnyOfGroup;
+            expect(resultEntryFourGroup.entries).toHaveLength(2);
+            expect((resultEntryFourGroup.entries[0] as JsonSchema).schema).toEqual(rawFoobarSchema);
+            expect((resultEntryFourGroup.entries[1] as JsonSchema).schema).toEqual(rawBazSchema);
             expect(result.entries[4]).toBeInstanceOf(JsonSchemaOneOfGroup);
-            expect(result.entries[4].entries).toHaveLength(2);
-            expect(result.entries[4].entries[0].schema).toEqual(rawQuxSchema);
-            expect(result.entries[4].entries[1].schema).toEqual(rawQuuxSchema);
+            const resultEntryFiveGroup = result.entries[4] as JsonSchemaOneOfGroup;
+            expect(resultEntryFiveGroup.entries).toHaveLength(2);
+            expect((resultEntryFiveGroup.entries[0] as JsonSchema).schema).toEqual(rawQuxSchema);
+            expect((resultEntryFiveGroup.entries[1] as JsonSchema).schema).toEqual(rawQuuxSchema);
         });
     });
     it("throws error for invalid $ref if scope provided", () => {
@@ -174,9 +177,7 @@ describe("getPropertiesFromSchemaGroup()", () => {
         }, {});
         const result = getPropertiesFromSchemaGroup(createGroupFromSchema(schema));
         expect(Object.keys(result)).toHaveLength(2);
-        expect(result.foo).toBeInstanceOf(JsonSchema);
         expect(result.foo.schema).toEqual(rawFooSchema);
-        expect(result.bar).toBeInstanceOf(JsonSchema);
         expect(result.bar.schema).toEqual(rawBarSchema);
     });
     it("returns empty object for empty schema", () => {
@@ -189,10 +190,8 @@ describe("getPropertiesFromSchemaGroup()", () => {
         }, {});
         const schemaGroup = createGroupFromSchema(simpleSchema);
         const result = getPropertiesFromSchemaGroup(schemaGroup);
-        expect(result.Foo).toBeInstanceOf(JsonSchema);
-        expect(result.Foo.schema).toBe(true);
-        expect(result.Bar).toBeInstanceOf(JsonSchema);
-        expect(result.Bar.schema).toBe(true);
+        expect(result.Foo.schema).toStrictEqual({});
+        expect(result.Bar.schema).toStrictEqual({});
     });
     it("returns combined `required` and `properties` from simple schema", () => {
         const rawFooSchema = { title: "foo" };
@@ -206,12 +205,9 @@ describe("getPropertiesFromSchemaGroup()", () => {
         }, {});
         const schemaGroup = createGroupFromSchema(simpleSchema);
         const result = getPropertiesFromSchemaGroup(schemaGroup);
-        expect(result.Foo).toBeInstanceOf(JsonSchema);
         expect(result.Foo.schema).toEqual(rawFooSchema);
-        expect(result.Bar).toBeInstanceOf(JsonSchema);
         expect(result.Bar.schema).toEqual(rawBarSchema);
-        expect(result.Foobar).toBeInstanceOf(JsonSchema);
-        expect(result.Foobar.schema).toBe(true);
+        expect(result.Foobar.schema).toStrictEqual({});
     });
     it("returns combined `properties` from nested schemas", () => {
         const rawFooSchema = { title: "Title" };
@@ -236,14 +232,10 @@ describe("getPropertiesFromSchemaGroup()", () => {
         }, {});
         const schemaGroup = createGroupFromSchema(mainSchema);
         const result = getPropertiesFromSchemaGroup(schemaGroup);
-        expect(result.Foo).toBeInstanceOf(JsonSchema);
         expect(result.Foo.schema).toEqual(rawFooSchema);
-        expect(result.Bar).toBeInstanceOf(JsonSchema);
         expect(result.Bar.schema).toEqual(rawBarSchema);
-        expect(result.Baz).toBeInstanceOf(JsonSchema);
-        expect(result.Baz.schema).toEqual(true);
-        expect(result.Foobar).toBeInstanceOf(JsonSchema);
-        expect(result.Foobar.schema).toEqual(false);
+        expect(result.Baz.schema).toEqual({});
+        expect(result.Foobar.schema).toEqual({ not: {} });
     });
     describe.each`
         groupName
@@ -282,9 +274,7 @@ describe("getPropertiesFromSchemaGroup()", () => {
 });
 describe("getOptionsInSchemaGroup()", () => {
     class MockJsonSchemaGroup extends JsonSchemaGroup {
-        static getDefaultGroupTitle() {
-            return "mocked";
-        }
+        private considerAsSeparateOptions: boolean;
         constructor(considerAsSeparateOptions = false) {
             super();
             this.considerAsSeparateOptions = considerAsSeparateOptions;
@@ -625,7 +615,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
                 { items: { description: "bar" } },
                 {
                     allOf: [
-                        true,
+                        {},
                         { items: { type: "object" } }
                     ]
                 }
