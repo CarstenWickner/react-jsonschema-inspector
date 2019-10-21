@@ -86,7 +86,7 @@ describe("calls onSelect", () => {
                 onSelect={onSelect}
             />
         );
-        component.find(".jsonschema-inspector-column").prop("onClick")({});
+        component.find(".jsonschema-inspector-column").prop("onClick")(null);
         expect(onSelect.mock.calls).toHaveLength(1);
         // expect no second parameter indicating selected item
         expect(onSelect.mock.calls[0]).toHaveLength(1);
@@ -98,7 +98,7 @@ describe("calls onSelect", () => {
                 onSelect={onSelect}
             />
         );
-        component.find("InspectorItem").prop("onSelect")({});
+        component.find("InspectorItem").prop("onSelect")(null);
         expect(onSelect.mock.calls).toHaveLength(1);
         // expect second parameter indicating selected item
         expect(onSelect.mock.calls[0]).toHaveLength(2);

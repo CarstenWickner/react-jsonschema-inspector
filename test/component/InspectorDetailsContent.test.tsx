@@ -1,7 +1,7 @@
 import * as React from "react";
 import { shallow } from "enzyme";
 
-import { InspectorDetailsContent } from "../../src/component/InspectorDetailsContent";
+import { InspectorDetailsContent, collectFormFields } from "../../src/component/InspectorDetailsContent";
 import { JsonSchema } from "../../src/model/JsonSchema";
 import { createGroupFromSchema } from "../../src/model/schemaUtils";
 import { createRenderDataBuilder } from "../../src/component/renderDataUtils";

@@ -24,7 +24,7 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
               "externalRefs": Map {},
               "internalRefs": Map {
                 "#" => JsonSchema {
-                  "parserConfig": undefined,
+                  "parserConfig": Object {},
                   "schema": Object {
                     "definitions": Object {
                       "Target": Object {},
@@ -58,7 +58,7 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
               "externalRefs": Map {},
               "internalRefs": Map {
                 "#" => JsonSchema {
-                  "parserConfig": undefined,
+                  "parserConfig": Object {},
                   "schema": Object {
                     "definitions": Object {
                       "Target": Object {},

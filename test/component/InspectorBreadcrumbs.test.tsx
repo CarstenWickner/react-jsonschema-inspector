@@ -228,7 +228,7 @@ describe("handles double-click navigation", () => {
         const selectedItems = component.find(".jsonschema-inspector-breadcrumbs-item");
         expect(selectedItems).toHaveLength(2);
 
-        selectedItems.at(0).prop("onDoubleClick")({});
+        selectedItems.at(0).prop("onDoubleClick")(null);
         expect(onSelectOne.mock.calls).toHaveLength(1);
         expect(onSelectOne.mock.calls[0][1]).toEqual("foo");
         expect(onSelectTwo.mock.calls).toHaveLength(0);
@@ -243,7 +243,7 @@ describe("handles double-click navigation", () => {
         const selectedItems = component.find(".jsonschema-inspector-breadcrumbs-item");
         expect(selectedItems).toHaveLength(2);
 
-        selectedItems.at(1).prop("onDoubleClick")({});
+        selectedItems.at(1).prop("onDoubleClick")(null);
         expect(onSelectOne.mock.calls).toHaveLength(0);
         expect(onSelectTwo.mock.calls).toHaveLength(1);
         expect(onSelectTwo.mock.calls[0][1]).toEqual("bar");
