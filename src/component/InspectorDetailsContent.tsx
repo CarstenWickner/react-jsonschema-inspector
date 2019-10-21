@@ -59,9 +59,9 @@ export function collectFormFields(itemSchemaGroup: JsonSchemaGroup, columnData: 
     };
     const { selectedItem } = columnData[selectionColumnIndex];
     const optionIndexes = typeof selectedItem === "string" ? undefined : selectedItem;
-    const getValue = <K extends keyof RawJsonSchema, T extends RawJsonSchema[K]>(
+    const getValue = <K extends keyof RawJsonSchema, T extends RawJsonSchema[K] | Array<RawJsonSchema[K]>>(
         fieldName: K,
-        mergeValues: (combined: T, nextValue: RawJsonSchema[K]) => T = listValues
+        mergeValues: (combined: T, nextValue: T) => T = listValues
     ): T => getFieldValueFromSchemaGroup(
         itemSchemaGroup, fieldName, mergeValues, undefined, undefined, optionIndexes
     );

@@ -10,15 +10,20 @@ import { RenderItemContentFunction, RenderOptions, RenderColumnOnSelectFunction 
 
 const columnDataPropTypeShape = getColumnDataPropTypeShape(true);
 
-export class InspectorOptionsColumn extends React.Component<{
+interface OptionsColumnDefaultProps {
+    selectedItem: Array<number>,
+    filteredItems: Array<Array<number>>,
+    trailingSelection: boolean,
+    renderItemContent: RenderItemContentFunction
+}
+
+interface OptionsColumnProps extends OptionsColumnDefaultProps {
+    contextGroup: JsonSchemaGroup,
     options: RenderOptions,
-    contextGroup?: JsonSchemaGroup,
-    selectedItem?: Array<number>,
-    filteredItems?: Array<Array<number>>,
-    trailingSelection?: boolean,
-    onSelect: RenderColumnOnSelectFunction,
-    renderItemContent?: RenderItemContentFunction
-}> {
+    onSelect: RenderColumnOnSelectFunction
+}
+
+export class InspectorOptionsColumn extends React.Component<OptionsColumnProps> {
     static defaultOptionNameForIndex = (optionIndexes: Array<number>) => `Option ${optionIndexes.map((index) => index + 1).join("-")}`;
 
     renderSingleOption(optionIndexes: Array<number>, name: string) {
@@ -100,7 +105,7 @@ export class InspectorOptionsColumn extends React.Component<{
         renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
     };
 
-    static defaultProps = {
+    static defaultProps: OptionsColumnDefaultProps = {
         selectedItem: null,
         trailingSelection: false,
         filteredItems: null,

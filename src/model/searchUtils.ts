@@ -21,7 +21,7 @@ import { RawJsonSchema } from "../types/RawJsonSchema";
  */
 export function createRecursiveFilterFunction(
     flatSearchFilter: (rawSchema: RawJsonSchema, includeNestedOptionals?: boolean) => boolean,
-    propertyNameCheck?: (propertyName: keyof RawJsonSchema) => boolean
+    propertyNameCheck?: (propertyName: string) => boolean
 ) {
     const recursiveFilterFunction = (
         target: JsonSchema,
@@ -55,7 +55,7 @@ export function createRecursiveFilterFunction(
             || (includeNestedOptionals && (searchInParts("oneOf") || searchInParts("anyOf")))) {
             return true;
         }
-        const filterRawSubSchemaIncludingOptionals = (rawSubSchema: RawJsonSchema) => recursiveFilterFunction(
+        const filterRawSubSchemaIncludingOptionals = (rawSubSchema: boolean | RawJsonSchema) => recursiveFilterFunction(
             new JsonSchema(rawSubSchema, parserConfig, scope),
             true
         );
@@ -132,7 +132,7 @@ export function collectReferencedSubSchemas(
  */
 export function createFilterFunctionForSchema(
     flatSearchFilter: (rawSchema: RawJsonSchema, includeNestedOptionals?: boolean) => boolean,
-    propertyNameCheck?: (propertyName: keyof RawJsonSchema) => boolean
+    propertyNameCheck?: (propertyName: string) => boolean
 ) {
     const recursiveSearchFilter = createRecursiveFilterFunction(flatSearchFilter, propertyNameCheck);
     // cache definitive search results for the individual sub-schemas

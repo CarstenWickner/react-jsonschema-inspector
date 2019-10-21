@@ -7,15 +7,20 @@ import { hasSchemaGroupNestedItems } from "./renderDataUtils";
 import { isDefined } from "../model/utils";
 import { RenderItemContentFunction, RenderColumnOnSelectFunction } from "../types/Inspector";
 
-export class InspectorItem extends React.Component<{
+interface ItemDefaultProps {
+    optionIndexes: Array<number>,
+    selected: boolean,
+    matchesFilter: boolean,
+    renderContent: RenderItemContentFunction
+};
+
+interface ItemProps extends ItemDefaultProps {
     name: string,
     schemaGroup: JsonSchemaGroup,
-    optionIndexes?: Array<number>,
-    selected?: boolean,
-    matchesFilter?: boolean,
-    onSelect: RenderColumnOnSelectFunction,
-    renderContent?: RenderItemContentFunction
-}> {
+    onSelect: RenderColumnOnSelectFunction
+}
+
+export class InspectorItem extends React.Component<ItemProps> {
     render() {
         const {
             name,
@@ -67,7 +72,7 @@ export class InspectorItem extends React.Component<{
         renderContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
     };
 
-    static defaultProps = {
+    static defaultProps: ItemDefaultProps = {
         optionIndexes: undefined,
         selected: false,
         matchesFilter: undefined,

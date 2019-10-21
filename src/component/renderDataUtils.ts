@@ -155,7 +155,7 @@ export const createRenderDataBuilder = (
 ) => {
     // the first column always lists all top-level schemas
     let nextColumn: RenderColumn | {} = createRootColumnData(schemas, referenceSchemas, parserConfig);
-    let selectedSchemaGroup;
+    let selectedSchemaGroup: JsonSchemaGroup;
     const columnData = selectedItems.map((selection, index) => {
         const currentColumn = nextColumn;
         const isOptionSelection = typeof selection !== "string";
@@ -369,7 +369,10 @@ export function getColumnDataPropTypeShape(includeOnSelect = true) {
  * @param {*} propertyNameFilterFunction.return - output is a truthy/falsy value, whether the property name matches some search criteria
  * @returns {FilterFunctionForColumn} function that returns the list of `filteredItems` for a given entry in the standard `columnData` array
  */
-export function createFilterFunctionForColumn(flatSchemaFilterFunction, propertyNameFilterFunction: (name: string) => boolean = () => false) {
+export function createFilterFunctionForColumn(
+    flatSchemaFilterFunction: (rawSchema: RawJsonSchema, includeNestedOptionals?: boolean) => boolean,
+    propertyNameFilterFunction: (name: string) => boolean = () => false
+) {
     const containsMatchingItems = createFilterFunctionForSchema(flatSchemaFilterFunction, propertyNameFilterFunction);
     return (column: RenderColumn) => {
         const { items } = column as RenderItemsColumn;

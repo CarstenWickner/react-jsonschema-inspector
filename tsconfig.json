@@ -16,7 +16,7 @@
         "noImplicitReturns": true,
         "noUnusedLocals": true,
         "outDir": "./build",
-        "strict": false,
+        "strict": true,
         "strictNullChecks": false,
         "target": "es5",
         "types": [

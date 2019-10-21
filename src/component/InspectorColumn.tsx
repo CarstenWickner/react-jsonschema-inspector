@@ -12,14 +12,19 @@ const {
     onSelect: onSelectPropType
 } = getColumnDataPropTypeShape(true);
 
-export class InspectorColumn extends React.Component<{
-    items: { [key: string]: JsonSchemaGroup },
-    selectedItem?: string,
-    filteredItems?: Array<string>,
-    trailingSelection?: boolean,
-    onSelect: RenderColumnOnSelectFunction,
+interface ColumnDefaultProps {
+    selectedItem: string,
+    filteredItems: Array<string>,
+    trailingSelection: boolean,
     renderItemContent: RenderItemContentFunction
-}> {
+}
+
+interface ColumnProps extends ColumnDefaultProps {
+    items: { [key: string]: JsonSchemaGroup },
+    onSelect: RenderColumnOnSelectFunction
+}
+
+export class InspectorColumn extends React.Component<ColumnProps> {
     render() {
         const {
             items, selectedItem, filteredItems, trailingSelection, onSelect, renderItemContent
@@ -59,7 +64,7 @@ export class InspectorColumn extends React.Component<{
         renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
     };
     
-    static defaultProps = {
+    static defaultProps: ColumnDefaultProps = {
         selectedItem: null,
         filteredItems: null,
         trailingSelection: false,
