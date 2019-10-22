@@ -32,7 +32,6 @@ module.exports = async ({ config }) => {
         ],
         exclude: /node_modules/
     });
-    config.resolve.extensions.push(".ts");
-    config.resolve.extensions.push(".tsx");
+    config.resolve.extensions.push(".ts", ".tsx");
     return config;
 };

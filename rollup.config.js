@@ -34,7 +34,8 @@ export default [
         input,
         output: {
             file: packageJSON.main,
-            format: "cjs"
+            format: "cjs",
+            sourcemap: true
         },
         external,
         plugins: [
@@ -58,7 +59,8 @@ export default [
         output: {
             file: packageJSON.module,
             format: "es",
-            exports: "named"
+            exports: "named",
+            sourcemap: true
         },
         external,
         plugins: [
