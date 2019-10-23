@@ -9,23 +9,23 @@ export interface ParserConfig {
     /**
      * Setting indicating how to include schema parts wrapped in "anyOf".
      */
-    anyOf?: SchemaPartParserConfig,
+    anyOf?: SchemaPartParserConfig;
     /**
      * Setting indicating how to include schema parts wrapped in "oneOf".
      */
-    oneOf?: SchemaPartParserConfig
-};
+    oneOf?: SchemaPartParserConfig;
+}
 
 export interface SchemaPartParserConfig {
     /**
      * Optional title to show above multiple parts in a given wrapper (e.g. "anyOf"/"oneOf").
      */
-    groupTitle?: string,
+    groupTitle?: string;
     /**
      * Supplier for an alternative name to be displayed (default is: (indexes) => `Option ${indexes.joining('.')}`).
      */
-    optionNameForIndex?: (indexes: Array<number>) => string | undefined
-};
+    optionNameForIndex?: (indexes: Array<number>) => string | undefined;
+}
 
 export type BuildArrayPropertiesFunction = (
     // declared type of the array's items
@@ -40,32 +40,32 @@ export interface BreadcrumbsOptions {
     /*
      * Text to show in front of root level selection, e.g. "//" or "./"
      */
-    prefix?: string,
+    prefix?: string;
     /*
      * Text to add between the selected item names from adjacent columns, e.g. "." or "/"
      */
-    separator?: string,
+    separator?: string;
     /*
      * Function to identify breadcrumb names that should not be prepended with a "separator"
      */
-    skipSeparator?: (name: string, column: RenderColumn, index: number) => boolean,
+    skipSeparator?: (name: string, column: RenderColumn, index: number) => boolean;
     /*
      * Function to derive the selected item's representation in the breadcrumbs from their name
      */
-    mutateName?: (selectedItem: string, column: RenderColumn, index: number) => undefined | null | string,
+    mutateName?: (selectedItem: string, column: RenderColumn, index: number) => undefined | null | string;
     /*
      * Flag indicating whether double-clicking an item should preserve subsequent selections, otherwise they are discarded
      */
-    preventNavigation?: boolean,
+    preventNavigation?: boolean;
     /*
      * Custom render function for a single breadcrumb item.
      */
-    renderItem?: (props: { breadcrumbText: string, hasNestedItems: boolean, column: RenderColumn, index: number }) => React.ReactNode,
+    renderItem?: (props: { breadcrumbText: string; hasNestedItems: boolean; column: RenderColumn; index: number }) => React.ReactNode;
     /*
      * Custom render function for adding extra elements (e.g. a "Copy to Clipboard" button) after the breadcrumbs.
      */
-    renderTrailingContent?: (props: { breadcrumbTexts: Array<string>, columnData: Array<RenderColumn> }) => React.ReactNode
-};
+    renderTrailingContent?: (props: { breadcrumbTexts: Array<string>; columnData: Array<RenderColumn> }) => React.ReactNode;
+}
 
 export type FilterFunction = (rawSchema: RawJsonSchema) => boolean;
 
@@ -76,55 +76,53 @@ export type OnSelectCallback = (
 ) => void;
 
 export type RenderItemContentFunction = (props: {
-    name: string,
-    hasNestedItems: boolean,
-    selected: boolean,
-    schemaGroup: JsonSchemaGroup,
-    optionIndexes?: Array<number>
+    name: string;
+    hasNestedItems: boolean;
+    selected: boolean;
+    schemaGroup: JsonSchemaGroup;
+    optionIndexes?: Array<number>;
 }) => React.ReactNode;
 
 export type RenderSelectionDetailsFunction = (props: {
-    itemSchemaGroup: JsonSchemaGroup,
-    columnData: Array<RenderColumn>,
-    selectionColumnIndex: number,
-    optionIndexes?: Array<number>
+    itemSchemaGroup: JsonSchemaGroup;
+    columnData: Array<RenderColumn>;
+    selectionColumnIndex: number;
+    optionIndexes?: Array<number>;
 }) => React.ReactNode;
 
-export type RenderEmptyDetailsFunction = (props: {
-    rootColumnSchemas: { [key: string]: JsonSchemaGroup }
-}) => React.ReactNode;
+export type RenderEmptyDetailsFunction = (props: { rootColumnSchemas: { [key: string]: JsonSchemaGroup } }) => React.ReactNode;
 
 export interface SearchOptions {
-    byPropertyName?: boolean,
-    fields?: Array<keyof RawJsonSchema>,
-    filterBy?: (enteredSearchFilter: string | null) => FilterFunction | undefined,
-    inputPlaceholder?: string,
-    debounceWait?: number,
-    debounceMaxWait?: number
-};
-
-interface RenderColumnDetails {
-    selectedItem?: string | Array<number>,
-    trailingSelection?: boolean,
-    filteredItems?: Array<string> | Array<Array<number>>,
-    onSelect?: RenderColumnOnSelectFunction
-};
-
-export type RenderColumnOnSelectFunction = (event: React.SyntheticEvent<any>, selectedItem?: string | Array<number>) => void;
-
-export interface RenderItemsColumn extends RenderColumnDetails {
-    items: { [key: string]: JsonSchemaGroup }
-};
-
-export interface RenderOptionsColumn extends RenderColumnDetails {
-    options: RenderOptions,
-    contextGroup: JsonSchemaGroup
+    byPropertyName?: boolean;
+    fields?: Array<keyof RawJsonSchema>;
+    filterBy?: (enteredSearchFilter: string | null) => FilterFunction | undefined;
+    inputPlaceholder?: string;
+    debounceWait?: number;
+    debounceMaxWait?: number;
 }
 
-export type RenderColumn = RenderItemsColumn | RenderOptionsColumn;
+interface RenderColumnDetails {
+    selectedItem?: string | Array<number>;
+    trailingSelection?: boolean;
+    filteredItems?: Array<string> | Array<Array<number>>;
+    onSelect?: RenderColumnOnSelectFunction;
+}
+
+export type RenderColumnOnSelectFunction = (event: React.SyntheticEvent, selectedItem?: string | Array<number>) => void;
+
+export interface RenderItemsColumn extends RenderColumnDetails {
+    items: { [key: string]: JsonSchemaGroup };
+}
 
 export interface RenderOptions {
-    groupTitle?: string,
-    options?: Array<RenderOptions>,
-    optionNameForIndex?: (indexes: Array<number>) => string | undefined
-};
+    groupTitle?: string;
+    options?: Array<RenderOptions>;
+    optionNameForIndex?: (indexes: Array<number>) => string | undefined;
+}
+
+export interface RenderOptionsColumn extends RenderColumnDetails {
+    options: RenderOptions;
+    contextGroup: JsonSchemaGroup;
+}
+
+export type RenderColumn = RenderItemsColumn | RenderOptionsColumn;

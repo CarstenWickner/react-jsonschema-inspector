@@ -8,29 +8,21 @@ import { isDefined } from "../model/utils";
 import { RenderItemContentFunction, RenderColumnOnSelectFunction } from "../types/Inspector";
 
 interface ItemDefaultProps {
-    optionIndexes: Array<number>,
-    selected: boolean,
-    matchesFilter: boolean,
-    renderContent: RenderItemContentFunction
-};
+    optionIndexes: Array<number>;
+    selected: boolean;
+    matchesFilter: boolean;
+    renderContent: RenderItemContentFunction;
+}
 
 interface ItemProps extends ItemDefaultProps {
-    name: string,
-    schemaGroup: JsonSchemaGroup,
-    onSelect: RenderColumnOnSelectFunction
+    name: string;
+    schemaGroup: JsonSchemaGroup;
+    onSelect: RenderColumnOnSelectFunction;
 }
 
 export class InspectorItem extends React.Component<ItemProps> {
-    render() {
-        const {
-            name,
-            schemaGroup,
-            optionIndexes,
-            selected,
-            matchesFilter,
-            onSelect,
-            renderContent
-        } = this.props;
+    render(): React.ReactNode {
+        const { name, schemaGroup, optionIndexes, selected, matchesFilter, onSelect, renderContent } = this.props;
         const hasNestedItems = hasSchemaGroupNestedItems(schemaGroup, optionIndexes);
         return (
             <button
@@ -45,13 +37,14 @@ export class InspectorItem extends React.Component<ItemProps> {
                 onClick={onSelect}
                 onFocus={onSelect}
             >
-                {renderContent && renderContent({
-                    name,
-                    hasNestedItems,
-                    selected,
-                    schemaGroup,
-                    optionIndexes
-                })}
+                {renderContent &&
+                    renderContent({
+                        name,
+                        hasNestedItems,
+                        selected,
+                        schemaGroup,
+                        optionIndexes
+                    })}
                 {!renderContent && (
                     <div className="jsonschema-inspector-item-content">
                         <span className="jsonschema-inspector-item-name">{name}</span>

@@ -4,32 +4,28 @@ import classNames from "classnames";
 import isDeepEqual from "lodash.isequal";
 
 import { InspectorItem } from "./InspectorItem";
-import { getColumnDataPropTypeShape } from "./renderDataUtils";
+import { RenderOptionsColumnPropTypeShape } from "./renderDataUtils";
 import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 import { RenderItemContentFunction, RenderOptions, RenderColumnOnSelectFunction } from "../types/Inspector";
 
-const columnDataPropTypeShape = getColumnDataPropTypeShape(true);
-
 interface OptionsColumnDefaultProps {
-    selectedItem: Array<number>,
-    filteredItems: Array<Array<number>>,
-    trailingSelection: boolean,
-    renderItemContent: RenderItemContentFunction
+    selectedItem: Array<number>;
+    filteredItems: Array<Array<number>>;
+    trailingSelection: boolean;
+    renderItemContent: RenderItemContentFunction;
 }
 
 interface OptionsColumnProps extends OptionsColumnDefaultProps {
-    contextGroup: JsonSchemaGroup,
-    options: RenderOptions,
-    onSelect: RenderColumnOnSelectFunction
+    contextGroup: JsonSchemaGroup;
+    options: RenderOptions;
+    onSelect: RenderColumnOnSelectFunction;
 }
 
 export class InspectorOptionsColumn extends React.Component<OptionsColumnProps> {
-    static defaultOptionNameForIndex = (optionIndexes: Array<number>) => `Option ${optionIndexes.map((index) => index + 1).join("-")}`;
+    static defaultOptionNameForIndex = (optionIndexes: Array<number>): string => `Option ${optionIndexes.map((index) => index + 1).join("-")}`;
 
-    renderSingleOption(optionIndexes: Array<number>, name: string) {
-        const {
-            contextGroup, selectedItem, filteredItems, renderItemContent, onSelect
-        } = this.props;
+    renderSingleOption(optionIndexes: Array<number>, name: string): React.ReactNode {
+        const { contextGroup, selectedItem, filteredItems, renderItemContent, onSelect } = this.props;
         return (
             <InspectorItem
                 name={name}
@@ -37,24 +33,20 @@ export class InspectorOptionsColumn extends React.Component<OptionsColumnProps> 
                 optionIndexes={optionIndexes}
                 selected={isDeepEqual(optionIndexes, selectedItem)}
                 matchesFilter={filteredItems ? filteredItems.some((filteredOption) => isDeepEqual(filteredOption, optionIndexes)) : undefined}
-                onSelect={(event) => onSelect(event, optionIndexes)}
+                onSelect={(event): void => onSelect(event, optionIndexes)}
                 renderContent={renderItemContent}
             />
         );
     }
 
-    renderGroupOfOptions({
-        groupTitle,
-        options,
-        optionNameForIndex = InspectorOptionsColumn.defaultOptionNameForIndex
-    }: RenderOptions, parentOptionIndexes: Array<number> = []) {
+    renderGroupOfOptions(
+        { groupTitle, options, optionNameForIndex = InspectorOptionsColumn.defaultOptionNameForIndex }: RenderOptions,
+        parentOptionIndexes: Array<number> = []
+    ): React.ReactNode {
         return (
             <>
                 {groupTitle && (
-                    <div
-                        key="group-title"
-                        className="optional-group-title"
-                    >
+                    <div key="group-title" className="optional-group-title">
                         <span>{groupTitle}</span>
                     </div>
                 )}
@@ -73,10 +65,8 @@ export class InspectorOptionsColumn extends React.Component<OptionsColumnProps> 
         );
     }
 
-    render() {
-        const {
-            options, selectedItem, trailingSelection, onSelect
-        } = this.props;
+    render(): React.ReactNode {
+        const { options, selectedItem, trailingSelection, onSelect } = this.props;
         return (
             <div
                 className={classNames({
@@ -95,13 +85,7 @@ export class InspectorOptionsColumn extends React.Component<OptionsColumnProps> 
     }
 
     static propTypes = {
-        options: columnDataPropTypeShape.options.isRequired,
-        // eslint-disable-next-line react/require-default-props
-        contextGroup: columnDataPropTypeShape.contextGroup,
-        selectedItem: PropTypes.arrayOf(PropTypes.number),
-        filteredItems: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
-        trailingSelection: columnDataPropTypeShape.trailingSelection,
-        onSelect: columnDataPropTypeShape.onSelect,
+        ...RenderOptionsColumnPropTypeShape,
         renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
     };
 

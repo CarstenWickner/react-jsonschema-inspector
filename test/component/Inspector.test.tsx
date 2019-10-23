@@ -39,12 +39,7 @@ describe("renders correctly", () => {
     ];
 
     it("with minimal/default props", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                referenceSchemas={referenceSchemas}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} referenceSchemas={referenceSchemas} />);
         expect(component).toMatchSnapshot();
     });
     describe("with search field in header", () => {
@@ -84,7 +79,7 @@ describe("renders correctly", () => {
                     schemas={schemas}
                     referenceSchemas={referenceSchemas}
                     searchOptions={{
-                        filterBy: (searchFilter) => (rawSchema) => !!rawSchema[searchFilter]
+                        filterBy: (searchFilter) => (rawSchema): boolean => !!rawSchema[searchFilter]
                     }}
                 />
             );
@@ -127,7 +122,7 @@ describe("renders correctly", () => {
                     schemas={schemas}
                     referenceSchemas={referenceSchemas}
                     searchOptions={{
-                        filterBy: (searchFilter) => (searchFilter.length < 3 ? undefined : () => true),
+                        filterBy: (searchFilter: string): (() => boolean) => (searchFilter.length < 3 ? undefined : (): boolean => true),
                         byPropertyName: false,
                         debounceWait: 100
                     }}
@@ -144,22 +139,12 @@ describe("renders correctly", () => {
         });
     });
     it("without footer", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                breadcrumbs={null}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} breadcrumbs={null} />);
         expect(component.find(".jsonschema-inspector-footer").exists()).toBe(false);
     });
     it("with root selection", () => {
         const selectedSchema = "Schema One";
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={[selectedSchema]}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={[selectedSchema]} />);
         const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(2);
         expect(((columnData[0] as RenderItemsColumn).items[selectedSchema].entries[0] as JsonSchema).schema).toEqual(schemas[selectedSchema]);
@@ -173,11 +158,7 @@ describe("renders correctly", () => {
         const selectedSchema = "Schema Two";
         const selectedItem = "Item Three";
         const component = shallow(
-            <Inspector
-                schemas={schemas}
-                referenceSchemas={referenceSchemas}
-                defaultSelectedItems={[selectedSchema, selectedItem]}
-            />
+            <Inspector schemas={schemas} referenceSchemas={referenceSchemas} defaultSelectedItems={[selectedSchema, selectedItem]} />
         );
         const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(2);
@@ -192,12 +173,7 @@ describe("renders correctly", () => {
     it("with multi-column branch selection", () => {
         const selectedSchema = "Schema One";
         const selectedItem = "Item Two";
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={[selectedSchema, selectedItem]}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={[selectedSchema, selectedItem]} />);
         const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(3);
         expect(Object.keys((columnData[1] as RenderItemsColumn).items)).toEqual(["Item One", "Item Two"]);
@@ -208,35 +184,20 @@ describe("renders correctly", () => {
         expect(typeof columnData[2].onSelect).toBe("function");
     });
     it("ignores invalid root selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema X"]}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema X"]} />);
         const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(1);
         expect(columnData[0].selectedItem).toBe(null);
     });
     it("ignores invalid trailing non-root selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One", "Item X"]}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One", "Item X"]} />);
         const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(2);
         expect(columnData[0].trailingSelection).toBe(true);
         expect(columnData[1].selectedItem).toBe(null);
     });
     it("ignores invalid intermediate non-root selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One", "Item X", "Property X"]}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One", "Item X", "Property X"]} />);
         const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(2);
         expect(columnData[0].trailingSelection).toBe(true);
@@ -258,17 +219,12 @@ describe("calls onSelect", () => {
         "Schema Two": {}
     };
     const mockEvent = {
-        stopPropagation: () => { }
+        stopPropagation: (): void => {}
     };
-    const onSelect = jest.fn(() => { });
+    const onSelect = jest.fn(() => {});
 
     it("when setting root selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                onSelect={onSelect}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} onSelect={onSelect} />);
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, "Schema One");
         expect(onSelect.mock.calls).toHaveLength(1);
@@ -276,23 +232,13 @@ describe("calls onSelect", () => {
         expect(component.state("appendEmptyColumn")).toBe(false);
     });
     it("when setting root selection (without onSelect prop)", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} />);
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, "Schema One");
         expect(component.state("appendEmptyColumn")).toBe(false);
     });
     it("when setting other root selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One"]}
-                onSelect={onSelect}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} onSelect={onSelect} />);
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, "Schema Two");
         expect(onSelect.mock.calls).toHaveLength(1);
@@ -301,37 +247,20 @@ describe("calls onSelect", () => {
         expect(component.state("appendEmptyColumn")).toBe(true);
     });
     it("when setting other root selection (without onSelect prop)", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One"]}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} />);
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, "Schema Two");
         // expect it to be true because "Schema Two" has no nested items, but "Schema One" has
         expect(component.state("appendEmptyColumn")).toBe(true);
     });
     it("not when setting same root selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One"]}
-                onSelect={onSelect}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} onSelect={onSelect} />);
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, "Schema One");
         expect(onSelect.mock.calls).toHaveLength(0);
     });
     it("when clearing and resetting root selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One"]}
-                onSelect={onSelect}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} onSelect={onSelect} />);
         const { onSelect: rootColumnSelectForClearing } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelectForClearing(mockEvent, null);
         expect(onSelect.mock.calls).toHaveLength(1);
@@ -345,35 +274,19 @@ describe("calls onSelect", () => {
         expect(component.state("appendEmptyColumn")).toBe(false);
     });
     it("when clearing root selection (without onSelect prop)", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One"]}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} />);
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, null);
         expect(component.state("appendEmptyColumn")).toBe(true);
     });
     it("not when clearing empty root selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                onSelect={onSelect}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} onSelect={onSelect} />);
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, null);
         expect(onSelect.mock.calls).toHaveLength(0);
     });
     it("when setting non-root selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One"]}
-                onSelect={onSelect}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} onSelect={onSelect} />);
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, "Item One");
         expect(onSelect.mock.calls).toHaveLength(1);
@@ -381,13 +294,7 @@ describe("calls onSelect", () => {
         expect(component.state("appendEmptyColumn")).toBe(false);
     });
     it("when setting other non-root selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One", "Item One"]}
-                onSelect={onSelect}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One", "Item One"]} onSelect={onSelect} />);
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, "Item Two");
         expect(onSelect.mock.calls).toHaveLength(1);
@@ -395,25 +302,13 @@ describe("calls onSelect", () => {
         expect(component.state("appendEmptyColumn")).toBe(false);
     });
     it("not when setting same non-root selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One", "Item One"]}
-                onSelect={onSelect}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One", "Item One"]} onSelect={onSelect} />);
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, "Item One");
         expect(onSelect.mock.calls).toHaveLength(0);
     });
     it("when clearing non-root selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One", "Item One"]}
-                onSelect={onSelect}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One", "Item One"]} onSelect={onSelect} />);
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, null);
         expect(onSelect.mock.calls).toHaveLength(1);
@@ -422,44 +317,27 @@ describe("calls onSelect", () => {
         expect(component.state("appendEmptyColumn")).toBe(false);
     });
     it("not when clearing empty non-root selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One"]}
-                onSelect={onSelect}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} onSelect={onSelect} />);
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, null);
         expect(onSelect.mock.calls).toHaveLength(0);
     });
     it("with extra information (excluding breadcrumbs)", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                breadcrumbs={null}
-                onSelect={onSelect}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} breadcrumbs={null} onSelect={onSelect} />);
         const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelect(mockEvent, "Schema One");
         expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][0]).toEqual(["Schema One"]);
         expect(onSelect.mock.calls[0][1].columnData).toHaveLength(2);
-        expect(onSelect.mock.calls[0][2]).toBe(null);
+        expect(onSelect.mock.calls[0][2]).toBeUndefined();
     });
     it("with extra information (including breadcrumbs)", () => {
         const breadcrumbs = {
             prefix: "this.",
-            mutateName: (selectedItem) => selectedItem && selectedItem.replace(/\s/g, "")
+            mutateName: (selectedItem: string): string => selectedItem && selectedItem.replace(/\s/g, "")
         };
         const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One"]}
-                breadcrumbs={breadcrumbs}
-                onSelect={onSelect}
-            />
+            <Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} breadcrumbs={breadcrumbs} onSelect={onSelect} />
         );
         const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
         secondColumnSelect(mockEvent, "Item One");
@@ -469,13 +347,7 @@ describe("calls onSelect", () => {
         expect(onSelect.mock.calls[0][2]).toEqual(["this.SchemaOne", ".ItemOne"]);
     });
     it("with extra information in case of empty selection", () => {
-        const component = shallow(
-            <Inspector
-                schemas={schemas}
-                defaultSelectedItems={["Schema One"]}
-                onSelect={onSelect}
-            />
-        );
+        const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} onSelect={onSelect} />);
         const { onSelect: rootColumnSelectForClearing } = component.find("InspectorColView").prop("columnData")[0];
         rootColumnSelectForClearing(mockEvent, null);
         expect(onSelect.mock.calls).toHaveLength(1);

@@ -20,9 +20,7 @@ export const customItems = () => (
         }}
         defaultSelectedItems={["Person", "friends"]}
         renderItemContent={(parameters) => {
-            const {
-                name, hasNestedItems, selected, schemaGroup, optionIndexes
-            } = parameters;
+            const { name, hasNestedItems, selected, schemaGroup, optionIndexes } = parameters;
             // getCommonFieldValuesFromSchemaGroup() is one of the helper functions provided alongside the <Inspector>
             const type = getCommonFieldValuesFromSchemaGroup(schemaGroup, "type", undefined, optionIndexes);
             const isArray = type === "array" || (Array.isArray(type) && type.includes("array"));

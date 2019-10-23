@@ -3,7 +3,7 @@ import { isNonEmptyObject } from "./utils";
 import { RawJsonSchema } from "../types/RawJsonSchema";
 import { ParserConfig } from "../types/Inspector";
 
-const createRawSchemaFromBoolean = (value: boolean): RawJsonSchema => value ? {} : { not: {} };
+const createRawSchemaFromBoolean = (value: boolean): RawJsonSchema => (value ? {} : { not: {} });
 
 /**
  * Representation of a Json Schema, offering a number of convenient functions for traversing and extracting information.
@@ -32,8 +32,9 @@ export class JsonSchema {
      * @param {?RefScope} scope - collection of available $ref targets (will be generated based on `schema` if not provided)
      */
     constructor(schema: boolean | RawJsonSchema, parserConfig: ParserConfig, scope?: RefScope) {
-        this.schema = typeof schema === "boolean" ? createRawSchemaFromBoolean(schema) : schema as RawJsonSchema;
+        this.schema = typeof schema === "boolean" ? createRawSchemaFromBoolean(schema) : (schema as RawJsonSchema);
         this.parserConfig = parserConfig;
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         this.scope = scope || new RefScope(this);
     }
 }
@@ -74,7 +75,7 @@ export class RefScope {
         let externalRefBase: string;
         if (mainAlias && !mainAlias.startsWith("#")) {
             // an absolute URI can be used both within the schema itself but also from other schemas
-            const mainAliasWithFragment = mainAlias.endsWith("#") ? mainAlias : (`${mainAlias}#`);
+            const mainAliasWithFragment = mainAlias.endsWith("#") ? mainAlias : `${mainAlias}#`;
             const mainAliasWithoutFragment = mainAliasWithFragment.substring(0, mainAliasWithFragment.length - 1);
             this.externalRefs.set(mainAliasWithFragment, schema);
             this.externalRefs.set(mainAliasWithoutFragment, schema);
@@ -137,10 +138,13 @@ export class RefScope {
      */
     find(ref: string): JsonSchema {
         let result = this.findSchemaInThisScope(ref);
-        if (result || this.otherScopes.some((otherScope) => {
-            result = otherScope.findSchemaInThisScope(ref, false);
-            return result;
-        })) {
+        if (
+            result ||
+            this.otherScopes.some((otherScope) => {
+                result = otherScope.findSchemaInThisScope(ref, false);
+                return result;
+            })
+        ) {
             return result;
         }
         throw new Error(`Cannot resolve $ref: "${ref}"`);

@@ -1,5 +1,9 @@
 import {
-    createRecursiveFilterFunction, collectReferencedSubSchemas, createFilterFunctionForSchema, filteringByFields, filteringByPropertyName
+    collectReferencedSubSchemas,
+    createFilterFunctionForSchema,
+    createRecursiveFilterFunction,
+    filteringByFields,
+    filteringByPropertyName
 } from "../../src/model/searchUtils";
 
 import { JsonSchema } from "../../src/model/JsonSchema";
@@ -191,10 +195,13 @@ describe("collectReferencedSubSchemas", () => {
         const rawSubSchema = {
             title: "Reference Target"
         };
-        const schema = new JsonSchema({
-            definitions: { Foo: rawSubSchema },
-            [fieldName]: [{}, { $ref: "#/definitions/Foo" }]
-        }, { [fieldName]: {} });
+        const schema = new JsonSchema(
+            {
+                definitions: { Foo: rawSubSchema },
+                [fieldName]: [{}, { $ref: "#/definitions/Foo" }]
+            },
+            { [fieldName]: {} }
+        );
 
         it("returns empty Map when includeNestedOptionals === false", () => {
             const result = collectReferencedSubSchemas(schema, false);
@@ -222,10 +229,13 @@ describe("collectReferencedSubSchemas", () => {
             ${"items"}           | ${{ $ref: "#/definitions/Foo" }}
             ${"additionalItems"} | ${{ $ref: "#/definitions/Foo" }}
         `("returning true as mapped result value for reference in '$fieldName'", ({ fieldName, referencingSchemaPart }) => {
-            const schema = new JsonSchema({
-                definitions: { Foo: rawSubSchema },
-                [fieldName]: referencingSchemaPart
-            }, {});
+            const schema = new JsonSchema(
+                {
+                    definitions: { Foo: rawSubSchema },
+                    [fieldName]: referencingSchemaPart
+                },
+                {}
+            );
             const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
             expect(result.size).toBe(1);
             const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
@@ -233,10 +243,13 @@ describe("collectReferencedSubSchemas", () => {
             expect(resultIncludingNestedOptionals).toBe(true);
         });
         it("returning includeNestedOptionals flag as mapped result value for reference in 'allOf'", () => {
-            const schema = new JsonSchema({
-                definitions: { Foo: rawSubSchema },
-                allOf: [{}, { $ref: "#/definitions/Foo" }]
-            }, {});
+            const schema = new JsonSchema(
+                {
+                    definitions: { Foo: rawSubSchema },
+                    allOf: [{}, { $ref: "#/definitions/Foo" }]
+                },
+                {}
+            );
             const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
             expect(result.size).toBe(1);
             const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
@@ -248,10 +261,13 @@ describe("collectReferencedSubSchemas", () => {
             ${"directly in 'allOf' (first) and as 'items' (second)"} | ${[{ $ref: "#/definitions/Foo" }, { items: { $ref: "#/definitions/Foo" } }]}
             ${"directly in 'allOf' (second) and as 'items' (first)"} | ${[{ items: { $ref: "#/definitions/Foo" } }, { $ref: "#/definitions/Foo" }]}
         `("returning true as mapped result value if same reference occurs $testDescription", ({ allOf }) => {
-            const schema = new JsonSchema({
-                definitions: { Foo: rawSubSchema },
-                allOf
-            }, {});
+            const schema = new JsonSchema(
+                {
+                    definitions: { Foo: rawSubSchema },
+                    allOf
+                },
+                {}
+            );
             const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
             expect(result.size).toBe(1);
             const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
@@ -260,22 +276,25 @@ describe("collectReferencedSubSchemas", () => {
         });
     });
     it("returns Map with multiple referenced sub-schemas", () => {
-        const schema = new JsonSchema({
-            definitions: {
-                Sub1: { title: "Reference Target" },
-                Sub2: { description: "Second Target" }
+        const schema = new JsonSchema(
+            {
+                definitions: {
+                    Sub1: { title: "Reference Target" },
+                    Sub2: { description: "Second Target" }
+                },
+                allOf: [{ $ref: "#/definitions/Sub1" }, { $ref: "#/definitions/Sub2" }]
             },
-            allOf: [
-                { $ref: "#/definitions/Sub1" },
-                { $ref: "#/definitions/Sub2" }
-            ]
-        }, {});
+            {}
+        );
         expect(collectReferencedSubSchemas(schema).size).toBe(2);
     });
     it("ignores self-reference", () => {
-        const schema = new JsonSchema({
-            items: { $ref: "#" }
-        }, {});
+        const schema = new JsonSchema(
+            {
+                items: { $ref: "#" }
+            },
+            {}
+        );
         expect(collectReferencedSubSchemas(schema)).toEqual(new Map());
     });
 });
@@ -298,29 +317,29 @@ describe("createFilterFunctionForSchema()", () => {
         });
     });
     describe("returning filter function for complex schema", () => {
-        const schema = new JsonSchema({
-            $id: "https://unique-schema-identifier",
-            title: "Match",
-            properties: {
-                "Item One": { $ref: "#/definitions/One" },
-                "Item Two": { $ref: "#/definitions/Two" },
-                "Item Three": { $ref: "#/definitions/Three" }
-            },
-            definitions: {
-                One: {
-                    items: { $ref: "#" }
+        const schema = new JsonSchema(
+            {
+                $id: "https://unique-schema-identifier",
+                title: "Match",
+                properties: {
+                    "Item One": { $ref: "#/definitions/One" },
+                    "Item Two": { $ref: "#/definitions/Two" },
+                    "Item Three": { $ref: "#/definitions/Three" }
                 },
-                Two: {
-                    items: { title: "Nothing" }
-                },
-                Three: {
-                    allOf: [
-                        { $ref: "#/definitions/Two" },
-                        { $ref: "https://unique-schema-identifier#" }
-                    ]
+                definitions: {
+                    One: {
+                        items: { $ref: "#" }
+                    },
+                    Two: {
+                        items: { title: "Nothing" }
+                    },
+                    Three: {
+                        allOf: [{ $ref: "#/definitions/Two" }, { $ref: "https://unique-schema-identifier#" }]
+                    }
                 }
-            }
-        }, {});
+            },
+            {}
+        );
         const schemaOne = schema.scope.find("#/definitions/One");
         const schemaTwo = schema.scope.find("#/definitions/Two");
         const schemaThree = schema.scope.find("#/definitions/Three");
@@ -364,16 +383,10 @@ describe("createFilterFunctionForSchema()", () => {
                         ]
                     },
                     Three: {
-                        anyOf: [
-                            { $ref: "#" },
-                            { title: "Foobar" }
-                        ]
+                        anyOf: [{ $ref: "#" }, { title: "Foobar" }]
                     },
                     Four: {
-                        anyOf: [
-                            { $ref: "#/definitions/Two" },
-                            { title: "Qux" }
-                        ]
+                        anyOf: [{ $ref: "#/definitions/Two" }, { title: "Qux" }]
                     },
                     Five: {
                         items: { $ref: "#/definitions/Two" }
@@ -403,30 +416,21 @@ describe("createFilterFunctionForSchema()", () => {
         describe("support non-optional parts of schema containing options", () => {
             const rawSchema = {
                 minProperties: 1,
-                allOf: [
-                    { title: "Foo" },
-                    { description: "Bar" }
-                ],
-                anyOf: [
-                    { maxProperties: 3 },
-                    { type: "object" }
-                ],
-                oneOf: [
-                    { maxProperties: 5 },
-                    { maxProperties: 7 }
-                ]
+                allOf: [{ title: "Foo" }, { description: "Bar" }],
+                anyOf: [{ maxProperties: 3 }, { type: "object" }],
+                oneOf: [{ maxProperties: 5 }, { maxProperties: 7 }]
             };
 
             it.each`
-                testTitle                                      | flatSearchFilter                  | includeOptionals | result
-                ${"directly on main schema (incl. optionals)"} | ${(sub) => sub.minProperties === 1} | ${true}          | ${true}
-                ${"directly on main schema (excl. optionals)"} | ${(sub) => sub.minProperties === 1} | ${false}         | ${true}
-                ${"in allOf part (incl. optionals)"}           | ${(sub) => sub.title === "Foo"}     | ${true}          | ${true}
-                ${"in allOf part (excl. optionals)"}           | ${(sub) => sub.title === "Foo"}     | ${false}         | ${true}
-                ${"in anyOf part (incl. optionals)"}           | ${(sub) => sub.type === "object"}   | ${true}          | ${true}
-                ${"in anyOf part (excl. optionals)"}           | ${(sub) => sub.type === "object"}   | ${false}         | ${false}
-                ${"in oneOf part (incl. optionals)"}           | ${(sub) => sub.maxProperties === 7} | ${true}          | ${true}
-                ${"in oneOf part (excl. optionals)"}           | ${(sub) => sub.maxProperties === 7} | ${false}         | ${false}
+                testTitle                                      | flatSearchFilter                             | includeOptionals | result
+                ${"directly on main schema (incl. optionals)"} | ${(sub): boolean => sub.minProperties === 1} | ${true}          | ${true}
+                ${"directly on main schema (excl. optionals)"} | ${(sub): boolean => sub.minProperties === 1} | ${false}         | ${true}
+                ${"in allOf part (incl. optionals)"}           | ${(sub): boolean => sub.title === "Foo"}     | ${true}          | ${true}
+                ${"in allOf part (excl. optionals)"}           | ${(sub): boolean => sub.title === "Foo"}     | ${false}         | ${true}
+                ${"in anyOf part (incl. optionals)"}           | ${(sub): boolean => sub.type === "object"}   | ${true}          | ${true}
+                ${"in anyOf part (excl. optionals)"}           | ${(sub): boolean => sub.type === "object"}   | ${false}         | ${false}
+                ${"in oneOf part (incl. optionals)"}           | ${(sub): boolean => sub.maxProperties === 7} | ${true}          | ${true}
+                ${"in oneOf part (excl. optionals)"}           | ${(sub): boolean => sub.maxProperties === 7} | ${false}         | ${false}
             `("$testTitle", ({ flatSearchFilter, includeOptionals, result }) => {
                 const schema = new JsonSchema(rawSchema, {});
                 const filterFunction = createFilterFunctionForSchema(flatSearchFilter);

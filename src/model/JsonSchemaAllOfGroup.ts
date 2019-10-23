@@ -11,9 +11,7 @@ export class JsonSchemaAllOfGroup extends JsonSchemaGroup {
      * @param {JsonSchema|JsonSchemaGroup} schemaOrGroup - entry to add to this group
      * @returns {JsonSchemaAllOfGroup} this (i.e. self-reference for chaining)
      */
-    with(
-        schemaOrGroup: JsonSchemaGroup | JsonSchema
-    ): this {
+    with(schemaOrGroup: JsonSchemaGroup | JsonSchema): this {
         if (schemaOrGroup instanceof JsonSchemaGroup && schemaOrGroup.shouldTreatEntriesAsOne()) {
             // unwrap entries to avoid an AllOfGroup being nested in an AllOfGroup
             schemaOrGroup.entries.forEach((entry) => this.with(entry));

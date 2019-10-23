@@ -19,17 +19,16 @@ import { BreadcrumbsOptions, RenderColumn, RenderOptionsColumn } from "../types/
  * @param {?Function} breadcrumbsOptions.mutateName - mutates name of selected item (e.g. for removing/replacing white-spaces)
  * @returns {BreadcrumbBuilder} function extracting breadcrumb text for one column
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const createBreadcrumbBuilder = (breadcrumbsOptions: BreadcrumbsOptions) => {
-    const {
-        prefix = "", separator = ".", skipSeparator, mutateName
-    } = breadcrumbsOptions;
+    const { prefix = "", separator = ".", skipSeparator, mutateName } = breadcrumbsOptions;
     return (column: RenderColumn, index: number): string => {
         if ((column as RenderOptionsColumn).options) {
             // no breadcrumb for option selection
             return null;
         }
         const { selectedItem } = column;
-        const name = mutateName ? mutateName(selectedItem as string, column, index) : selectedItem as string;
+        const name = mutateName ? mutateName(selectedItem as string, column, index) : (selectedItem as string);
         if (!name) {
             // if mutateName() returns a falsy value (undefined|null|empty), the whole breadcrumb should be skipped
             return null;

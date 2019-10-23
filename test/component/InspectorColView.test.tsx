@@ -15,7 +15,7 @@ describe("renders correctly", () => {
                             "Item Two": new JsonSchemaGroup()
                         },
                         selectedItem: "Item One",
-                        onSelect: () => { }
+                        onSelect: (): void => {}
                     },
                     {
                         options: {
@@ -25,14 +25,14 @@ describe("renders correctly", () => {
                         contextGroup: new JsonSchemaGroup(),
                         selectedItem: [0],
                         trailingSelection: true,
-                        onSelect: () => { }
+                        onSelect: (): void => {}
                     },
                     {
                         items: {
                             "Item One-Two-One": new JsonSchemaGroup(),
                             "Item One-Two-Two": new JsonSchemaGroup()
                         },
-                        onSelect: () => { }
+                        onSelect: (): void => {}
                     }
                 ]}
             />
@@ -50,7 +50,7 @@ describe("renders correctly", () => {
                         },
                         selectedItem: "Item Two",
                         trailingSelection: true,
-                        onSelect: () => { }
+                        onSelect: (): void => {}
                     }
                 ]}
                 appendEmptyColumn
@@ -66,7 +66,7 @@ describe("update according to prop changes", () => {
                 "Item One": new JsonSchemaGroup(),
                 "Item Two": new JsonSchemaGroup()
             },
-            onSelect: () => { }
+            onSelect: (): void => {}
         }
     ];
     const doubleColumnData = [
@@ -77,21 +77,19 @@ describe("update according to prop changes", () => {
             },
             selectedItem: "Item Two",
             trailingSelection: true,
-            onSelect: () => { }
+            onSelect: (): void => {}
         },
         {
             items: {
                 "Item Two-One": new JsonSchemaGroup(),
                 "Item Two-Two": new JsonSchemaGroup()
             },
-            onSelect: () => { }
+            onSelect: (): void => {}
         }
     ];
 
     it("setting root selection (while no empty column was displayed)", () => {
-        const component = mount(
-            <InspectorColView columnData={singleColumnData} />
-        );
+        const component = mount(<InspectorColView columnData={singleColumnData} />);
         // simulate selection in root column
         component.setProps({
             columnData: doubleColumnData
@@ -99,12 +97,7 @@ describe("update according to prop changes", () => {
         expect(component.find("InspectorColumn")).toHaveLength(2);
     });
     it("setting root selection (while empty column was displayed)", () => {
-        const component = mount(
-            <InspectorColView
-                columnData={singleColumnData}
-                appendEmptyColumn
-            />
-        );
+        const component = mount(<InspectorColView columnData={singleColumnData} appendEmptyColumn />);
         // simulate selection in root column
         component.setProps({
             columnData: doubleColumnData
@@ -112,9 +105,7 @@ describe("update according to prop changes", () => {
         expect(component.find("InspectorColumn")).toHaveLength(2);
     });
     it("clearing root selection", () => {
-        const component = mount(
-            <InspectorColView columnData={doubleColumnData} />
-        );
+        const component = mount(<InspectorColView columnData={doubleColumnData} />);
         // simulate clearing the selection again (thereby adding an empty column)
         component.setProps({
             columnData: singleColumnData,

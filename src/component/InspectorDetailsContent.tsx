@@ -1,30 +1,29 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/no-array-index-key */
 import * as PropTypes from "prop-types";
 import * as React from "react";
 
 import { InspectorDetailsForm } from "./InspectorDetailsForm";
-import { getColumnDataPropTypeShape } from "./renderDataUtils";
+import { ColumnDataPropType } from "./renderDataUtils";
 
 import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 import { createOptionTargetArrayFromIndexes, getFieldValueFromSchemaGroup } from "../model/schemaUtils";
-import {
-    isDefined, listValues, commonValues, minimumValue, maximumValue
-} from "../model/utils";
+import { isDefined, listValues, commonValues, minimumValue, maximumValue } from "../model/utils";
 import { RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
 import { RawJsonSchema } from "../types/RawJsonSchema";
 
 function containsTrueOrReduce<T>(
-    allValues: T | Array<boolean | T>,
+    allValues: T | Array<boolean | T>,
     reduceNonBooleans: (combined: T, nextValue: T, index: number, all: Array<T>) => T
 ): boolean | T | undefined {
     if (Array.isArray(allValues)) {
-        return (allValues as Array<any>).includes(true)
-                || (allValues.filter((value) => !(typeof value === "boolean")) as Array<T>)
-                        .reduce(reduceNonBooleans);
+        return (
+            (allValues as Array<unknown>).includes(true) ||
+            (allValues.filter((value) => !(typeof value === "boolean")) as Array<T>).reduce(reduceNonBooleans)
+        );
     }
     return isDefined(allValues) ? allValues : undefined;
 }
-
 
 function checkIfIsRequired(selectionColumnIndex: number, columnData: Array<RenderColumn>): boolean {
     if (selectionColumnIndex < 1) {
@@ -41,17 +40,18 @@ function checkIfIsRequired(selectionColumnIndex: number, columnData: Array<Rende
             parentSchemaGroup = (parentColumn as RenderOptionsColumn).contextGroup;
             optionTarget = createOptionTargetArrayFromIndexes(parentColumn.selectedItem as Array<number>);
         }
-        return parentSchemaGroup.someEntry(
-            ({ schema: rawSchema }) => rawSchema.required && rawSchema.required.includes(selectedItem),
-            optionTarget
-        );
+        return parentSchemaGroup.someEntry(({ schema: rawSchema }) => rawSchema.required && rawSchema.required.includes(selectedItem), optionTarget);
     }
     // simply check whether the parent (the one the selected option belongs to) is required
     return checkIfIsRequired(selectionColumnIndex - 1, columnData);
 }
 
-export function collectFormFields(itemSchemaGroup: JsonSchemaGroup, columnData: Array<RenderColumn>, selectionColumnIndex: number) {
-    const formFields: Array<{ labelText: string, rowValue: any }> = [];
+export function collectFormFields(
+    itemSchemaGroup: JsonSchemaGroup,
+    columnData: Array<RenderColumn>,
+    selectionColumnIndex: number
+): Array<{ labelText: string; rowValue: any }> {
+    const formFields: Array<{ labelText: string; rowValue: any }> = [];
     const addFormField = (labelText: string, rowValue?: any): void => {
         if (isDefined(rowValue)) {
             formFields.push({ labelText, rowValue });
@@ -62,9 +62,7 @@ export function collectFormFields(itemSchemaGroup: JsonSchemaGroup, columnData: 
     const getValue = <K extends keyof RawJsonSchema, T extends RawJsonSchema[K] | Array<RawJsonSchema[K]>>(
         fieldName: K,
         mergeValues: (combined: T, nextValue: T) => T = listValues
-    ): T => getFieldValueFromSchemaGroup(
-        itemSchemaGroup, fieldName, mergeValues, undefined, undefined, optionIndexes
-    );
+    ): T => getFieldValueFromSchemaGroup(itemSchemaGroup, fieldName, mergeValues, undefined, undefined, optionIndexes);
 
     addFormField("Title", getValue("title"));
     addFormField("Description", getValue("description"));
@@ -114,9 +112,8 @@ export function collectFormFields(itemSchemaGroup: JsonSchemaGroup, columnData: 
     const defaultValue = getValue("default");
     addFormField("Default Value", typeof defaultValue === "object" ? JSON.stringify(defaultValue) : defaultValue);
     let examples = getValue("examples");
-    examples = (isDefined(examples) && examples.length > 0) ? examples : null;
-    addFormField("Example(s)",
-        (examples && typeof examples[0] === "object") ? JSON.stringify(examples) : examples);
+    examples = isDefined(examples) && examples.length > 0 ? examples : null;
+    addFormField("Example(s)", examples && typeof examples[0] === "object" ? JSON.stringify(examples) : examples);
     addFormField("Value Pattern", getValue("pattern"));
     addFormField("Value Format", getValue("format", commonValues));
     // if multiple minimums are specified (in allOf parts), the highest minimum applies
@@ -131,28 +128,23 @@ export function collectFormFields(itemSchemaGroup: JsonSchemaGroup, columnData: 
 }
 
 export class InspectorDetailsContent extends React.Component<{
-    itemSchemaGroup: JsonSchemaGroup,
-    columnData: Array<RenderColumn>,
-    selectionColumnIndex: number
+    itemSchemaGroup: JsonSchemaGroup;
+    columnData: Array<RenderColumn>;
+    selectionColumnIndex: number;
 }> {
-    render() {
-        const {
-            itemSchemaGroup, columnData, selectionColumnIndex
-        } = this.props;
+    render(): React.ReactNode {
+        const { itemSchemaGroup, columnData, selectionColumnIndex } = this.props;
         return (
             <div className="jsonschema-inspector-details-content">
                 <h3 className="jsonschema-inspector-details-header">Details</h3>
-                <InspectorDetailsForm
-                    key="main-form"
-                    fields={collectFormFields(itemSchemaGroup, columnData, selectionColumnIndex)}
-                />
+                <InspectorDetailsForm key="main-form" fields={collectFormFields(itemSchemaGroup, columnData, selectionColumnIndex)} />
             </div>
         );
     }
 
     static propTypes = {
         itemSchemaGroup: PropTypes.instanceOf(JsonSchemaGroup).isRequired,
-        columnData: PropTypes.arrayOf(PropTypes.shape(getColumnDataPropTypeShape(false))).isRequired,
+        columnData: ColumnDataPropType.isRequired,
         selectionColumnIndex: PropTypes.number
     };
 

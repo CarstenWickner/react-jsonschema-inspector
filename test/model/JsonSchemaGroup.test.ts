@@ -1,5 +1,6 @@
 import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
 import { JsonSchema } from "../../src/model/JsonSchema";
+import { RawJsonSchema } from "../../src/types/RawJsonSchema";
 
 /**
  * Minimal implementation of JsonSchemaGroup
@@ -10,7 +11,9 @@ class MockJsonSchemaGroup extends JsonSchemaGroup {
         super();
         this.treatAsAdditionalColumn = treatAsAdditionalColumn;
     }
-    considerSchemasAsSeparateOptions() { return this.treatAsAdditionalColumn; }
+    considerSchemasAsSeparateOptions(): boolean {
+        return this.treatAsAdditionalColumn;
+    }
 }
 
 describe("with()", () => {
@@ -33,9 +36,7 @@ describe("with()", () => {
         expect(targetGroup.entries).toEqual([otherEntry]);
     });
     it("adds given JsonSchemaGroup (with more than one entry) to this group's entries", () => {
-        const otherGroup = new JsonSchemaGroup()
-            .with(new JsonSchema(true, {}))
-            .with(new JsonSchema(true, {}));
+        const otherGroup = new JsonSchemaGroup().with(new JsonSchema(true, {})).with(new JsonSchema(true, {}));
         const targetGroup = new JsonSchemaGroup();
         const returnedGroup = targetGroup.with(otherGroup);
         expect(returnedGroup).toBe(targetGroup);
@@ -44,12 +45,10 @@ describe("with()", () => {
 });
 describe("someEntry()", () => {
     describe("on group with considerSchemasAsSeparateOptions() === true", () => {
-        const group = new MockJsonSchemaGroup(true)
-            .with(new JsonSchema({ title: "Foo" }, {}))
-            .with(new JsonSchema({ title: "Bar" }, {}));
+        const group = new MockJsonSchemaGroup(true).with(new JsonSchema({ title: "Foo" }, {})).with(new JsonSchema({ title: "Bar" }, {}));
 
         it("includes sub-schema in leading option", () => {
-            const checkEntry = ({ schema }) => schema.title === "Foo";
+            const checkEntry = ({ schema }): boolean => schema.title === "Foo";
             expect(group.someEntry(checkEntry)).toBe(true);
             expect(group.someEntry(checkEntry, [])).toBe(false);
             expect(group.someEntry(checkEntry, [{ index: -1 }])).toBe(false);
@@ -57,7 +56,7 @@ describe("someEntry()", () => {
             expect(group.someEntry(checkEntry, [{ index: 1 }])).toBe(false);
         });
         it("includes sub-schema in trailing option", () => {
-            const checkEntry = ({ schema }) => schema.title === "Bar";
+            const checkEntry = ({ schema }): boolean => schema.title === "Bar";
             expect(group.someEntry(checkEntry)).toBe(true);
             expect(group.someEntry(checkEntry, [])).toBe(false);
             expect(group.someEntry(checkEntry, [{ index: -1 }])).toBe(false);
@@ -66,10 +65,8 @@ describe("someEntry()", () => {
             expect(group.someEntry(checkEntry, [{ index: 2 }])).toBe(false);
         });
         it("supports nested group with considerSchemasAsSeparateOptions() === true", () => {
-            const outerGroup = new MockJsonSchemaGroup(true)
-                .with(new JsonSchema({ title: "Foobar" }, {}))
-                .with(group);
-            const checkEntry = ({ schema }) => schema.title === "Foo";
+            const outerGroup = new MockJsonSchemaGroup(true).with(new JsonSchema({ title: "Foobar" }, {})).with(group);
+            const checkEntry = ({ schema }): boolean => schema.title === "Foo";
             expect(outerGroup.someEntry(checkEntry)).toBe(true);
             expect(outerGroup.someEntry(checkEntry, [])).toBe(false);
             expect(outerGroup.someEntry(checkEntry, [{ index: 0 }])).toBe(false);
@@ -81,15 +78,11 @@ describe("someEntry()", () => {
     describe("on group with considerSchemasAsSeparateOptions() === false", () => {
         const group = new JsonSchemaGroup()
             .with(new JsonSchema({ title: "Foo" }, {}))
-            .with(new MockJsonSchemaGroup(true)
-                .with(new JsonSchema({ title: "Bar" }, {}))
-                .with(new JsonSchema(true, {})))
-            .with(new MockJsonSchemaGroup(true)
-                .with(new JsonSchema(true, {}))
-                .with(new JsonSchema({ title: "Foobar" }, {})));
+            .with(new MockJsonSchemaGroup(true).with(new JsonSchema({ title: "Bar" }, {})).with(new JsonSchema(true, {})))
+            .with(new MockJsonSchemaGroup(true).with(new JsonSchema(true, {})).with(new JsonSchema({ title: "Foobar" }, {})));
 
         it("always including top-level schema", () => {
-            const checkEntry = ({ schema }) => schema.title === "Foo";
+            const checkEntry = ({ schema }): boolean => schema.title === "Foo";
             expect(group.someEntry(checkEntry, [{ index: 0 }])).toBe(true);
             expect(group.someEntry(checkEntry, [{ index: 0 }, { index: 0 }])).toBe(true);
             expect(group.someEntry(checkEntry, [{ index: -2 }])).toBe(true);
@@ -97,7 +90,7 @@ describe("someEntry()", () => {
         });
         describe("only including schema in nested group with considerSchemasAsSeparateOptions() === true if indicated by optionTarget", () => {
             it("includes sub-schema in leading option", () => {
-                const checkEntry = ({ schema }) => schema.title === "Bar";
+                const checkEntry = ({ schema }): boolean => schema.title === "Bar";
                 expect(group.someEntry(checkEntry, [{ index: 0 }])).toBe(false);
                 expect(group.someEntry(checkEntry, [{ index: 0 }, { index: 0 }])).toBe(true);
                 expect(group.someEntry(checkEntry, [{ index: 0 }, { index: 1 }])).toBe(false);
@@ -105,7 +98,7 @@ describe("someEntry()", () => {
                 expect(group.someEntry(checkEntry, [{ index: 3 }])).toBe(false);
             });
             it("includes sub-schema in trailing option", () => {
-                const checkEntry = ({ schema }) => schema.title === "Foobar";
+                const checkEntry = ({ schema }): boolean => schema.title === "Foobar";
                 expect(group.someEntry(checkEntry, [{ index: 0 }])).toBe(false);
                 expect(group.someEntry(checkEntry, [{ index: -2 }])).toBe(false);
                 expect(group.someEntry(checkEntry, [{ index: 3 }])).toBe(false);
@@ -119,7 +112,8 @@ describe("someEntry()", () => {
 describe("extractValues()/extractValuesFromEntry()", () => {
     describe("when considerSchemasAsSeparateOptions() === false", () => {
         it("calling given extractFromSchema() function on single schema entry", () => {
-            const extractFromSchema = jest.fn()
+            const extractFromSchema = jest
+                .fn()
                 .mockReturnValueOnce(10)
                 .mockReturnValueOnce("foo")
                 .mockReturnValueOnce(false);
@@ -139,12 +133,11 @@ describe("extractValues()/extractValuesFromEntry()", () => {
             expect(extractFromSchema.mock.calls[2][0]).toBe(entry);
         });
         it("calling extractValues() recursively on group entry", () => {
-            const group = new JsonSchemaGroup()
-                .with(new JsonSchemaGroup()
-                    .with(new JsonSchema({ title: "foo" }, {}))
-                    .with(new JsonSchema({ description: "bar" }, {})));
-            const extractFromSchema = ({ schema }) => schema;
-            const mergeResults = (combined, nextValue) => ({ ...combined, ...nextValue });
+            const group = new JsonSchemaGroup().with(
+                new JsonSchemaGroup().with(new JsonSchema({ title: "foo" }, {})).with(new JsonSchema({ description: "bar" }, {}))
+            );
+            const extractFromSchema = ({ schema }: JsonSchema): RawJsonSchema => schema;
+            const mergeResults = <T>(combined: T, nextValue: T): T => ({ ...combined, ...nextValue });
             const defaultValue = {};
             expect(group.extractValues(extractFromSchema, mergeResults, defaultValue)).toEqual({
                 title: "foo",
@@ -154,47 +147,36 @@ describe("extractValues()/extractValuesFromEntry()", () => {
     });
     describe("when considerSchemasAsSeparateOptions() === true", () => {
         it.each`
-            conditionText                      | optionTargetIn     | optionTargetOut
-            ${"is undefined"}                  | ${undefined}       | ${undefined}
-            ${"is empty array"}                | ${[]}              | ${[]}
+            conditionText                       | optionTargetIn     | optionTargetOut
+            ${"is undefined"}                   | ${undefined}       | ${undefined}
+            ${"is empty array"}                 | ${[]}              | ${[]}
             ${"has two items with index > 1"}   | ${[{ index: 4 }]}  | ${[{ index: 2 }]}
             ${"has two items with index === 1"} | ${[{ index: 1 }]}  | ${[{ index: -1 }]}
-            ${"has two item with index < 0"}   | ${[{ index: -2 }]} | ${[{ index: -4 }]}
+            ${"has two item with index < 0"}    | ${[{ index: -2 }]} | ${[{ index: -4 }]}
         `("returns given defaultValue if optionTarget $conditionText", ({ optionTargetIn, optionTargetOut }) => {
-            const group = new MockJsonSchemaGroup(true)
-                .with(new JsonSchema(true, {}))
-                .with(new JsonSchema(true, {}));
-            expect(group.extractValues(
-                ():string  => undefined,
-                // eslint-disable-next-line no-nested-ternary
-                (combined, nextValue) => (!combined ? nextValue : (nextValue ? `${combined}, ${nextValue}` : combined)),
-                "foobar",
-                optionTargetIn
-            )).toBe("foobar");
+            const group = new MockJsonSchemaGroup(true).with(new JsonSchema(true, {})).with(new JsonSchema(true, {}));
+            expect(
+                group.extractValues(
+                    (): string => undefined,
+                    // eslint-disable-next-line no-nested-ternary
+                    (combined, nextValue) => (!combined ? nextValue : nextValue ? `${combined}, ${nextValue}` : combined),
+                    "foobar",
+                    optionTargetIn
+                )
+            ).toBe("foobar");
             expect(optionTargetIn).toEqual(optionTargetOut);
         });
         it("returns merged values when optionTarget index reaches 0", () => {
             const group = new MockJsonSchemaGroup(true)
                 .with(new JsonSchema(false, {}))
-                .with(new MockJsonSchemaGroup(true)
-                    .with(new JsonSchema({ title: "bar" }, {}))
-                    .with(new JsonSchema({ title: "baz" }, {})));
-            const extractFromSchema = ({ schema }) => schema.title;
-            const mergeResults = (combined, nextValue) => (
-                (combined && nextValue)
-                    ? `${combined}, ${nextValue}`
-                    : combined || nextValue
-            );
+                .with(new MockJsonSchemaGroup(true).with(new JsonSchema({ title: "bar" }, {})).with(new JsonSchema({ title: "baz" }, {})));
+            const extractFromSchema = ({ schema }: JsonSchema): string => schema.title;
+            const mergeResults = (combined: string, nextValue: string): string =>
+                combined && nextValue ? `${combined}, ${nextValue}` : combined || nextValue;
             const defaultValue = null;
-            const optionTarget = [
-                { index: 1 },
-                { index: 0 }
-            ];
+            const optionTarget = [{ index: 1 }, { index: 0 }];
             expect(group.extractValues(extractFromSchema, mergeResults, defaultValue, optionTarget)).toBe("bar");
-            expect(optionTarget).toEqual([
-                { index: -1 },
-                { index: -2 }
-            ]);
+            expect(optionTarget).toEqual([{ index: -1 }, { index: -2 }]);
         });
     });
 });

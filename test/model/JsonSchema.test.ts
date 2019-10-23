@@ -2,9 +2,12 @@ import { JsonSchema, RefScope } from "../../src/model/JsonSchema";
 
 describe("constructed correctly()", () => {
     it("includes only self-reference for simple schema", () => {
-        const schema = new JsonSchema({
-            title: "Test"
-        }, {});
+        const schema = new JsonSchema(
+            {
+                title: "Test"
+            },
+            {}
+        );
         const { scope } = schema;
         expect(scope.internalRefs.size).toBe(1);
         expect(scope.internalRefs.get("#")).toEqual(schema);
@@ -87,13 +90,16 @@ describe("constructed correctly()", () => {
         expect(scope.externalRefs.get("http://valid-uri.com/$id#/definitions/A").schema).toEqual(subSchema);
     });
     it("ignores undefined/null/invalid/empty definitions", () => {
-        const schema = new JsonSchema({
-            definitions: {
-                A: undefined,
-                B: null,
-                C: {}
-            }
-        }, {});
+        const schema = new JsonSchema(
+            {
+                definitions: {
+                    A: undefined,
+                    B: null,
+                    C: {}
+                }
+            },
+            {}
+        );
         const { scope } = schema;
         expect(scope.internalRefs.size).toBe(1);
         expect(scope.internalRefs.get("#")).toEqual(schema);
@@ -183,7 +189,7 @@ describe("RefScope.find()", () => {
     it("throws error if not found", () => {
         const schema = new JsonSchema({ title: "Test" }, {});
         const { scope } = schema;
-        expect(() => scope.find("#/definitions/A")).toThrowError("Cannot resolve $ref: \"#/definitions/A\"");
+        expect(() => scope.find("#/definitions/A")).toThrowError('Cannot resolve $ref: "#/definitions/A"');
     });
     it("via other scope's `externalRefs`", () => {
         const otherSchemaId = "http://valid-uri.com/$id#";
@@ -194,12 +200,17 @@ describe("RefScope.find()", () => {
     });
     it("not via other scope's `internalRefs`", () => {
         const { scope } = new JsonSchema({ title: "Test" }, {});
-        scope.addOtherScope(new JsonSchema({
-            definitions: {
-                A: { description: "Value" }
-            }
-        }, {}).scope);
+        scope.addOtherScope(
+            new JsonSchema(
+                {
+                    definitions: {
+                        A: { description: "Value" }
+                    }
+                },
+                {}
+            ).scope
+        );
         expect(Array.from(scope.otherScopes[0].internalRefs.keys())).toEqual(["#", "#/definitions/A"]);
-        expect(() => scope.find("#/definitions/A")).toThrowError("Cannot resolve $ref: \"#/definitions/A\"");
+        expect(() => scope.find("#/definitions/A")).toThrowError('Cannot resolve $ref: "#/definitions/A"');
     });
 });

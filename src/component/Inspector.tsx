@@ -17,38 +17,48 @@ import { createBreadcrumbBuilder } from "../model/breadcrumbsUtils";
 import { filteringByFields, filteringByPropertyName } from "../model/searchUtils";
 
 import {
-    SearchOptions, RenderItemsColumn, RenderOptionsColumn, ParserConfig, BuildArrayPropertiesFunction, BreadcrumbsOptions, OnSelectCallback,
-    RenderItemContentFunction, RenderSelectionDetailsFunction, RenderEmptyDetailsFunction
+    BreadcrumbsOptions,
+    BuildArrayPropertiesFunction,
+    OnSelectCallback,
+    ParserConfig,
+    RenderEmptyDetailsFunction,
+    RenderColumn,
+    RenderColumnOnSelectFunction,
+    RenderItemContentFunction,
+    RenderItemsColumn,
+    RenderOptionsColumn,
+    RenderSelectionDetailsFunction,
+    SearchOptions
 } from "../types/Inspector";
 import { RawJsonSchema } from "../types/RawJsonSchema";
-import { RenderColumnOnSelectFunction } from "../types/Inspector";
+import { Cancelable } from "lodash";
 
 interface InspectorDefaultProps {
-    referenceSchemas: Array<RawJsonSchema>,
-    defaultSelectedItems: Array<string | Array<number>>,
-    parserConfig: ParserConfig,
-    buildArrayProperties?: BuildArrayPropertiesFunction,
-    breadcrumbs: BreadcrumbsOptions | null,
-    searchOptions: SearchOptions | null,
-    onSelect?: OnSelectCallback,
-    renderItemContent?: RenderItemContentFunction,
-    renderSelectionDetails?: RenderSelectionDetailsFunction,
-    renderEmptyDetails?: RenderEmptyDetailsFunction
+    referenceSchemas: Array<RawJsonSchema>;
+    defaultSelectedItems: Array<string | Array<number>>;
+    parserConfig: ParserConfig;
+    buildArrayProperties?: BuildArrayPropertiesFunction;
+    breadcrumbs: BreadcrumbsOptions | null;
+    searchOptions: SearchOptions | null;
+    onSelect?: OnSelectCallback;
+    renderItemContent?: RenderItemContentFunction;
+    renderSelectionDetails?: RenderSelectionDetailsFunction;
+    renderEmptyDetails?: RenderEmptyDetailsFunction;
 }
 
 interface InspectorProps extends InspectorDefaultProps {
     /**
      * Object containing names of root level items (as keys) each associated with their respective JSON Schema (as values).
      */
-    schemas: { [key: string]: RawJsonSchema },
-};
+    schemas: { [key: string]: RawJsonSchema };
+}
 
 interface InspectorState {
-    selectedItems: Array<string | Array<number>>,
-    appendEmptyColumn: boolean,
-    enteredSearchFilter: string,
-    appliedSearchFilter: string
-};
+    selectedItems: Array<string | Array<number>>;
+    appendEmptyColumn: boolean;
+    enteredSearchFilter: string;
+    appliedSearchFilter: string;
+}
 
 export class Inspector extends React.Component<InspectorProps, InspectorState> {
     /**
@@ -60,8 +70,8 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
      * @returns {Function} return debounced function to set applied filter
      * @returns {string} return.value input parameter is the new search filter value to apply
      */
-    debouncedApplySearchFilter = memoize(
-        (debounceWait: number, debounceMaxWait: number) => debounce(
+    debouncedApplySearchFilter = memoize((debounceWait: number, debounceMaxWait: number): ((newSearchFilter: string) => void) & Cancelable =>
+        debounce(
             (newSearchFilter: string) => {
                 this.setState({ appliedSearchFilter: newSearchFilter });
             },
@@ -89,7 +99,7 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
      *
      * @param {string} enteredSearchFilter - the newly entered search filter in its respective input field
      */
-    onSearchFilterChange = (enteredSearchFilter: string) => {
+    onSearchFilterChange = (enteredSearchFilter: string): void => {
         this.setState({ enteredSearchFilter });
         const { searchOptions } = this.props;
         const { debounceWait = 200, debounceMaxWait = 500 } = searchOptions as SearchOptions;
@@ -104,7 +114,7 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
      * {*} return.param0.event - the originally triggered event (e.g. onClick, onDoubleClick, onKeyDown, etc.)
      * {string} return.param0.selectedItem - the item to select (or `null` to discard any selection in this column – and all subsequent ones)
      */
-    onSelectInColumn = (columnIndex: number): RenderColumnOnSelectFunction => (event, selectedItem) => {
+    onSelectInColumn = (columnIndex: number): RenderColumnOnSelectFunction => (event, selectedItem): void => {
         // the lowest child component accepting the click/selection event should consume it
         event.stopPropagation();
         const { selectedItems, appendEmptyColumn } = this.state;
@@ -113,7 +123,7 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
             // i.e. no change = no need for any action
             return;
         }
-        if (selectedItems.length === (columnIndex + 1) && isDeepEqual(selectedItems[columnIndex], selectedItem)) {
+        if (selectedItems.length === columnIndex + 1 && isDeepEqual(selectedItems[columnIndex], selectedItem)) {
             // click on current/last selection
             // i.e. no change = no need for any action
             return;
@@ -128,11 +138,10 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
         }
         // need to look-up the currently displayed number of content columns
         // thanks to 'memoize', we just look-up the result of the previous evaluation
-        const {
-            schemas, referenceSchemas, onSelect: onSelectProp, parserConfig, buildArrayProperties, breadcrumbs: breadcrumbsOptions
-        } = this.props;
-        const oldColumnCount = (appendEmptyColumn ? 1 : 0)
-            + this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties).columnData.length;
+        const { schemas, referenceSchemas, parserConfig, buildArrayProperties } = this.props;
+        const oldColumnCount =
+            (appendEmptyColumn ? 1 : 0) +
+            this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties).columnData.length;
         // now we need to know what the number of content columns will be after changing the state
         // thanks to 'memoize', the subsequent render() call will just look-up the result of this evaluation
         const newRenderData = this.getRenderDataForSelection(schemas, referenceSchemas, newSelection, parserConfig, buildArrayProperties);
@@ -143,14 +152,36 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
                 selectedItems: newSelection,
                 appendEmptyColumn: columnData.length < oldColumnCount
             },
-            onSelectProp
-                // due to the two-step process, the newRenderData will NOT include the filteredItems
-                ? () => onSelectProp(newSelection, newRenderData,
-                    breadcrumbsOptions && columnData.map(createBreadcrumbBuilder(breadcrumbsOptions as BreadcrumbsOptions)).filter((value) => value))
-                // no call-back provided via props, nothing to do
-                : undefined
+            // due to the two-step process, the newRenderData will NOT include the filteredItems
+            this.getSetStateCallbackOnSelect(newSelection, newRenderData)
         );
     };
+
+    /**
+     * @param {Array.<string|Array.<number>>} newSelection - updated "electedItems" value in state
+     * @param {{columnData:Array.<RenderColumn>}} newRenderData - new complete render data derived from props and updated state
+     * @returns {?Function} callback function for setState() being called as a result of an onSelect event
+     */
+    getSetStateCallbackOnSelect(newSelection: Array<string | Array<number>>, newRenderData: { columnData: Array<RenderColumn> }): () => void {
+        const { onSelect } = this.props;
+        if (!onSelect) {
+            return undefined;
+        }
+        const { columnData } = newRenderData;
+        return (): void => onSelect(newSelection, newRenderData, this.collectBreadCrumbs(columnData));
+    }
+
+    /**
+     * @param {Array.<RenderColumn>} columnData - complete render information for the separate columns
+     * @returns {?Array.<string>} full breadcrumbs according to configuration and currently selected items
+     */
+    collectBreadCrumbs(columnData: Array<RenderColumn>): Array<string> {
+        const { breadcrumbs: breadcrumbsOptions } = this.props;
+        if (!breadcrumbsOptions) {
+            return undefined;
+        }
+        return columnData.map(createBreadcrumbBuilder(breadcrumbsOptions)).filter((value) => value);
+    }
 
     /**
      * Collect the data to provide as props to the sub components.
@@ -195,7 +226,7 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
             if (flatSchemaFilterFunction || propertyNameFilterFunction) {
                 // search feature is being used, so we set the filteredItems accordingly
                 const getFilteredItemsForColumn = createFilterFunctionForColumn(flatSchemaFilterFunction, propertyNameFilterFunction);
-                return (column: RenderItemsColumn | RenderOptionsColumn) => {
+                return (column: RenderItemsColumn | RenderOptionsColumn): void => {
                     // eslint-disable-next-line no-param-reassign
                     column.filteredItems = getFilteredItemsForColumn(column);
                 };
@@ -203,24 +234,29 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
         }
         // if the search feature is disabled or currently unused, we should ensure that there are no left-over filteredItems
         // eslint-disable-next-line no-param-reassign
-        return (column: RenderItemsColumn | RenderOptionsColumn) => delete column.filteredItems;
+        return (column: RenderItemsColumn | RenderOptionsColumn): void => {
+            delete column.filteredItems;
+        };
     }, isDeepEqual);
 
-    render() {
+    render(): React.ReactNode {
         const {
-            schemas, referenceSchemas, parserConfig, buildArrayProperties,
-            searchOptions, breadcrumbs, renderItemContent, renderSelectionDetails, renderEmptyDetails
+            schemas,
+            referenceSchemas,
+            parserConfig,
+            buildArrayProperties,
+            searchOptions,
+            breadcrumbs,
+            renderItemContent,
+            renderSelectionDetails,
+            renderEmptyDetails
         } = this.props;
-        const {
-            selectedItems, appendEmptyColumn, enteredSearchFilter, appliedSearchFilter
-        } = this.state;
+        const { selectedItems, appendEmptyColumn, enteredSearchFilter, appliedSearchFilter } = this.state;
         const { columnData } = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties);
         // apply search filter if enabled or clear (potentially left-over) search results
         columnData.forEach(this.setFilteredItemsForColumn(searchOptions, appliedSearchFilter));
-        const searchFeatureEnabled = searchOptions
-            && (searchOptions.byPropertyName
-                || (searchOptions.fields && searchOptions.fields.length)
-                || searchOptions.filterBy);
+        const searchFeatureEnabled =
+            searchOptions && (searchOptions.byPropertyName || (searchOptions.fields && searchOptions.fields.length) || searchOptions.filterBy);
         return (
             <div className="jsonschema-inspector">
                 {searchFeatureEnabled && (
@@ -233,11 +269,7 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
                     </div>
                 )}
                 <div className="jsonschema-inspector-body">
-                    <InspectorColView
-                        columnData={columnData}
-                        appendEmptyColumn={appendEmptyColumn}
-                        renderItemContent={renderItemContent}
-                    />
+                    <InspectorColView columnData={columnData} appendEmptyColumn={appendEmptyColumn} renderItemContent={renderItemContent} />
                     <InspectorDetails
                         columnData={columnData}
                         renderSelectionDetails={renderSelectionDetails}
@@ -246,10 +278,7 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
                 </div>
                 {breadcrumbs && (
                     <div className="jsonschema-inspector-footer">
-                        <InspectorBreadcrumbs
-                            columnData={columnData}
-                            breadcrumbsOptions={breadcrumbs}
-                        />
+                        <InspectorBreadcrumbs columnData={columnData} breadcrumbsOptions={breadcrumbs} />
                     </div>
                 )}
             </div>
@@ -326,11 +355,11 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
         /**
          * Options for the search input shown in the header and its impact on the displayed columns – set to `null` to turn it off.
          * - "byPropertyName": Flag indicating whether property names should be considered when searching/filtering
-         * - "fields": Array of strings: each referring to a textual field in a JSON Schema (e.g. `["title", "description"]`) in which to search/filter
+         * - "fields": Array of strings: each referring to a textual field in a JSON Schema (e.g. `["title", "description"]`) in which to search
          * - "filterBy": Custom search/filter logic, if present: overriding behaviour based on "fields"
          * - "inputPlaceholder": Hint text to display in the search input field (defaults to "Search")
-         * - "debounceWait": Number indicating the delay in milliseconds since the last change to the search term before applying it. Defaults to `200`.
-         * - "debounceMaxWait": Number indicating the maximum delay in milliseconds before a newly entered search is being applied. Defaults to `500`.
+         * - "debounceWait": Number indicating the delay in milliseconds since the last change to the search term before applying it. Default: `200`.
+         * - "debounceMaxWait": Number indicating the maximum delay in milliseconds before a newly entered search is being applied. Default: `500`.
          */
         searchOptions: PropTypes.shape({
             byPropertyName: PropTypes.bool,
@@ -361,7 +390,7 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
          * Expects a single object as input with the following keys:
          * - "itemSchemaGroup": the full `JsonSchemaGroup` associated with the currently selected trailing item (i.e. right-most selection)
          * - "columnData": the full render information for all columns
-         * - "selectionColumnIndex": indicating the index of the right-most column containing a selected item (for more convenient use of "columnData")
+         * - "selectionColumnIndex": indicating the index of the right-most column containing a selected item (for convenient use of "columnData")
          */
         renderSelectionDetails: PropTypes.func,
         /**
@@ -378,7 +407,7 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
         parserConfig: {},
         buildArrayProperties: undefined,
         breadcrumbs: {
-            skipSeparator: (fieldName) => (fieldName === "[0]")
+            skipSeparator: (fieldName): boolean => fieldName === "[0]"
         },
         searchOptions: {
             byPropertyName: true,

@@ -3,17 +3,17 @@ import * as React from "react";
 
 import { InspectorColumn } from "./InspectorColumn";
 import { InspectorOptionsColumn } from "./InspectorOptionsColumn";
-import { getColumnDataPropTypeShape } from "./renderDataUtils";
+import { ColumnDataPropType } from "./renderDataUtils";
 import { RenderItemsColumn, RenderOptionsColumn, RenderItemContentFunction } from "../types/Inspector";
 
 interface ColViewDefaultProps {
-    appendEmptyColumn: boolean,
-    renderItemContent: RenderItemContentFunction
-};
+    appendEmptyColumn: boolean;
+    renderItemContent: RenderItemContentFunction;
+}
 
 export interface ColViewProps extends ColViewDefaultProps {
-    columnData: Array<RenderItemsColumn | RenderOptionsColumn>
-};
+    columnData: Array<RenderItemsColumn | RenderOptionsColumn>;
+}
 
 export class InspectorColView extends React.Component<ColViewProps> {
     private colViewContainerRef: React.RefObject<HTMLDivElement>;
@@ -23,7 +23,7 @@ export class InspectorColView extends React.Component<ColViewProps> {
         this.colViewContainerRef = React.createRef();
     }
 
-    componentDidUpdate(prevProps: ColViewProps) {
+    componentDidUpdate(prevProps: ColViewProps): void {
         const previousColumnCount = prevProps.columnData.length + (prevProps.appendEmptyColumn ? 1 : 0);
         const { columnData, appendEmptyColumn } = this.props;
         const currentColumnCount = columnData.length + (appendEmptyColumn ? 1 : 0);
@@ -33,20 +33,12 @@ export class InspectorColView extends React.Component<ColViewProps> {
         }
     }
 
-    render() {
-        const {
-            columnData, appendEmptyColumn, renderItemContent
-        } = this.props;
+    render(): React.ReactNode {
+        const { columnData, appendEmptyColumn, renderItemContent } = this.props;
         return (
-            <div
-                className="jsonschema-inspector-colview"
-                ref={this.colViewContainerRef}
-                tabIndex={-1}
-            >
+            <div className="jsonschema-inspector-colview" ref={this.colViewContainerRef} tabIndex={-1}>
                 {columnData.map((singleColumnData, index) => {
-                    const {
-                        selectedItem, trailingSelection, filteredItems, onSelect
-                    } = singleColumnData;
+                    const { selectedItem, trailingSelection, filteredItems, onSelect } = singleColumnData;
                     if ((singleColumnData as RenderItemsColumn).items) {
                         return (
                             <InspectorColumn
@@ -76,18 +68,17 @@ export class InspectorColView extends React.Component<ColViewProps> {
                         />
                     );
                 })}
-                {appendEmptyColumn
-                    && <div className="jsonschema-inspector-column-placeholder" />}
+                {appendEmptyColumn && <div className="jsonschema-inspector-column-placeholder" />}
             </div>
         );
     }
 
     static propTypes = {
-        columnData: PropTypes.arrayOf(PropTypes.shape(getColumnDataPropTypeShape(true))).isRequired,
+        columnData: ColumnDataPropType.isRequired,
         appendEmptyColumn: PropTypes.bool,
         renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
     };
-    
+
     static defaultProps: ColViewDefaultProps = {
         appendEmptyColumn: false,
         renderItemContent: null

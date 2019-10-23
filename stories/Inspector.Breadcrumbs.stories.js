@@ -70,7 +70,7 @@ export const breadcrumbsSkippedSeparator = () => (
         defaultSelectedItems={["Meta Hyper JSON Schema", "contains", "allOf", "[0]"]}
         breadcrumbs={{
             // the default skipSeparator function only ignored "{0}"
-            skipSeparator: (fieldName, _column, index) => (fieldName === "[0]" || index % 2 === 0)
+            skipSeparator: (fieldName, _column, index) => fieldName === "[0]" || index % 2 === 0
         }}
     />
 );
@@ -86,7 +86,7 @@ export const breadcrumbsMultipleSeparators = () => (
         referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
         defaultSelectedItems={["Meta Hyper JSON Schema", "contains", "allOf", "[0]"]}
         breadcrumbs={{
-            skipSeparator: (fieldName, _column, index) => (fieldName === "[0]" || index % 2 === 0),
+            skipSeparator: (fieldName, _column, index) => fieldName === "[0]" || index % 2 === 0,
             mutateName: (fieldName, _column, index) => fieldName && `${index === 0 || index % 2 ? "" : "/"}${fieldName}`
         }}
     />
@@ -104,7 +104,7 @@ export const breadcrumbsNotShowingRootSelection = () => (
         defaultSelectedItems={["Meta Hyper JSON Schema", "contains", "allOf", "[0]"]}
         breadcrumbs={{
             // avoid leading separator (in addition to default ignoring of "[0]")
-            skipSeparator: (fieldName, _column, index) => (fieldName === "[0]" || index === 1),
+            skipSeparator: (fieldName, _column, index) => fieldName === "[0]" || index === 1,
             // returning a falsy value skips the breadcrumbs item (here: for the root selection)
             mutateName: (fieldName, _column, index) => index > 0 && fieldName
         }}
@@ -166,7 +166,9 @@ export const breadcrumbsCustomRendering = () => (
                             height: "2.5em"
                         }}
                         // eslint-disable-next-line no-alert
-                        onClick={() => window.alert(`E.g. could have copied current breadcrumbs to clipboard:\n\n\t"${renderProps.breadcrumbTexts.join("")}"`)}
+                        onClick={() =>
+                            window.alert(`E.g. could have copied current breadcrumbs to clipboard:\n\n\t"${renderProps.breadcrumbTexts.join("")}"`)
+                        }
                     >
                         Copy
                     </button>

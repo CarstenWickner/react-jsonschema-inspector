@@ -8,16 +8,14 @@ export class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
     /**
      * Configuration object determining how a particular part of a schema is being interpreted.
      *
-     * @type {{groupTitle: ?string, optionNameForIndex: ?Function}}
+     * @type {SchemaPartParserConfig}
      */
     settings: SchemaPartParserConfig;
 
     /**
      * Constructor for the representation of a schema's grouping property, e.g. `anyOf` or `oneOf`.
      *
-     * @param {object} settings - configuration object determining how the represented schema part should be interpreted
-     * @param {?string} settings.groupTitle - group title to show instead of the default provided by `getDefaultGroupTitle()`
-     * @param {?Function} settings.optionNameForIndex - function for deriving an option's name/label from an 'optionIndexes' array
+     * @param {SchemaPartParserConfig} settings - configuration object determining how the represented schema part should be interpreted
      */
     constructor(settings: SchemaPartParserConfig) {
         super();
@@ -30,7 +28,7 @@ export class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
      * @returns {boolean} always 'true'
      */
     // eslint-disable-next-line class-methods-use-this
-    considerSchemasAsSeparateOptions() {
+    considerSchemasAsSeparateOptions(): boolean {
         return true;
     }
 
@@ -38,12 +36,10 @@ export class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
      * Extension of method from super class for creating a representation of this group's given options.
      * Additionally adding the `settings.groupTitle` if no other `groupTitle` is present yet.
      *
-     * @param {Array.<RenderOptions} containedOptions - nested option representations
+     * @param {Array.<RenderOptions>} containedOptions - nested option representations
      * @returns {RenderOptions} representation of this group's contained optional hierarchy
      */
-    createOptionsRepresentation(
-        containedOptions: Array<RenderOptions>
-    ): RenderOptions {
+    createOptionsRepresentation(containedOptions: Array<RenderOptions>): RenderOptions {
         const result = super.createOptionsRepresentation(containedOptions);
         if (result.options && !result.groupTitle) {
             result.groupTitle = this.settings.groupTitle;
@@ -52,5 +48,41 @@ export class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
             result.optionNameForIndex = this.settings.optionNameForIndex;
         }
         return result;
+    }
+}
+
+/**
+ * Representation of an `anyOf` element in a json schema.
+ */
+export class JsonSchemaAnyOfGroup extends JsonSchemaOptionalsGroup {
+    /**
+     * Constructor for the representation of a schema's `anyOf` property.
+     * The `anyOf` property is a collection of sub-schemas of which one or multiple are expected to be fulfilled.
+     *
+     * @param {ParserConfig} parserConfig - configuration object determining how particular parts of a schema are being interpreted
+     */
+    constructor(parserConfig: { anyOf?: SchemaPartParserConfig }) {
+        super({
+            groupTitle: "any of",
+            ...parserConfig.anyOf
+        });
+    }
+}
+
+/**
+ * Representation of an `oneOf` element in a json schema.
+ */
+export class JsonSchemaOneOfGroup extends JsonSchemaOptionalsGroup {
+    /**
+     * Constructor for the representation of a schema's `oneOf` property.
+     * The `oneOf` property is a collection of sub-schemas of which exactly one is expected to be fulfilled.
+     *
+     * @param {ParserConfig} parserConfig - configuration object determining how particular parts of a schema are being interpreted
+     */
+    constructor(parserConfig: { oneOf?: SchemaPartParserConfig }) {
+        super({
+            groupTitle: "one of",
+            ...parserConfig.oneOf
+        });
     }
 }

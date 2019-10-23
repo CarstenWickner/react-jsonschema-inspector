@@ -3,12 +3,12 @@
         "browser": true,
         "es6": true
     },
-    "extends": "airbnb",
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
-    "parser": "babel-eslint",
+    "extends": [
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -17,13 +17,15 @@
         "sourceType": "module"
     },
     "plugins": [
-        "babel",
         "jsdoc",
         "react"
     ],
+    "settings":  {
+        "react":  {
+            "version": "detect"
+        }
+    },
     "rules": {
-        "babel/semi": "warn",
-        "comma-dangle": ["error", "never"],
         "indent": ["error", 4],
         "jsdoc/check-alignment": "warn",
         "jsdoc/check-indentation": "warn",
@@ -45,7 +47,6 @@
         "linebreak-style": "off",
         "max-len": ["warn", 150],
         "quotes": ["error", "double"],
-        "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
         "react/jsx-indent": ["error", 4],
         "react/jsx-indent-props": ["error", 4]
     }

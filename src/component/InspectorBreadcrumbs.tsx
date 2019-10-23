@@ -2,17 +2,17 @@ import * as PropTypes from "prop-types";
 import * as React from "react";
 import classNames from "classnames";
 
-import { getColumnDataPropTypeShape } from "./renderDataUtils";
+import { ColumnDataPropType } from "./renderDataUtils";
 import { createBreadcrumbBuilder } from "../model/breadcrumbsUtils";
 import { BreadcrumbsOptions, RenderColumn, RenderOptionsColumn } from "../types/Inspector";
 
 interface InspectorBreadcrumbsProps {
-    columnData: Array<RenderColumn>,
-    breadcrumbsOptions: BreadcrumbsOptions
+    columnData: Array<RenderColumn>;
+    breadcrumbsOptions: BreadcrumbsOptions;
 }
 
 export class InspectorBreadcrumbs extends React.Component<InspectorBreadcrumbsProps> {
-    render() {
+    render(): React.ReactNode {
         const { columnData, breadcrumbsOptions } = this.props;
         const buildBreadcrumb = createBreadcrumbBuilder(breadcrumbsOptions);
         const { preventNavigation, renderItem, renderTrailingContent } = breadcrumbsOptions;
@@ -26,9 +26,11 @@ export class InspectorBreadcrumbs extends React.Component<InspectorBreadcrumbsPr
                             // omit empty breadcrumb
                             return null;
                         }
-                        const hasNestedItems = index < (columnData.length - 2)
-                            || (index === (columnData.length - 2)
-                                && (!(columnData[columnData.length - 1] as RenderOptionsColumn).options || !columnData[columnData.length - 1].selectedItem));
+                        const hasNestedItems =
+                            index < columnData.length - 2 ||
+                            (index === columnData.length - 2 &&
+                                (!(columnData[columnData.length - 1] as RenderOptionsColumn).options ||
+                                    !columnData[columnData.length - 1].selectedItem));
                         if (renderItem) {
                             return renderItem({
                                 breadcrumbText,
@@ -46,23 +48,24 @@ export class InspectorBreadcrumbs extends React.Component<InspectorBreadcrumbsPr
                                     "jsonschema-inspector-breadcrumbs-item": true,
                                     "has-nested-items": hasNestedItems
                                 })}
-                                onDoubleClick={preventNavigation ? undefined : (event) => onSelect(event, selectedItem)}
+                                onDoubleClick={preventNavigation ? undefined : (event): void => onSelect(event, selectedItem)}
                             >
                                 {breadcrumbText}
                             </span>
                         );
                     })}
                 </div>
-                {renderTrailingContent && renderTrailingContent({
-                    breadcrumbTexts: columnData.map(buildBreadcrumb).filter((b) => !!b),
-                    columnData
-                })}
+                {renderTrailingContent &&
+                    renderTrailingContent({
+                        breadcrumbTexts: columnData.map(buildBreadcrumb).filter((b) => !!b),
+                        columnData
+                    })}
             </>
         );
     }
 
     static propTypes = {
-        columnData: PropTypes.arrayOf(PropTypes.shape(getColumnDataPropTypeShape(true))).isRequired,
+        columnData: ColumnDataPropType.isRequired,
         breadcrumbsOptions: PropTypes.shape({
             prefix: PropTypes.string,
             separator: PropTypes.string,

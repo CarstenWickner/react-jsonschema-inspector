@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as PropTypes from "prop-types";
 import * as React from "react";
 
@@ -5,11 +6,11 @@ import { isDefined } from "../model/utils";
 
 export class InspectorDetailsForm extends React.Component<{
     fields: Array<{
-        labelText: string,
-        rowValue?: any
-    }>
+        labelText: string;
+        rowValue?: any;
+    }>;
 }> {
-    render() {
+    render(): React.ReactNode {
         const { fields } = this.props;
         return (
             <form className="jsonschema-inspector-details-form">

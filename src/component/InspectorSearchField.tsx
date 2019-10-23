@@ -2,14 +2,12 @@ import * as PropTypes from "prop-types";
 import * as React from "react";
 
 export class InspectorSearchField extends React.Component<{
-    searchFilter: string,
-    onSearchFilterChange: (newFilterValue: string) => void,
-    placeholder: string
+    searchFilter: string;
+    onSearchFilterChange: (newFilterValue: string) => void;
+    placeholder: string;
 }> {
-    render() {
-        const {
-            searchFilter, onSearchFilterChange, placeholder
-        } = this.props;
+    render(): React.ReactNode {
+        const { searchFilter, onSearchFilterChange, placeholder } = this.props;
         return (
             <div className="jsonschema-inspector-search">
                 <input
@@ -17,14 +15,14 @@ export class InspectorSearchField extends React.Component<{
                     className="jsonschema-inspector-search-input"
                     value={searchFilter}
                     placeholder={placeholder}
-                    onChange={(event) => {
+                    onChange={(event): void => {
                         event.stopPropagation();
                         onSearchFilterChange(event.target.value);
                     }}
                 />
             </div>
         );
-    };
+    }
 
     static propTypes = {
         searchFilter: PropTypes.string.isRequired,

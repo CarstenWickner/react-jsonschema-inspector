@@ -1,8 +1,6 @@
 import { Inspector as InspectorComponent } from "./component/Inspector";
 import { getFieldValueFromSchemaGroup } from "./model/schemaUtils";
-import {
-    minimumValue, maximumValue, commonValues, listValues
-} from "./model/utils";
+import { minimumValue, maximumValue, commonValues, listValues } from "./model/utils";
 
 import { JsonSchemaGroup } from "./model/JsonSchemaGroup";
 import { RawJsonSchema } from "./types/RawJsonSchema";
@@ -27,9 +25,7 @@ export const getMinimumFieldValueFromSchemaGroup = (
     fieldName: keyof RawJsonSchema,
     defaultValue: number,
     optionIndexes?: Array<number>
-) => getFieldValueFromSchemaGroup(
-    schemaGroup, fieldName, minimumValue, defaultValue, null, optionIndexes
-);
+): number => getFieldValueFromSchemaGroup(schemaGroup, fieldName, minimumValue, defaultValue, null, optionIndexes);
 
 /**
  * Extract single maximum numeric value from a certain field in the (selected) schema parts of the given schema group.
@@ -46,9 +42,7 @@ export const getMaximumFieldValueFromSchemaGroup = (
     fieldName: keyof RawJsonSchema,
     defaultValue: number,
     optionIndexes?: Array<number>
-) => getFieldValueFromSchemaGroup(
-    schemaGroup, fieldName, maximumValue, defaultValue, null, optionIndexes
-);
+): number => getFieldValueFromSchemaGroup(schemaGroup, fieldName, maximumValue, defaultValue, null, optionIndexes);
 
 /**
  * Extract intersecting value (parts) from a certain field in the (selected) schema parts of the given schema group.
@@ -67,9 +61,7 @@ export const getCommonFieldValuesFromSchemaGroup = <S, T extends S | Array<S>>(
     fieldName: keyof RawJsonSchema,
     defaultValue: T,
     optionIndexes?: Array<number>
-): T => getFieldValueFromSchemaGroup(
-    schemaGroup, fieldName, commonValues, defaultValue, null, optionIndexes
-);
+): T => getFieldValueFromSchemaGroup(schemaGroup, fieldName, commonValues, defaultValue, null, optionIndexes);
 
 /**
  * Extract all value (parts) from a certain field in the (selected) schema parts of the given schema group.
@@ -83,11 +75,9 @@ export const getCommonFieldValuesFromSchemaGroup = <S, T extends S | Array<S>>(
  * @param {?Array.<number>} optionIndexes - indexes representing the (optional) selection path in the schema group
  * @returns {?*|Array.<*>} all encountered values in schema parts in the given group (may be the `defaultValue`)
  */
-export const getFieldValueArrayFromSchemaGroup = (
+export const getFieldValueArrayFromSchemaGroup = <S, T extends S | Array<S>>(
     schemaGroup: JsonSchemaGroup,
     fieldName: keyof RawJsonSchema,
-    defaultValue: number,
+    defaultValue: T,
     optionIndexes?: Array<number>
-) => getFieldValueFromSchemaGroup(
-    schemaGroup, fieldName, listValues, defaultValue, null, optionIndexes
-);
+): T => getFieldValueFromSchemaGroup(schemaGroup, fieldName, listValues, defaultValue, null, optionIndexes);

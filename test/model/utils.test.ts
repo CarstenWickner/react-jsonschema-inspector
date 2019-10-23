@@ -1,6 +1,4 @@
-import {
-    isDefined, isNonEmptyObject, mapObjectValues, minimumValue, maximumValue, listValues, commonValues
-} from "../../src/model/utils";
+import { isDefined, isNonEmptyObject, mapObjectValues, minimumValue, maximumValue, listValues, commonValues } from "../../src/model/utils";
 
 describe("isDefined()", () => {
     it("rejects undefined", () => {
@@ -15,12 +13,12 @@ describe("isDefined()", () => {
     it("accepts falsy: 0", () => {
         expect(isDefined(0)).toBe(true);
     });
-    it("accepts falsy: \"\"", () => {
+    it('accepts falsy: ""', () => {
         expect(isDefined("")).toBe(true);
     });
     it("accepts falsy: ''", () => {
         // eslint-disable-next-line quotes
-        expect(isDefined('')).toBe(true);
+        expect(isDefined("")).toBe(true);
     });
     it("accepts falsy: ``", () => {
         // eslint-disable-next-line quotes
@@ -38,7 +36,7 @@ describe("isDefined()", () => {
         // eslint-disable-next-line quotes
         expect(isDefined({})).toBe(true);
     });
-    it("accepts truthy: \"string\"", () => {
+    it('accepts truthy: "string"', () => {
         // eslint-disable-next-line quotes
         expect(isDefined("string")).toBe(true);
     });
@@ -53,19 +51,19 @@ describe("isNonEmptyObject()", () => {
     it("rejects non-object: 1", () => {
         expect(isNonEmptyObject(1)).toBe(false);
     });
-    it("rejects non-object: \"string\"", () => {
+    it('rejects non-object: "string"', () => {
         expect(isNonEmptyObject("string")).toBe(false);
     });
     it("rejects empty array: []", () => {
         expect(isNonEmptyObject(["value"])).toBe(false);
     });
-    it("rejects non-empty array: [{key:\"value\"}]", () => {
+    it('rejects non-empty array: [{key:"value"}]', () => {
         expect(isNonEmptyObject([{ key: "value" }])).toBe(false);
     });
     it("rejects empty object: {}", () => {
         expect(isNonEmptyObject({})).toBe(false);
     });
-    it("accepts non-empty object: { key: \"value\" }", () => {
+    it('accepts non-empty object: { key: "value" }', () => {
         expect(isNonEmptyObject({ key: "value" })).toBe(true);
     });
 });
@@ -112,32 +110,32 @@ describe("nullAwareReduce()", () => {
 });
 describe("minimumValue()", () => {
     it.each`
-        testDescription                                      | firstParam   | secondParam  | result
-        ${"returns unchanged param if both are the same"}    | ${5}         | ${5}         | ${5}
-        ${"returns first param if that is the lower value"}  | ${6}         | ${9}         | ${6}
-        ${"returns second param if that is the lower value"} | ${8}         | ${7}         | ${7}
+        testDescription                                      | firstParam | secondParam | result
+        ${"returns unchanged param if both are the same"}    | ${5}       | ${5}        | ${5}
+        ${"returns first param if that is the lower value"}  | ${6}       | ${9}        | ${6}
+        ${"returns second param if that is the lower value"} | ${8}       | ${7}        | ${7}
     `("$testDescription", ({ firstParam, secondParam, result }) => {
         expect(minimumValue(firstParam, secondParam)).toEqual(result);
     });
 });
 describe("maximumValue()", () => {
     it.each`
-        testDescription                                       | firstParam   | secondParam  | result
-        ${"returns unchanged param if both are the same"}     | ${5}         | ${5}         | ${5}
-        ${"returns first param if that is the higher value"}  | ${6}         | ${1}         | ${6}
-        ${"returns second param if that is the higher value"} | ${5}         | ${7}         | ${7}
+        testDescription                                       | firstParam | secondParam | result
+        ${"returns unchanged param if both are the same"}     | ${5}       | ${5}        | ${5}
+        ${"returns first param if that is the higher value"}  | ${6}       | ${1}        | ${6}
+        ${"returns second param if that is the higher value"} | ${5}       | ${7}        | ${7}
     `("$testDescription", ({ firstParam, secondParam, result }) => {
         expect(maximumValue(firstParam, secondParam)).toEqual(result);
     });
 });
 describe("listValues()", () => {
     it.each`
-        testDescription                                              | firstParam   | secondParam  | result
-        ${"returns unchanged param if both are the same"}            | ${"foo"}     | ${"foo"}     | ${"foo"}
-        ${"returns combined array if both params are arrays"}        | ${[1, 2]}    | ${[3, 4]}    | ${[1, 2, 3, 4]}
-        ${"returns combined array if only first param is an array"}  | ${[1, 2]}    | ${3}         | ${[1, 2, 3]}
-        ${"returns combined array if only second param is an array"} | ${1}         | ${[2, 3]}    | ${[1, 2, 3]}
-        ${"returns combined array if params are not the same"}       | ${1}         | ${2}         | ${[1, 2]}
+        testDescription                                              | firstParam | secondParam | result
+        ${"returns unchanged param if both are the same"}            | ${"foo"}   | ${"foo"}    | ${"foo"}
+        ${"returns combined array if both params are arrays"}        | ${[1, 2]}  | ${[3, 4]}   | ${[1, 2, 3, 4]}
+        ${"returns combined array if only first param is an array"}  | ${[1, 2]}  | ${3}        | ${[1, 2, 3]}
+        ${"returns combined array if only second param is an array"} | ${1}       | ${[2, 3]}   | ${[1, 2, 3]}
+        ${"returns combined array if params are not the same"}       | ${1}       | ${2}        | ${[1, 2]}
     `("$testDescription", ({ firstParam, secondParam, result }) => {
         expect(listValues(firstParam, secondParam)).toEqual(result);
     });

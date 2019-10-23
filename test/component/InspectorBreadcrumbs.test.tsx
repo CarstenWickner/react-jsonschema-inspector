@@ -6,7 +6,7 @@ import { createRenderDataBuilder } from "../../src/component/renderDataUtils";
 import { RenderColumn } from "../../src/types/Inspector";
 
 describe("renders correctly", () => {
-    const buildColumnData = createRenderDataBuilder(() => () => { });
+    const buildColumnData = createRenderDataBuilder(() => (): void => {});
     it("with minimal/default props", () => {
         const schema = {
             properties: {
@@ -15,22 +15,12 @@ describe("renders correctly", () => {
             }
         };
         const { columnData } = buildColumnData({ foobar: schema }, [], ["foobar"], {});
-        const component = shallow(
-            <InspectorBreadcrumbs
-                columnData={columnData}
-                breadcrumbsOptions={{}}
-            />
-        );
+        const component = shallow(<InspectorBreadcrumbs columnData={columnData} breadcrumbsOptions={{}} />);
         expect(component).toMatchSnapshot();
     });
     it("without selection", () => {
         const { columnData } = buildColumnData({ foo: {} }, [], [], {});
-        const component = shallow(
-            <InspectorBreadcrumbs
-                columnData={columnData}
-                breadcrumbsOptions={{}}
-            />
-        );
+        const component = shallow(<InspectorBreadcrumbs columnData={columnData} breadcrumbsOptions={{}} />);
         expect(component.find(".jsonschema-inspector-breadcrumbs-icon").exists()).toBe(true);
         expect(component.find(".jsonschema-inspector-breadcrumbs-item").exists()).toBe(false);
         expect(component.text()).toEqual("");
@@ -65,12 +55,7 @@ describe("renders correctly", () => {
             ${"array item selection"} | ${["foo", "[0]", "bar"]} | ${3}      | ${"foo.[0].bar"}
         `("$testTitle", ({ selectedItems, itemCount, breadcrumbsText }) => {
             const { columnData } = buildColumnData(schemas, [], selectedItems, {});
-            const component = shallow(
-                <InspectorBreadcrumbs
-                    columnData={columnData}
-                    breadcrumbsOptions={{}}
-                />
-            );
+            const component = shallow(<InspectorBreadcrumbs columnData={columnData} breadcrumbsOptions={{}} />);
             expect(component.text()).toEqual(breadcrumbsText);
             expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(itemCount);
         });
@@ -103,12 +88,7 @@ describe("renders correctly", () => {
 
         it("is skipping option selection", () => {
             const { columnData } = buildColumnData({ foo: schema }, [], ["foo", [1], "baz"], {});
-            const component = shallow(
-                <InspectorBreadcrumbs
-                    columnData={columnData}
-                    breadcrumbsOptions={{}}
-                />
-            );
+            const component = shallow(<InspectorBreadcrumbs columnData={columnData} breadcrumbsOptions={{}} />);
             expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
             expect(component.text()).toEqual("foo.baz");
         });
@@ -118,12 +98,7 @@ describe("renders correctly", () => {
             ${"indicates on previous breadcrumb when selected option has nested property"} | ${[1]}        | ${true}
         `("$testTitle", ({ optionIndexes, hasNestedItems }) => {
             const { columnData } = buildColumnData({ foo: schema }, [], ["foo", optionIndexes], {});
-            const component = shallow(
-                <InspectorBreadcrumbs
-                    columnData={columnData}
-                    breadcrumbsOptions={{}}
-                />
-            );
+            const component = shallow(<InspectorBreadcrumbs columnData={columnData} breadcrumbsOptions={{}} />);
             const singleItem = component.find(".jsonschema-inspector-breadcrumbs-item");
             expect(singleItem).toHaveLength(1);
             expect(singleItem.hasClass("has-nested-items")).toBe(hasNestedItems);
@@ -143,22 +118,22 @@ describe("renders correctly", () => {
             ["foo", "bar"],
             {}
         );
-        const renderItem = ({ breadcrumbText, hasNestedItems, column, index }: {
-            breadcrumbText: string,
-            hasNestedItems: boolean,
-            column: RenderColumn,
-            index: number
-        }) => (
+        const renderItem = ({
+            breadcrumbText,
+            hasNestedItems,
+            column,
+            index
+        }: {
+            breadcrumbText: string;
+            hasNestedItems: boolean;
+            column: RenderColumn;
+            index: number;
+        }): React.ReactNode => (
             <span key={index} className="custom-breadcrumbs-item">
                 {`${index + 1}. ${breadcrumbText} (${columnData[index] === column})${hasNestedItems ? " >" : ""}`}
             </span>
         );
-        const component = shallow(
-            <InspectorBreadcrumbs
-                columnData={columnData}
-                breadcrumbsOptions={{ renderItem }}
-            />
-        );
+        const component = shallow(<InspectorBreadcrumbs columnData={columnData} breadcrumbsOptions={{ renderItem }} />);
         expect(component.find(".jsonschema-inspector-breadcrumbs-icon").exists()).toBe(true);
         expect(component.find(".jsonschema-inspector-breadcrumbs-item").exists()).toBe(false);
         const customItems = component.find(".custom-breadcrumbs-item");
@@ -179,20 +154,15 @@ describe("renders correctly", () => {
             ["foo", "bar"],
             {}
         );
-        const renderTrailingContent = ({ breadcrumbTexts, columnData: columnDataParam }: {
-            breadcrumbTexts: Array<string>,
-            columnData: Array<RenderColumn>
-        }) => (columnDataParam !== columnData ? null : (
-            <button type="button">
-                {`Copy to Clipboard: ${breadcrumbTexts.join("")}`}
-            </button>
-        ));
-        const component = shallow(
-            <InspectorBreadcrumbs
-                columnData={columnData}
-                breadcrumbsOptions={{ renderTrailingContent }}
-            />
-        );
+        const renderTrailingContent = ({
+            breadcrumbTexts,
+            columnData: columnDataParam
+        }: {
+            breadcrumbTexts: Array<string>;
+            columnData: Array<RenderColumn>;
+        }): React.ReactNode =>
+            columnDataParam !== columnData ? null : <button type="button">{`Copy to Clipboard: ${breadcrumbTexts.join("")}`}</button>;
+        const component = shallow(<InspectorBreadcrumbs columnData={columnData} breadcrumbsOptions={{ renderTrailingContent }} />);
         expect(component.find(".jsonschema-inspector-breadcrumbs-icon").exists()).toBe(true);
         expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
         const trailingButton = component.find("button");
@@ -201,11 +171,9 @@ describe("renders correctly", () => {
     });
 });
 describe("handles double-click navigation", () => {
-    const onSelectOne = jest.fn(() => { });
-    const onSelectTwo = jest.fn(() => { });
-    const { columnData } = createRenderDataBuilder(
-        (index) => (index === 0 ? onSelectOne : onSelectTwo)
-    )(
+    const onSelectOne = jest.fn(() => {});
+    const onSelectTwo = jest.fn(() => {});
+    const { columnData } = createRenderDataBuilder((index) => (index === 0 ? onSelectOne : onSelectTwo))(
         {
             foo: {
                 properties: {
@@ -219,12 +187,7 @@ describe("handles double-click navigation", () => {
     );
 
     it("triggers onSelect on root selection", () => {
-        const component = shallow(
-            <InspectorBreadcrumbs
-                columnData={columnData}
-                breadcrumbsOptions={{}}
-            />
-        );
+        const component = shallow(<InspectorBreadcrumbs columnData={columnData} breadcrumbsOptions={{}} />);
         const selectedItems = component.find(".jsonschema-inspector-breadcrumbs-item");
         expect(selectedItems).toHaveLength(2);
 
@@ -234,12 +197,7 @@ describe("handles double-click navigation", () => {
         expect(onSelectTwo.mock.calls).toHaveLength(0);
     });
     it("triggers onSelect on non-root selection", () => {
-        const component = shallow(
-            <InspectorBreadcrumbs
-                columnData={columnData}
-                breadcrumbsOptions={{}}
-            />
-        );
+        const component = shallow(<InspectorBreadcrumbs columnData={columnData} breadcrumbsOptions={{}} />);
         const selectedItems = component.find(".jsonschema-inspector-breadcrumbs-item");
         expect(selectedItems).toHaveLength(2);
 

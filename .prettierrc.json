@@ -1,0 +1,7 @@
+{
+    "arrowParens": "always",
+    "endOfLine": "lf",
+    "üarser": "typescript",
+    "printWidth":  150,
+    "tabWidth":  4
+}

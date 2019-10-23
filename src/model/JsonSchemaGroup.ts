@@ -14,7 +14,7 @@ export class JsonSchemaGroup {
      * @returns {boolean} by default: always 'false', but may be overridden by sub-classes
      */
     // eslint-disable-next-line class-methods-use-this
-    considerSchemasAsSeparateOptions() {
+    considerSchemasAsSeparateOptions(): boolean {
         return false;
     }
 
@@ -24,7 +24,7 @@ export class JsonSchemaGroup {
      *
      * @returns {boolean} whether entries should be included transparently (otherwise as options)
      */
-    shouldTreatEntriesAsOne() {
+    shouldTreatEntriesAsOne(): boolean {
         let filteredEntries = this.entries;
         if (!this.considerSchemasAsSeparateOptions()) {
             filteredEntries = filteredEntries.filter((entry) => entry instanceof JsonSchemaGroup && !entry.shouldTreatEntriesAsOne());
@@ -38,9 +38,7 @@ export class JsonSchemaGroup {
      * @param {JsonSchema|JsonSchemaGroup} schemaOrGroup - entry to add to this group
      * @returns {JsonSchemaGroup} this (i.e. self-reference for chaining)
      */
-    with(
-        schemaOrGroup: JsonSchema | JsonSchemaGroup
-    ): this {
+    with(schemaOrGroup: JsonSchema | JsonSchemaGroup): this {
         if (schemaOrGroup instanceof JsonSchemaGroup && schemaOrGroup.entries.length === 1) {
             // unwrap a group containing only a single entry
             this.entries.push(schemaOrGroup.entries[0]);
@@ -61,10 +59,7 @@ export class JsonSchemaGroup {
      * @param {number} optionTarget[].index - mutable index, a value of `0` marks the optional schema part to be considered
      * @returns {boolean} whether `checkEntry` returned 'true' for any item in this group's `entries`
      */
-    someEntry(
-        checkEntry: (schema: JsonSchema, includeNestedGroups?: boolean) => boolean,
-        optionTarget?: Array<{index: number}>
-    ): boolean {
+    someEntry(checkEntry: (schema: JsonSchema, includeNestedGroups?: boolean) => boolean, optionTarget?: Array<{ index: number }>): boolean {
         const considerSchemasAsOptions = this.considerSchemasAsSeparateOptions();
         const treatEntriesAsSingleSchema = this.shouldTreatEntriesAsOne();
         return this.entries.some((entry) => {
@@ -82,10 +77,7 @@ export class JsonSchemaGroup {
             }
             if (entry instanceof JsonSchemaGroup) {
                 // recursively check all parts of this nested group
-                return entry.someEntry(
-                    checkEntry,
-                    (treatEntriesAsSingleSchema || !optionTarget) ? optionTarget : optionTarget.slice(1)
-                );
+                return entry.someEntry(checkEntry, treatEntriesAsSingleSchema || !optionTarget ? optionTarget : optionTarget.slice(1));
             }
             // entry is a JsonSchema, invoke the given checkEntry function and return its result
             return checkEntry(entry, !optionTarget || !optionTarget.length);
@@ -115,7 +107,7 @@ export class JsonSchemaGroup {
     ): T {
         // collect schemas where we have both a boolean and a proper schema, favour the proper schema
         const values: Array<T> = [];
-        const addToResultAndContinue = (entry: JsonSchema) => {
+        const addToResultAndContinue = (entry: JsonSchema): boolean => {
             values.push(extractFromSchema(entry));
             // indicate to continue traversing all entries
             return false;
@@ -131,9 +123,7 @@ export class JsonSchemaGroup {
      * @returns {{groupTitle: ?string, options: ?Array.<object>, nameForIndex: ?Function}} representation of the given group's top level options
      */
     // eslint-disable-next-line class-methods-use-this
-    createOptionsRepresentation(
-        containedOptions: Array<RenderOptions>
-    ): RenderOptions {
+    createOptionsRepresentation(containedOptions: Array<RenderOptions>): RenderOptions {
         let result: RenderOptions;
         if (containedOptions.length === 0) {
             result = {};

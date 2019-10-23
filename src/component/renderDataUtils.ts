@@ -4,13 +4,23 @@ import { JsonSchema, RefScope } from "../model/JsonSchema";
 import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 import { JsonSchemaOptionalsGroup } from "../model/JsonSchemaOptionalsGroup";
 import {
-    createGroupFromSchema, getPropertiesFromSchemaGroup, getTypeOfArrayItemsFromSchemaGroup,
-    createOptionTargetArrayFromIndexes, getOptionsInSchemaGroup, getIndexPermutationsForOptions
+    createGroupFromSchema,
+    createOptionTargetArrayFromIndexes,
+    getIndexPermutationsForOptions,
+    getOptionsInSchemaGroup,
+    getPropertiesFromSchemaGroup,
+    getTypeOfArrayItemsFromSchemaGroup
 } from "../model/schemaUtils";
 import { isDefined, isNonEmptyObject, mapObjectValues } from "../model/utils";
 import { createFilterFunctionForSchema } from "../model/searchUtils";
 import {
-    BuildArrayPropertiesFunction, ParserConfig, RenderColumn, RenderColumnOnSelectFunction, RenderOptionsColumn, RenderItemsColumn, RenderOptions
+    BuildArrayPropertiesFunction,
+    ParserConfig,
+    RenderColumn,
+    RenderColumnOnSelectFunction,
+    RenderOptionsColumn,
+    RenderItemsColumn,
+    RenderOptions
 } from "../types/Inspector";
 import { RawJsonSchema } from "../types/RawJsonSchema";
 
@@ -21,10 +31,7 @@ import { RawJsonSchema } from "../types/RawJsonSchema";
  * @param {{groupTitle: ?string, options: Array.<object>}} options - representation of the hierarchical structure of optional sub schemas
  * @returns {boolean} whether given `optionIndexes` represent a valid option path
  */
-function isOptionIndexValidForOptions(
-    optionIndexes: Array<number>,
-    options: RenderOptions
-) {
+function isOptionIndexValidForOptions(optionIndexes: Array<number>, options: RenderOptions): boolean {
     let optionsPart = options;
     optionIndexes.forEach((index) => {
         if (optionsPart && optionsPart.options && optionsPart.options.length > index) {
@@ -46,8 +53,8 @@ function isOptionIndexValidForOptions(
  */
 function createRootColumnData(
     schemas: { [key: string]: RawJsonSchema },
-    referenceSchemas?: Array<RawJsonSchema>,
-    parserConfig: ParserConfig = {}
+    referenceSchemas: Array<RawJsonSchema>,
+    parserConfig: ParserConfig
 ): RenderItemsColumn {
     // first prepare those schemas that may be referenced by the displayed ones or each other
     const referenceScopes: Array<RefScope> = [];
@@ -74,7 +81,7 @@ function createRootColumnData(
  * @param {JsonSchema} arrayItemSchema - declared type of items in an array (as per the respective json schema)
  * @returns {{"[0]": JsonSchema}} simple object allowing to access the array's item definition via a single entry
  */
-function buildDefaultArrayProperties(arrayItemSchema: JsonSchema) {
+function buildDefaultArrayProperties(arrayItemSchema: JsonSchema): { [key: string]: JsonSchema | RawJsonSchema } {
     return { "[0]": arrayItemSchema };
 }
 
@@ -86,8 +93,11 @@ function buildDefaultArrayProperties(arrayItemSchema: JsonSchema) {
  * @param {?BuildArrayPropertiesFunction} buildArrayProperties - function for building dynamic sub schema based on declared array item type
  * @returns {object} `columnData` entry
  */
-function buildNextColumn(schemaGroup: JsonSchemaGroup, optionIndexes?: Array<number>,
-    buildArrayProperties: BuildArrayPropertiesFunction = buildDefaultArrayProperties): RenderColumn | {} {
+function buildNextColumn(
+    schemaGroup: JsonSchemaGroup,
+    optionIndexes?: Array<number>,
+    buildArrayProperties: BuildArrayPropertiesFunction = buildDefaultArrayProperties
+): RenderColumn | {} {
     if (!optionIndexes) {
         const options = getOptionsInSchemaGroup(schemaGroup);
         if (options.options) {
@@ -110,13 +120,8 @@ function buildNextColumn(schemaGroup: JsonSchemaGroup, optionIndexes?: Array<num
     const nestedArrayItemSchema = getTypeOfArrayItemsFromSchemaGroup(schemaGroup, optionIndexes);
     if (nestedArrayItemSchema) {
         // next column should allow accessing the schema of the array's items
-        const arrayProperties = mapObjectValues(
-            buildArrayProperties(nestedArrayItemSchema, schemaGroup, optionIndexes),
-            (propertyValue) => (
-                propertyValue instanceof JsonSchema
-                    ? (propertyValue as JsonSchema)
-                    : new JsonSchema(propertyValue, nestedArrayItemSchema.parserConfig)
-            )
+        const arrayProperties = mapObjectValues(buildArrayProperties(nestedArrayItemSchema, schemaGroup, optionIndexes), (propertyValue) =>
+            propertyValue instanceof JsonSchema ? (propertyValue as JsonSchema) : new JsonSchema(propertyValue, nestedArrayItemSchema.parserConfig)
         );
 
         return {
@@ -144,9 +149,8 @@ function buildNextColumn(schemaGroup: JsonSchemaGroup, optionIndexes?: Array<num
  * @param {Function} onSelectInColumn.return - onSelect call-back for the column at the indicated index
  * @returns {RenderDataBuilder} function for building the standard render data used throughout the component
  */
-export const createRenderDataBuilder = (
-    onSelectInColumn: (columnIndex: number) => RenderColumnOnSelectFunction
-) => (
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const createRenderDataBuilder = (onSelectInColumn: (columnIndex: number) => RenderColumnOnSelectFunction) => (
     schemas: { [key: string]: RawJsonSchema },
     referenceSchemas: undefined | Array<RawJsonSchema>,
     selectedItems: Array<string | Array<number>>,
@@ -154,31 +158,33 @@ export const createRenderDataBuilder = (
     buildArrayProperties?: BuildArrayPropertiesFunction
 ) => {
     // the first column always lists all top-level schemas
-    let nextColumn: RenderColumn | {} = createRootColumnData(schemas, referenceSchemas, parserConfig);
+    let nextColumn: RenderColumn | {} = createRootColumnData(schemas, referenceSchemas, parserConfig);
     let selectedSchemaGroup: JsonSchemaGroup;
-    const columnData = selectedItems.map((selection, index) => {
-        const currentColumn = nextColumn;
-        const isOptionSelection = typeof selection !== "string";
-        let isValidSelection: boolean;
-        if (isOptionSelection && selectedSchemaGroup && (currentColumn as RenderOptionsColumn).options) {
-            isValidSelection = isOptionIndexValidForOptions(selection as Array<number>, (currentColumn as RenderOptionsColumn).options);
-        } else if (!isOptionSelection && (currentColumn as RenderItemsColumn).items) {
-            selectedSchemaGroup = (currentColumn as RenderItemsColumn).items[selection as string];
-            isValidSelection = isDefined(selectedSchemaGroup);
-        }
-        if (isValidSelection) {
-            nextColumn = buildNextColumn(selectedSchemaGroup, isOptionSelection ? (selection as Array<number>) : undefined, buildArrayProperties);
-            if (isOptionSelection) {
-                selectedSchemaGroup = null;
+    const columnData = selectedItems
+        .map((selection, index) => {
+            const currentColumn = nextColumn;
+            const isOptionSelection = typeof selection !== "string";
+            let isValidSelection: boolean;
+            if (isOptionSelection && selectedSchemaGroup && (currentColumn as RenderOptionsColumn).options) {
+                isValidSelection = isOptionIndexValidForOptions(selection as Array<number>, (currentColumn as RenderOptionsColumn).options);
+            } else if (!isOptionSelection && (currentColumn as RenderItemsColumn).items) {
+                selectedSchemaGroup = (currentColumn as RenderItemsColumn).items[selection as string];
+                isValidSelection = isDefined(selectedSchemaGroup);
             }
-        } else {
-            nextColumn = {};
-        }
-        // name of the selected item (i.e. key in 'items') or int array of option indexes
-        (currentColumn as RenderColumn).selectedItem = isValidSelection ? selection : null;
-        (currentColumn as RenderColumn).onSelect = onSelectInColumn(index);
-        return currentColumn as RenderColumn;
-    }).filter((column) => (column as RenderItemsColumn).items || (column as RenderOptionsColumn).options);
+            if (isValidSelection) {
+                nextColumn = buildNextColumn(selectedSchemaGroup, isOptionSelection ? (selection as Array<number>) : undefined, buildArrayProperties);
+                if (isOptionSelection) {
+                    selectedSchemaGroup = null;
+                }
+            } else {
+                nextColumn = {};
+            }
+            // name of the selected item (i.e. key in 'items') or int array of option indexes
+            (currentColumn as RenderColumn).selectedItem = isValidSelection ? selection : null;
+            (currentColumn as RenderColumn).onSelect = onSelectInColumn(index);
+            return currentColumn as RenderColumn;
+        })
+        .filter((column) => (column as RenderItemsColumn).items || (column as RenderOptionsColumn).options);
     // set the flag for the last column containing a valid selection
     const columnCount = columnData.length;
     if (columnCount) {
@@ -187,7 +193,7 @@ export const createRenderDataBuilder = (
         // if the last column has no valid selection, the second to last column must have one
         if (selectedItemInLastColumn || columnCount > 1) {
             // there is at least one column with a valid selection, mark the column with the trailing selection as such
-            columnData[selectedItemInLastColumn ? (columnCount - 1) : (columnCount - 2)].trailingSelection = true;
+            columnData[selectedItemInLastColumn ? columnCount - 1 : columnCount - 2].trailingSelection = true;
         }
     }
     // append last column where there is no selection yet, unless the last selected item has no nested items or options of its own
@@ -207,13 +213,8 @@ export const createRenderDataBuilder = (
  */
 function hasSchemaNestedItems(schema: JsonSchema): boolean {
     const { schema: rawSchema } = schema;
-    const {
-        properties, required, items, additionalItems
-    } = rawSchema;
-    return isNonEmptyObject(properties)
-        || !!required
-        || isNonEmptyObject(items)
-        || isNonEmptyObject(additionalItems);
+    const { properties, required, items, additionalItems } = rawSchema;
+    return isNonEmptyObject(properties) || !!required || isNonEmptyObject(items) || isNonEmptyObject(additionalItems);
 }
 
 /**
@@ -224,128 +225,10 @@ function hasSchemaNestedItems(schema: JsonSchema): boolean {
  * @returns {boolean} whether any properties are mentioned, it represents an array with items of a certain type or contains selectable options
  */
 export function hasSchemaGroupNestedItems(schemaGroup: JsonSchemaGroup, optionIndexes?: Array<number>): boolean {
-    return schemaGroup.someEntry(hasSchemaNestedItems, createOptionTargetArrayFromIndexes(optionIndexes))
-        || (!optionIndexes && !!getOptionsInSchemaGroup(schemaGroup).options);
-}
-
-const optionShape = {
-    groupTitle: PropTypes.string,
-    options: PropTypes.array.isRequired
-};
-optionShape.options = PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.shape({}), PropTypes.shape(optionShape)])).isRequired;
-
-/**
- * PropType validation of the `contextGroup` prop (and the related `options`/`items` props).
- *
- * @param {object} param0 - props
- * @param {?JsonSchemaGroup} param0.contextGroup - group to validate
- * @param {?object} param0.options - representation of options within the `contextGroup`
- * @param {?object} param0.items - list of selectable entries being listed (i.e. properties/options/array-item-accessors)
- * @returns {?Error} validation error or null if validation is successful
- */
-function contextGroupValidator({ contextGroup, options, items }: {
-    contextGroup?: JsonSchemaGroup,
-    options?: RenderOptions,
-    items?: { [key: string]: JsonSchemaGroup }
-}): Error {
-    if (isDefined(contextGroup) && !(contextGroup instanceof JsonSchemaGroup)) {
-        return new Error("`contextGroup` is not a JsonSchemaGroup");
-    }
-    if (isNonEmptyObject(options) !== isDefined(contextGroup)) {
-        return new Error("`options` and `contextGroup` are expected to be both set or not at the same time");
-    }
-    if (isNonEmptyObject(items) === isNonEmptyObject(options)) {
-        return new Error("exactly one of `items` or `options` should be provided");
-    }
-    return null;
-}
-
-/**
- * PropType validation of the `selectedItem` prop.
- *
- * @param {object} param0 - props
- * @param {?string|Array.<number>} param0.selectedItem - name of the selected property/array-item-accessor or array of option indexes
- * @returns {?Error} validation error or null if validation is successful
- */
-function selectedItemValidator({ selectedItem }: {
-    selectedItem?: string | Array<number>
-}): Error {
-    if (isDefined(selectedItem)
-        && typeof selectedItem !== "string"
-        && !(
-            Array.isArray(selectedItem) && selectedItem.length && selectedItem.every((arrayEntry) => typeof arrayEntry === "number")
-        )) {
-        return new Error("`selectedItem` is not a string or array of numbers");
-    }
-    // assume all ok
-    return null;
-}
-
-/**
- * PropType validation of the `trailingSelection` prop (and the related `selectedItem` prop).
- *
- * @param {object} param0 - props
- * @param {?string|Array.<number>} param0.selectedItem - name of the selected property/array-item-accessor or array of option indexes
- * @param {?boolean} param0.trailingSelection - flag indicating whether the `selectedItem` is the last selection (i.e. in the right-most column)
- * @returns {?Error} validation error or null if validation is successful
- */
-function trailingSelectionValidator({ selectedItem, trailingSelection }: {
-    selectedItem?: string | Array<number>,
-    trailingSelection?: boolean
-}): Error {
-    if (isDefined(trailingSelection) && typeof trailingSelection !== "boolean") {
-        return new Error("`trailingSelection` is not a boolean");
-    }
-    if (trailingSelection && !selectedItem) {
-        return new Error("`trailingSelection` is true while there is no `selectedItem`");
-    }
-    return null;
-}
-
-/**
- * PropType validation of the `filteredItems` prop.
- *
- * @param {object} param0 - props
- * @param {?Array.<string>|Array.<Array.<number>>} param0.filteredItems - names of properties/options/array-item-accessors matching the search filter
- * @param {?object} param0.options - representation of options within the `contextGroup`
- * @param {?object} param0.items - list of selectable entries being listed (i.e. properties/options/array-item-accessors)
- * @returns {?Error} validation error or null if validation is successful
- */
-function filteredItemsValidator({ items, options, filteredItems }: {
-    items?:  { [key: string]: JsonSchemaGroup },
-    options?: RenderOptions
-    filteredItems?: Array<string> | Array<Array<number>>
-}): Error {
-    if (isDefined(filteredItems)) {
-        if (!Array.isArray(filteredItems)) {
-            return new Error("`filteredItems` is not an `array`");
-        }
-        if (items && (filteredItems as Array<string>).some((singleItem) => !items[singleItem])) {
-            return new Error("`filteredItems` are not all part of `items`");
-        }
-        if (options && !(filteredItems as Array<Array<number>>).every((singleOption) => isOptionIndexValidForOptions(singleOption, options))) {
-            return new Error("`filteredItems` are not all part of index combinations derived from `options`");
-        }
-    }
-    return null;
-}
-
-/**
- * Shape for PropType validation of a single entries in the standard `columnData` array generated by a created render-data-builder.
- *
- * @param {?boolean} includeOnSelect - flag indicating whether `onSelect` should be treated as required
- * @returns {object} `columnData` shape for PropType validation
- */
-export function getColumnDataPropTypeShape(includeOnSelect = true) {
-    return {
-        items: PropTypes.objectOf(PropTypes.instanceOf(JsonSchemaGroup)),
-        options: PropTypes.shape(optionShape),
-        contextGroup: contextGroupValidator,
-        selectedItem: selectedItemValidator,
-        trailingSelection: trailingSelectionValidator,
-        filteredItems: filteredItemsValidator,
-        onSelect: includeOnSelect ? PropTypes.func.isRequired : PropTypes.func // func(SyntheticEvent: event, string|array<number>: identifier)
-    };
+    return (
+        schemaGroup.someEntry(hasSchemaNestedItems, createOptionTargetArrayFromIndexes(optionIndexes)) ||
+        (!optionIndexes && !!getOptionsInSchemaGroup(schemaGroup).options)
+    );
 }
 
 /**
@@ -371,16 +254,45 @@ export function getColumnDataPropTypeShape(includeOnSelect = true) {
  */
 export function createFilterFunctionForColumn(
     flatSchemaFilterFunction: (rawSchema: RawJsonSchema, includeNestedOptionals?: boolean) => boolean,
-    propertyNameFilterFunction: (name: string) => boolean = () => false
-) {
+    propertyNameFilterFunction: (name: string) => boolean = (): boolean => false
+): (column: RenderColumn) => Array<string> | Array<Array<number>> {
     const containsMatchingItems = createFilterFunctionForSchema(flatSchemaFilterFunction, propertyNameFilterFunction);
-    return (column: RenderColumn) => {
+    return (column: RenderColumn): Array<string> | Array<Array<number>> => {
         const { items } = column as RenderItemsColumn;
         if (isNonEmptyObject(items)) {
             return Object.keys(items).filter((key) => propertyNameFilterFunction(key) || items[key].someEntry(containsMatchingItems));
         }
         const { options, contextGroup } = column as RenderOptionsColumn;
-        return getIndexPermutationsForOptions(options)
-            .filter((optionIndexes) => contextGroup.someEntry(containsMatchingItems, createOptionTargetArrayFromIndexes(optionIndexes)));
+        return getIndexPermutationsForOptions(options).filter((optionIndexes) =>
+            contextGroup.someEntry(containsMatchingItems, createOptionTargetArrayFromIndexes(optionIndexes))
+        );
     };
 }
+
+export const RenderItemsColumnPropTypeShape = {
+    trailingSelection: PropTypes.bool,
+    onSelect: PropTypes.func.isRequired,
+    items: PropTypes.objectOf(PropTypes.instanceOf(JsonSchemaGroup)).isRequired,
+    selectedItem: PropTypes.string,
+    filteredItems: PropTypes.arrayOf(PropTypes.string)
+};
+
+const RenderOptionsPropTypeShape = {
+    groupTitle: PropTypes.string,
+    options: PropTypes.array,
+    optionNameForIndex: PropTypes.func,
+    filteredItems: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
+};
+RenderOptionsPropTypeShape.options = PropTypes.arrayOf(PropTypes.shape(RenderOptionsPropTypeShape));
+
+export const RenderOptionsColumnPropTypeShape = {
+    trailingSelection: PropTypes.bool,
+    onSelect: PropTypes.func.isRequired,
+    options: PropTypes.shape(RenderOptionsPropTypeShape).isRequired,
+    selectedItem: PropTypes.arrayOf(PropTypes.number),
+    contextGroup: PropTypes.instanceOf(JsonSchemaGroup).isRequired
+};
+
+export const ColumnDataPropType = PropTypes.arrayOf(
+    PropTypes.oneOfType([PropTypes.shape(RenderItemsColumnPropTypeShape), PropTypes.shape(RenderOptionsColumnPropTypeShape)])
+);
