@@ -42,7 +42,14 @@ export default [
             // collect styles from SCSS, minimise them and include them in the JS module (i.e. not as separate .css file)
             postcss(postcssOptions),
             // compile typescript into vanilla javascript
-            typescript(typescriptOptions),
+            typescript({
+                ...typescriptOptions,
+                tsconfigOverride: {
+                    compilerOptions: {
+                        target: "es5"
+                    }
+                }
+            }),
             // transpile non-typescript files
             babel(babelOptions),
             // resolve dependencies that are ES modules

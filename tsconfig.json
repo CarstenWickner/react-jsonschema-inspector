@@ -19,7 +19,7 @@
         "sourceMap": true,
         "strict": true,
         "strictNullChecks": false,
-        "target": "es5",
+        "target": "es6",
         "types": [
             "classnames",
             "jest",
