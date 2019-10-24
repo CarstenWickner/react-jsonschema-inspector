@@ -1,8 +1,9 @@
 {
     "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off",
         "import/no-extraneous-dependencies": "off",
         "jsdoc/require-param": "off",
         "jsdoc/require-returns": "off",
-        "no-nested-ternary": "off"
+        "react/display-name": "off"
     }
 }

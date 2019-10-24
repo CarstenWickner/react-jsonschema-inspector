@@ -227,13 +227,11 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
                 // search feature is being used, so we set the filteredItems accordingly
                 const getFilteredItemsForColumn = createFilterFunctionForColumn(flatSchemaFilterFunction, propertyNameFilterFunction);
                 return (column: RenderItemsColumn | RenderOptionsColumn): void => {
-                    // eslint-disable-next-line no-param-reassign
                     column.filteredItems = getFilteredItemsForColumn(column);
                 };
             }
         }
         // if the search feature is disabled or currently unused, we should ensure that there are no left-over filteredItems
-        // eslint-disable-next-line no-param-reassign
         return (column: RenderItemsColumn | RenderOptionsColumn): void => {
             delete column.filteredItems;
         };

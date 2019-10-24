@@ -13,7 +13,6 @@ export class JsonSchemaGroup {
      *
      * @returns {boolean} by default: always 'false', but may be overridden by sub-classes
      */
-    // eslint-disable-next-line class-methods-use-this
     considerSchemasAsSeparateOptions(): boolean {
         return false;
     }
@@ -67,7 +66,6 @@ export class JsonSchemaGroup {
                 // an optional entry should be skipped if it is not the specifically selected one
                 const isSelectedEntry = !optionTarget || (optionTarget.length && optionTarget[0].index === 0);
                 if (optionTarget && optionTarget.length) {
-                    // eslint-disable-next-line no-param-reassign
                     optionTarget[0].index -= 1;
                 }
                 if (!isSelectedEntry) {
@@ -122,7 +120,6 @@ export class JsonSchemaGroup {
      * @param {Array.<{groupTitle: ?string, options: ?Array.<object>, nameForIndex: ?Function}>} containedOptions - nested option representations
      * @returns {{groupTitle: ?string, options: ?Array.<object>, nameForIndex: ?Function}} representation of the given group's top level options
      */
-    // eslint-disable-next-line class-methods-use-this
     createOptionsRepresentation(containedOptions: Array<RenderOptions>): RenderOptions {
         let result: RenderOptions;
         if (containedOptions.length === 0) {

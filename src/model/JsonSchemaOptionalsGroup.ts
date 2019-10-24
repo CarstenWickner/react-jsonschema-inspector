@@ -27,7 +27,6 @@ export class JsonSchemaOptionalsGroup extends JsonSchemaGroup {
      *
      * @returns {boolean} always 'true'
      */
-    // eslint-disable-next-line class-methods-use-this
     considerSchemasAsSeparateOptions(): boolean {
         return true;
     }

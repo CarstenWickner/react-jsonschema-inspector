@@ -230,7 +230,6 @@ export function getTypeOfArrayItemsFromSchemaGroup(schemaGroup: JsonSchemaGroup,
     let arrayItemSchema: JsonSchema | Array<JsonSchema> = getSchemaFieldValueFromSchemaGroup(schemaGroup, "items", optionTarget);
     if (!Array.isArray(arrayItemSchema) && !(arrayItemSchema instanceof JsonSchema)) {
         const resetOptionIndex = (originalOption: { index: number }, arrayIndex: number): void => {
-            // eslint-disable-next-line no-param-reassign
             optionTarget[arrayIndex].index = originalOption.index;
         };
         // reset indexes in optionTarget if nothing was found

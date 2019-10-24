@@ -17,27 +17,21 @@ describe("isDefined()", () => {
         expect(isDefined("")).toBe(true);
     });
     it("accepts falsy: ''", () => {
-        // eslint-disable-next-line quotes
         expect(isDefined("")).toBe(true);
     });
     it("accepts falsy: ``", () => {
-        // eslint-disable-next-line quotes
         expect(isDefined(``)).toBe(true);
     });
     it("accepts truthy: 1", () => {
-        // eslint-disable-next-line quotes
         expect(isDefined(1)).toBe(true);
     });
     it("accepts truthy: []", () => {
-        // eslint-disable-next-line quotes
         expect(isDefined([])).toBe(true);
     });
     it("accepts truthy: {}", () => {
-        // eslint-disable-next-line quotes
         expect(isDefined({})).toBe(true);
     });
     it('accepts truthy: "string"', () => {
-        // eslint-disable-next-line quotes
         expect(isDefined("string")).toBe(true);
     });
 });

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/no-array-index-key */
 import * as PropTypes from "prop-types";
 import * as React from "react";
 

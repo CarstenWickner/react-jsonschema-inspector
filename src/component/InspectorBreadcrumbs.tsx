@@ -42,7 +42,6 @@ export class InspectorBreadcrumbs extends React.Component<InspectorBreadcrumbsPr
                         const { selectedItem, onSelect } = column;
                         return (
                             <span
-                                // eslint-disable-next-line react/no-array-index-key
                                 key={index}
                                 className={classNames({
                                     "jsonschema-inspector-breadcrumbs-item": true,

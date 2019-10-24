@@ -12,9 +12,13 @@
     "scripts": {
         "start": "start-storybook -p 9001 -c .storybook",
         "build": "rollup -c",
-        "lint": "eslint '{src,test}/**/*.{js,ts,tsx}' && stylelint src stories/**/*.*css stories/**/*.js",
+        "lint": "tsc --noEmit && npm run lint-code && npm run lint-styles",
+        "lint-code": "eslint '{src,test,stories}/**/*.{js,ts,tsx}' --report-unused-disable-directives",
+        "lint-styles": "stylelint src stories/**/*.*css stories/**/*.js",
+        "lint-fix": "npm run lint-code -- --fix && npm run lint-styles -- --fix",
         "test": "jest",
-        "predeploy": "rm -rf docs && npm run lint && npm run test --bail && build-storybook -c .storybook -o docs",
+        "build-storybook": "build-storybook -c .storybook -o docs",
+        "predeploy": "rm -rf docs && npm run lint && npm run test --bail && npm run build-storybook",
         "deploy": "gh-pages -d docs",
         "prepublishOnly": "rm -rf build && npm run lint && npm run test --bail && npm run build"
     },

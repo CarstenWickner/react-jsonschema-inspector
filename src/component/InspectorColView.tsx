@@ -42,7 +42,6 @@ export class InspectorColView extends React.Component<ColViewProps> {
                     if ((singleColumnData as RenderItemsColumn).items) {
                         return (
                             <InspectorColumn
-                                // eslint-disable-next-line react/no-array-index-key
                                 key={index}
                                 items={(singleColumnData as RenderItemsColumn).items}
                                 selectedItem={selectedItem as string}
@@ -56,7 +55,6 @@ export class InspectorColView extends React.Component<ColViewProps> {
                     const { options, contextGroup } = singleColumnData as RenderOptionsColumn;
                     return (
                         <InspectorOptionsColumn
-                            // eslint-disable-next-line react/no-array-index-key
                             key={index}
                             options={options}
                             contextGroup={contextGroup}

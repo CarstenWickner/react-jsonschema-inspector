@@ -158,7 +158,6 @@ describe("extractValues()/extractValuesFromEntry()", () => {
             expect(
                 group.extractValues(
                     (): string => undefined,
-                    // eslint-disable-next-line no-nested-ternary
                     (combined, nextValue) => (!combined ? nextValue : nextValue ? `${combined}, ${nextValue}` : combined),
                     "foobar",
                     optionTargetIn

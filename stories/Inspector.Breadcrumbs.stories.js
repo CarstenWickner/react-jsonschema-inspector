@@ -142,7 +142,6 @@ export const breadcrumbsCustomRendering = () => (
             // custom rendering for individual breadcrumb items
             renderItem: (renderProps) => (
                 <span
-                    // eslint-disable-next-line react/no-array-index-key
                     key={renderProps.index}
                     className={classNames({
                         "jsonschema-inspector-breadcrumbs-item": true,
@@ -165,7 +164,6 @@ export const breadcrumbsCustomRendering = () => (
                             margin: ".5em",
                             height: "2.5em"
                         }}
-                        // eslint-disable-next-line no-alert
                         onClick={() =>
                             window.alert(`E.g. could have copied current breadcrumbs to clipboard:\n\n\t"${renderProps.breadcrumbTexts.join("")}"`)
                         }
