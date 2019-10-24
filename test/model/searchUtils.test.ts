@@ -7,10 +7,11 @@ import {
 } from "../../src/model/searchUtils";
 
 import { JsonSchema } from "../../src/model/JsonSchema";
+import { RawJsonSchema } from "../../src/types/RawJsonSchema";
 
 describe("createRecursiveFilterFunction()", () => {
     const flatSearchFilter = jest.fn((rawSchema) => rawSchema.default);
-    let recursiveFilterFunction;
+    let recursiveFilterFunction: (target: JsonSchema, includeNestedOptionals?: boolean) => boolean;
     beforeEach(() => {
         recursiveFilterFunction = createRecursiveFilterFunction(flatSearchFilter);
     });
@@ -22,10 +23,6 @@ describe("createRecursiveFilterFunction()", () => {
         });
         it("null schema", () => {
             expect(recursiveFilterFunction(null)).toBe(false);
-            expect(flatSearchFilter).not.toHaveBeenCalled();
-        });
-        it("non-object schema", () => {
-            expect(recursiveFilterFunction("not-a-schema")).toBe(false);
             expect(flatSearchFilter).not.toHaveBeenCalled();
         });
         it("empty schema", () => {
@@ -422,15 +419,15 @@ describe("createFilterFunctionForSchema()", () => {
             };
 
             it.each`
-                testTitle                                      | flatSearchFilter                             | includeOptionals | result
-                ${"directly on main schema (incl. optionals)"} | ${(sub): boolean => sub.minProperties === 1} | ${true}          | ${true}
-                ${"directly on main schema (excl. optionals)"} | ${(sub): boolean => sub.minProperties === 1} | ${false}         | ${true}
-                ${"in allOf part (incl. optionals)"}           | ${(sub): boolean => sub.title === "Foo"}     | ${true}          | ${true}
-                ${"in allOf part (excl. optionals)"}           | ${(sub): boolean => sub.title === "Foo"}     | ${false}         | ${true}
-                ${"in anyOf part (incl. optionals)"}           | ${(sub): boolean => sub.type === "object"}   | ${true}          | ${true}
-                ${"in anyOf part (excl. optionals)"}           | ${(sub): boolean => sub.type === "object"}   | ${false}         | ${false}
-                ${"in oneOf part (incl. optionals)"}           | ${(sub): boolean => sub.maxProperties === 7} | ${true}          | ${true}
-                ${"in oneOf part (excl. optionals)"}           | ${(sub): boolean => sub.maxProperties === 7} | ${false}         | ${false}
+                testTitle                             | flatSearchFilter                                        | includeOptionals | result
+                ${"on main schema (incl. optionals)"} | ${(s: RawJsonSchema): boolean => s.minProperties === 1} | ${true}          | ${true}
+                ${"on main schema (excl. optionals)"} | ${(s: RawJsonSchema): boolean => s.minProperties === 1} | ${false}         | ${true}
+                ${"in allOf part (incl. optionals)"}  | ${(s: RawJsonSchema): boolean => s.title === "Foo"}     | ${true}          | ${true}
+                ${"in allOf part (excl. optionals)"}  | ${(s: RawJsonSchema): boolean => s.title === "Foo"}     | ${false}         | ${true}
+                ${"in anyOf part (incl. optionals)"}  | ${(s: RawJsonSchema): boolean => s.type === "object"}   | ${true}          | ${true}
+                ${"in anyOf part (excl. optionals)"}  | ${(s: RawJsonSchema): boolean => s.type === "object"}   | ${false}         | ${false}
+                ${"in oneOf part (incl. optionals)"}  | ${(s: RawJsonSchema): boolean => s.maxProperties === 7} | ${true}          | ${true}
+                ${"in oneOf part (excl. optionals)"}  | ${(s: RawJsonSchema): boolean => s.maxProperties === 7} | ${false}         | ${false}
             `("$testTitle", ({ flatSearchFilter, includeOptionals, result }) => {
                 const schema = new JsonSchema(rawSchema, {});
                 const filterFunction = createFilterFunctionForSchema(flatSearchFilter);

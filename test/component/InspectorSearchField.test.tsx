@@ -14,8 +14,8 @@ describe("renders correctly", () => {
     });
 });
 describe("calls onSearchFilterChange", () => {
-    let mockEvent;
-    let onSearchFilterChange;
+    let mockEvent: React.ChangeEvent<{ value: string }>;
+    let onSearchFilterChange: () => void;
     beforeEach(() => {
         mockEvent = {
             stopPropagation: (): void => {}

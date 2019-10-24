@@ -48,7 +48,7 @@ describe("someEntry()", () => {
         const group = new MockJsonSchemaGroup(true).with(new JsonSchema({ title: "Foo" }, {})).with(new JsonSchema({ title: "Bar" }, {}));
 
         it("includes sub-schema in leading option", () => {
-            const checkEntry = ({ schema }): boolean => schema.title === "Foo";
+            const checkEntry = ({ schema }: JsonSchema): boolean => schema.title === "Foo";
             expect(group.someEntry(checkEntry)).toBe(true);
             expect(group.someEntry(checkEntry, [])).toBe(false);
             expect(group.someEntry(checkEntry, [{ index: -1 }])).toBe(false);
@@ -56,7 +56,7 @@ describe("someEntry()", () => {
             expect(group.someEntry(checkEntry, [{ index: 1 }])).toBe(false);
         });
         it("includes sub-schema in trailing option", () => {
-            const checkEntry = ({ schema }): boolean => schema.title === "Bar";
+            const checkEntry = ({ schema }: JsonSchema): boolean => schema.title === "Bar";
             expect(group.someEntry(checkEntry)).toBe(true);
             expect(group.someEntry(checkEntry, [])).toBe(false);
             expect(group.someEntry(checkEntry, [{ index: -1 }])).toBe(false);
@@ -66,7 +66,7 @@ describe("someEntry()", () => {
         });
         it("supports nested group with considerSchemasAsSeparateOptions() === true", () => {
             const outerGroup = new MockJsonSchemaGroup(true).with(new JsonSchema({ title: "Foobar" }, {})).with(group);
-            const checkEntry = ({ schema }): boolean => schema.title === "Foo";
+            const checkEntry = ({ schema }: JsonSchema): boolean => schema.title === "Foo";
             expect(outerGroup.someEntry(checkEntry)).toBe(true);
             expect(outerGroup.someEntry(checkEntry, [])).toBe(false);
             expect(outerGroup.someEntry(checkEntry, [{ index: 0 }])).toBe(false);
@@ -82,7 +82,7 @@ describe("someEntry()", () => {
             .with(new MockJsonSchemaGroup(true).with(new JsonSchema(true, {})).with(new JsonSchema({ title: "Foobar" }, {})));
 
         it("always including top-level schema", () => {
-            const checkEntry = ({ schema }): boolean => schema.title === "Foo";
+            const checkEntry = ({ schema }: JsonSchema): boolean => schema.title === "Foo";
             expect(group.someEntry(checkEntry, [{ index: 0 }])).toBe(true);
             expect(group.someEntry(checkEntry, [{ index: 0 }, { index: 0 }])).toBe(true);
             expect(group.someEntry(checkEntry, [{ index: -2 }])).toBe(true);
@@ -90,7 +90,7 @@ describe("someEntry()", () => {
         });
         describe("only including schema in nested group with considerSchemasAsSeparateOptions() === true if indicated by optionTarget", () => {
             it("includes sub-schema in leading option", () => {
-                const checkEntry = ({ schema }): boolean => schema.title === "Bar";
+                const checkEntry = ({ schema }: JsonSchema): boolean => schema.title === "Bar";
                 expect(group.someEntry(checkEntry, [{ index: 0 }])).toBe(false);
                 expect(group.someEntry(checkEntry, [{ index: 0 }, { index: 0 }])).toBe(true);
                 expect(group.someEntry(checkEntry, [{ index: 0 }, { index: 1 }])).toBe(false);
@@ -98,7 +98,7 @@ describe("someEntry()", () => {
                 expect(group.someEntry(checkEntry, [{ index: 3 }])).toBe(false);
             });
             it("includes sub-schema in trailing option", () => {
-                const checkEntry = ({ schema }): boolean => schema.title === "Foobar";
+                const checkEntry = ({ schema }: JsonSchema): boolean => schema.title === "Foobar";
                 expect(group.someEntry(checkEntry, [{ index: 0 }])).toBe(false);
                 expect(group.someEntry(checkEntry, [{ index: -2 }])).toBe(false);
                 expect(group.someEntry(checkEntry, [{ index: 3 }])).toBe(false);
@@ -172,7 +172,7 @@ describe("extractValues()/extractValuesFromEntry()", () => {
             const extractFromSchema = ({ schema }: JsonSchema): string => schema.title;
             const mergeResults = (combined: string, nextValue: string): string =>
                 combined && nextValue ? `${combined}, ${nextValue}` : combined || nextValue;
-            const defaultValue = null;
+            const defaultValue: string = null;
             const optionTarget = [{ index: 1 }, { index: 0 }];
             expect(group.extractValues(extractFromSchema, mergeResults, defaultValue, optionTarget)).toBe("bar");
             expect(optionTarget).toEqual([{ index: -1 }, { index: -2 }]);

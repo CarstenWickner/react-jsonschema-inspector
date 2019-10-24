@@ -352,7 +352,7 @@ describe("collectFormFields()", () => {
         ]);
     });
     it("ignores empty `examples`", () => {
-        const schema = { examples: [] };
+        const schema: { examples: Array<string> } = { examples: [] };
         const itemSchemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
         expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([]);
     });
