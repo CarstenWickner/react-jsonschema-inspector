@@ -1,12 +1,7 @@
 const path = require("path");
+const mdxCompiler = require('@storybook/addon-docs/mdx-compiler-plugin');
 
 module.exports = async ({ config }) => {
-    config.module.rules.push({
-        test: /\.stories\.js$/,
-        loader: require.resolve('@storybook/source-loader'),
-        exclude: [/node_modules/],
-        enforce: 'pre'
-    });
     config.module.rules.push({
         test: /\.scss$/,
         loaders: ["style-loader", "css-loader", "sass-loader"],
@@ -21,16 +16,32 @@ module.exports = async ({ config }) => {
         test: /\.tsx?$/,
         use: [
             {
-                loader: "awesome-typescript-loader",
-                options: {
-                    configFile: "../tsconfig.json"
-                }
+                loader: "awesome-typescript-loader"
             },
             {
-                loader: "react-docgen-typescript-loader",
+                loader: "react-docgen-typescript-loader"
             }
         ],
         exclude: /node_modules/
+    });
+    config.module.rules.push({
+        test: /\.stories\.mdx$/,
+        use: [
+            {
+                loader: 'babel-loader',
+                options: {
+                    plugins: ['@babel/plugin-transform-react-jsx'],
+                },
+            },
+            {
+                loader: '@mdx-js/loader',
+                options: {
+                    compilers: [
+                        mdxCompiler({})
+                    ]
+                }
+            },
+        ]
     });
     config.resolve.extensions.push(".ts", ".tsx");
     return config;
