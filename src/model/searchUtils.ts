@@ -4,7 +4,7 @@ import escapeRegExp from "lodash.escaperegexp";
 
 import { JsonSchema } from "./JsonSchema";
 import { isNonEmptyObject } from "./utils";
-import { RawJsonSchema } from "../types/RawJsonSchema";
+import { RawJsonSchema, KeysOfRawJsonSchemaStringValues } from "../types/RawJsonSchema";
 
 /**
  * Creating a function that accepts a single raw schema definition and applies the given filter function on itself and all contained sub-schemas.
@@ -42,7 +42,7 @@ export function createRecursiveFilterFunction(
         }
         const searchInParts = (groupKey: "allOf" | "oneOf" | "anyOf"): boolean =>
             rawSchema[groupKey] &&
-            rawSchema[groupKey].some((rawSubSchema) =>
+            rawSchema[groupKey].some((rawSubSchema: RawJsonSchema | boolean) =>
                 recursiveFilterFunction(new JsonSchema(rawSubSchema, parserConfig, scope), includeNestedOptionals)
             );
         // if the given schema is a composite of multiple sub-schemas, check each of its parts
@@ -228,13 +228,20 @@ export function createFilterFunctionForSchema(
  * @returns {object.<string, JsonSchema>} return.value expected input is an object representing a view column's items
  * @returns {boolean} return.return - output is the indication whether the given schema is deemed to be a match
  */
-export const filteringByFields = memoize((searchFields: Array<keyof RawJsonSchema>, searchFilter: string | undefined): ((
+export const filteringByFields = memoize((searchFields: Array<KeysOfRawJsonSchemaStringValues>, searchFilter: string | undefined): ((
     rawSchema: RawJsonSchema
 ) => boolean) => {
     if (searchFields && searchFields.length && searchFilter) {
         // use case-insensitive flag "i" in regular expression for value matching
         const regex = new RegExp(escapeRegExp(searchFilter), "i");
-        return (rawSchema: RawJsonSchema): boolean => searchFields.some((fieldName) => regex.test(rawSchema[fieldName] as string));
+        return (rawSchema: RawJsonSchema): boolean =>
+            searchFields.some(
+                (fieldName) =>
+                    // check whether the given schema contains a value of type string
+                    typeof (rawSchema as { [k in KeysOfRawJsonSchemaStringValues]?: unknown })[fieldName] === "string" &&
+                    // check whether that string value matches the search filter
+                    regex.test((rawSchema as { [k in KeysOfRawJsonSchemaStringValues]?: string })[fieldName])
+            );
     }
     return undefined;
 }, isDeepEqual);

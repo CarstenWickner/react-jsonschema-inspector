@@ -1,8 +1,8 @@
 import * as PropTypes from "prop-types";
-import { RawJsonSchema } from "../types/RawJsonSchema";
+import { KeysOfRawJsonSchema } from "../types/RawJsonSchema";
 
 const simpleTypes = PropTypes.oneOf(["string", "integer", "number", "object", "array", "boolean", "null"]);
-const jsonSchemaShape: { [key in keyof RawJsonSchema]: PropTypes.Requireable<unknown> } = {
+const jsonSchemaShape: { [key in KeysOfRawJsonSchema]?: PropTypes.Requireable<unknown> } = {
     /* commented out: unsupported field (for now)
         $schema: PropTypes.string,
     */

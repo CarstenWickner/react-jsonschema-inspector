@@ -1,3 +1,5 @@
+import { JSONSchema7 } from "json-schema";
+
 import {
     collectReferencedSubSchemas,
     createFilterFunctionForSchema,
@@ -411,7 +413,7 @@ describe("createFilterFunctionForSchema()", () => {
         });
 
         describe("support non-optional parts of schema containing options", () => {
-            const rawSchema = {
+            const rawSchema: JSONSchema7 = {
                 minProperties: 1,
                 allOf: [{ title: "Foo" }, { description: "Bar" }],
                 anyOf: [{ maxProperties: 3 }, { type: "object" }],
@@ -494,6 +496,11 @@ describe("filteringByFields()", () => {
         it("no match if field value different", () => {
             const filterFunction = filteringByFields(["const"], "value");
             const schema = { const: "something else" };
+            expect(filterFunction(schema)).toBe(false);
+        });
+        it("no match if field value not of type string", () => {
+            const filterFunction = filteringByFields(["const"], "5");
+            const schema = { const: 5 };
             expect(filterFunction(schema)).toBe(false);
         });
     });

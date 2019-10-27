@@ -3,7 +3,7 @@ import { getFieldValueFromSchemaGroup } from "./model/schemaUtils";
 import { minimumValue, maximumValue, commonValues, listValues } from "./model/utils";
 
 import { JsonSchemaGroup } from "./model/JsonSchemaGroup";
-import { RawJsonSchema } from "./types/RawJsonSchema";
+import { KeysOfRawJsonSchema } from "./types/RawJsonSchema";
 
 /**
  * Main Inspector component (with numerous props).
@@ -22,7 +22,7 @@ export const Inspector = InspectorComponent;
  */
 export const getMinimumFieldValueFromSchemaGroup = (
     schemaGroup: JsonSchemaGroup,
-    fieldName: keyof RawJsonSchema,
+    fieldName: KeysOfRawJsonSchema,
     defaultValue: number,
     optionIndexes?: Array<number>
 ): number => getFieldValueFromSchemaGroup(schemaGroup, fieldName, minimumValue, defaultValue, null, optionIndexes);
@@ -39,7 +39,7 @@ export const getMinimumFieldValueFromSchemaGroup = (
  */
 export const getMaximumFieldValueFromSchemaGroup = (
     schemaGroup: JsonSchemaGroup,
-    fieldName: keyof RawJsonSchema,
+    fieldName: KeysOfRawJsonSchema,
     defaultValue: number,
     optionIndexes?: Array<number>
 ): number => getFieldValueFromSchemaGroup(schemaGroup, fieldName, maximumValue, defaultValue, null, optionIndexes);
@@ -58,7 +58,7 @@ export const getMaximumFieldValueFromSchemaGroup = (
  */
 export const getCommonFieldValuesFromSchemaGroup = <S, T extends S | Array<S>>(
     schemaGroup: JsonSchemaGroup,
-    fieldName: keyof RawJsonSchema,
+    fieldName: KeysOfRawJsonSchema,
     defaultValue: T,
     optionIndexes?: Array<number>
 ): T => getFieldValueFromSchemaGroup(schemaGroup, fieldName, commonValues, defaultValue, null, optionIndexes);
@@ -77,7 +77,7 @@ export const getCommonFieldValuesFromSchemaGroup = <S, T extends S | Array<S>>(
  */
 export const getFieldValueArrayFromSchemaGroup = <S, T extends S | Array<S>>(
     schemaGroup: JsonSchemaGroup,
-    fieldName: keyof RawJsonSchema,
+    fieldName: KeysOfRawJsonSchema,
     defaultValue: T,
     optionIndexes?: Array<number>
 ): T => getFieldValueFromSchemaGroup(schemaGroup, fieldName, listValues, defaultValue, null, optionIndexes);

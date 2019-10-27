@@ -1,3 +1,5 @@
+import { JSONSchema7 } from "json-schema";
+
 import {
     createGroupFromSchema,
     getFieldValueFromSchemaGroup,
@@ -107,7 +109,7 @@ describe("createGroupFromSchema()", () => {
         const rawBazSchema = { minProperties: 1 };
         const rawQuxSchema = { maxProperties: 5 };
         const rawQuuxSchema = { additionalProperties: false };
-        const rawTargetSchema = {
+        const rawTargetSchema: JSONSchema7 = {
             allOf: [rawFooSchema, rawBarSchema],
             anyOf: [rawFoobarSchema, rawBazSchema],
             oneOf: [rawQuxSchema, rawQuuxSchema]
@@ -176,7 +178,7 @@ describe("getPropertiesFromSchemaGroup()", () => {
                     foo: rawFooSchema,
                     bar: rawBarSchema
                 }
-            },
+            } as JSONSchema7,
             {}
         );
         const result = getPropertiesFromSchemaGroup(createGroupFromSchema(schema));
@@ -456,7 +458,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
     });
     describe("allOf:", () => {
         it("finds single value", () => {
-            const schema = {
+            const schema: JSONSchema7 = {
                 allOf: [{ description: "foo" }, { title: "bar" }, { type: "object" }]
             };
             const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
@@ -565,7 +567,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
     it("ignores array of `items`", () => {
         const itemSchemaArray = [{ title: "Test" }, { type: "object" }];
         const additionalItemSchema = { description: "Value" };
-        const schema = {
+        const schema: JSONSchema7 = {
             items: itemSchemaArray,
             additionalItems: additionalItemSchema
         };
@@ -574,14 +576,14 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
         expect(result.schema).toEqual(additionalItemSchema);
     });
     it("returns null if neither `items` nor `additionalItems` are present", () => {
-        const schema = {
+        const schema: JSONSchema7 = {
             type: "array"
         };
         const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, {})));
         expect(result).toBeUndefined();
     });
     it("picks first of multiple `items` in complex schema", () => {
-        const schema = {
+        const schema: JSONSchema7 = {
             allOf: [
                 { items: { title: "foo" } },
                 { items: { description: "bar" } },

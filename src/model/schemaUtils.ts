@@ -4,7 +4,13 @@ import { JsonSchemaAllOfGroup } from "./JsonSchemaAllOfGroup";
 import { JsonSchemaAnyOfGroup, JsonSchemaOneOfGroup } from "./JsonSchemaOptionalsGroup";
 import { isNonEmptyObject, listValues, mapObjectValues } from "./utils";
 
-import { RawJsonSchema } from "../types/RawJsonSchema";
+import {
+    RawJsonSchema,
+    KeysOfRawJsonSchema,
+    TypeInRawJsonSchema,
+    getValueFromRawJsonSchema,
+    KeysOfRawJsonSchemaWithValuesOf
+} from "../types/RawJsonSchema";
 import { ParserConfig, RenderOptions } from "../types/Inspector";
 
 /**
@@ -135,18 +141,18 @@ export function createGroupFromSchema(schema: JsonSchema): JsonSchemaAllOfGroup 
  * @param {?RefScope} mappingFunction.param2 - scope from given 'schema'
  * @returns {*} return looked-up field value (possibly changed by 'mappingFunction'
  */
-function getFieldValueFromSchema<K extends string & keyof RawJsonSchema, S extends RawJsonSchema[K], T>(
+function getFieldValueFromSchema<K extends KeysOfRawJsonSchema, S extends TypeInRawJsonSchema<K>, T>(
     schema: JsonSchema,
     fieldName: K,
     mappingFunction?: (value: S, parserConfig: ParserConfig, scope: RefScope) => T
 ): T {
     const { schema: rawSchema } = schema;
-    const rawValue: S = rawSchema[fieldName];
+    const rawValue = getValueFromRawJsonSchema(rawSchema, fieldName) as S;
     if (mappingFunction) {
         const { parserConfig, scope } = schema;
         return mappingFunction(rawValue, parserConfig, scope);
     }
-    return rawValue;
+    return (rawValue as unknown) as T;
 }
 
 /**
@@ -166,12 +172,12 @@ function getFieldValueFromSchema<K extends string & keyof RawJsonSchema, S exten
  * @param {?Array.<{index: number}>|Array.<number>} optionIndexes - indexes representing the selection path to a particular option
  * @returns {*} merged result of all encountered values in schema parts in the given group
  */
-export function getFieldValueFromSchemaGroup<K extends keyof RawJsonSchema, S extends RawJsonSchema[K], T extends S | Array<S>>(
+export function getFieldValueFromSchemaGroup<K extends KeysOfRawJsonSchema, S extends TypeInRawJsonSchema<K>, T extends S | Array<S>>(
     schemaGroup: JsonSchemaGroup,
     fieldName: K,
     mergeValues: (combined: T, nextValue: T) => T = listValues,
     defaultValue?: T,
-    mappingFunction?: (value: RawJsonSchema[K], parserConfig: ParserConfig, scope: RefScope) => T,
+    mappingFunction?: (value: S, parserConfig: ParserConfig, scope: RefScope) => T,
     optionIndexes?: Array<number> | Array<{ index: number }>
 ): T {
     return schemaGroup.extractValues(
@@ -204,7 +210,7 @@ function createJsonSchemaIfNotEmpty(rawSchema: RawJsonSchema, parserConfig: Pars
  */
 function getSchemaFieldValueFromSchemaGroup(
     schemaGroup: JsonSchemaGroup,
-    fieldName: keyof RawJsonSchema,
+    fieldName: KeysOfRawJsonSchemaWithValuesOf<RawJsonSchema>,
     optionTarget?: Array<number> | Array<{ index: number }>
 ): JsonSchema | Array<JsonSchema> {
     return getFieldValueFromSchemaGroup(
@@ -254,8 +260,8 @@ export function getTypeOfArrayItemsFromSchemaGroup(schemaGroup: JsonSchemaGroup,
  */
 function getPropertiesFromSchema(schema: JsonSchema): { [key: string]: JsonSchema | boolean | {} } {
     const { schema: rawSchema, parserConfig, scope } = schema;
-    const { required = [], properties = {} } = rawSchema;
-    const rawProperties = Object.assign({}, ...required.map((value) => ({ [value]: true })), properties);
+    const { required, properties = {} } = rawSchema;
+    const rawProperties = Object.assign({}, ...(required ? required.map((value) => ({ [value]: true })) : []), properties);
     // properties is an Object.<String, raw-json-schema> and should be converted to an Object.<String, JsonSchema>
     return mapObjectValues(rawProperties, (rawPropertySchema: RawJsonSchema | boolean | {}): JsonSchema | boolean | {} =>
         isNonEmptyObject(rawPropertySchema)

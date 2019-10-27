@@ -9,7 +9,7 @@ import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 import { createOptionTargetArrayFromIndexes, getFieldValueFromSchemaGroup } from "../model/schemaUtils";
 import { isDefined, listValues, commonValues, minimumValue, maximumValue } from "../model/utils";
 import { RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
-import { RawJsonSchema } from "../types/RawJsonSchema";
+import { RawJsonSchema, TypeInRawJsonSchema, KeysOfRawJsonSchema } from "../types/RawJsonSchema";
 
 function containsTrueOrReduce<T>(
     allValues: T | Array<boolean | T>,
@@ -58,7 +58,7 @@ export function collectFormFields(
     };
     const { selectedItem } = columnData[selectionColumnIndex];
     const optionIndexes = typeof selectedItem === "string" ? undefined : selectedItem;
-    const getValue = <K extends keyof RawJsonSchema, T extends RawJsonSchema[K] | Array<RawJsonSchema[K]>>(
+    const getValue = <K extends KeysOfRawJsonSchema, T extends TypeInRawJsonSchema<K> | Array<TypeInRawJsonSchema<K>>>(
         fieldName: K,
         mergeValues: (combined: T, nextValue: T) => T = listValues
     ): T => getFieldValueFromSchemaGroup(itemSchemaGroup, fieldName, mergeValues, undefined, undefined, optionIndexes);
@@ -111,8 +111,8 @@ export function collectFormFields(
     const defaultValue = getValue("default");
     addFormField("Default Value", typeof defaultValue === "object" ? JSON.stringify(defaultValue) : defaultValue);
     let examples = getValue("examples");
-    examples = isDefined(examples) && examples.length > 0 ? examples : null;
-    addFormField("Example(s)", examples && typeof examples[0] === "object" ? JSON.stringify(examples) : examples);
+    examples = isDefined(examples) && (!Array.isArray(examples) || examples.length) ? examples : null;
+    addFormField("Example(s)", examples && Array.isArray(examples) && typeof examples[0] === "object" ? JSON.stringify(examples) : examples);
     addFormField("Value Pattern", getValue("pattern"));
     addFormField("Value Format", getValue("format", commonValues));
     // if multiple minimums are specified (in allOf parts), the highest minimum applies

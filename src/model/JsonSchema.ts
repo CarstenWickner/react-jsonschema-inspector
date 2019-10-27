@@ -2,6 +2,7 @@ import { isNonEmptyObject } from "./utils";
 
 import { RawJsonSchema } from "../types/RawJsonSchema";
 import { ParserConfig } from "../types/Inspector";
+import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
 
 const createRawSchemaFromBoolean = (value: boolean): RawJsonSchema => (value ? {} : { not: {} });
 
@@ -71,7 +72,7 @@ export class RefScope {
         // can always self-reference via an empty fragment
         this.internalRefs.set("#", schema);
         // from JSON Schema Draft 6: "$id" replaces former "id"
-        const mainAlias = schema.schema.$id || schema.schema.id;
+        const mainAlias = schema.schema.$id || (schema.schema as JSONSchema4).id;
         let externalRefBase: string;
         if (mainAlias && !mainAlias.startsWith("#")) {
             // an absolute URI can be used both within the schema itself but also from other schemas
@@ -92,7 +93,7 @@ export class RefScope {
                 if (isNonEmptyObject(definition)) {
                     const subSchema: JsonSchema = new JsonSchema(definition, schema.parserConfig, this);
                     // from JSON Schema Draft 6: "$id" replaces former "id"
-                    const subAlias = definition.$id || definition.id;
+                    const subAlias = (definition as JSONSchema6 | JSONSchema7).$id || (definition as JSONSchema4).id;
                     if (subAlias) {
                         // any alias provided within "definitions" will only be available as short-hand in this schema
                         this.internalRefs.set(subAlias, subSchema);
