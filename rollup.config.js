@@ -1,4 +1,3 @@
-import babel from "rollup-plugin-babel";
 import commonjs from "rollup-plugin-commonjs";
 import postcss from "rollup-plugin-postcss";
 import resolve from "rollup-plugin-node-resolve";
@@ -19,9 +18,6 @@ const postcssOptions = {
     extract: false,
     extensions: [".scss"],
     minimize: true
-};
-const babelOptions = {
-    exclude: "node_modules/**"
 };
 const typescriptOptions = {
     // eslint-disable-next-line global-require
@@ -50,8 +46,6 @@ export default [
                     }
                 }
             }),
-            // transpile non-typescript files
-            babel(babelOptions),
             // resolve dependencies that are ES modules
             resolve(),
             // resolve dependencies that are (legacy) CommonJS modules
@@ -75,8 +69,6 @@ export default [
             postcss(postcssOptions),
             // compile typescript into vanilla javascript
             typescript(typescriptOptions),
-            // transpile non-typescript files
-            babel(babelOptions),
             // resolve dependencies that are ES modules
             resolve(),
             // resolve dependencies that are (legacy) CommonJS modules
