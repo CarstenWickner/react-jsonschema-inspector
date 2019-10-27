@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
         "declaration": true,
         "declarationDir": "./build",
         "esModuleInterop": true,
