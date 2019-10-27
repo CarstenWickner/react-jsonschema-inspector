@@ -9,7 +9,7 @@ import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 import { createOptionTargetArrayFromIndexes, getFieldValueFromSchemaGroup } from "../model/schemaUtils";
 import { isDefined, listValues, commonValues, minimumValue, maximumValue } from "../model/utils";
 import { RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
-import { RawJsonSchema, TypeInRawJsonSchema, KeysOfRawJsonSchema } from "../types/RawJsonSchema";
+import { TypeInRawJsonSchema, KeysOfRawJsonSchema } from "../types/RawJsonSchema";
 
 function containsTrueOrReduce<T>(
     allValues: T | Array<boolean | T>,
