@@ -13,15 +13,7 @@ import {
 } from "../model/schemaUtils";
 import { isDefined, isNonEmptyObject, mapObjectValues } from "../model/utils";
 import { createFilterFunctionForSchema } from "../model/searchUtils";
-import {
-    BuildArrayPropertiesFunction,
-    ParserConfig,
-    RenderColumn,
-    RenderColumnOnSelectFunction,
-    RenderOptionsColumn,
-    RenderItemsColumn,
-    RenderOptions
-} from "../types/Inspector";
+import { BuildArrayPropertiesFunction, ParserConfig, RenderColumn, RenderOptionsColumn, RenderItemsColumn, RenderOptions } from "../types/Inspector";
 import { RawJsonSchema } from "../types/RawJsonSchema";
 
 /**
@@ -150,7 +142,7 @@ function buildNextColumn(
  * @returns {RenderDataBuilder} function for building the standard render data used throughout the component
  */
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const createRenderDataBuilder = (onSelectInColumn: (columnIndex: number) => RenderColumnOnSelectFunction) => (
+export const createRenderDataBuilder = (onSelectInColumn: (columnIndex: number) => RenderColumn["onSelect"]) => (
     schemas: { [key: string]: RawJsonSchema },
     referenceSchemas: undefined | Array<RawJsonSchema>,
     selectedItems: Array<string | Array<number>>,

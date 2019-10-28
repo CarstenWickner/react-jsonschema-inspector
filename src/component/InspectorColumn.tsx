@@ -4,22 +4,21 @@ import classNames from "classnames";
 
 import { InspectorItem } from "./InspectorItem";
 import { RenderItemsColumnPropTypeShape } from "./renderDataUtils";
-import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
-import { RenderItemContentFunction, RenderColumnOnSelectFunction } from "../types/Inspector";
+import { InspectorProps, RenderItemsColumn } from "../types/Inspector";
 
 interface ColumnDefaultProps {
-    selectedItem: string;
-    filteredItems: Array<string>;
-    trailingSelection: boolean;
-    renderItemContent: RenderItemContentFunction;
+    selectedItem: RenderItemsColumn["selectedItem"];
+    filteredItems: RenderItemsColumn["filteredItems"];
+    trailingSelection: RenderItemsColumn["trailingSelection"];
+    renderItemContent: InspectorProps["renderItemContent"];
 }
 
-interface ColumnProps extends ColumnDefaultProps {
-    items: { [key: string]: JsonSchemaGroup };
-    onSelect: RenderColumnOnSelectFunction;
-}
-
-export class InspectorColumn extends React.Component<ColumnProps> {
+export class InspectorColumn extends React.Component<
+    {
+        items: RenderItemsColumn["items"];
+        onSelect: RenderItemsColumn["onSelect"];
+    } & ColumnDefaultProps
+> {
     render(): React.ReactNode {
         const { items, selectedItem, filteredItems, trailingSelection, onSelect, renderItemContent } = this.props;
         return (

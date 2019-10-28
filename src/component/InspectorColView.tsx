@@ -4,11 +4,11 @@ import * as React from "react";
 import { InspectorColumn } from "./InspectorColumn";
 import { InspectorOptionsColumn } from "./InspectorOptionsColumn";
 import { ColumnDataPropType } from "./renderDataUtils";
-import { RenderItemsColumn, RenderOptionsColumn, RenderItemContentFunction } from "../types/Inspector";
+import { InspectorProps, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
 
 interface ColViewDefaultProps {
     appendEmptyColumn: boolean;
-    renderItemContent: RenderItemContentFunction;
+    renderItemContent: InspectorProps["renderItemContent"];
 }
 
 export interface ColViewProps extends ColViewDefaultProps {

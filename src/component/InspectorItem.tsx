@@ -5,19 +5,19 @@ import classNames from "classnames";
 import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 import { hasSchemaGroupNestedItems } from "./renderDataUtils";
 import { isDefined } from "../model/utils";
-import { RenderItemContentFunction, RenderColumnOnSelectFunction } from "../types/Inspector";
+import { InspectorProps, RenderColumn } from "../types/Inspector";
 
 interface ItemDefaultProps {
     optionIndexes: Array<number>;
     selected: boolean;
     matchesFilter: boolean;
-    renderContent: RenderItemContentFunction;
+    renderContent: InspectorProps["renderItemContent"];
 }
 
 interface ItemProps extends ItemDefaultProps {
     name: string;
     schemaGroup: JsonSchemaGroup;
-    onSelect: RenderColumnOnSelectFunction;
+    onSelect: RenderColumn["onSelect"];
 }
 
 export class InspectorItem extends React.Component<ItemProps> {

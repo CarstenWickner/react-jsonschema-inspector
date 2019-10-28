@@ -9,15 +9,24 @@ export interface InspectorDefaultProps {
     /**
      * Array of additional JSON Schemas that may be referenced by entries in `schemas` but are not shown (on the root level) themselves.
      */
-    referenceSchemas: Array<RawJsonSchema>;
+    referenceSchemas?: Array<RawJsonSchema>;
     /**
      * Array of (default) selected items – each item representing the selection in one displayed column.
      */
-    defaultSelectedItems: Array<string | Array<number>>;
+    defaultSelectedItems?: Array<string | Array<number>>;
     /**
      * Options for the traversing/parsing of JSON schemas. Defining how optional parts of a schema should be represented.
      */
-    parserConfig: ParserConfig;
+    parserConfig?: {
+        /**
+         * Setting indicating how to include schema parts wrapped in "anyOf".
+         */
+        anyOf?: SchemaPartParserConfig;
+        /**
+         * Setting indicating how to include schema parts wrapped in "oneOf".
+         */
+        oneOf?: SchemaPartParserConfig;
+    };
     /**
      * Function accepting a `JsonSchema` instance representing an array's declared type of items and returning an object listing the available
      * properties to offer. The default, providing access to the array's items, is: `arrayItemSchema => ({ "[0]": arrayItemSchema })`
@@ -26,7 +35,14 @@ export interface InspectorDefaultProps {
      * The expected values of the expected object being returned may be either `JsonSchema`, plain/raw json schema definitions, or a mix of them.
      * E.g. `arrayItemSchema => ({ "[0]": arrayItemSchema, "length": { type: "number" } })` is valid here as well.
      */
-    buildArrayProperties?: BuildArrayPropertiesFunction;
+    buildArrayProperties?: (
+        // declared type of the array's items
+        schema: JsonSchema,
+        // schema group representing the array
+        schemaGroup: JsonSchemaGroup,
+        // selected optionIndexes in the array's JsonSchemaGroup (if it contains options)
+        optionIndexes?: Array<number>
+    ) => { [key: string]: JsonSchema | RawJsonSchema };
     /**
      * Options for the breadcrumbs feature shown in the footer – set to `null` to turn it off.
      * - "prefix": Text to show in front of root level selection, e.g. "//" or "./"
@@ -34,17 +50,39 @@ export interface InspectorDefaultProps {
      * - "skipSeparator": Function to identify breadcrumb names that should not be prepended with a "separator"
      * - "mutateName": Function to derive the selected item's representation in the breadcrumbs from their name
      * - "preventNavigation": Flag indicating whether double-clicking an item should preserve subsequent selections, otherwise they are discarded
-     * - "renderItem": Custom render function for a single breadcrumb item, expecting four parameters:
-     * 1. The textual representation of the respective column's selected item (after mutateName() was applied)
-     * 2. Flag indicating whether the respective column's selection contains some more nested items
-     * 3. The standard columnData entry representing the associated column
-     * 4. The index of the respective column
-     * - "renderTrailingContent": Custom render function for adding extra elements (e.g. a "Copy to Clipboard" button) after the breadcrumbs,
-     * expecting two parameters:
-     * 1. Array of breadcrumbs texts
-     * 2. The whole standard columnData object
+     * - "renderItem": Custom render function for a single breadcrumb item
+     * - "renderTrailingContent": Custom render function for adding extra elements (e.g. a "Copy to Clipboard" button) after the breadcrumbs
      */
-    breadcrumbs: BreadcrumbsOptions | null;
+    breadcrumbs?: null | {
+        /*
+         * Text to show in front of root level selection, e.g. "//" or "./"
+         */
+        prefix?: string;
+        /*
+         * Text to add between the selected item names from adjacent columns, e.g. "." or "/"
+         */
+        separator?: string;
+        /*
+         * Function to identify breadcrumb names that should not be prepended with a "separator"
+         */
+        skipSeparator?: (name: string, column: RenderColumn, index: number) => boolean;
+        /*
+         * Function to derive the selected item's representation in the breadcrumbs from their name
+         */
+        mutateName?: (selectedItem: string, column: RenderColumn, index: number) => undefined | null | string;
+        /*
+         * Flag indicating whether double-clicking an item should preserve subsequent selections, otherwise they are discarded
+         */
+        preventNavigation?: boolean;
+        /*
+         * Custom render function for a single breadcrumb item.
+         */
+        renderItem?: (props: { breadcrumbText: string; hasNestedItems: boolean; column: RenderColumn; index: number }) => React.ReactNode;
+        /*
+         * Custom render function for adding extra elements (e.g. a "Copy to Clipboard" button) after the breadcrumbs.
+         */
+        renderTrailingContent?: (props: { breadcrumbTexts: Array<string>; columnData: Array<RenderColumn> }) => React.ReactNode;
+    };
     /**
      * Options for the search input shown in the header and its impact on the displayed columns – set to `null` to turn it off.
      * - "byPropertyName": Flag indicating whether property names should be considered when searching/filtering
@@ -54,14 +92,25 @@ export interface InspectorDefaultProps {
      * - "debounceWait": Number indicating the delay in milliseconds since the last change to the search term before applying it. Default: `200`.
      * - "debounceMaxWait": Number indicating the maximum delay in milliseconds before a newly entered search is being applied. Default: `500`.
      */
-    searchOptions: SearchOptions | null;
+    searchOptions?: null | {
+        byPropertyName?: boolean;
+        fields?: Array<KeysOfRawJsonSchemaStringValues>;
+        filterBy?: (enteredSearchFilter: string | null) => (rawSchema: RawJsonSchema) => boolean | undefined;
+        inputPlaceholder?: string;
+        debounceWait?: number;
+        debounceMaxWait?: number;
+    };
     /**
      * Callback to invoke after the selection changed.
      * Expects two inputs:
      * 1. the string-array of selected items
      * 2. object containing a "columnData" key, holding the full render information for all columns (except for currently applied search/filter)
      */
-    onSelect?: OnSelectCallback;
+    onSelect?: (
+        newSelection: Array<string | Array<number>>,
+        newRenderData: { columnData: Array<RenderColumn> },
+        breadcrumbsTexts?: Array<string>
+    ) => void;
     /**
      * Custom render function for the content of a single item in a column.
      * Expects a single object as input with the following keys:
@@ -70,7 +119,13 @@ export interface InspectorDefaultProps {
      * - "selected": flag indicating whether the item is currently selected
      * - "schemaGroup": the full `JsonSchemaGroup` associated with the item
      */
-    renderItemContent?: RenderItemContentFunction;
+    renderItemContent?: (props: {
+        name: string;
+        hasNestedItems: boolean;
+        selected: boolean;
+        schemaGroup: JsonSchemaGroup;
+        optionIndexes?: Array<number>;
+    }) => React.ReactNode;
     /**
      * Custom render function for the details block on the right (only used if there is an actual selection).
      * Expects a single object as input with the following keys:
@@ -78,13 +133,18 @@ export interface InspectorDefaultProps {
      * - "columnData": the full render information for all columns
      * - "selectionColumnIndex": indicating the index of the right-most column containing a selected item (for convenient use of "columnData")
      */
-    renderSelectionDetails?: RenderSelectionDetailsFunction;
+    renderSelectionDetails?: (props: {
+        itemSchemaGroup: JsonSchemaGroup;
+        columnData: Array<RenderColumn>;
+        selectionColumnIndex: number;
+        optionIndexes?: Array<number>;
+    }) => React.ReactNode;
     /**
      * Custom render function for the details block on the right (only used if there is no selection).
      * Expects a single object as input with the following key:
      * - "rootColumnSchemas": the full render information for the root column (since there is no selection, there are no other columns)
      */
-    renderEmptyDetails?: RenderEmptyDetailsFunction;
+    renderEmptyDetails?: (props: { rootColumnSchemas: { [key: string]: JsonSchemaGroup } }) => React.ReactNode;
 }
 
 export interface InspectorProps extends InspectorDefaultProps {
@@ -94,16 +154,7 @@ export interface InspectorProps extends InspectorDefaultProps {
     schemas: { [key: string]: RawJsonSchema };
 }
 
-export interface ParserConfig {
-    /**
-     * Setting indicating how to include schema parts wrapped in "anyOf".
-     */
-    anyOf?: SchemaPartParserConfig;
-    /**
-     * Setting indicating how to include schema parts wrapped in "oneOf".
-     */
-    oneOf?: SchemaPartParserConfig;
-}
+export type ParserConfig = InspectorProps["parserConfig"];
 
 export interface SchemaPartParserConfig {
     /**
@@ -116,102 +167,34 @@ export interface SchemaPartParserConfig {
     optionNameForIndex?: (indexes: Array<number>) => string | undefined;
 }
 
-export type BuildArrayPropertiesFunction = (
-    // declared type of the array's items
-    schema: JsonSchema,
-    // schema group representing the array
-    schemaGroup: JsonSchemaGroup,
-    // selected optionIndexes in the array's JsonSchemaGroup (if it contains options)
-    optionIndexes?: Array<number>
-) => { [key: string]: JsonSchema | RawJsonSchema };
+export type BuildArrayPropertiesFunction = InspectorProps["buildArrayProperties"];
 
-export interface BreadcrumbsOptions {
-    /*
-     * Text to show in front of root level selection, e.g. "//" or "./"
-     */
-    prefix?: string;
-    /*
-     * Text to add between the selected item names from adjacent columns, e.g. "." or "/"
-     */
-    separator?: string;
-    /*
-     * Function to identify breadcrumb names that should not be prepended with a "separator"
-     */
-    skipSeparator?: (name: string, column: RenderColumn, index: number) => boolean;
-    /*
-     * Function to derive the selected item's representation in the breadcrumbs from their name
-     */
-    mutateName?: (selectedItem: string, column: RenderColumn, index: number) => undefined | null | string;
-    /*
-     * Flag indicating whether double-clicking an item should preserve subsequent selections, otherwise they are discarded
-     */
-    preventNavigation?: boolean;
-    /*
-     * Custom render function for a single breadcrumb item.
-     */
-    renderItem?: (props: { breadcrumbText: string; hasNestedItems: boolean; column: RenderColumn; index: number }) => React.ReactNode;
-    /*
-     * Custom render function for adding extra elements (e.g. a "Copy to Clipboard" button) after the breadcrumbs.
-     */
-    renderTrailingContent?: (props: { breadcrumbTexts: Array<string>; columnData: Array<RenderColumn> }) => React.ReactNode;
-}
+export type BreadcrumbsOptions = InspectorProps["breadcrumbs"];
 
-export type FilterFunction = (rawSchema: RawJsonSchema) => boolean;
-
-export type OnSelectCallback = (
-    newSelection: Array<string | Array<number>>,
-    newRenderData: { columnData: Array<RenderColumn> },
-    breadcrumbsTexts?: Array<string>
-) => void;
-
-export type RenderItemContentFunction = (props: {
-    name: string;
-    hasNestedItems: boolean;
-    selected: boolean;
-    schemaGroup: JsonSchemaGroup;
-    optionIndexes?: Array<number>;
-}) => React.ReactNode;
-
-export type RenderSelectionDetailsFunction = (props: {
-    itemSchemaGroup: JsonSchemaGroup;
-    columnData: Array<RenderColumn>;
-    selectionColumnIndex: number;
-    optionIndexes?: Array<number>;
-}) => React.ReactNode;
-
-export type RenderEmptyDetailsFunction = (props: { rootColumnSchemas: { [key: string]: JsonSchemaGroup } }) => React.ReactNode;
-
-export interface SearchOptions {
-    byPropertyName?: boolean;
-    fields?: Array<KeysOfRawJsonSchemaStringValues>;
-    filterBy?: (enteredSearchFilter: string | null) => FilterFunction | undefined;
-    inputPlaceholder?: string;
-    debounceWait?: number;
-    debounceMaxWait?: number;
-}
+export type SearchOptions = InspectorProps["searchOptions"];
 
 interface RenderColumnDetails {
-    selectedItem?: string | Array<number>;
     trailingSelection?: boolean;
-    filteredItems?: Array<string> | Array<Array<number>>;
-    onSelect?: RenderColumnOnSelectFunction;
+    onSelect?: (event: React.SyntheticEvent, selectedItem?: string | Array<number>) => void;
 }
 
-export type RenderColumnOnSelectFunction = (event: React.SyntheticEvent, selectedItem?: string | Array<number>) => void;
-
-export interface RenderItemsColumn extends RenderColumnDetails {
+export type RenderItemsColumn = {
     items: { [key: string]: JsonSchemaGroup };
-}
+    selectedItem?: string;
+    filteredItems?: Array<string>;
+} & RenderColumnDetails;
 
-export interface RenderOptions {
+export type RenderOptions = {
     groupTitle?: string;
     options?: Array<RenderOptions>;
     optionNameForIndex?: (indexes: Array<number>) => string | undefined;
-}
+};
 
-export interface RenderOptionsColumn extends RenderColumnDetails {
+export type RenderOptionsColumn = {
     options: RenderOptions;
     contextGroup: JsonSchemaGroup;
-}
+    selectedItem?: Array<number>;
+    filteredItems?: Array<Array<number>>;
+} & RenderColumnDetails;
 
 export type RenderColumn = RenderItemsColumn | RenderOptionsColumn;

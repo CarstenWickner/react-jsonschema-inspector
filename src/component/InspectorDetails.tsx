@@ -4,11 +4,11 @@ import * as React from "react";
 import { InspectorDetailsContent } from "./InspectorDetailsContent";
 import { ColumnDataPropType } from "./renderDataUtils";
 import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
-import { RenderColumn, RenderSelectionDetailsFunction, RenderEmptyDetailsFunction, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
+import { InspectorProps, RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
 
 interface InspectorDetailsDefaultProps {
-    renderSelectionDetails: RenderSelectionDetailsFunction;
-    renderEmptyDetails: RenderEmptyDetailsFunction;
+    renderSelectionDetails: InspectorProps["renderSelectionDetails"];
+    renderEmptyDetails: InspectorProps["renderEmptyDetails"];
 }
 
 interface InspectorDetailsProps extends InspectorDetailsDefaultProps {

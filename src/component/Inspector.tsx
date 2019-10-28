@@ -3,6 +3,7 @@ import * as React from "react";
 import memoize from "memoize-one";
 import debounce from "lodash.debounce";
 import isDeepEqual from "lodash.isequal";
+import { Cancelable } from "lodash";
 
 import "./Inspector.scss";
 
@@ -16,25 +17,17 @@ import { createRenderDataBuilder, createFilterFunctionForColumn } from "./render
 import { createBreadcrumbBuilder } from "../model/breadcrumbsUtils";
 import { filteringByFields, filteringByPropertyName } from "../model/searchUtils";
 
-import {
+import { InspectorDefaultProps, InspectorProps, RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
+
+export class Inspector extends React.Component<
     InspectorProps,
-    RenderColumn,
-    RenderColumnOnSelectFunction,
-    RenderItemsColumn,
-    RenderOptionsColumn,
-    SearchOptions,
-    InspectorDefaultProps
-} from "../types/Inspector";
-import { Cancelable } from "lodash";
-
-interface InspectorState {
-    selectedItems: Array<string | Array<number>>;
-    appendEmptyColumn: boolean;
-    enteredSearchFilter: string;
-    appliedSearchFilter: string;
-}
-
-export class Inspector extends React.Component<InspectorProps, InspectorState> {
+    {
+        selectedItems: Array<string | Array<number>>;
+        appendEmptyColumn: boolean;
+        enteredSearchFilter: string;
+        appliedSearchFilter: string;
+    }
+> {
     /**
      * Avoid constant/immediate re-rendering while the search filter is being entered by using debounce.
      * This is wrapped into memoize() to allow setting the wait times via props.
@@ -76,7 +69,7 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
     onSearchFilterChange = (enteredSearchFilter: string): void => {
         this.setState({ enteredSearchFilter });
         const { searchOptions } = this.props;
-        const { debounceWait = 200, debounceMaxWait = 500 } = searchOptions as SearchOptions;
+        const { debounceWait = 200, debounceMaxWait = 500 } = searchOptions;
         this.debouncedApplySearchFilter(debounceWait, debounceMaxWait)(enteredSearchFilter);
     };
 
@@ -88,7 +81,7 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
      * {*} return.param0.event - the originally triggered event (e.g. onClick, onDoubleClick, onKeyDown, etc.)
      * {string} return.param0.selectedItem - the item to select (or `null` to discard any selection in this column – and all subsequent ones)
      */
-    onSelectInColumn = (columnIndex: number): RenderColumnOnSelectFunction => (event, selectedItem): void => {
+    onSelectInColumn = (columnIndex: number): RenderColumn["onSelect"] => (event, selectedItem): void => {
         // the lowest child component accepting the click/selection event should consume it
         event.stopPropagation();
         const { selectedItems, appendEmptyColumn } = this.state;
@@ -190,7 +183,7 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
      * @returns {Function} return - function to apply for setting/clearing the `filteredItems` in an entry of the 'columnData' array
      * {object} return.param0 - entry of the 'columnData' array to set/clear the `filteredItems` in
      */
-    setFilteredItemsForColumn = memoize((searchOptions: SearchOptions, searchFilter: string) => {
+    setFilteredItemsForColumn = memoize((searchOptions: InspectorProps["searchOptions"], searchFilter: string) => {
         if (searchOptions && searchFilter) {
             // search feature is enabled
             const { filterBy, fields, byPropertyName } = searchOptions;

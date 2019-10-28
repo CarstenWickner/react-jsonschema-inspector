@@ -4,14 +4,12 @@ import classNames from "classnames";
 
 import { ColumnDataPropType } from "./renderDataUtils";
 import { createBreadcrumbBuilder } from "../model/breadcrumbsUtils";
-import { BreadcrumbsOptions, RenderColumn, RenderOptionsColumn } from "../types/Inspector";
+import { InspectorProps, RenderColumn, RenderOptionsColumn } from "../types/Inspector";
 
-interface InspectorBreadcrumbsProps {
+export class InspectorBreadcrumbs extends React.Component<{
     columnData: Array<RenderColumn>;
-    breadcrumbsOptions: BreadcrumbsOptions;
-}
-
-export class InspectorBreadcrumbs extends React.Component<InspectorBreadcrumbsProps> {
+    breadcrumbsOptions: InspectorProps["breadcrumbs"];
+}> {
     render(): React.ReactNode {
         const { columnData, breadcrumbsOptions } = this.props;
         const buildBreadcrumb = createBreadcrumbBuilder(breadcrumbsOptions);

@@ -5,20 +5,19 @@ import isDeepEqual from "lodash.isequal";
 
 import { InspectorItem } from "./InspectorItem";
 import { RenderOptionsColumnPropTypeShape } from "./renderDataUtils";
-import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
-import { RenderItemContentFunction, RenderOptions, RenderColumnOnSelectFunction } from "../types/Inspector";
+import { InspectorProps, RenderOptionsColumn, RenderOptions } from "../types/Inspector";
 
 interface OptionsColumnDefaultProps {
-    selectedItem: Array<number>;
-    filteredItems: Array<Array<number>>;
-    trailingSelection: boolean;
-    renderItemContent: RenderItemContentFunction;
+    selectedItem: RenderOptionsColumn["selectedItem"];
+    filteredItems: RenderOptionsColumn["filteredItems"];
+    trailingSelection: RenderOptionsColumn["trailingSelection"];
+    renderItemContent: InspectorProps["renderItemContent"];
 }
 
 interface OptionsColumnProps extends OptionsColumnDefaultProps {
-    contextGroup: JsonSchemaGroup;
-    options: RenderOptions;
-    onSelect: RenderColumnOnSelectFunction;
+    contextGroup: RenderOptionsColumn["contextGroup"];
+    options: RenderOptionsColumn["options"];
+    onSelect: RenderOptionsColumn["onSelect"];
 }
 
 export class InspectorOptionsColumn extends React.Component<OptionsColumnProps> {
