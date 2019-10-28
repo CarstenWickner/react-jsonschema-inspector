@@ -16,10 +16,7 @@ function containsTrueOrReduce<T>(
     reduceNonBooleans: (combined: T, nextValue: T, index: number, all: Array<T>) => T
 ): boolean | T | undefined {
     if (Array.isArray(allValues)) {
-        return (
-            (allValues as Array<unknown>).includes(true) ||
-            (allValues.filter((value) => !(typeof value === "boolean")) as Array<T>).reduce(reduceNonBooleans)
-        );
+        return allValues.includes(true) || (allValues.filter((value) => !(typeof value === "boolean")) as Array<T>).reduce(reduceNonBooleans);
     }
     return isDefined(allValues) ? allValues : undefined;
 }

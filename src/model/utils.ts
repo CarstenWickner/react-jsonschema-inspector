@@ -14,7 +14,7 @@ export function isDefined(target: unknown): boolean {
  * @param {*} target - value to confirm as non-empty object
  * @returns {boolean} whether the target is a non-empty object
  */
-export function isNonEmptyObject(target: unknown): boolean {
+export function isNonEmptyObject(target: unknown): target is { [key: string]: unknown } {
     return isDefined(target) && typeof target === "object" && !Array.isArray(target) && Object.keys(target).length > 0;
 }
 
