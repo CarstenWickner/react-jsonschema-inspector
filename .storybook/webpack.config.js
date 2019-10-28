@@ -14,7 +14,16 @@ module.exports = async ({ config }) => {
     });
     config.module.rules.push({
         test: /\.tsx?$/,
-        loaders: ["awesome-typescript-loader", "react-docgen-typescript-loader"],
+        use: [
+            {
+                loader: "awesome-typescript-loader"
+            }, {
+                loader: "react-docgen-typescript-loader",
+                options: {
+                    tsconfigPath: path.resolve(__dirname, '../tsconfig.json')
+                }
+            }
+        ],
         exclude: /node_modules/
     });
     config.module.rules.push({
