@@ -1,6 +1,6 @@
 {
     "name": "react-jsonschema-inspector",
-    "version": "3.1.1-SNAPSHOT",
+    "version": "4.0.0-SNAPSHOT",
     "description": "View component for traversing/searching in a JSON Schema",
     "homepage": "https://CarstenWickner.github.io/react-jsonschema-inspector",
     "author": "Carsten Wickner",
@@ -12,14 +12,19 @@
     "scripts": {
         "start": "start-storybook -p 9001 -c .storybook",
         "build": "rollup -c",
-        "lint": "eslint src stories test && stylelint src stories/**/*.*css stories/**/*.js",
+        "lint": "tsc --noEmit && npm run lint-code && npm run lint-styles",
+        "lint-code": "eslint '{src,test,stories}/**/*.{js,ts,tsx}' --report-unused-disable-directives",
+        "lint-styles": "stylelint src stories/**/*.*css stories/**/*.mdx",
+        "lint-fix": "npm run lint-code -- --fix",
         "test": "jest",
-        "predeploy": "rm -rf docs && npm run lint && npm run test --bail && build-storybook -c .storybook -o docs",
+        "build-storybook": "build-storybook -c .storybook -o docs",
+        "predeploy": "rm -rf docs && npm run lint && npm run test --bail && npm run build-storybook",
         "deploy": "gh-pages -d docs",
         "prepublishOnly": "rm -rf build && npm run lint && npm run test --bail && npm run build"
     },
     "main": "build/index.js",
     "module": "build/index.es.js",
+    "types": "build/index.d.ts",
     "files": [
         "/build"
     ],
@@ -30,46 +35,60 @@
         "not op_mini all"
     ],
     "devDependencies": {
-        "@babel/cli": "~7.6.4",
-        "@babel/core": "~7.6.4",
-        "@babel/plugin-proposal-class-properties": "~7.5.5",
-        "@babel/preset-env": "~7.6.3",
-        "@babel/preset-react": "~7.6.3",
+        "@mdx-js/loader": "~1.5.1",
         "@storybook/addon-actions": "~5.2.3",
         "@storybook/addon-docs": "~5.2.3",
         "@storybook/addon-options": "~5.2.3",
         "@storybook/react": "~5.2.3",
-        "babel-eslint": "~10.0.3",
-        "babel-jest": "~24.9.0",
+        "@types/classnames": "^2.2.9",
+        "@types/enzyme": "~3.10.3",
+        "@types/enzyme-adapter-react-16": "~1.0.5",
+        "@types/jest": "24.0.19",
+        "@types/json-schema": "^7.0.3",
+        "@types/lodash.debounce": "^4.0.6",
+        "@types/lodash.escaperegexp": "^4.1.6",
+        "@types/lodash.isequal": "^4.5.5",
+        "@types/memoize-one": "^4.1.1",
+        "@types/prop-types": "^15.7.2",
+        "@types/react": "^16.9.5",
+        "@types/react-dom": "^16.9.2",
+        "@typescript-eslint/eslint-plugin": "~2.5.0",
+        "@typescript-eslint/parser": "~2.5.0",
+        "@typescript-eslint/typescript-estree": "~2.5.0",
+        "awesome-typescript-loader": "~5.2.1",
         "babel-loader": "~8.0.6",
         "coveralls": "~3.0.6",
         "css-loader": "~3.2.0",
         "enzyme": "~3.10.0",
         "enzyme-adapter-react-16": "~1.15.0",
         "enzyme-to-json": "~3.4.2",
-        "eslint": "~6.5.1",
-        "eslint-config-airbnb": "~18.0.1",
-        "eslint-plugin-babel": "~5.3.0",
+        "eslint": "~6.6.0",
+        "eslint-config-prettier": "~6.4.0",
         "eslint-plugin-import": "~2.18.2",
         "eslint-plugin-jsdoc": "~15.12.1",
         "eslint-plugin-jsx-a11y": "~6.2.3",
+        "eslint-plugin-prettier": "~3.1.1",
         "eslint-plugin-react": "~7.16.0",
         "gh-pages": "~2.1.1",
         "identity-obj-proxy": "~3.0.0",
-        "jest": "~24.9.0",
+        "jest": "24.0.0",
         "node-sass": "~4.12.0",
-        "rollup": "~1.24.0",
-        "rollup-plugin-babel": "~4.3.3",
+        "prettier": "~1.18.2",
+        "react-docgen-typescript-loader": "~3.3.0",
+        "rollup": "~1.26.0",
         "rollup-plugin-commonjs": "~10.1.0",
         "rollup-plugin-node-resolve": "~5.2.0",
         "rollup-plugin-postcss": "~2.0.3",
         "rollup-plugin-terser": "~5.1.2",
+        "rollup-plugin-typescript2": "~0.24.3",
         "rollup-plugin-uglify": "~6.0.3",
         "sass-loader": "~8.0.0",
         "style-loader": "~1.0.0",
         "stylelint": "~11.1.1",
         "stylelint-config-recommended-scss": "~4.0.0",
-        "stylelint-scss": "~3.11.1"
+        "stylelint-scss": "~3.12.0",
+        "ts-jest": "~24.1.0",
+        "typescript": "~3.6.4"
     },
     "dependencies": {
         "classnames": "^2.2.6",
@@ -80,13 +99,34 @@
     },
     "peerDependencies": {
         "prop-types": "^15.7.2",
-        "react": "^16.8.3",
-        "react-dom": "^16.8.3"
+        "react": "^16.9.5",
+        "react-dom": "^16.9.2"
     },
     "jest": {
         "testEnvironment": "jsdom",
+        "roots": [
+            "<rootDir>/src",
+            "<rootDir>/test"
+        ],
+        "transform": {
+            "^.+\\.tsx?$": "ts-jest"
+        },
+        "globals": {
+            "ts-jest": {
+                "diagnostics": {
+                    "ignoreCodes": [
+                        2322,
+                        2493,
+                        2532,
+                        2740,
+                        7053,
+                        18002
+                    ]
+                }
+            }
+        },
         "setupFilesAfterEnv": [
-            "<rootDir>/test/setupTests.js"
+            "<rootDir>/test/setupTests.ts"
         ],
         "snapshotSerializers": [
             "enzyme-to-json/serializer"

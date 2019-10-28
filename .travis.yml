@@ -2,10 +2,12 @@ language: node_js
 node_js:
   - "10"
 script:
-  - npm run lint
+  - tsc --noEmit
+  - npm run lint-code
+  - npm run lint-styles
   - npm run test -- --ci --coverage --coverageReporters=text-lcov | coveralls
   - npm run test -- --ci --bail
-  - build-storybook -c .storybook -o docs
+  - npm run build-storybook
   - npm run build
 branches:
   only:
