@@ -72,7 +72,7 @@
         "gh-pages": "~2.1.1",
         "identity-obj-proxy": "~3.0.0",
         "jest": "24.0.0",
-        "node-sass": "~4.12.0",
+        "node-sass": "~4.13.0",
         "prettier": "~1.18.2",
         "react-docgen-typescript-loader": "~3.3.0",
         "rollup": "~1.26.0",
