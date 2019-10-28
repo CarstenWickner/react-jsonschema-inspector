@@ -1,0 +1,61 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import "./style-overrides.css";
+
+import { Inspector, getMaximumFieldValueFromSchemaGroup } from "../src/index";
+
+import personSchema from "./schema-person.json";
+import shopSelectionSchema from "./schema-shop-selection.json";
+
+<Meta title="Inspector (buildArrayProperties)" component={Inspector} />
+
+# Inspector (buildArrayProperties)
+## Focus: How to represent arrays in a Schema
+
+<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "buildArrayProperties")} />
+
+----
+
+### default
+If no `buildArrayProperties` prop is defined, an array is represented by an object containing a single item `"[0]"` of the array's content type.
+
+<Preview>
+    <Story name="default">
+        <Inspector
+            schemas={{
+                Person: personSchema,
+                Shop: shopSelectionSchema
+            }}
+            defaultSelectedItems={["Person", "friends"]}
+            // the default prop (i.e. same as if you leave it out)
+            buildArrayProperties={(arrayItemSchema) => ({ "[0]": arrayItemSchema })}
+        />
+    </Story>
+</Preview>
+
+----
+
+### with additional properties
+Through `buildArrayProperties` you can alternatively define what items to shows for a given array type and what schema should be associated with each of them.
+The schema for an array's property item can be either an instance of the `JsonSchema` class returned by various helper functions (and provided as the first parameter to `buildArrayProperties`) or an object representing a JSON Schema.
+
+<Preview>
+    <Story name="with additional properties">
+        <Inspector
+            schemas={{
+                Person: personSchema,
+                Shop: shopSelectionSchema
+            }}
+            defaultSelectedItems={["Person", "friends"]}
+            // the default props (i.e. same as if you leave them out)
+            buildArrayProperties={(arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
+                "get(0)": arrayItemSchema,
+                "size()": {
+                    title: "Number of Items",
+                    type: "number",
+                    // getMaximumFieldValueFromSchemaGroup() is one of the helper functions exported alongside the <Inspector>
+                    minimum: getMaximumFieldValueFromSchemaGroup(arraySchemaGroup, "minItems", 0, optionIndexes)
+                }
+            })}
+        />
+    </Story>
+</Preview>

@@ -1,0 +1,95 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import "./style-overrides.css";
+
+import { Inspector } from "../src/index";
+
+import personSchema from "./schema-person.json";
+import shopSelectionSchema from "./schema-shop-selection.json";
+
+
+<Meta title="Inspector (parserConfig)" component={Inspector} />
+
+# Inspector (parserConfig)
+## Focus: How to represent optional schema parts
+
+<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "parserConfig")} />
+
+----
+
+### default
+If no `parserConfig` prop is defined, `anyOf`/`oneOf` parts will be listed as "Option 1-2-3-..." under an "any of"/"one of" title.
+
+<Preview>
+    <Story name="default">
+        <Inspector
+            schemas={{
+                Person: personSchema,
+                Shop: shopSelectionSchema
+            }}
+            defaultSelectedItems={["Shop", "inventory", "[0]"]}
+            // the default props (i.e. same as if you leave them out)
+            parserConfig={{
+                anyOf: {
+                    groupTitle: "any of",
+                    optionNameForIndex: (optionIndexes) => `Option ${optionIndexes.map((index) => index + 1).join("-")}`
+                },
+                oneOf: {
+                    groupTitle: "one of",
+                    optionNameForIndex: (optionIndexes) => `Option ${optionIndexes.map((index) => index + 1).join("-")}`
+                }
+            }}
+        />
+    </Story>
+</Preview>
+
+----
+
+### with custom group titles
+You can override the respective "any of"/"one of" titles via `anyOf.groupTitle` and `oneOf.groupTitle` respectively.
+
+<Preview>
+    <Story name="with custom group titles">
+        <Inspector
+            schemas={{
+                Person: personSchema,
+                Shop: shopSelectionSchema
+            }}
+            defaultSelectedItems={["Shop", "inventory", "[0]"]}
+            // customise/translate title above optional parts of a schema
+            parserConfig={{
+                anyOf: {
+                    groupTitle: "at least one of:"
+                },
+                oneOf: {
+                    groupTitle: "exactly one of:"
+                }
+            }}
+        />
+    </Story>
+</Preview>
+
+----
+
+### with custom option names
+Through `anyOf.optionNameForIndex`/`oneOf.optionNameForIndex` you can replace the default "Option 1-2-3-..." items with your preferred (e.g. translated) labels.
+
+<Preview>
+    <Story name="with custom option names">
+        <Inspector
+            schemas={{
+                Person: personSchema,
+                Shop: shopSelectionSchema
+            }}
+            defaultSelectedItems={["Shop", "inventory", "[0]"]}
+            // ideally, these functions should be declared separately to avoid unnecessary re-rendering
+            parserConfig={{
+                anyOf: {
+                    optionNameForIndex: (optionIndexes) => `– ${optionIndexes.map((index) => String.fromCharCode(65 + index)).join(".")}`
+                },
+                oneOf: {
+                    optionNameForIndex: (optionIndexes) => `- ${optionIndexes.map((index) => String.fromCharCode(65 + index)).join(".")}`
+                }
+            }}
+        />
+    </Story>
+</Preview>
