@@ -1,0 +1,254 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import "./style-overrides.css";
+import classNames from "classnames";
+
+import { Inspector } from "../src/index";
+
+import metaSchema from "./schema-meta.json";
+import hyperMetaSchema from "./schema-hyper-meta.json";
+import linksMetaSchema from "./schema-links-meta.json";
+
+<Meta title="Inspector (breadcrumbs)" component={Inspector} />
+
+# Inspector
+## Focus: Breadcrumbs at the bottom of the Inspector
+
+<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "breadcrumbs")} />
+
+----
+
+### default
+If no `breadcrumbs` prop is defined, they are shown by default.
+
+<Preview>
+    <Story name="default">
+        <Inspector
+            schemas={{
+                "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
+                "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
+                "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
+            }}
+            referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
+        />
+    </Story>
+</Preview>
+
+----
+
+### with prefix
+You can define your own `prefix` to be shown as part of the very first column's selected item.
+
+<Preview>
+    <Story name="with prefix">
+        <Inspector
+            schemas={{
+                "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
+                "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
+                "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
+            }}
+            referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
+            breadcrumbs={{
+                // prefix is only shown in front of the root selection
+                prefix: "Selection: "
+            }}
+        />
+    </Story>
+</Preview>
+
+----
+
+### with custom separator
+You can define your own `separator` if the default `.` does not suit your needs.
+
+<Preview>
+    <Story name="with custom separator">
+        <Inspector
+            schemas={{
+                "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
+                "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
+                "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
+            }}
+            referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
+            breadcrumbs={{
+                separator: "/"
+            }}
+        />
+    </Story>
+</Preview>
+
+----
+
+### with optional separator
+Via `skipSeparator` you can decide whether a separator should be shown in front of any subsequent selection.
+By default, there is no separator in front of the first column's selection and if the selectable item's name is `"[0]"`.
+
+<Preview>
+    <Story name="with optional separator">
+        <Inspector
+            schemas={{
+                "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
+                "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
+                "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
+            }}
+            referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "contains", "allOf", "[0]"]}
+            breadcrumbs={{
+                // the default skipSeparator function only ignored "{0}"
+                skipSeparator: (fieldName, _column, index) => fieldName === "[0]" || index % 2 === 0
+            }}
+        />
+    </Story>
+</Preview>
+
+----
+
+### with multiple different separators
+Via `mutateName` you can define an alternative representation of a selected item's name in the breadcrumbs.
+E.g. you can show different separators in combination with `skipSeparator`.
+
+<Preview>
+    <Story name="with multiple different separators">
+        <Inspector
+            schemas={{
+                "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
+                "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
+                "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
+            }}
+            referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "contains", "allOf", "[0]"]}
+            breadcrumbs={{
+                skipSeparator: (fieldName, _column, index) => fieldName === "[0]" || index % 2 === 0,
+                mutateName: (fieldName, _column, index) => fieldName && `${index === 0 || index % 2 ? "" : "/"}${fieldName}`
+            }}
+        />
+    </Story>
+</Preview>
+
+----
+
+### not showing root selection
+Alternatively you can ignore certain item selections in the breadcrumbs by letting `mutateName` return a falsy value (e.g. `null` or `false`).
+E.g. you can omit the first column's selection in the displayed breadcrumbs. In order to avoid the initial separator you might have to use `skipSeparator` as well.
+
+<Preview>
+    <Story name="not showing root selection">
+        <Inspector
+            schemas={{
+                "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
+                "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
+                "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
+            }}
+            referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "contains", "allOf", "[0]"]}
+            breadcrumbs={{
+                // avoid leading separator (in addition to default ignoring of "[0]")
+                skipSeparator: (fieldName, _column, index) => fieldName === "[0]" || index === 1,
+                // returning a falsy value skips the breadcrumbs item (here: for the root selection)
+                mutateName: (fieldName, _column, index) => index > 0 && fieldName
+            }}
+        />
+    </Story>
+</Preview>
+
+----
+
+### without navigation on double-click
+By default, a double-click on an item in the breadcrumbs changes the selection in the `<Inspector>` to the respective item.
+This can be disabled via `preventNavigation`, i.e. so a double-click does nothing but select the text displayed on the breadcrumb item.
+
+<Preview>
+    <Story name="without navigation on double-click">
+        <Inspector
+            schemas={{
+                "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
+                "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
+                "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
+            }}
+            referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
+            breadcrumbs={{
+                // if this is NOT set to true, double-clicking on an item in the breadcrumbs changes the current selection
+                preventNavigation: true
+            }}
+        />
+    </Story>
+</Preview>
+
+----
+
+### with custom items and extra content
+If all the above options are not customised enough, you can also provide your component for each breadcrumb item through `renderItem`.
+Additionally, `renderTrailingContent` allows you to add extra content behind the breadcrumb items, e.g. a "Copy to Clipboard" button.
+
+<Preview>
+    <Story name="with custom items and extra content">
+        <Inspector
+            schemas={{
+                "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
+                "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
+                "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
+            }}
+            referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
+            breadcrumbs={{
+                // custom rendering for individual breadcrumb items
+                renderItem: (renderProps) => (
+                    <span
+                        key={renderProps.index}
+                        className={classNames({
+                            "jsonschema-inspector-breadcrumbs-item": true,
+                            "has-nested-items": renderProps.hasNestedItems
+                        })}
+                        style={{ backgroundColor: renderProps.hasNestedItems ? "#a5d6a7" : "#e8f5e9" }}
+                    >
+                        {renderProps.breadcrumbText}
+                    </span>
+                ),
+                // custom rendering of an additional "Copy" button to the right of the breadcrumbs
+                renderTrailingContent: (renderProps) => (
+                    <div style={{ flexGrow: 1 }}>
+                        <button
+                            type="button"
+                            style={{
+                                backgroundColor: "#276bd2",
+                                color: "#fff",
+                                float: "right",
+                                margin: ".5em",
+                                height: "2.5em"
+                            }}
+                            onClick={() =>
+                                window.alert(`E.g. could have copied current breadcrumbs to clipboard:\n\n\t"${renderProps.breadcrumbTexts.join("")}"`)
+                            }
+                        >
+                            Copy
+                        </button>
+                    </div>
+                )
+            }}
+        />
+    </Story>
+</Preview>
+
+----
+
+### disabled
+You can also turn-off the breadcrumbs feature completely by providing `null` instead of an object to the whole `breadcrumbs` prop.
+
+<Preview>
+    <Story name="disabled">
+        <Inspector
+            schemas={{
+                "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
+                "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
+                "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
+            }}
+            referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
+            // set to null to disable breadcrumbs completely
+            breadcrumbs={null}
+        />
+    </Story>
+</Preview>
