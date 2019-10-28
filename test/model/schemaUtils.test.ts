@@ -1,5 +1,3 @@
-import { JSONSchema7 } from "json-schema";
-
 import {
     createGroupFromSchema,
     getFieldValueFromSchemaGroup,
@@ -14,6 +12,7 @@ import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
 import { JsonSchemaAllOfGroup } from "../../src/model/JsonSchemaAllOfGroup";
 import { JsonSchemaAnyOfGroup, JsonSchemaOneOfGroup } from "../../src/model/JsonSchemaOptionalsGroup";
 import { isDefined } from "../../src/model/utils";
+import { RawJsonSchema } from "../../src/types/RawJsonSchema";
 
 describe("createGroupFromSchema()", () => {
     const rawFooSchema = { title: "Foo" };
@@ -109,7 +108,7 @@ describe("createGroupFromSchema()", () => {
         const rawBazSchema = { minProperties: 1 };
         const rawQuxSchema = { maxProperties: 5 };
         const rawQuuxSchema = { additionalProperties: false };
-        const rawTargetSchema: JSONSchema7 = {
+        const rawTargetSchema: RawJsonSchema = {
             allOf: [rawFooSchema, rawBarSchema],
             anyOf: [rawFoobarSchema, rawBazSchema],
             oneOf: [rawQuxSchema, rawQuuxSchema]
@@ -170,15 +169,15 @@ describe("getIndexPermutationsForOptions()", () => {
 });
 describe("getPropertiesFromSchemaGroup()", () => {
     it("returns properties from simple schema", () => {
-        const rawFooSchema = { type: "string" };
-        const rawBarSchema = { type: "number" };
+        const rawFooSchema = { type: "string" as "string" };
+        const rawBarSchema = { type: "number" as "number" };
         const schema = new JsonSchema(
             {
                 properties: {
                     foo: rawFooSchema,
                     bar: rawBarSchema
                 }
-            } as JSONSchema7,
+            },
             {}
         );
         const result = getPropertiesFromSchemaGroup(createGroupFromSchema(schema));
@@ -458,8 +457,8 @@ describe("getFieldValueFromSchemaGroup()", () => {
     });
     describe("allOf:", () => {
         it("finds single value", () => {
-            const schema: JSONSchema7 = {
-                allOf: [{ description: "foo" }, { title: "bar" }, { type: "object" }]
+            const schema = {
+                allOf: [{ description: "foo" }, { title: "bar" }, { type: "object" as "object" }]
             };
             const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
             expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toBe("bar");
@@ -472,7 +471,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
                             allOf: [
                                 { description: "foobar" },
                                 {
-                                    allOf: [{ title: "baz" }, { type: "object" }]
+                                    allOf: [{ title: "baz" }, { type: "object" as "object" }]
                                 }
                             ]
                         }
@@ -565,9 +564,9 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
         expect(result.schema).toEqual(additionalItemSchema);
     });
     it("ignores array of `items`", () => {
-        const itemSchemaArray = [{ title: "Test" }, { type: "object" }];
+        const itemSchemaArray = [{ title: "Test" }, { type: "object" as "object" }];
         const additionalItemSchema = { description: "Value" };
-        const schema: JSONSchema7 = {
+        const schema = {
             items: itemSchemaArray,
             additionalItems: additionalItemSchema
         };
@@ -576,19 +575,19 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
         expect(result.schema).toEqual(additionalItemSchema);
     });
     it("returns null if neither `items` nor `additionalItems` are present", () => {
-        const schema: JSONSchema7 = {
-            type: "array"
+        const schema = {
+            type: "array" as "array"
         };
         const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, {})));
         expect(result).toBeUndefined();
     });
     it("picks first of multiple `items` in complex schema", () => {
-        const schema: JSONSchema7 = {
+        const schema = {
             allOf: [
                 { items: { title: "foo" } },
                 { items: { description: "bar" } },
                 {
-                    allOf: [{}, { items: { type: "object" } }]
+                    allOf: [{}, { items: { type: "object" as "object" } }]
                 }
             ]
         };

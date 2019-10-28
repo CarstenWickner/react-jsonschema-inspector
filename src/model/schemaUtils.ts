@@ -141,18 +141,28 @@ export function createGroupFromSchema(schema: JsonSchema): JsonSchemaAllOfGroup 
  * @param {?RefScope} mappingFunction.param2 - scope from given 'schema'
  * @returns {*} return looked-up field value (possibly changed by 'mappingFunction'
  */
+function getFieldValueFromSchema<K extends KeysOfRawJsonSchema, S extends TypeInRawJsonSchema<K>>(
+    schema: JsonSchema,
+    fieldName: K,
+    mappingFunction: undefined
+): S;
 function getFieldValueFromSchema<K extends KeysOfRawJsonSchema, S extends TypeInRawJsonSchema<K>, T>(
     schema: JsonSchema,
     fieldName: K,
-    mappingFunction?: (value: S, parserConfig: ParserConfig, scope: RefScope) => T
-): T {
+    mappingFunction: (value: S, parserConfig: ParserConfig, scope: RefScope) => T
+): T;
+function getFieldValueFromSchema<K extends KeysOfRawJsonSchema, S extends TypeInRawJsonSchema<K>, T>(
+    schema: JsonSchema,
+    fieldName: K,
+    mappingFunction: undefined | ((value: S, parserConfig: ParserConfig, scope: RefScope) => T)
+): S | T {
     const { schema: rawSchema } = schema;
     const rawValue = getValueFromRawJsonSchema(rawSchema, fieldName) as S;
     if (mappingFunction) {
         const { parserConfig, scope } = schema;
         return mappingFunction(rawValue, parserConfig, scope);
     }
-    return (rawValue as unknown) as T;
+    return rawValue;
 }
 
 /**
@@ -249,7 +259,7 @@ export function getTypeOfArrayItemsFromSchemaGroup(schemaGroup: JsonSchemaGroup,
     }
     // due to the 'listValues' mergeFunction, the array item schemas may be in an array
     // for simplicity's sake: treating this as unclean schema declaration – we just consider the first
-    return Array.isArray(arrayItemSchema) ? arrayItemSchema[0] : (arrayItemSchema as JsonSchema);
+    return Array.isArray(arrayItemSchema) ? arrayItemSchema[0] : arrayItemSchema;
 }
 
 /**

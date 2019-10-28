@@ -20,10 +20,10 @@ export type TypeInRawJsonSchema<K> =
     | (K extends KnownKeys<JSONSchema7> ? JSONSchema7[K] : never);
 
 /**
- * Type look-up for a particular key in any of the supported JSON Schema versions.
+ * Type-safe value look-up for a particular key in a given JSON Schema.
  *
- * @param {RawJsonSchema} rawSchema - t
- * @param {string} key - t
+ * @param {RawJsonSchema} rawSchema - JSON Schema from which to extract a value
+ * @param {string} key - name of object property too look-up
  * @returns {*} value in schema
  */
 export function getValueFromRawJsonSchema<K extends KeysOfRawJsonSchema>(rawSchema: RawJsonSchema, key: K): TypeInRawJsonSchema<K> {

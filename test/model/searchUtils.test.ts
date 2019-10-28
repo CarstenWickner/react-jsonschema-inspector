@@ -1,5 +1,3 @@
-import { JSONSchema7 } from "json-schema";
-
 import {
     collectReferencedSubSchemas,
     createFilterFunctionForSchema,
@@ -413,10 +411,10 @@ describe("createFilterFunctionForSchema()", () => {
         });
 
         describe("support non-optional parts of schema containing options", () => {
-            const rawSchema: JSONSchema7 = {
+            const rawSchema = {
                 minProperties: 1,
                 allOf: [{ title: "Foo" }, { description: "Bar" }],
-                anyOf: [{ maxProperties: 3 }, { type: "object" }],
+                anyOf: [{ maxProperties: 3 }, { type: "object" as "object" }],
                 oneOf: [{ maxProperties: 5 }, { maxProperties: 7 }]
             };
 
