@@ -6,7 +6,8 @@
         "jsdoc/require-param": "off",
         "jsdoc/require-returns": "off",
         "lines-between-class-members": "off",
-        "no-prototype-builtins": "off"
+        "no-prototype-builtins": "off",
+        "quotes": "off"
     },
     "globals": {
         "afterAll": "readonly",

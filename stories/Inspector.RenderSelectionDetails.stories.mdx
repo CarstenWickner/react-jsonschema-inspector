@@ -1,0 +1,49 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import { action } from "@storybook/addon-actions";
+import "./style-overrides.css";
+
+import { Inspector, getFieldValueArrayFromSchemaGroup } from "../src/index";
+
+import shopSelectionSchema from "./schema-shop-selection.json";
+
+<Meta title="Inspector (renderSelectionDetails)" component={Inspector} />
+
+# Inspector (renderSelectionDetails)
+## Focus: Customise details panel on the right for a selected item
+
+<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "renderSelectionDetails")} />
+
+----
+
+### with custom details display
+When an item is being selected, a details panel is shown on the right for displaying further details about the current selection.
+By default that is a selection of data fields from the JSON Schema displayed in a simple form.
+
+Via `renderSelectionDetails` you can define your own component to be displayed on the right in case of an item being selected.
+
+<Preview>
+    <Story name="with custom selection details">
+        <Inspector
+            schemas={{
+                Shop: shopSelectionSchema
+            }}
+            defaultSelectedItems={["Shop", "inventory"]}
+            renderSelectionDetails={(parameters) => {
+                const { itemSchemaGroup, columnData, selectionColumnIndex, optionIndexes } = parameters;
+                return (
+                    <div style={{ padding: "1em", backgroundColor: "#80cbc4", height: "100%" }}>
+                        <h3>Custom Details</h3>
+                        <p>{getFieldValueArrayFromSchemaGroup(itemSchemaGroup, "description", null, optionIndexes)}</p>
+                        <h4>Selection</h4>
+                        <p>
+                            {selectionColumnIndex === 0 && `The root ${columnData[0].selectedItem}`}
+                            {selectionColumnIndex > 0 &&
+                                `${columnData[selectionColumnIndex].selectedItem} of ${columnData[selectionColumnIndex - 1].selectedItem}`}
+                        </p>
+                    </div>
+                );
+            }}
+            onSelect={action("onSelect")}
+        />
+    </Story>
+</Preview>
