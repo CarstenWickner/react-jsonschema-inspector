@@ -4,21 +4,13 @@ import { JsonSchema } from "../../src/model/JsonSchema";
 import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
 import { createGroupFromSchema, getOptionsInSchemaGroup, getFieldValueFromSchemaGroup } from "../../src/model/schemaUtils";
 import { maximumValue } from "../../src/model/utils";
-import {
-    RenderItemsColumn,
-    RenderOptionsColumn,
-    RenderColumnOnSelectFunction,
-    BuildArrayPropertiesFunction,
-    ParserConfig
-} from "../../src/types/Inspector";
+import { RenderItemsColumn, RenderOptionsColumn, BuildArrayPropertiesFunction, ParserConfig } from "../../src/types/Inspector";
 
 describe("createRenderDataBuilder()", () => {
     let lastCalledOnSelectColumnIndex: number;
-    const onSelectInColumn = jest.fn(
-        (columnIndex: number): RenderColumnOnSelectFunction => (): void => {
-            lastCalledOnSelectColumnIndex = columnIndex;
-        }
-    );
+    const onSelectInColumn = jest.fn((columnIndex: number): RenderItemsColumn["onSelect"] => (): void => {
+        lastCalledOnSelectColumnIndex = columnIndex;
+    });
     const getRenderData = createRenderDataBuilder(onSelectInColumn);
 
     beforeEach(() => {
