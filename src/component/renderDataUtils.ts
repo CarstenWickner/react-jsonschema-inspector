@@ -13,8 +13,10 @@ import {
 } from "../model/schemaUtils";
 import { isDefined, isNonEmptyObject, mapObjectValues } from "../model/utils";
 import { createFilterFunctionForSchema } from "../model/searchUtils";
-import { BuildArrayPropertiesFunction, ParserConfig, RenderColumn, RenderOptionsColumn, RenderItemsColumn, RenderOptions } from "../types/Inspector";
+import { BuildArrayPropertiesFunction, RenderColumn, RenderOptionsColumn, RenderItemsColumn } from "./InspectorTypes";
+import { ParserConfig } from "../types/ParserConfig";
 import { RawJsonSchema } from "../types/RawJsonSchema";
+import { RenderOptions } from "../types/RenderOptions";
 
 /**
  * Check whether a given array of indexes corresponds to an existing path in the `options` hierarchy.

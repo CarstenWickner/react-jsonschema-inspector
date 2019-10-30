@@ -11,7 +11,8 @@ import {
     getValueFromRawJsonSchema,
     KeysOfRawJsonSchemaWithValuesOf
 } from "../types/RawJsonSchema";
-import { ParserConfig, RenderOptions } from "../types/Inspector";
+import { ParserConfig } from "../types/ParserConfig";
+import { RenderOptions } from "../types/RenderOptions";
 
 /**
  * Determines optional paths in this schema group.

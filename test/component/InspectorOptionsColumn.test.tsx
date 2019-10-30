@@ -7,7 +7,7 @@ import { getOptionsInSchemaGroup } from "../../src/model/schemaUtils";
 import { JsonSchema } from "../../src/model/JsonSchema";
 import { JsonSchemaAllOfGroup } from "../../src/model/JsonSchemaAllOfGroup";
 import { JsonSchemaAnyOfGroup, JsonSchemaOneOfGroup } from "../../src/model/JsonSchemaOptionalsGroup";
-import { ParserConfig } from "../../src/types/Inspector";
+import { ParserConfig } from "../../src/types/ParserConfig";
 
 describe("renders correctly", () => {
     const oneOfOptionNameForIndex = (optionIndexes: Array<number>): string => `Exclusive Option ${optionIndexes.map((index) => index + 1).join("-")}`;

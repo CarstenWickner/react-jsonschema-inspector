@@ -4,7 +4,8 @@ import { JsonSchema } from "../../src/model/JsonSchema";
 import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
 import { createGroupFromSchema, getOptionsInSchemaGroup, getFieldValueFromSchemaGroup } from "../../src/model/schemaUtils";
 import { maximumValue } from "../../src/model/utils";
-import { RenderItemsColumn, RenderOptionsColumn, BuildArrayPropertiesFunction, ParserConfig } from "../../src/types/Inspector";
+import { RenderItemsColumn, RenderOptionsColumn, BuildArrayPropertiesFunction } from "../../src/component/InspectorTypes";
+import { ParserConfig } from "../../src/types/ParserConfig";
 
 describe("createRenderDataBuilder()", () => {
     let lastCalledOnSelectColumnIndex: number;

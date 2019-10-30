@@ -3,7 +3,7 @@ import { shallow } from "enzyme";
 
 import { InspectorBreadcrumbs } from "../../src/component/InspectorBreadcrumbs";
 import { createRenderDataBuilder } from "../../src/component/renderDataUtils";
-import { RenderColumn } from "../../src/types/Inspector";
+import { RenderColumn } from "../../src/component/InspectorTypes";
 
 describe("renders correctly", () => {
     const buildColumnData = createRenderDataBuilder(() => (): void => {});

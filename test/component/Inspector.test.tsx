@@ -4,7 +4,7 @@ import { shallow } from "enzyme";
 import { Inspector } from "../../src/component/Inspector";
 import { ColViewProps } from "../../src/component/InspectorColView";
 import { JsonSchema } from "../../src/model/JsonSchema";
-import { RenderColumn, RenderItemsColumn } from "../../src/types/Inspector";
+import { RenderColumn, RenderItemsColumn } from "../../src/component/InspectorTypes";
 
 describe("renders correctly", () => {
     const schemas = {

@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import { InspectorItem } from "./InspectorItem";
 import { RenderItemsColumnPropTypeShape } from "./renderDataUtils";
-import { InspectorProps, RenderItemsColumn } from "../types/Inspector";
+import { InspectorProps, RenderItemsColumn } from "./InspectorTypes";
 
 interface ColumnDefaultProps {
     selectedItem: RenderItemsColumn["selectedItem"];

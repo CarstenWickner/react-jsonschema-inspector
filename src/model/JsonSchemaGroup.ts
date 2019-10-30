@@ -1,6 +1,6 @@
 import { JsonSchema } from "./JsonSchema";
 import { listValues } from "./utils";
-import { RenderOptions } from "../types/Inspector";
+import { RenderOptions } from "../types/RenderOptions";
 
 /**
  * Representation of an array of schemas (e.g. `allOf`, `anyOf`, `oneOf`), offering a number of convenience functions for extracting information.
