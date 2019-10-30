@@ -1,4 +1,4 @@
-import { BreadcrumbsOptions, RenderColumn, RenderOptionsColumn } from "./InspectorTypes";
+import { InspectorProps, RenderColumn, RenderOptionsColumn } from "./InspectorTypes";
 
 /**
  * @name BreadcrumbBuilder
@@ -20,7 +20,7 @@ import { BreadcrumbsOptions, RenderColumn, RenderOptionsColumn } from "./Inspect
  * @returns {BreadcrumbBuilder} function extracting breadcrumb text for one column
  */
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const createBreadcrumbBuilder = (breadcrumbsOptions: BreadcrumbsOptions) => {
+export const createBreadcrumbBuilder = (breadcrumbsOptions: InspectorProps["breadcrumbs"]) => {
     const { prefix = "", separator = ".", skipSeparator, mutateName } = breadcrumbsOptions;
     return (column: RenderColumn, index: number): string => {
         if ((column as RenderOptionsColumn).options) {

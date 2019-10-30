@@ -4,7 +4,7 @@ import { JsonSchema } from "../../src/model/JsonSchema";
 import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
 import { createGroupFromSchema, getOptionsInSchemaGroup, getFieldValueFromSchemaGroup } from "../../src/model/schemaUtils";
 import { maximumValue } from "../../src/model/utils";
-import { RenderItemsColumn, RenderOptionsColumn, BuildArrayPropertiesFunction } from "../../src/component/InspectorTypes";
+import { InspectorProps, RenderItemsColumn, RenderOptionsColumn } from "../../src/component/InspectorTypes";
 import { ParserConfig } from "../../src/types/ParserConfig";
 
 describe("createRenderDataBuilder()", () => {
@@ -239,7 +239,7 @@ describe("createRenderDataBuilder()", () => {
             expect(fourthColumn.trailingSelection).toBe(true);
         });
         it("calls provided buildArrayItemProperties() with array schema and option indexes", () => {
-            const buildArrayProperties: BuildArrayPropertiesFunction = (arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
+            const buildArrayProperties: InspectorProps["buildArrayProperties"] = (arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
                 "get(0)": arrayItemSchema,
                 "size()": {
                     type: "number",

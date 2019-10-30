@@ -13,10 +13,10 @@ import {
 } from "../model/schemaUtils";
 import { isDefined, isNonEmptyObject, mapObjectValues } from "../model/utils";
 import { createFilterFunctionForSchema } from "../model/searchUtils";
-import { BuildArrayPropertiesFunction, RenderColumn, RenderOptionsColumn, RenderItemsColumn } from "./InspectorTypes";
-import { ParserConfig } from "../types/ParserConfig";
+import { InspectorProps, RenderColumn, RenderOptionsColumn, RenderItemsColumn } from "./InspectorTypes";
 import { RawJsonSchema } from "../types/RawJsonSchema";
 import { RenderOptions } from "../types/RenderOptions";
+import { ParserConfig } from "../types/ParserConfig";
 
 /**
  * Check whether a given array of indexes corresponds to an existing path in the `options` hierarchy.
@@ -46,8 +46,8 @@ function isOptionIndexValidForOptions(optionIndexes: Array<number>, options: Ren
  * @returns {object.<string, JsonSchemaGroup>} named schema groups, derived from the provided raw schemas
  */
 function createRootColumnData(
-    schemas: { [key: string]: RawJsonSchema },
-    referenceSchemas: Array<RawJsonSchema>,
+    schemas: InspectorProps["schemas"],
+    referenceSchemas: InspectorProps["referenceSchemas"],
     parserConfig: ParserConfig
 ): RenderItemsColumn {
     // first prepare those schemas that may be referenced by the displayed ones or each other
@@ -84,14 +84,14 @@ function buildDefaultArrayProperties(arrayItemSchema: JsonSchema): { [key: strin
  *
  * @param {JsonSchemaGroup} schemaGroup - selected schema group (in previous column)
  * @param {?Array.<number>} optionIndexes - selected option path in `schemaGroup`
- * @param {?BuildArrayPropertiesFunction} buildArrayProperties - function for building dynamic sub schema based on declared array item type
+ * @param {?Function} buildArrayProperties - function for building dynamic sub schema based on declared array item type
  * @returns {object} `columnData` entry
  */
 function buildNextColumn(
     schemaGroup: JsonSchemaGroup,
     optionIndexes?: Array<number>,
-    buildArrayProperties: BuildArrayPropertiesFunction = buildDefaultArrayProperties
 ): RenderColumn | {} {
+    buildArrayProperties: InspectorProps["buildArrayProperties"] = buildDefaultArrayProperties
     if (!optionIndexes) {
         const options = getOptionsInSchemaGroup(schemaGroup);
         if (options.options) {
@@ -149,7 +149,7 @@ export const createRenderDataBuilder = (onSelectInColumn: (columnIndex: number) 
     referenceSchemas: undefined | Array<RawJsonSchema>,
     selectedItems: Array<string | Array<number>>,
     parserConfig: ParserConfig,
-    buildArrayProperties?: BuildArrayPropertiesFunction
+    buildArrayProperties?: InspectorProps["buildArrayProperties"]
 ) => {
     // the first column always lists all top-level schemas
     let nextColumn: RenderColumn | {} = createRootColumnData(schemas, referenceSchemas, parserConfig);
