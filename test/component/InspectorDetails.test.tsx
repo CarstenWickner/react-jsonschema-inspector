@@ -5,7 +5,7 @@ import { InspectorDetails } from "../../src/component/InspectorDetails";
 import { createRenderDataBuilder } from "../../src/component/renderDataUtils";
 import { JsonSchema } from "../../src/model/JsonSchema";
 import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
-import { RenderItemsColumn, RenderColumn } from "../../src/types/Inspector";
+import { RenderItemsColumn, RenderColumn } from "../../src/component/InspectorTypes";
 
 describe("renders correctly", () => {
     const buildColumnData = createRenderDataBuilder(() => (): void => {});

@@ -5,7 +5,8 @@ import isDeepEqual from "lodash.isequal";
 
 import { InspectorItem } from "./InspectorItem";
 import { RenderOptionsColumnPropTypeShape } from "./renderDataUtils";
-import { InspectorProps, RenderOptionsColumn, RenderOptions } from "../types/Inspector";
+import { InspectorProps, RenderOptionsColumn } from "./InspectorTypes";
+import { RenderOptions } from "../types/RenderOptions";
 
 interface OptionsColumnDefaultProps {
     selectedItem: RenderOptionsColumn["selectedItem"];

@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 import { hasSchemaGroupNestedItems } from "./renderDataUtils";
 import { isDefined } from "../model/utils";
-import { InspectorProps, RenderColumn } from "../types/Inspector";
+import { InspectorProps, RenderColumn } from "./InspectorTypes";
 
 interface ItemDefaultProps {
     optionIndexes: Array<number>;

@@ -1,7 +1,7 @@
 import { isNonEmptyObject } from "./utils";
 
 import { RawJsonSchema, getValueFromRawJsonSchema } from "../types/RawJsonSchema";
-import { ParserConfig } from "../types/Inspector";
+import { ParserConfig } from "../types/ParserConfig";
 
 const createRawSchemaFromBoolean = (value: boolean): RawJsonSchema => (value ? {} : { not: {} });
 

@@ -4,7 +4,7 @@ import * as React from "react";
 import { InspectorDetailsContent } from "./InspectorDetailsContent";
 import { ColumnDataPropType } from "./renderDataUtils";
 import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
-import { InspectorProps, RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
+import { InspectorProps, RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "./InspectorTypes";
 
 interface InspectorDetailsDefaultProps {
     renderSelectionDetails: InspectorProps["renderSelectionDetails"];

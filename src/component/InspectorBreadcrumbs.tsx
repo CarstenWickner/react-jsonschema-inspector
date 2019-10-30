@@ -3,8 +3,8 @@ import * as React from "react";
 import classNames from "classnames";
 
 import { ColumnDataPropType } from "./renderDataUtils";
-import { createBreadcrumbBuilder } from "../model/breadcrumbsUtils";
-import { InspectorProps, RenderColumn, RenderOptionsColumn } from "../types/Inspector";
+import { createBreadcrumbBuilder } from "./breadcrumbsUtils";
+import { InspectorProps, RenderColumn, RenderOptionsColumn } from "./InspectorTypes";
 
 export class InspectorBreadcrumbs extends React.Component<{
     columnData: Array<RenderColumn>;

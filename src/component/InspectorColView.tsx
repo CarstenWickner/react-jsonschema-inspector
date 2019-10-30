@@ -4,7 +4,7 @@ import * as React from "react";
 import { InspectorColumn } from "./InspectorColumn";
 import { InspectorOptionsColumn } from "./InspectorOptionsColumn";
 import { ColumnDataPropType } from "./renderDataUtils";
-import { InspectorProps, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
+import { InspectorProps, RenderItemsColumn, RenderOptionsColumn } from "./InspectorTypes";
 
 interface ColViewDefaultProps {
     appendEmptyColumn: boolean;

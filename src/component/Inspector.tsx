@@ -14,10 +14,10 @@ import { InspectorSearchField } from "./InspectorSearchField";
 import { JsonSchemaPropType } from "./JsonSchemaPropType";
 import { createRenderDataBuilder, createFilterFunctionForColumn } from "./renderDataUtils";
 
-import { createBreadcrumbBuilder } from "../model/breadcrumbsUtils";
+import { createBreadcrumbBuilder } from "./breadcrumbsUtils";
 import { filteringByFields, filteringByPropertyName } from "../model/searchUtils";
 
-import { InspectorDefaultProps, InspectorProps, RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
+import { InspectorDefaultProps, InspectorProps, RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "./InspectorTypes";
 
 export class Inspector extends React.Component<
     InspectorProps,

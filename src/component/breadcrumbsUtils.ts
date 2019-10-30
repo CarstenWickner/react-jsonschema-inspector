@@ -1,4 +1,4 @@
-import { BreadcrumbsOptions, RenderColumn, RenderOptionsColumn } from "../types/Inspector";
+import { BreadcrumbsOptions, RenderColumn, RenderOptionsColumn } from "./InspectorTypes";
 
 /**
  * @name BreadcrumbBuilder

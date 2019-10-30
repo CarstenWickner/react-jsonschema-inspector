@@ -4,7 +4,7 @@
  * @param {*} target - value to confirm
  * @returns {boolean} whether the target is neither undefined nor null
  */
-export function isDefined(target: unknown): boolean {
+export function isDefined(target: unknown): target is {} {
     return target !== undefined && target !== null;
 }
 
@@ -25,12 +25,12 @@ export function isNonEmptyObject(target: unknown): target is { [key: string]: un
  * @param {Function} mappingFunction - conversion to perform
  * @returns {object} cloned object with same keys as the original, but with mapped values
  */
-export function mapObjectValues<S, T>(original: { [key: string]: S }, mappingFunction: (value: S) => T): { [key: string]: T } {
-    const mappedObject: { [key: string]: T } = {};
-    Object.keys(original).forEach((key) => {
+export function mapObjectValues<O extends { [key: string]: S }, S, T>(original: O, mappingFunction: (value: S) => T): { [key in keyof O]: T } {
+    const mappedObject: { [key in keyof O]?: T } = {};
+    Object.keys(original).forEach((key: keyof O) => {
         mappedObject[key] = mappingFunction(original[key]);
     });
-    return mappedObject;
+    return mappedObject as { [key in keyof O]: T };
 }
 
 /**
