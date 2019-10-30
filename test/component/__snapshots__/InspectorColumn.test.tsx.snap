@@ -11,7 +11,6 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
     key="Item One"
     name="Item One"
     onSelect={[Function]}
-    renderContent={null}
     schemaGroup={
       JsonSchemaGroup {
         "entries": Array [
@@ -45,7 +44,6 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
     key="Item Two"
     name="Item Two"
     onSelect={[Function]}
-    renderContent={null}
     schemaGroup={
       JsonSchemaGroup {
         "entries": Array [

@@ -8,9 +8,9 @@ import { isDefined } from "../model/utils";
 import { InspectorProps, RenderColumn } from "./InspectorTypes";
 
 interface ItemDefaultProps {
-    optionIndexes: Array<number>;
+    optionIndexes?: Array<number>;
     selected: boolean;
-    matchesFilter: boolean;
+    matchesFilter?: boolean;
     renderContent: InspectorProps["renderItemContent"];
 }
 
@@ -69,6 +69,6 @@ export class InspectorItem extends React.Component<ItemProps> {
         optionIndexes: undefined,
         selected: false,
         matchesFilter: undefined,
-        renderContent: null
+        renderContent: undefined
     };
 }

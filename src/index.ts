@@ -25,7 +25,7 @@ export const getMinimumFieldValueFromSchemaGroup = (
     fieldName: KeysOfRawJsonSchemaWithValuesOf<number>,
     defaultValue: number,
     optionIndexes?: Array<number>
-): number => getFieldValueFromSchemaGroup(schemaGroup, fieldName, minimumValue, defaultValue, null, optionIndexes);
+): number => getFieldValueFromSchemaGroup(schemaGroup, fieldName, minimumValue, defaultValue, undefined, optionIndexes);
 
 /**
  * Extract single maximum numeric value from a certain field in the (selected) schema parts of the given schema group.
@@ -42,7 +42,7 @@ export const getMaximumFieldValueFromSchemaGroup = (
     fieldName: KeysOfRawJsonSchemaWithValuesOf<number>,
     defaultValue: number,
     optionIndexes?: Array<number>
-): number => getFieldValueFromSchemaGroup(schemaGroup, fieldName, maximumValue, defaultValue, null, optionIndexes);
+): number => getFieldValueFromSchemaGroup(schemaGroup, fieldName, maximumValue, defaultValue, undefined, optionIndexes);
 
 /**
  * Extract intersecting value (parts) from a certain field in the (selected) schema parts of the given schema group.
@@ -61,7 +61,7 @@ export const getCommonFieldValuesFromSchemaGroup = <S, T extends S | Array<S>>(
     fieldName: KeysOfRawJsonSchema,
     defaultValue: T,
     optionIndexes?: Array<number>
-): T => getFieldValueFromSchemaGroup(schemaGroup, fieldName, commonValues, defaultValue, null, optionIndexes);
+): T => getFieldValueFromSchemaGroup(schemaGroup, fieldName, commonValues, defaultValue, undefined, optionIndexes);
 
 /**
  * Extract all value (parts) from a certain field in the (selected) schema parts of the given schema group.
@@ -80,4 +80,4 @@ export const getFieldValueArrayFromSchemaGroup = <S, T extends S | Array<S>>(
     fieldName: KeysOfRawJsonSchema,
     defaultValue: T,
     optionIndexes?: Array<number>
-): T => getFieldValueFromSchemaGroup(schemaGroup, fieldName, listValues, defaultValue, null, optionIndexes);
+): T => getFieldValueFromSchemaGroup(schemaGroup, fieldName, listValues, defaultValue, undefined, optionIndexes);

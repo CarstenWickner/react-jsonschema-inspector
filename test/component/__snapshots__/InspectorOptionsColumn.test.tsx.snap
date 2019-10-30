@@ -29,7 +29,6 @@ exports[`renders correctly with minimal/default props 1`] = `
             0,
           ]
         }
-        renderContent={null}
         schemaGroup={
           JsonSchemaAllOfGroup {
             "entries": Array [
@@ -132,7 +131,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                 0,
               ]
             }
-            renderContent={null}
             schemaGroup={
               JsonSchemaAllOfGroup {
                 "entries": Array [
@@ -221,7 +219,6 @@ exports[`renders correctly with minimal/default props 1`] = `
                 1,
               ]
             }
-            renderContent={null}
             schemaGroup={
               JsonSchemaAllOfGroup {
                 "entries": Array [

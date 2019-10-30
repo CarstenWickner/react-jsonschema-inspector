@@ -149,7 +149,7 @@ export interface InspectorProps extends InspectorDefaultProps {
 
 interface RenderColumnDetails {
     trailingSelection?: boolean;
-    onSelect?: (event: React.SyntheticEvent, selectedItem?: string | Array<number>) => void;
+    onSelect: (event: React.SyntheticEvent, selectedItem?: string | Array<number>) => void;
 }
 
 export interface RenderItemsColumn extends RenderColumnDetails {

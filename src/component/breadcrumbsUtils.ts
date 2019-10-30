@@ -22,7 +22,7 @@ import { InspectorProps, RenderColumn, RenderOptionsColumn } from "./InspectorTy
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const createBreadcrumbBuilder = (breadcrumbsOptions: InspectorProps["breadcrumbs"]) => {
     const { prefix = "", separator = ".", skipSeparator, mutateName } = breadcrumbsOptions;
-    return (column: RenderColumn, index: number): string => {
+    return (column: RenderColumn, index: number): string | null => {
         if ((column as RenderOptionsColumn).options) {
             // no breadcrumb for option selection
             return null;
