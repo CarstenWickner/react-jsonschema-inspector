@@ -13,10 +13,10 @@ import {
 } from "../model/schemaUtils";
 import { isDefined, isNonEmptyObject, mapObjectValues } from "../model/utils";
 import { createFilterFunctionForSchema } from "../model/searchUtils";
-import { BuildArrayPropertiesFunction, RenderColumn, RenderOptionsColumn, RenderItemsColumn } from "./InspectorTypes";
-import { ParserConfig } from "../types/ParserConfig";
+import { InspectorProps, RenderColumn, RenderOptionsColumn, RenderItemsColumn } from "./InspectorTypes";
 import { RawJsonSchema } from "../types/RawJsonSchema";
 import { RenderOptions } from "../types/RenderOptions";
+import { ParserConfig } from "../types/ParserConfig";
 
 /**
  * Check whether a given array of indexes corresponds to an existing path in the `options` hierarchy.
@@ -26,12 +26,12 @@ import { RenderOptions } from "../types/RenderOptions";
  * @returns {boolean} whether given `optionIndexes` represent a valid option path
  */
 function isOptionIndexValidForOptions(optionIndexes: Array<number>, options: RenderOptions): boolean {
-    let optionsPart = options;
+    let optionsPart: RenderOptions | undefined = options;
     optionIndexes.forEach((index) => {
         if (optionsPart && optionsPart.options && optionsPart.options.length > index) {
             optionsPart = optionsPart.options[index];
         } else {
-            optionsPart = null;
+            optionsPart = undefined;
         }
     });
     return optionsPart && !optionsPart.options;
@@ -46,22 +46,24 @@ function isOptionIndexValidForOptions(optionIndexes: Array<number>, options: Ren
  * @returns {object.<string, JsonSchemaGroup>} named schema groups, derived from the provided raw schemas
  */
 function createRootColumnData(
-    schemas: { [key: string]: RawJsonSchema },
-    referenceSchemas: Array<RawJsonSchema>,
+    schemas: InspectorProps["schemas"],
+    referenceSchemas: InspectorProps["referenceSchemas"],
     parserConfig: ParserConfig
-): RenderItemsColumn {
+): Omit<RenderItemsColumn, "onSelect"> {
     // first prepare those schemas that may be referenced by the displayed ones or each other
     const referenceScopes: Array<RefScope> = [];
-    referenceSchemas.forEach((rawRefSchema) => {
-        const newReferenceScope = new JsonSchema(rawRefSchema, parserConfig).scope;
-        referenceScopes.forEach((otherReferenceScope) => {
-            newReferenceScope.addOtherScope(otherReferenceScope);
-            otherReferenceScope.addOtherScope(newReferenceScope);
+    if (referenceSchemas) {
+        referenceSchemas.forEach((rawRefSchema) => {
+            const newReferenceScope = new JsonSchema(rawRefSchema, parserConfig).scope;
+            referenceScopes.forEach((otherReferenceScope) => {
+                newReferenceScope.addOtherScope(otherReferenceScope);
+                otherReferenceScope.addOtherScope(newReferenceScope);
+            });
+            referenceScopes.push(newReferenceScope);
         });
-        referenceScopes.push(newReferenceScope);
-    });
+    }
     // the first column always lists all top-level schemas
-    const rootColumnItems = mapObjectValues(schemas, (rawSchema) => {
+    const rootColumnItems = mapObjectValues(schemas, (rawSchema: RawJsonSchema) => {
         const schema = new JsonSchema(rawSchema, parserConfig);
         referenceScopes.forEach((referenceScope) => schema.scope.addOtherScope(referenceScope));
         return createGroupFromSchema(schema);
@@ -75,7 +77,7 @@ function createRootColumnData(
  * @param {JsonSchema} arrayItemSchema - declared type of items in an array (as per the respective json schema)
  * @returns {{"[0]": JsonSchema}} simple object allowing to access the array's item definition via a single entry
  */
-function buildDefaultArrayProperties(arrayItemSchema: JsonSchema): { [key: string]: JsonSchema | RawJsonSchema } {
+function buildDefaultArrayProperties(arrayItemSchema: JsonSchema): { [key: string]: JsonSchema } {
     return { "[0]": arrayItemSchema };
 }
 
@@ -84,14 +86,14 @@ function buildDefaultArrayProperties(arrayItemSchema: JsonSchema): { [key: strin
  *
  * @param {JsonSchemaGroup} schemaGroup - selected schema group (in previous column)
  * @param {?Array.<number>} optionIndexes - selected option path in `schemaGroup`
- * @param {?BuildArrayPropertiesFunction} buildArrayProperties - function for building dynamic sub schema based on declared array item type
+ * @param {?Function} buildArrayProperties - function for building dynamic sub schema based on declared array item type
  * @returns {object} `columnData` entry
  */
 function buildNextColumn(
     schemaGroup: JsonSchemaGroup,
     optionIndexes?: Array<number>,
-    buildArrayProperties: BuildArrayPropertiesFunction = buildDefaultArrayProperties
-): RenderColumn | {} {
+    buildArrayProperties: InspectorProps["buildArrayProperties"] = buildDefaultArrayProperties
+): Omit<RenderColumn, "onSelect"> | {} {
     if (!optionIndexes) {
         const options = getOptionsInSchemaGroup(schemaGroup);
         if (options.options) {
@@ -114,8 +116,10 @@ function buildNextColumn(
     const nestedArrayItemSchema = getTypeOfArrayItemsFromSchemaGroup(schemaGroup, optionIndexes);
     if (nestedArrayItemSchema) {
         // next column should allow accessing the schema of the array's items
-        const arrayProperties = mapObjectValues(buildArrayProperties(nestedArrayItemSchema, schemaGroup, optionIndexes), (propertyValue) =>
-            propertyValue instanceof JsonSchema ? (propertyValue as JsonSchema) : new JsonSchema(propertyValue, nestedArrayItemSchema.parserConfig)
+        const arrayProperties = mapObjectValues(
+            buildArrayProperties(nestedArrayItemSchema, schemaGroup, optionIndexes),
+            (propertyValue: JsonSchema | RawJsonSchema) =>
+                propertyValue instanceof JsonSchema ? propertyValue : new JsonSchema(propertyValue, nestedArrayItemSchema.parserConfig)
         );
 
         return {
@@ -145,15 +149,15 @@ function buildNextColumn(
  */
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const createRenderDataBuilder = (onSelectInColumn: (columnIndex: number) => RenderColumn["onSelect"]) => (
-    schemas: { [key: string]: RawJsonSchema },
-    referenceSchemas: undefined | Array<RawJsonSchema>,
+    schemas: InspectorProps["schemas"],
+    referenceSchemas: InspectorProps["referenceSchemas"],
     selectedItems: Array<string | Array<number>>,
     parserConfig: ParserConfig,
-    buildArrayProperties?: BuildArrayPropertiesFunction
+    buildArrayProperties?: InspectorProps["buildArrayProperties"]
 ) => {
     // the first column always lists all top-level schemas
-    let nextColumn: RenderColumn | {} = createRootColumnData(schemas, referenceSchemas, parserConfig);
-    let selectedSchemaGroup: JsonSchemaGroup;
+    let nextColumn: Omit<RenderColumn, "onSelect"> | {} = createRootColumnData(schemas, referenceSchemas, parserConfig);
+    let selectedSchemaGroup: JsonSchemaGroup | undefined;
     const columnData = selectedItems
         .map((selection, index) => {
             const currentColumn = nextColumn;
@@ -164,17 +168,19 @@ export const createRenderDataBuilder = (onSelectInColumn: (columnIndex: number) 
             } else if (!isOptionSelection && (currentColumn as RenderItemsColumn).items) {
                 selectedSchemaGroup = (currentColumn as RenderItemsColumn).items[selection as string];
                 isValidSelection = isDefined(selectedSchemaGroup);
+            } else {
+                isValidSelection = false;
             }
             if (isValidSelection) {
                 nextColumn = buildNextColumn(selectedSchemaGroup, isOptionSelection ? (selection as Array<number>) : undefined, buildArrayProperties);
                 if (isOptionSelection) {
-                    selectedSchemaGroup = null;
+                    selectedSchemaGroup = undefined;
                 }
             } else {
                 nextColumn = {};
             }
             // name of the selected item (i.e. key in 'items') or int array of option indexes
-            (currentColumn as RenderColumn).selectedItem = isValidSelection ? selection : null;
+            (currentColumn as RenderColumn).selectedItem = isValidSelection ? selection : undefined;
             (currentColumn as RenderColumn).onSelect = onSelectInColumn(index);
             return currentColumn as RenderColumn;
         })
@@ -247,7 +253,7 @@ export function hasSchemaGroupNestedItems(schemaGroup: JsonSchemaGroup, optionIn
  * @returns {FilterFunctionForColumn} function that returns the list of `filteredItems` for a given entry in the standard `columnData` array
  */
 export function createFilterFunctionForColumn(
-    flatSchemaFilterFunction: (rawSchema: RawJsonSchema, includeNestedOptionals?: boolean) => boolean,
+    flatSchemaFilterFunction?: (rawSchema: RawJsonSchema, includeNestedOptionals?: boolean) => boolean,
     propertyNameFilterFunction: (name: string) => boolean = (): boolean => false
 ): (column: RenderColumn) => Array<string> | Array<Array<number>> {
     const containsMatchingItems = createFilterFunctionForSchema(flatSchemaFilterFunction, propertyNameFilterFunction);

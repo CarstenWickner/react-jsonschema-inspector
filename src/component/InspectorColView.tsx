@@ -27,7 +27,7 @@ export class InspectorColView extends React.Component<ColViewProps> {
         const previousColumnCount = prevProps.columnData.length + (prevProps.appendEmptyColumn ? 1 : 0);
         const { columnData, appendEmptyColumn } = this.props;
         const currentColumnCount = columnData.length + (appendEmptyColumn ? 1 : 0);
-        if (previousColumnCount < currentColumnCount) {
+        if (previousColumnCount < currentColumnCount && this.colViewContainerRef.current) {
             // auto-scroll to the far right if an additional column was added
             this.colViewContainerRef.current.scrollLeft = this.colViewContainerRef.current.scrollWidth;
         }
@@ -79,6 +79,6 @@ export class InspectorColView extends React.Component<ColViewProps> {
 
     static defaultProps: ColViewDefaultProps = {
         appendEmptyColumn: false,
-        renderItemContent: null
+        renderItemContent: undefined
     };
 }

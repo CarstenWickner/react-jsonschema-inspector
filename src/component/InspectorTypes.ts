@@ -147,28 +147,22 @@ export interface InspectorProps extends InspectorDefaultProps {
     schemas: { [key: string]: RawJsonSchema };
 }
 
-export type BuildArrayPropertiesFunction = InspectorProps["buildArrayProperties"];
-
-export type BreadcrumbsOptions = InspectorProps["breadcrumbs"];
-
-export type SearchOptions = InspectorProps["searchOptions"];
-
 interface RenderColumnDetails {
     trailingSelection?: boolean;
-    onSelect?: (event: React.SyntheticEvent, selectedItem?: string | Array<number>) => void;
+    onSelect: (event: React.SyntheticEvent, selectedItem?: string | Array<number>) => void;
 }
 
-export type RenderItemsColumn = {
+export interface RenderItemsColumn extends RenderColumnDetails {
     items: { [key: string]: JsonSchemaGroup };
     selectedItem?: string;
     filteredItems?: Array<string>;
-} & RenderColumnDetails;
+}
 
-export type RenderOptionsColumn = {
+export interface RenderOptionsColumn extends RenderColumnDetails {
     options: RenderOptions;
     contextGroup: JsonSchemaGroup;
     selectedItem?: Array<number>;
     filteredItems?: Array<Array<number>>;
-} & RenderColumnDetails;
+}
 
 export type RenderColumn = RenderItemsColumn | RenderOptionsColumn;

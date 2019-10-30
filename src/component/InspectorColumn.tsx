@@ -55,9 +55,9 @@ export class InspectorColumn extends React.Component<
     };
 
     static defaultProps: ColumnDefaultProps = {
-        selectedItem: null,
-        filteredItems: null,
+        selectedItem: undefined,
+        filteredItems: undefined,
         trailingSelection: false,
-        renderItemContent: null
+        renderItemContent: undefined
     };
 }

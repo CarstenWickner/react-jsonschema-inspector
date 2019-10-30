@@ -21,8 +21,8 @@ export class InspectorDetails extends React.Component<InspectorDetailsProps> {
         const lastColumnContainsSelection = columnData.length && columnData[columnData.length - 1].trailingSelection;
         const selectionColumnIndex = columnData.length - (lastColumnContainsSelection ? 1 : 2);
         const trailingSelectionColumn = selectionColumnIndex < 0 ? null : columnData[selectionColumnIndex];
-        let itemSchemaGroup: JsonSchemaGroup;
-        let optionIndexes: Array<number>;
+        let itemSchemaGroup: JsonSchemaGroup | undefined = undefined;
+        let optionIndexes: Array<number> | undefined = undefined;
         if (trailingSelectionColumn) {
             itemSchemaGroup = (trailingSelectionColumn as RenderItemsColumn).items
                 ? (trailingSelectionColumn as RenderItemsColumn).items[trailingSelectionColumn.selectedItem as string]
@@ -62,7 +62,7 @@ export class InspectorDetails extends React.Component<InspectorDetailsProps> {
     };
 
     static defaultProps: InspectorDetailsDefaultProps = {
-        renderSelectionDetails: null,
-        renderEmptyDetails: null
+        renderSelectionDetails: undefined,
+        renderEmptyDetails: undefined
     };
 }
