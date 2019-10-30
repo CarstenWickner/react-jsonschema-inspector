@@ -14,7 +14,8 @@ describe("createBreadcrumbBuilder()", () => {
         `("$name item", ({ name, index, expected }) => {
             const column: RenderItemsColumn = {
                 items: { [name as string]: simpleSchema },
-                selectedItem: name as string
+                selectedItem: name as string,
+                onSelect: (): void => {}
             };
             expect(buildBreadcrumb(column, index as number)).toBe(expected);
         });
@@ -24,7 +25,8 @@ describe("createBreadcrumbBuilder()", () => {
                     options: [{}, {}]
                 },
                 selectedItem: [1],
-                contextGroup: new JsonSchemaGroup()
+                contextGroup: new JsonSchemaGroup(),
+                onSelect: (): void => {}
             };
             expect(buildBreadcrumb(column, 1)).toBe(null);
         });
@@ -45,7 +47,8 @@ describe("createBreadcrumbBuilder()", () => {
         `("$type $name item", ({ name, index, expected }) => {
             const column: RenderItemsColumn = {
                 items: { [name as string]: simpleSchema },
-                selectedItem: name as string
+                selectedItem: name as string,
+                onSelect: (): void => {}
             };
             expect(buildBreadcrumb(column, index as number)).toBe(expected);
         });
@@ -55,7 +58,8 @@ describe("createBreadcrumbBuilder()", () => {
                     options: [{}, {}]
                 },
                 selectedItem: [1],
-                contextGroup: new JsonSchemaGroup()
+                contextGroup: new JsonSchemaGroup(),
+                onSelect: (): void => {}
             };
             expect(buildBreadcrumb(column, 1)).toBe(null);
         });
