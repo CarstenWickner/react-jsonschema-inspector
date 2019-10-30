@@ -6,7 +6,6 @@ exports[`renders correctly with minimal/default props 1`] = `
   tabIndex={-1}
 >
   <InspectorColumn
-    filteredItems={null}
     items={
       Object {
         "Item One": JsonSchemaGroup {
@@ -19,7 +18,6 @@ exports[`renders correctly with minimal/default props 1`] = `
     }
     key="0"
     onSelect={[Function]}
-    renderItemContent={null}
     selectedItem="Item One"
     trailingSelection={false}
   />
@@ -29,7 +27,6 @@ exports[`renders correctly with minimal/default props 1`] = `
         "entries": Array [],
       }
     }
-    filteredItems={null}
     key="1"
     onSelect={[Function]}
     options={
@@ -41,7 +38,6 @@ exports[`renders correctly with minimal/default props 1`] = `
         ],
       }
     }
-    renderItemContent={null}
     selectedItem={
       Array [
         0,
@@ -50,7 +46,6 @@ exports[`renders correctly with minimal/default props 1`] = `
     trailingSelection={true}
   />
   <InspectorColumn
-    filteredItems={null}
     items={
       Object {
         "Item One-Two-One": JsonSchemaGroup {
@@ -63,8 +58,6 @@ exports[`renders correctly with minimal/default props 1`] = `
     }
     key="2"
     onSelect={[Function]}
-    renderItemContent={null}
-    selectedItem={null}
     trailingSelection={false}
   />
 </div>

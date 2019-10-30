@@ -14,10 +14,10 @@ import { InspectorSearchField } from "./InspectorSearchField";
 import { JsonSchemaPropType } from "./JsonSchemaPropType";
 import { createRenderDataBuilder, createFilterFunctionForColumn } from "./renderDataUtils";
 
-import { createBreadcrumbBuilder } from "../model/breadcrumbsUtils";
+import { createBreadcrumbBuilder } from "./breadcrumbsUtils";
 import { filteringByFields, filteringByPropertyName } from "../model/searchUtils";
 
-import { InspectorDefaultProps, InspectorProps, RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
+import { InspectorDefaultProps, InspectorProps, RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "./InspectorTypes";
 
 export class Inspector extends React.Component<
     InspectorProps,
@@ -129,7 +129,10 @@ export class Inspector extends React.Component<
      * @param {{columnData:Array.<RenderColumn>}} newRenderData - new complete render data derived from props and updated state
      * @returns {?Function} callback function for setState() being called as a result of an onSelect event
      */
-    getSetStateCallbackOnSelect(newSelection: Array<string | Array<number>>, newRenderData: { columnData: Array<RenderColumn> }): () => void {
+    getSetStateCallbackOnSelect(
+        newSelection: Array<string | Array<number>>,
+        newRenderData: { columnData: Array<RenderColumn> }
+    ): (() => void) | undefined {
         const { onSelect } = this.props;
         if (!onSelect) {
             return undefined;
@@ -142,12 +145,12 @@ export class Inspector extends React.Component<
      * @param {Array.<RenderColumn>} columnData - complete render information for the separate columns
      * @returns {?Array.<string>} full breadcrumbs according to configuration and currently selected items
      */
-    collectBreadCrumbs(columnData: Array<RenderColumn>): Array<string> {
+    collectBreadCrumbs(columnData: Array<RenderColumn>): Array<string> | undefined {
         const { breadcrumbs: breadcrumbsOptions } = this.props;
         if (!breadcrumbsOptions) {
             return undefined;
         }
-        return columnData.map(createBreadcrumbBuilder(breadcrumbsOptions)).filter((value) => value);
+        return columnData.map(createBreadcrumbBuilder(breadcrumbsOptions)).filter((value: string | null) => value) as Array<string>;
     }
 
     /**
@@ -188,7 +191,7 @@ export class Inspector extends React.Component<
             // search feature is enabled
             const { filterBy, fields, byPropertyName } = searchOptions;
             // if `filterBy` is defined, `fields` are being ignored
-            const flatSchemaFilterFunction = filterBy ? filterBy(searchFilter) : filteringByFields(fields, searchFilter);
+            const flatSchemaFilterFunction = filterBy ? filterBy(searchFilter) : fields ? filteringByFields(fields, searchFilter) : undefined;
             const propertyNameFilterFunction = byPropertyName ? filteringByPropertyName(searchFilter) : undefined;
             if (flatSchemaFilterFunction || propertyNameFilterFunction) {
                 // search feature is being used, so we set the filteredItems accordingly

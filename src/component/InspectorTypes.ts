@@ -3,7 +3,9 @@ import * as React from "react";
 import { JsonSchema } from "../model/JsonSchema";
 import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 
-import { RawJsonSchema, KeysOfRawJsonSchemaStringValues } from "./RawJsonSchema";
+import { RawJsonSchema, KeysOfRawJsonSchemaStringValues } from "../types/RawJsonSchema";
+import { ParserConfig } from "../types/ParserConfig";
+import { RenderOptions } from "../types/RenderOptions";
 
 export interface InspectorDefaultProps {
     /**
@@ -17,16 +19,7 @@ export interface InspectorDefaultProps {
     /**
      * Options for the traversing/parsing of JSON schemas. Defining how optional parts of a schema should be represented.
      */
-    parserConfig?: {
-        /**
-         * Setting indicating how to include schema parts wrapped in "anyOf".
-         */
-        anyOf?: SchemaPartParserConfig;
-        /**
-         * Setting indicating how to include schema parts wrapped in "oneOf".
-         */
-        oneOf?: SchemaPartParserConfig;
-    };
+    parserConfig?: ParserConfig;
     /**
      * Function accepting a `JsonSchema` instance representing an array's declared type of items and returning an object listing the available
      * properties to offer. The default, providing access to the array's items, is: `arrayItemSchema => ({ "[0]": arrayItemSchema })`
@@ -154,47 +147,22 @@ export interface InspectorProps extends InspectorDefaultProps {
     schemas: { [key: string]: RawJsonSchema };
 }
 
-export type ParserConfig = InspectorProps["parserConfig"];
-
-export interface SchemaPartParserConfig {
-    /**
-     * Optional title to show above multiple parts in a given wrapper (e.g. "anyOf"/"oneOf").
-     */
-    groupTitle?: string;
-    /**
-     * Supplier for an alternative name to be displayed (default is: (indexes) => `Option ${indexes.joining('.')}`).
-     */
-    optionNameForIndex?: (indexes: Array<number>) => string | undefined;
-}
-
-export type BuildArrayPropertiesFunction = InspectorProps["buildArrayProperties"];
-
-export type BreadcrumbsOptions = InspectorProps["breadcrumbs"];
-
-export type SearchOptions = InspectorProps["searchOptions"];
-
 interface RenderColumnDetails {
     trailingSelection?: boolean;
-    onSelect?: (event: React.SyntheticEvent, selectedItem?: string | Array<number>) => void;
+    onSelect: (event: React.SyntheticEvent, selectedItem?: string | Array<number>) => void;
 }
 
-export type RenderItemsColumn = {
+export interface RenderItemsColumn extends RenderColumnDetails {
     items: { [key: string]: JsonSchemaGroup };
     selectedItem?: string;
     filteredItems?: Array<string>;
-} & RenderColumnDetails;
+}
 
-export type RenderOptions = {
-    groupTitle?: string;
-    options?: Array<RenderOptions>;
-    optionNameForIndex?: (indexes: Array<number>) => string | undefined;
-};
-
-export type RenderOptionsColumn = {
+export interface RenderOptionsColumn extends RenderColumnDetails {
     options: RenderOptions;
     contextGroup: JsonSchemaGroup;
     selectedItem?: Array<number>;
     filteredItems?: Array<Array<number>>;
-} & RenderColumnDetails;
+}
 
 export type RenderColumn = RenderItemsColumn | RenderOptionsColumn;

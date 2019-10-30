@@ -8,7 +8,7 @@ import { ColumnDataPropType } from "./renderDataUtils";
 import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 import { createOptionTargetArrayFromIndexes, getFieldValueFromSchemaGroup } from "../model/schemaUtils";
 import { isDefined, listValues, commonValues, minimumValue, maximumValue } from "../model/utils";
-import { RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "../types/Inspector";
+import { RenderColumn, RenderItemsColumn, RenderOptionsColumn } from "./InspectorTypes";
 import { TypeInRawJsonSchema, KeysOfRawJsonSchema } from "../types/RawJsonSchema";
 
 function containsTrueOrReduce<T>(
@@ -28,15 +28,19 @@ function checkIfIsRequired(selectionColumnIndex: number, columnData: Array<Rende
     const { selectedItem } = columnData[selectionColumnIndex];
     if (typeof selectedItem === "string") {
         let parentSchemaGroup: JsonSchemaGroup;
-        let optionTarget: Array<{ index: number }>;
+        let optionTarget: Array<{ index: number }> | undefined;
         const parentColumn = columnData[selectionColumnIndex - 1];
         if ((parentColumn as RenderItemsColumn).items) {
             parentSchemaGroup = (parentColumn as RenderItemsColumn).items[parentColumn.selectedItem as string];
+            optionTarget = undefined;
         } else {
             parentSchemaGroup = (parentColumn as RenderOptionsColumn).contextGroup;
             optionTarget = createOptionTargetArrayFromIndexes(parentColumn.selectedItem as Array<number>);
         }
-        return parentSchemaGroup.someEntry(({ schema: rawSchema }) => rawSchema.required && rawSchema.required.includes(selectedItem), optionTarget);
+        return parentSchemaGroup.someEntry(
+            ({ schema: rawSchema }) => !!rawSchema.required && rawSchema.required.includes(selectedItem),
+            optionTarget
+        );
     }
     // simply check whether the parent (the one the selected option belongs to) is required
     return checkIfIsRequired(selectionColumnIndex - 1, columnData);
@@ -118,7 +122,8 @@ export function collectFormFields(
     addFormField("Max Length", getValue("maxLength", minimumValue));
     addFormField("Min Items", getValue("minItems", maximumValue));
     addFormField("Max Items", getValue("maxItems", minimumValue));
-    addFormField("Items Unique", containsTrueOrReduce(getValue("uniqueItems"), undefined) ? "Yes" : null);
+    const uniqueItems = getValue("uniqueItems");
+    addFormField("Items Unique", (Array.isArray(uniqueItems) && uniqueItems.includes(true)) || uniqueItems === true ? "Yes" : null);
 
     return formFields;
 }
@@ -144,7 +149,7 @@ export class InspectorDetailsContent extends React.Component<{
         selectionColumnIndex: PropTypes.number
     };
 
-    static defaultProps: { selectionColumnIndex: number } = {
+    static defaultProps: { selectionColumnIndex?: number } = {
         selectionColumnIndex: undefined
     };
 }

@@ -5,7 +5,8 @@ import isDeepEqual from "lodash.isequal";
 
 import { InspectorItem } from "./InspectorItem";
 import { RenderOptionsColumnPropTypeShape } from "./renderDataUtils";
-import { InspectorProps, RenderOptionsColumn, RenderOptions } from "../types/Inspector";
+import { InspectorProps, RenderOptionsColumn } from "./InspectorTypes";
+import { RenderOptions } from "../types/RenderOptions";
 
 interface OptionsColumnDefaultProps {
     selectedItem: RenderOptionsColumn["selectedItem"];
@@ -38,10 +39,7 @@ export class InspectorOptionsColumn extends React.Component<OptionsColumnProps> 
         );
     }
 
-    renderGroupOfOptions(
-        { groupTitle, options, optionNameForIndex = InspectorOptionsColumn.defaultOptionNameForIndex }: RenderOptions,
-        parentOptionIndexes: Array<number> = []
-    ): React.ReactNode {
+    renderGroupOfOptions({ groupTitle, options, optionNameForIndex }: RenderOptions, parentOptionIndexes: Array<number> = []): React.ReactNode {
         return (
             <>
                 {groupTitle && (
@@ -50,15 +48,21 @@ export class InspectorOptionsColumn extends React.Component<OptionsColumnProps> 
                     </div>
                 )}
                 <ul key="list-of-options">
-                    {options.map((optionOrNestedGroup, index) => {
-                        const optionIndexes = parentOptionIndexes.concat([index]);
-                        return (
-                            <li key={JSON.stringify(optionIndexes)}>
-                                {optionOrNestedGroup.options && this.renderGroupOfOptions(optionOrNestedGroup, optionIndexes)}
-                                {!optionOrNestedGroup.options && this.renderSingleOption(optionIndexes, optionNameForIndex(optionIndexes))}
-                            </li>
-                        );
-                    })}
+                    {options &&
+                        options.map((optionOrNestedGroup, index) => {
+                            const optionIndexes = parentOptionIndexes.concat([index]);
+                            return (
+                                <li key={JSON.stringify(optionIndexes)}>
+                                    {optionOrNestedGroup.options && this.renderGroupOfOptions(optionOrNestedGroup, optionIndexes)}
+                                    {!optionOrNestedGroup.options &&
+                                        this.renderSingleOption(
+                                            optionIndexes,
+                                            (optionNameForIndex && optionNameForIndex(optionIndexes)) ||
+                                                InspectorOptionsColumn.defaultOptionNameForIndex(optionIndexes)
+                                        )}
+                                </li>
+                            );
+                        })}
                 </ul>
             </>
         );
@@ -89,9 +93,9 @@ export class InspectorOptionsColumn extends React.Component<OptionsColumnProps> 
     };
 
     static defaultProps: OptionsColumnDefaultProps = {
-        selectedItem: null,
+        selectedItem: undefined,
         trailingSelection: false,
-        filteredItems: null,
-        renderItemContent: null
+        filteredItems: undefined,
+        renderItemContent: undefined
     };
 }

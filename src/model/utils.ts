@@ -4,7 +4,7 @@
  * @param {*} target - value to confirm
  * @returns {boolean} whether the target is neither undefined nor null
  */
-export function isDefined(target: unknown): boolean {
+export function isDefined(target: unknown): target is {} {
     return target !== undefined && target !== null;
 }
 
@@ -25,12 +25,12 @@ export function isNonEmptyObject(target: unknown): target is { [key: string]: un
  * @param {Function} mappingFunction - conversion to perform
  * @returns {object} cloned object with same keys as the original, but with mapped values
  */
-export function mapObjectValues<S, T>(original: { [key: string]: S }, mappingFunction: (value: S) => T): { [key: string]: T } {
-    const mappedObject: { [key: string]: T } = {};
-    Object.keys(original).forEach((key) => {
+export function mapObjectValues<O extends { [key: string]: S }, S, T>(original: O, mappingFunction: (value: S) => T): { [key in keyof O]: T } {
+    const mappedObject: { [key in keyof O]?: T } = {};
+    Object.keys(original).forEach((key: keyof O) => {
         mappedObject[key] = mappingFunction(original[key]);
     });
-    return mappedObject;
+    return mappedObject as { [key in keyof O]: T };
 }
 
 /**
@@ -42,12 +42,12 @@ export function mapObjectValues<S, T>(original: { [key: string]: S }, mappingFun
  * @returns {Function} also expecting two parameters: (1) the temporary result of previous reduce steps and (2) the single value to add/merge with
  */
 function nullAwareReduce<T>(mergeDefinedValues: (combined: T, nextValue: T) => T) {
-    return (combined?: T, nextValue?: T): T => {
-        let mergeResult: T;
-        if (!isDefined(combined)) {
-            mergeResult = nextValue;
-        } else if (!isDefined(nextValue)) {
+    return (combined: T, nextValue?: T): T => {
+        let mergeResult: T | undefined;
+        if (!isDefined(nextValue)) {
             mergeResult = combined;
+        } else if (!isDefined(combined)) {
+            mergeResult = nextValue;
         } else {
             mergeResult = mergeDefinedValues(combined, nextValue);
         }
@@ -63,7 +63,7 @@ function nullAwareReduce<T>(mergeDefinedValues: (combined: T, nextValue: T) => T
  * @param {?number} nextValue - next value to compare with
  * @returns {?number} lowest encountered value
  */
-export const minimumValue: (combined?: number, nextValue?: number) => number = nullAwareReduce((a, b) => (a < b ? a : b));
+export const minimumValue: (combined: number, nextValue?: number) => number = nullAwareReduce((a, b) => (a < b ? a : b));
 
 /**
  * Generic function to be used in Array.reduce() – returning the highest encountered value.
@@ -73,7 +73,7 @@ export const minimumValue: (combined?: number, nextValue?: number) => number = n
  * @param {?number} nextValue - next value to compare with
  * @returns {?number} highest encountered value
  */
-export const maximumValue: (combined?: number, nextValue?: number) => number = nullAwareReduce((a, b) => (a > b ? a : b));
+export const maximumValue: (combined: number, nextValue?: number) => number = nullAwareReduce((a, b) => (a > b ? a : b));
 
 /**
  * Generic function to be used in Array.reduce() – returning all encountered values.
@@ -126,14 +126,14 @@ export const commonValues = nullAwareReduce(<S, T extends S | Array<S>>(combined
             mergeResult = (filteredCombined.length === 1 ? filteredCombined[0] : filteredCombined) as T;
         } else {
             // "combined" is an array already but "nextValue" is a single value
-            mergeResult = combined.includes(nextValue) ? nextValue : ([] as T);
+            mergeResult = combined.includes(nextValue) ? nextValue : (([] as unknown) as T);
         }
     } else if (Array.isArray(nextValue)) {
         // "combined" is a single value but "nextValue" is an array already
-        mergeResult = nextValue.includes(combined) ? combined : ([] as T);
+        mergeResult = nextValue.includes(combined) ? combined : (([] as unknown) as T);
     } else {
         // "combined" and "nextValue" are single values but are not the same
-        mergeResult = [] as T;
+        mergeResult = ([] as unknown) as T;
     }
     return mergeResult;
 });

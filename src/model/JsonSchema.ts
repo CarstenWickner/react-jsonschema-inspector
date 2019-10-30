@@ -1,7 +1,7 @@
 import { isNonEmptyObject } from "./utils";
 
 import { RawJsonSchema, getValueFromRawJsonSchema } from "../types/RawJsonSchema";
-import { ParserConfig } from "../types/Inspector";
+import { ParserConfig } from "../types/ParserConfig";
 
 const createRawSchemaFromBoolean = (value: boolean): RawJsonSchema => (value ? {} : { not: {} });
 
@@ -72,7 +72,7 @@ export class RefScope {
         this.internalRefs.set("#", schema);
         // from JSON Schema Draft 6: "$id" replaces former "id"
         const mainAlias = getValueFromRawJsonSchema(schema.schema, "$id") || getValueFromRawJsonSchema(schema.schema, "id");
-        let externalRefBase: string;
+        let externalRefBase: string | null;
         if (mainAlias && !mainAlias.startsWith("#")) {
             // an absolute URI can be used both within the schema itself but also from other schemas
             const mainAliasWithFragment = mainAlias.endsWith("#") ? mainAlias : `${mainAlias}#`;
@@ -125,7 +125,7 @@ export class RefScope {
      * @param {boolean} includeInternalRefs - whether the "$ref" value is from within the same main schema this RefScope belongs to
      * @returns {JsonSchema} the successfully looked-up reference (or null if no match was found)
      */
-    findSchemaInThisScope(ref: string, includeInternalRefs = true): JsonSchema {
+    findSchemaInThisScope(ref: string, includeInternalRefs = true): JsonSchema | undefined {
         return (includeInternalRefs && this.internalRefs.get(ref)) || this.externalRefs.get(ref);
     }
 
@@ -138,13 +138,13 @@ export class RefScope {
      */
     find(ref: string): JsonSchema {
         let result = this.findSchemaInThisScope(ref);
-        if (
-            result ||
+        if (!result) {
             this.otherScopes.some((otherScope) => {
                 result = otherScope.findSchemaInThisScope(ref, false);
                 return result;
-            })
-        ) {
+            });
+        }
+        if (result) {
             return result;
         }
         throw new Error(`Cannot resolve $ref: "${ref}"`);

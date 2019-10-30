@@ -4,7 +4,7 @@ import { shallow } from "enzyme";
 import { Inspector } from "../../src/component/Inspector";
 import { ColViewProps } from "../../src/component/InspectorColView";
 import { JsonSchema } from "../../src/model/JsonSchema";
-import { RenderColumn, RenderItemsColumn } from "../../src/types/Inspector";
+import { RenderColumn, RenderItemsColumn } from "../../src/component/InspectorTypes";
 
 describe("renders correctly", () => {
     const schemas = {
@@ -187,21 +187,21 @@ describe("renders correctly", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema X"]} />);
         const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(1);
-        expect(columnData[0].selectedItem).toBe(null);
+        expect(columnData[0].selectedItem).toBeUndefined();
     });
     it("ignores invalid trailing non-root selection", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One", "Item X"]} />);
         const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(2);
         expect(columnData[0].trailingSelection).toBe(true);
-        expect(columnData[1].selectedItem).toBe(null);
+        expect(columnData[1].selectedItem).toBeUndefined();
     });
     it("ignores invalid intermediate non-root selection", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One", "Item X", "Property X"]} />);
         const { columnData } = component.find("InspectorColView").props() as ColViewProps;
         expect(columnData).toHaveLength(2);
         expect(columnData[0].trailingSelection).toBe(true);
-        expect(columnData[1].selectedItem).toBe(null);
+        expect(columnData[1].selectedItem).toBeUndefined();
     });
 });
 describe("calls onSelect", () => {
