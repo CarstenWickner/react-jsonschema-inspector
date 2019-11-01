@@ -38,30 +38,10 @@ describe("renders correctly", () => {
         );
         expect(component.hasClass("with-selection")).toBe(true);
         expect(component.hasClass("trailing-selection")).toBe(false);
-        expect(
-            component
-                .find("InspectorItem")
-                .at(0)
-                .prop("selected")
-        ).toBe(false);
-        expect(
-            component
-                .find("InspectorItem")
-                .at(1)
-                .prop("selected")
-        ).toBe(true);
-        expect(
-            component
-                .find("InspectorItem")
-                .at(0)
-                .prop("matchesFilter")
-        ).toBeUndefined();
-        expect(
-            component
-                .find("InspectorItem")
-                .at(1)
-                .prop("matchesFilter")
-        ).toBeUndefined();
+        expect(component.childAt(0).prop("selected")).toBe(false);
+        expect(component.childAt(1).prop("selected")).toBe(true);
+        expect(component.childAt(0).prop("matchesFilter")).toBeUndefined();
+        expect(component.childAt(1).prop("matchesFilter")).toBeUndefined();
     });
     it("with trailing selection", () => {
         const component = shallow(
@@ -77,30 +57,10 @@ describe("renders correctly", () => {
         );
         expect(component.hasClass("with-selection")).toBe(true);
         expect(component.hasClass("trailing-selection")).toBe(true);
-        expect(
-            component
-                .find("InspectorItem")
-                .at(0)
-                .prop("selected")
-        ).toBe(false);
-        expect(
-            component
-                .find("InspectorItem")
-                .at(1)
-                .prop("selected")
-        ).toBe(true);
-        expect(
-            component
-                .find("InspectorItem")
-                .at(0)
-                .prop("matchesFilter")
-        ).toBeUndefined();
-        expect(
-            component
-                .find("InspectorItem")
-                .at(1)
-                .prop("matchesFilter")
-        ).toBeUndefined();
+        expect(component.childAt(0).prop("selected")).toBe(false);
+        expect(component.childAt(1).prop("selected")).toBe(true);
+        expect(component.childAt(0).prop("matchesFilter")).toBeUndefined();
+        expect(component.childAt(1).prop("matchesFilter")).toBeUndefined();
     });
     it("with filtered items", () => {
         const component = shallow(
@@ -115,18 +75,8 @@ describe("renders correctly", () => {
         );
         expect(component.hasClass("with-selection")).toBe(false);
         expect(component.hasClass("trailing-selection")).toBe(false);
-        expect(
-            component
-                .find("InspectorItem")
-                .at(0)
-                .prop("matchesFilter")
-        ).toBe(false);
-        expect(
-            component
-                .find("InspectorItem")
-                .at(1)
-                .prop("matchesFilter")
-        ).toBe(true);
+        expect(component.childAt(0).prop("matchesFilter")).toBe(false);
+        expect(component.childAt(1).prop("matchesFilter")).toBe(true);
     });
 });
 describe("calls onSelect", () => {
@@ -141,7 +91,7 @@ describe("calls onSelect", () => {
     });
     it("setting selection when clicking on item", () => {
         const component = shallow(<InspectorColumn items={{ Foo: new JsonSchemaGroup() }} onSelect={onSelect} />);
-        component.find("InspectorItem").prop("onSelect")(null);
+        component.childAt(0).prop("onSelect")(null);
         expect(onSelect.mock.calls).toHaveLength(1);
         // expect second parameter indicating selected item
         expect(onSelect.mock.calls[0]).toHaveLength(2);

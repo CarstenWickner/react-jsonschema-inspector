@@ -44,7 +44,7 @@ describe("renders correctly", () => {
                 selectionColumnIndex={0}
             />
         );
-        expect(component.find("InspectorDetailsForm").prop("fields")).toEqual([
+        expect(component.childAt(1).prop("fields")).toEqual([
             {
                 labelText: "Title",
                 rowValue: "Schema Title"
@@ -63,7 +63,7 @@ describe("renders correctly", () => {
                 selectionColumnIndex={1}
             />
         );
-        expect(component.find("InspectorDetailsForm").prop("fields")).toEqual([
+        expect(component.childAt(1).prop("fields")).toEqual([
             {
                 labelText: "Title",
                 rowValue: "Bar"

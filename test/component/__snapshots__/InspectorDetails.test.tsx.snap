@@ -4,7 +4,7 @@ exports[`renders correctly with minimal/default props 1`] = `
 <div
   className="jsonschema-inspector-details"
 >
-  <InspectorDetailsContent
+  <Component
     columnData={
       Array [
         Object {

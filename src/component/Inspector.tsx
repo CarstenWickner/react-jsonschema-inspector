@@ -11,7 +11,6 @@ import { InspectorColView } from "./InspectorColView";
 import { InspectorDetails } from "./InspectorDetails";
 import { InspectorBreadcrumbs } from "./InspectorBreadcrumbs";
 import { InspectorSearchField } from "./InspectorSearchField";
-import { JsonSchemaPropType } from "./JsonSchemaPropType";
 import { createRenderDataBuilder, createFilterFunctionForColumn } from "./renderDataUtils";
 
 import { createBreadcrumbBuilder } from "./breadcrumbsUtils";
@@ -207,7 +206,7 @@ export class Inspector extends React.Component<
         };
     }, isDeepEqual);
 
-    render(): React.ReactNode {
+    render(): React.ReactElement {
         const {
             schemas,
             referenceSchemas,
@@ -254,8 +253,8 @@ export class Inspector extends React.Component<
     }
 
     static propTypes = {
-        schemas: PropTypes.objectOf(JsonSchemaPropType).isRequired,
-        referenceSchemas: PropTypes.arrayOf(JsonSchemaPropType),
+        schemas: PropTypes.objectOf(PropTypes.object).isRequired,
+        referenceSchemas: PropTypes.arrayOf(PropTypes.object),
         defaultSelectedItems: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.number)])),
         parserConfig: PropTypes.shape({
             anyOf: PropTypes.shape({
