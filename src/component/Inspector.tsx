@@ -207,7 +207,7 @@ export class Inspector extends React.Component<
         };
     }, isDeepEqual);
 
-    render(): React.ReactNode {
+    render(): React.ReactElement {
         const {
             schemas,
             referenceSchemas,

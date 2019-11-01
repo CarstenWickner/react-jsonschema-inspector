@@ -75,7 +75,7 @@ describe("renders correctly", () => {
                 schemaGroup={group}
                 onSelect={(): void => {}}
                 optionIndexes={[0]}
-                renderContent={({ name, hasNestedItems, selected, schemaGroup, optionIndexes }): React.ReactNode => (
+                renderContent={({ name, hasNestedItems, selected, schemaGroup, optionIndexes }): React.ReactElement => (
                     <span className="custom-content">{`${name}, ${hasNestedItems}, ${selected}, ${schemaGroup === group}, ${optionIndexes}`}</span>
                 )}
             />

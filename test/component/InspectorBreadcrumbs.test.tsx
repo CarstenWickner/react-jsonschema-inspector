@@ -128,7 +128,7 @@ describe("renders correctly", () => {
             hasNestedItems: boolean;
             column: RenderColumn;
             index: number;
-        }): React.ReactNode => (
+        }): React.ReactElement => (
             <span key={index} className="custom-breadcrumbs-item">
                 {`${index + 1}. ${breadcrumbText} (${columnData[index] === column})${hasNestedItems ? " >" : ""}`}
             </span>
@@ -160,7 +160,7 @@ describe("renders correctly", () => {
         }: {
             breadcrumbTexts: Array<string>;
             columnData: Array<RenderColumn>;
-        }): React.ReactNode =>
+        }): React.ReactElement =>
             columnDataParam !== columnData ? null : <button type="button">{`Copy to Clipboard: ${breadcrumbTexts.join("")}`}</button>;
         const component = shallow(<InspectorBreadcrumbs columnData={columnData} breadcrumbsOptions={{ renderTrailingContent }} />);
         expect(component.find(".jsonschema-inspector-breadcrumbs-icon").exists()).toBe(true);

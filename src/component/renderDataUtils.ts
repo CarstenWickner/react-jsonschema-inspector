@@ -1,5 +1,3 @@
-import * as PropTypes from "prop-types";
-
 import { JsonSchema, RefScope } from "../model/JsonSchema";
 import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 import { JsonSchemaOptionalsGroup } from "../model/JsonSchemaOptionalsGroup";
@@ -268,31 +266,3 @@ export function createFilterFunctionForColumn(
         );
     };
 }
-
-export const RenderItemsColumnPropTypeShape = {
-    trailingSelection: PropTypes.bool,
-    onSelect: PropTypes.func.isRequired,
-    items: PropTypes.objectOf(PropTypes.instanceOf(JsonSchemaGroup)).isRequired,
-    selectedItem: PropTypes.string,
-    filteredItems: PropTypes.arrayOf(PropTypes.string)
-};
-
-const RenderOptionsPropTypeShape = {
-    groupTitle: PropTypes.string,
-    options: PropTypes.array,
-    optionNameForIndex: PropTypes.func,
-    filteredItems: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
-};
-RenderOptionsPropTypeShape.options = PropTypes.arrayOf(PropTypes.shape(RenderOptionsPropTypeShape));
-
-export const RenderOptionsColumnPropTypeShape = {
-    trailingSelection: PropTypes.bool,
-    onSelect: PropTypes.func.isRequired,
-    options: PropTypes.shape(RenderOptionsPropTypeShape).isRequired,
-    selectedItem: PropTypes.arrayOf(PropTypes.number),
-    contextGroup: PropTypes.instanceOf(JsonSchemaGroup).isRequired
-};
-
-export const ColumnDataPropType = PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.shape(RenderItemsColumnPropTypeShape), PropTypes.shape(RenderOptionsColumnPropTypeShape)])
-);

@@ -33,7 +33,7 @@ describe("renders correctly", () => {
             const component = shallow(
                 <InspectorDetails
                     columnData={[]}
-                    renderEmptyDetails={({ rootColumnSchemas }): React.ReactNode => (
+                    renderEmptyDetails={({ rootColumnSchemas }): React.ReactElement => (
                         <span className="custom-empty-details">{Object.keys(rootColumnSchemas).length}</span>
                     )}
                 />
@@ -62,7 +62,7 @@ describe("renders correctly", () => {
             const component = shallow(
                 <InspectorDetails
                     columnData={columnData}
-                    renderEmptyDetails={({ rootColumnSchemas }): React.ReactNode => (
+                    renderEmptyDetails={({ rootColumnSchemas }): React.ReactElement => (
                         <span className="custom-empty-details">{Object.keys(rootColumnSchemas).length}</span>
                     )}
                 />
@@ -85,7 +85,7 @@ describe("renders correctly", () => {
 
         it("show InspectorDetailsContent by default", () => {
             const component = shallow(<InspectorDetails columnData={columnDataProp} />);
-            const { columnData, itemSchemaGroup, selectionColumnIndex } = component.find("InspectorDetailsContent").props() as {
+            const { columnData, itemSchemaGroup, selectionColumnIndex } = component.childAt(0).props() as {
                 itemSchemaGroup: JsonSchemaGroup;
                 columnData: Array<RenderColumn>;
                 selectionColumnIndex: number;
@@ -126,7 +126,7 @@ describe("renders correctly", () => {
 
         it("show InspectorDetailsContent by default", () => {
             const component = shallow(<InspectorDetails columnData={columnDataProp} />);
-            const { columnData, itemSchemaGroup, selectionColumnIndex } = component.find("InspectorDetailsContent").props() as {
+            const { columnData, itemSchemaGroup, selectionColumnIndex } = component.childAt(0).props() as {
                 itemSchemaGroup: JsonSchemaGroup;
                 columnData: Array<RenderColumn>;
                 selectionColumnIndex: number;

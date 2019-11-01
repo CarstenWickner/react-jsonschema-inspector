@@ -58,14 +58,14 @@ describe("renders correctly", () => {
             );
             const header = component.find(".jsonschema-inspector-header");
             expect(header.exists()).toBe(true);
-            let searchField = header.find("InspectorSearchField");
+            let searchField = header.childAt(0);
             expect(searchField.exists()).toBe(true);
             expect(searchField.prop("searchFilter")).toEqual("");
             const onSearchFilterChange: (newSearchFilter: string) => void = searchField.prop("onSearchFilterChange");
             // trigger change of search filter
             onSearchFilterChange("Title");
             (component.instance() as Inspector).debouncedApplySearchFilter(100, 1000).flush();
-            searchField = component.find("InspectorSearchField");
+            searchField = component.find(".jsonschema-inspector-header").childAt(0);
             expect(searchField.prop("searchFilter")).toEqual("Title");
             expect(searchField.prop("placeholder")).toEqual("Filter by Title");
             const { filteredItems } = (component.find("InspectorColView").prop("columnData") as Array<RenderColumn>)[0];
@@ -83,12 +83,20 @@ describe("renders correctly", () => {
                     }}
                 />
             );
-            const onSearchFilterChange: (newSearchFilter: string) => void = component.find("InspectorSearchField").prop("onSearchFilterChange");
+            const onSearchFilterChange: (newSearchFilter: string) => void = component
+                .find(".jsonschema-inspector-header")
+                .childAt(0)
+                .prop("onSearchFilterChange");
             // trigger change of search filter (looking for all schemas with a `properties` field)
             onSearchFilterChange("properties");
             // flush based on default debounce times
             (component.instance() as Inspector).debouncedApplySearchFilter(200, 500).flush();
-            expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("properties");
+            expect(
+                component
+                    .find(".jsonschema-inspector-header")
+                    .childAt(0)
+                    .prop("searchFilter")
+            ).toEqual("properties");
             const { filteredItems } = (component.find("InspectorColView").prop("columnData") as Array<RenderColumn>)[0];
             expect(filteredItems).toBeDefined();
             expect(filteredItems).toHaveLength(2);
@@ -105,12 +113,20 @@ describe("renders correctly", () => {
                     }}
                 />
             );
-            const onSearchFilterChange: (newSearchFilter: string) => void = component.find("InspectorSearchField").prop("onSearchFilterChange");
+            const onSearchFilterChange: (newSearchFilter: string) => void = component
+                .find(".jsonschema-inspector-header")
+                .childAt(0)
+                .prop("onSearchFilterChange");
             // trigger change of search filter (looking for all top-level properties containing 'Schema Two')
             onSearchFilterChange("Schema Two");
             // flush based on default debounce times
             (component.instance() as Inspector).debouncedApplySearchFilter(200, 500).flush();
-            expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("Schema Two");
+            expect(
+                component
+                    .find(".jsonschema-inspector-header")
+                    .childAt(0)
+                    .prop("searchFilter")
+            ).toEqual("Schema Two");
             const { filteredItems } = (component.find("InspectorColView").prop("columnData") as Array<RenderColumn>)[0];
             expect(filteredItems).toBeDefined();
             expect(filteredItems).toHaveLength(1);
@@ -128,12 +144,20 @@ describe("renders correctly", () => {
                     }}
                 />
             );
-            const onSearchFilterChange: (newSearchFilter: string) => void = component.find("InspectorSearchField").prop("onSearchFilterChange");
+            const onSearchFilterChange: (newSearchFilter: string) => void = component
+                .find(".jsonschema-inspector-header")
+                .childAt(0)
+                .prop("onSearchFilterChange");
             // trigger change of search filter (but without any filtering being applied since there are only two characters)
             onSearchFilterChange("12");
             // flush based on default debounce maxWait
             (component.instance() as Inspector).debouncedApplySearchFilter(100, 500).flush();
-            expect(component.find("InspectorSearchField").prop("searchFilter")).toEqual("12");
+            expect(
+                component
+                    .find(".jsonschema-inspector-header")
+                    .childAt(0)
+                    .prop("searchFilter")
+            ).toEqual("12");
             const { filteredItems } = (component.find("InspectorColView").prop("columnData") as Array<RenderColumn>)[0];
             expect(filteredItems).toBeUndefined();
         });

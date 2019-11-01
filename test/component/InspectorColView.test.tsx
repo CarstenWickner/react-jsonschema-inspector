@@ -94,7 +94,8 @@ describe("update according to prop changes", () => {
         component.setProps({
             columnData: doubleColumnData
         });
-        expect(component.find("InspectorColumn")).toHaveLength(2);
+        expect(component.find(doubleColumnData[0]).exists()).toBe(true);
+        expect(component.find(doubleColumnData[1]).exists()).toBe(true);
     });
     it("setting root selection (while empty column was displayed)", () => {
         const component = mount(<InspectorColView columnData={singleColumnData} appendEmptyColumn />);
@@ -102,7 +103,8 @@ describe("update according to prop changes", () => {
         component.setProps({
             columnData: doubleColumnData
         });
-        expect(component.find("InspectorColumn")).toHaveLength(2);
+        expect(component.find(doubleColumnData[0]).exists()).toBe(true);
+        expect(component.find(doubleColumnData[1]).exists()).toBe(true);
     });
     it("clearing root selection", () => {
         const component = mount(<InspectorColView columnData={doubleColumnData} />);
@@ -111,8 +113,8 @@ describe("update according to prop changes", () => {
             columnData: singleColumnData,
             appendEmptyColumn: true
         });
-        const rootColumn = component.find("InspectorColumn");
-        expect(rootColumn).toBeDefined();
+        const rootColumn = component.find(singleColumnData[0]);
+        expect(rootColumn.exists()).toBe(true);
         expect(Array.isArray(rootColumn)).toBe(false);
     });
 });

@@ -5,7 +5,7 @@ exports[`renders correctly with minimal/default props 1`] = `
   className="jsonschema-inspector-colview"
   tabIndex={-1}
 >
-  <InspectorColumn
+  <Component
     items={
       Object {
         "Item One": JsonSchemaGroup {
@@ -19,7 +19,6 @@ exports[`renders correctly with minimal/default props 1`] = `
     key="0"
     onSelect={[Function]}
     selectedItem="Item One"
-    trailingSelection={false}
   />
   <InspectorOptionsColumn
     contextGroup={
@@ -45,7 +44,7 @@ exports[`renders correctly with minimal/default props 1`] = `
     }
     trailingSelection={true}
   />
-  <InspectorColumn
+  <Component
     items={
       Object {
         "Item One-Two-One": JsonSchemaGroup {
@@ -58,7 +57,6 @@ exports[`renders correctly with minimal/default props 1`] = `
     }
     key="2"
     onSelect={[Function]}
-    trailingSelection={false}
   />
 </div>
 `;

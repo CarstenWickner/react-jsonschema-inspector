@@ -70,11 +70,11 @@ export interface InspectorDefaultProps {
         /*
          * Custom render function for a single breadcrumb item.
          */
-        renderItem?: (props: { breadcrumbText: string; hasNestedItems: boolean; column: RenderColumn; index: number }) => React.ReactNode;
+        renderItem?: (props: { breadcrumbText: string; hasNestedItems: boolean; column: RenderColumn; index: number }) => React.ReactElement;
         /*
          * Custom render function for adding extra elements (e.g. a "Copy to Clipboard" button) after the breadcrumbs.
          */
-        renderTrailingContent?: (props: { breadcrumbTexts: Array<string>; columnData: Array<RenderColumn> }) => React.ReactNode;
+        renderTrailingContent?: (props: { breadcrumbTexts: Array<string>; columnData: Array<RenderColumn> }) => React.ReactElement;
     };
     /**
      * Options for the search input shown in the header and its impact on the displayed columns – set to `null` to turn it off.
@@ -118,7 +118,7 @@ export interface InspectorDefaultProps {
         selected: boolean;
         schemaGroup: JsonSchemaGroup;
         optionIndexes?: Array<number>;
-    }) => React.ReactNode;
+    }) => React.ReactElement;
     /**
      * Custom render function for the details block on the right (only used if there is an actual selection).
      * Expects a single object as input with the following keys:
@@ -131,13 +131,13 @@ export interface InspectorDefaultProps {
         columnData: Array<RenderColumn>;
         selectionColumnIndex: number;
         optionIndexes?: Array<number>;
-    }) => React.ReactNode;
+    }) => React.ReactElement;
     /**
      * Custom render function for the details block on the right (only used if there is no selection).
      * Expects a single object as input with the following key:
      * - "rootColumnSchemas": the full render information for the root column (since there is no selection, there are no other columns)
      */
-    renderEmptyDetails?: (props: { rootColumnSchemas: { [key: string]: JsonSchemaGroup } }) => React.ReactNode;
+    renderEmptyDetails?: (props: { rootColumnSchemas: { [key: string]: JsonSchemaGroup } }) => React.ReactElement;
 }
 
 export interface InspectorProps extends InspectorDefaultProps {
