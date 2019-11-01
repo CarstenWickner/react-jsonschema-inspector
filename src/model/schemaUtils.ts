@@ -11,7 +11,8 @@ import {
     getValueFromRawJsonSchema,
     KeysOfRawJsonSchemaWithValuesOf
 } from "../types/RawJsonSchema";
-import { ParserConfig, RenderOptions } from "../types/Inspector";
+import { ParserConfig } from "../types/ParserConfig";
+import { RenderOptions } from "../types/RenderOptions";
 
 /**
  * Determines optional paths in this schema group.
@@ -240,7 +241,7 @@ function getSchemaFieldValueFromSchemaGroup(
  * @param {?Array.<number>} optionIndexes - in case of a group with optional branches, indexes indicating selected path
  * @returns {?JsonSchema} type of items in given schema group, if it represents an array
  */
-export function getTypeOfArrayItemsFromSchemaGroup(schemaGroup: JsonSchemaGroup, optionIndexes?: Array<number>): JsonSchema {
+export function getTypeOfArrayItemsFromSchemaGroup(schemaGroup: JsonSchemaGroup, optionIndexes?: Array<number>): JsonSchema | undefined {
     const optionTarget = createOptionTargetArrayFromIndexes(optionIndexes);
     const optionTargetCopy: Array<{ index: number }> = JSON.parse(JSON.stringify(optionTarget));
     let arrayItemSchema: JsonSchema | Array<JsonSchema> = getSchemaFieldValueFromSchemaGroup(schemaGroup, "items", optionTarget);
@@ -274,9 +275,7 @@ function getPropertiesFromSchema(schema: JsonSchema): { [key: string]: JsonSchem
     const rawProperties = Object.assign({}, ...(required ? required.map((value) => ({ [value]: true })) : []), properties);
     // properties is an Object.<String, raw-json-schema> and should be converted to an Object.<String, JsonSchema>
     return mapObjectValues(rawProperties, (rawPropertySchema: RawJsonSchema | boolean | {}): JsonSchema | boolean | {} =>
-        isNonEmptyObject(rawPropertySchema)
-            ? new JsonSchema(rawPropertySchema as RawJsonSchema, parserConfig, scope)
-            : (rawPropertySchema as boolean | {})
+        isNonEmptyObject(rawPropertySchema) ? new JsonSchema(rawPropertySchema, parserConfig, scope) : (rawPropertySchema as boolean | {})
     );
 }
 
@@ -321,7 +320,7 @@ export function getPropertiesFromSchemaGroup(schemaGroup: JsonSchemaGroup, optio
     // convert any remaining non-schema values (e.g. booleans) into schema wrappers
     const result = mapObjectValues(extractedValues, (value) =>
         // no need to forward any parserConfig or scope to this (dummy/empty) schema
-        value instanceof JsonSchema ? value : new JsonSchema(value as RawJsonSchema, {}, undefined)
+        value instanceof JsonSchema ? value : new JsonSchema(value as RawJsonSchema, {})
     );
     return result;
 }

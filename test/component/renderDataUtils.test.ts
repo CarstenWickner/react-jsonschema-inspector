@@ -4,7 +4,8 @@ import { JsonSchema } from "../../src/model/JsonSchema";
 import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
 import { createGroupFromSchema, getOptionsInSchemaGroup, getFieldValueFromSchemaGroup } from "../../src/model/schemaUtils";
 import { maximumValue } from "../../src/model/utils";
-import { RenderItemsColumn, RenderOptionsColumn, BuildArrayPropertiesFunction, ParserConfig } from "../../src/types/Inspector";
+import { InspectorProps, RenderItemsColumn, RenderOptionsColumn } from "../../src/component/InspectorTypes";
+import { ParserConfig } from "../../src/types/ParserConfig";
 
 describe("createRenderDataBuilder()", () => {
     let lastCalledOnSelectColumnIndex: number;
@@ -57,7 +58,7 @@ describe("createRenderDataBuilder()", () => {
         ];
 
         it("returns single root column if there are no other settings", () => {
-            const { columnData } = getRenderData({ foo: fooSchema }, [], [], {});
+            const { columnData } = getRenderData({ foo: fooSchema }, undefined, [], {});
             expect(columnData).toHaveLength(1);
             const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
             // single item containing the given schema (wrapped in a JsonSchema and again wrapped in a JsonSchemaGroup)
@@ -183,7 +184,7 @@ describe("createRenderDataBuilder()", () => {
         };
 
         it("returns extra column when array is selected", () => {
-            const { columnData } = getRenderData(schemas, [], ["bar", "[0]"], {});
+            const { columnData } = getRenderData(schemas, undefined, ["bar", "[0]"], {});
             expect(columnData).toHaveLength(3);
             const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(2);
@@ -208,7 +209,7 @@ describe("createRenderDataBuilder()", () => {
             expect(thirdColumn.trailingSelection).toBeFalsy();
         });
         it("allows for arrays in arrays", () => {
-            const { columnData } = getRenderData(schemas, [], ["foobar", "[0]", "[0]", "qux"], {});
+            const { columnData } = getRenderData(schemas, undefined, ["foobar", "[0]", "[0]", "qux"], {});
             expect(columnData).toHaveLength(4);
             const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(2);
@@ -238,7 +239,7 @@ describe("createRenderDataBuilder()", () => {
             expect(fourthColumn.trailingSelection).toBe(true);
         });
         it("calls provided buildArrayItemProperties() with array schema and option indexes", () => {
-            const buildArrayProperties: BuildArrayPropertiesFunction = (arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
+            const buildArrayProperties: InspectorProps["buildArrayProperties"] = (arrayItemSchema, arraySchemaGroup, optionIndexes) => ({
                 "get(0)": arrayItemSchema,
                 "size()": {
                     type: "number",
@@ -407,7 +408,8 @@ describe("createFilterFunctionForColumn()", () => {
                 items: {
                     one: createGroupFromSchema(new JsonSchema({ title: "Foo" }, {})),
                     other: createGroupFromSchema(new JsonSchema({ description: "Bar" }, {}))
-                }
+                },
+                onSelect: (): void => {}
             };
             expect(filterFunction(columnInput)).toEqual(["one", "other"]);
         });
@@ -417,7 +419,8 @@ describe("createFilterFunctionForColumn()", () => {
                 items: {
                     one: createGroupFromSchema(new JsonSchema({ description: "value" }, {})),
                     other: createGroupFromSchema(new JsonSchema({ title: "value" }, {}))
-                }
+                },
+                onSelect: (): void => {}
             };
             expect(filterFunction(columnInput)).toEqual(["other"]);
         });
@@ -427,7 +430,8 @@ describe("createFilterFunctionForColumn()", () => {
                 items: {
                     one: createGroupFromSchema(new JsonSchema({ description: "value" }, {})),
                     other: createGroupFromSchema(new JsonSchema({ title: "value" }, {}))
-                }
+                },
+                onSelect: (): void => {}
             };
             expect(filterFunction(columnInput)).toEqual([]);
         });
@@ -461,7 +465,8 @@ describe("createFilterFunctionForColumn()", () => {
                 "Item One": createGroupFromSchema(schema.scope.find("#/definitions/One")),
                 "Item Two": createGroupFromSchema(schema.scope.find("#/definitions/Two")),
                 "Item Three": createGroupFromSchema(schema.scope.find("#/definitions/Three"))
-            }
+            },
+            onSelect: (): void => {}
         };
         it("finding match via circular reference to parent schema", () => {
             const filterFunction = createFilterFunctionForColumn((rawSchema) => rawSchema.title === "Match");
@@ -511,7 +516,8 @@ describe("createFilterFunctionForColumn()", () => {
                     "I-Two": createGroupFromSchema(schema.scope.find("#/definitions/Two")),
                     "I-Three": createGroupFromSchema(schema.scope.find("#/definitions/Three")),
                     "I-Four": createGroupFromSchema(schema.scope.find("#/definitions/Four"))
-                }
+                },
+                onSelect: (): void => {}
             };
             const filterFunction = createFilterFunctionForColumn((rawSubSchema) => rawSubSchema.title === "Match");
             expect(filterFunction(columnInput)).toEqual(["I-One", "I-Two", "I-Three", "I-Four"]);
@@ -557,7 +563,8 @@ describe("createFilterFunctionForColumn()", () => {
             const contextGroup = createGroupFromSchema(schema);
             const columnInput = {
                 contextGroup,
-                options: getOptionsInSchemaGroup(contextGroup)
+                options: getOptionsInSchemaGroup(contextGroup),
+                onSelect: (): void => {}
             };
             const filterFunction = createFilterFunctionForColumn((rawSubSchema) => rawSubSchema.title === "Match");
             // stringify to more easily detect differences in case of test failure

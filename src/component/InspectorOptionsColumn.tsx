@@ -1,29 +1,23 @@
-import * as PropTypes from "prop-types";
 import * as React from "react";
 import classNames from "classnames";
 import isDeepEqual from "lodash.isequal";
 
 import { InspectorItem } from "./InspectorItem";
-import { RenderOptionsColumnPropTypeShape } from "./renderDataUtils";
-import { InspectorProps, RenderOptionsColumn, RenderOptions } from "../types/Inspector";
+import { InspectorProps, RenderOptionsColumn } from "./InspectorTypes";
+import { RenderOptions } from "../types/RenderOptions";
 
-interface OptionsColumnDefaultProps {
-    selectedItem: RenderOptionsColumn["selectedItem"];
-    filteredItems: RenderOptionsColumn["filteredItems"];
-    trailingSelection: RenderOptionsColumn["trailingSelection"];
-    renderItemContent: InspectorProps["renderItemContent"];
-}
-
-interface OptionsColumnProps extends OptionsColumnDefaultProps {
+export class InspectorOptionsColumn extends React.Component<{
     contextGroup: RenderOptionsColumn["contextGroup"];
     options: RenderOptionsColumn["options"];
+    selectedItem?: RenderOptionsColumn["selectedItem"];
+    filteredItems?: RenderOptionsColumn["filteredItems"];
+    trailingSelection?: RenderOptionsColumn["trailingSelection"];
+    renderItemContent?: InspectorProps["renderItemContent"];
     onSelect: RenderOptionsColumn["onSelect"];
-}
-
-export class InspectorOptionsColumn extends React.Component<OptionsColumnProps> {
+}> {
     static defaultOptionNameForIndex = (optionIndexes: Array<number>): string => `Option ${optionIndexes.map((index) => index + 1).join("-")}`;
 
-    renderSingleOption(optionIndexes: Array<number>, name: string): React.ReactNode {
+    renderSingleOption(optionIndexes: Array<number>, name: string): React.ReactElement {
         const { contextGroup, selectedItem, filteredItems, renderItemContent, onSelect } = this.props;
         return (
             <InspectorItem
@@ -38,10 +32,7 @@ export class InspectorOptionsColumn extends React.Component<OptionsColumnProps> 
         );
     }
 
-    renderGroupOfOptions(
-        { groupTitle, options, optionNameForIndex = InspectorOptionsColumn.defaultOptionNameForIndex }: RenderOptions,
-        parentOptionIndexes: Array<number> = []
-    ): React.ReactNode {
+    renderGroupOfOptions({ groupTitle, options, optionNameForIndex }: RenderOptions, parentOptionIndexes: Array<number> = []): React.ReactElement {
         return (
             <>
                 {groupTitle && (
@@ -50,21 +41,27 @@ export class InspectorOptionsColumn extends React.Component<OptionsColumnProps> 
                     </div>
                 )}
                 <ul key="list-of-options">
-                    {options.map((optionOrNestedGroup, index) => {
-                        const optionIndexes = parentOptionIndexes.concat([index]);
-                        return (
-                            <li key={JSON.stringify(optionIndexes)}>
-                                {optionOrNestedGroup.options && this.renderGroupOfOptions(optionOrNestedGroup, optionIndexes)}
-                                {!optionOrNestedGroup.options && this.renderSingleOption(optionIndexes, optionNameForIndex(optionIndexes))}
-                            </li>
-                        );
-                    })}
+                    {options &&
+                        options.map((optionOrNestedGroup, index) => {
+                            const optionIndexes = parentOptionIndexes.concat([index]);
+                            return (
+                                <li key={JSON.stringify(optionIndexes)}>
+                                    {optionOrNestedGroup.options && this.renderGroupOfOptions(optionOrNestedGroup, optionIndexes)}
+                                    {!optionOrNestedGroup.options &&
+                                        this.renderSingleOption(
+                                            optionIndexes,
+                                            (optionNameForIndex && optionNameForIndex(optionIndexes)) ||
+                                                InspectorOptionsColumn.defaultOptionNameForIndex(optionIndexes)
+                                        )}
+                                </li>
+                            );
+                        })}
                 </ul>
             </>
         );
     }
 
-    render(): React.ReactNode {
+    render(): React.ReactElement {
         const { options, selectedItem, trailingSelection, onSelect } = this.props;
         return (
             <div
@@ -82,16 +79,4 @@ export class InspectorOptionsColumn extends React.Component<OptionsColumnProps> 
             </div>
         );
     }
-
-    static propTypes = {
-        ...RenderOptionsColumnPropTypeShape,
-        renderItemContent: PropTypes.func // func({ string: name, boolean: hasNestedItems, boolean: selected, JsonSchema: schema })
-    };
-
-    static defaultProps: OptionsColumnDefaultProps = {
-        selectedItem: null,
-        trailingSelection: false,
-        filteredItems: null,
-        renderItemContent: null
-    };
 }

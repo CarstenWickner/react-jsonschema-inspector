@@ -5,7 +5,7 @@ import { InspectorDetailsContent, collectFormFields } from "../../src/component/
 import { JsonSchema } from "../../src/model/JsonSchema";
 import { createGroupFromSchema } from "../../src/model/schemaUtils";
 import { createRenderDataBuilder } from "../../src/component/renderDataUtils";
-import { RenderItemsColumn } from "../../src/types/Inspector";
+import { RenderItemsColumn } from "../../src/component/InspectorTypes";
 
 describe("renders correctly", () => {
     const buildColumnData = createRenderDataBuilder(() => (): void => {});
@@ -44,7 +44,7 @@ describe("renders correctly", () => {
                 selectionColumnIndex={0}
             />
         );
-        expect(component.find("InspectorDetailsForm").prop("fields")).toEqual([
+        expect(component.childAt(1).prop("fields")).toEqual([
             {
                 labelText: "Title",
                 rowValue: "Schema Title"
@@ -63,7 +63,7 @@ describe("renders correctly", () => {
                 selectionColumnIndex={1}
             />
         );
-        expect(component.find("InspectorDetailsForm").prop("fields")).toEqual([
+        expect(component.childAt(1).prop("fields")).toEqual([
             {
                 labelText: "Title",
                 rowValue: "Bar"

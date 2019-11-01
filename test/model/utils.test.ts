@@ -64,13 +64,13 @@ describe("isNonEmptyObject()", () => {
 describe("mapObjectValues()", () => {
     it("returns new empty object for empty input", () => {
         const inputObject = {};
-        const outputObject = mapObjectValues(inputObject, (value) => value);
+        const outputObject = mapObjectValues(inputObject, (value: unknown) => value);
         expect(outputObject).toEqual({});
         expect(outputObject === inputObject).toBe(false);
     });
     it("returns mapped object without changing input object", () => {
         const inputObject = { key: 4 };
-        const outputObject = mapObjectValues(inputObject, (value) => value * 2);
+        const outputObject = mapObjectValues(inputObject, (value: number) => value * 2);
         expect(outputObject).toEqual({ key: 8 });
         expect(inputObject).toEqual({ key: 4 });
     });
@@ -80,7 +80,7 @@ describe("mapObjectValues()", () => {
             b: "Brenda",
             c: "Carl"
         };
-        const outputObject = mapObjectValues(inputObject, (name) => `Hello ${name}!`);
+        const outputObject = mapObjectValues(inputObject, (name: string) => `Hello ${name}!`);
         expect(outputObject).toEqual({
             a: "Hello Albert!",
             b: "Hello Brenda!",

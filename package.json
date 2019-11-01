@@ -29,10 +29,7 @@
         "/build"
     ],
     "browserslist": [
-        ">0.2%",
-        "not dead",
-        "not ie <= 11",
-        "not op_mini all"
+        "defaults"
     ],
     "devDependencies": {
         "@mdx-js/loader": "~1.5.1",
@@ -55,6 +52,7 @@
         "@typescript-eslint/eslint-plugin": "~2.5.0",
         "@typescript-eslint/parser": "~2.5.0",
         "@typescript-eslint/typescript-estree": "~2.5.0",
+        "@wessberg/rollup-plugin-ts": "~1.1.73",
         "awesome-typescript-loader": "~5.2.1",
         "babel-loader": "~8.0.6",
         "coveralls": "~3.0.6",
@@ -65,7 +63,7 @@
         "eslint": "~6.6.0",
         "eslint-config-prettier": "~6.4.0",
         "eslint-plugin-import": "~2.18.2",
-        "eslint-plugin-jsdoc": "~15.12.1",
+        "eslint-plugin-jsdoc": "~16.1.1",
         "eslint-plugin-jsx-a11y": "~6.2.3",
         "eslint-plugin-prettier": "~3.1.1",
         "eslint-plugin-react": "~7.16.0",
@@ -76,12 +74,8 @@
         "prettier": "~1.18.2",
         "react-docgen-typescript-loader": "~3.3.0",
         "rollup": "~1.26.0",
-        "rollup-plugin-commonjs": "~10.1.0",
-        "rollup-plugin-node-resolve": "~5.2.0",
         "rollup-plugin-postcss": "~2.0.3",
         "rollup-plugin-terser": "~5.1.2",
-        "rollup-plugin-typescript2": "~0.24.3",
-        "rollup-plugin-uglify": "~6.0.3",
         "sass-loader": "~8.0.0",
         "style-loader": "~1.0.0",
         "stylelint": "~11.1.1",

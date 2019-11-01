@@ -3,7 +3,9 @@ import * as React from "react";
 import { JsonSchema } from "../model/JsonSchema";
 import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
 
-import { RawJsonSchema, KeysOfRawJsonSchemaStringValues } from "./RawJsonSchema";
+import { RawJsonSchema, KeysOfRawJsonSchemaStringValues } from "../types/RawJsonSchema";
+import { ParserConfig } from "../types/ParserConfig";
+import { RenderOptions } from "../types/RenderOptions";
 
 export interface InspectorDefaultProps {
     /**
@@ -17,16 +19,7 @@ export interface InspectorDefaultProps {
     /**
      * Options for the traversing/parsing of JSON schemas. Defining how optional parts of a schema should be represented.
      */
-    parserConfig?: {
-        /**
-         * Setting indicating how to include schema parts wrapped in "anyOf".
-         */
-        anyOf?: SchemaPartParserConfig;
-        /**
-         * Setting indicating how to include schema parts wrapped in "oneOf".
-         */
-        oneOf?: SchemaPartParserConfig;
-    };
+    parserConfig?: ParserConfig;
     /**
      * Function accepting a `JsonSchema` instance representing an array's declared type of items and returning an object listing the available
      * properties to offer. The default, providing access to the array's items, is: `arrayItemSchema => ({ "[0]": arrayItemSchema })`
@@ -77,11 +70,11 @@ export interface InspectorDefaultProps {
         /*
          * Custom render function for a single breadcrumb item.
          */
-        renderItem?: (props: { breadcrumbText: string; hasNestedItems: boolean; column: RenderColumn; index: number }) => React.ReactNode;
+        renderItem?: (props: { breadcrumbText: string; hasNestedItems: boolean; column: RenderColumn; index: number }) => React.ReactElement;
         /*
          * Custom render function for adding extra elements (e.g. a "Copy to Clipboard" button) after the breadcrumbs.
          */
-        renderTrailingContent?: (props: { breadcrumbTexts: Array<string>; columnData: Array<RenderColumn> }) => React.ReactNode;
+        renderTrailingContent?: (props: { breadcrumbTexts: Array<string>; columnData: Array<RenderColumn> }) => React.ReactElement;
     };
     /**
      * Options for the search input shown in the header and its impact on the displayed columns – set to `null` to turn it off.
@@ -125,7 +118,7 @@ export interface InspectorDefaultProps {
         selected: boolean;
         schemaGroup: JsonSchemaGroup;
         optionIndexes?: Array<number>;
-    }) => React.ReactNode;
+    }) => React.ReactElement;
     /**
      * Custom render function for the details block on the right (only used if there is an actual selection).
      * Expects a single object as input with the following keys:
@@ -138,13 +131,13 @@ export interface InspectorDefaultProps {
         columnData: Array<RenderColumn>;
         selectionColumnIndex: number;
         optionIndexes?: Array<number>;
-    }) => React.ReactNode;
+    }) => React.ReactElement;
     /**
      * Custom render function for the details block on the right (only used if there is no selection).
      * Expects a single object as input with the following key:
      * - "rootColumnSchemas": the full render information for the root column (since there is no selection, there are no other columns)
      */
-    renderEmptyDetails?: (props: { rootColumnSchemas: { [key: string]: JsonSchemaGroup } }) => React.ReactNode;
+    renderEmptyDetails?: (props: { rootColumnSchemas: { [key: string]: JsonSchemaGroup } }) => React.ReactElement;
 }
 
 export interface InspectorProps extends InspectorDefaultProps {
@@ -154,47 +147,22 @@ export interface InspectorProps extends InspectorDefaultProps {
     schemas: { [key: string]: RawJsonSchema };
 }
 
-export type ParserConfig = InspectorProps["parserConfig"];
-
-export interface SchemaPartParserConfig {
-    /**
-     * Optional title to show above multiple parts in a given wrapper (e.g. "anyOf"/"oneOf").
-     */
-    groupTitle?: string;
-    /**
-     * Supplier for an alternative name to be displayed (default is: (indexes) => `Option ${indexes.joining('.')}`).
-     */
-    optionNameForIndex?: (indexes: Array<number>) => string | undefined;
-}
-
-export type BuildArrayPropertiesFunction = InspectorProps["buildArrayProperties"];
-
-export type BreadcrumbsOptions = InspectorProps["breadcrumbs"];
-
-export type SearchOptions = InspectorProps["searchOptions"];
-
 interface RenderColumnDetails {
     trailingSelection?: boolean;
-    onSelect?: (event: React.SyntheticEvent, selectedItem?: string | Array<number>) => void;
+    onSelect: (event: React.SyntheticEvent, selectedItem?: string | Array<number>) => void;
 }
 
-export type RenderItemsColumn = {
+export interface RenderItemsColumn extends RenderColumnDetails {
     items: { [key: string]: JsonSchemaGroup };
     selectedItem?: string;
     filteredItems?: Array<string>;
-} & RenderColumnDetails;
+}
 
-export type RenderOptions = {
-    groupTitle?: string;
-    options?: Array<RenderOptions>;
-    optionNameForIndex?: (indexes: Array<number>) => string | undefined;
-};
-
-export type RenderOptionsColumn = {
+export interface RenderOptionsColumn extends RenderColumnDetails {
     options: RenderOptions;
     contextGroup: JsonSchemaGroup;
     selectedItem?: Array<number>;
     filteredItems?: Array<Array<number>>;
-} & RenderColumnDetails;
+}
 
 export type RenderColumn = RenderItemsColumn | RenderOptionsColumn;

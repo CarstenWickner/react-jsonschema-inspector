@@ -7,11 +7,10 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
   role="presentation"
   tabIndex={-1}
 >
-  <InspectorItem
+  <Component
     key="Item One"
     name="Item One"
     onSelect={[Function]}
-    renderContent={null}
     schemaGroup={
       JsonSchemaGroup {
         "entries": Array [
@@ -41,11 +40,10 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
     }
     selected={false}
   />
-  <InspectorItem
+  <Component
     key="Item Two"
     name="Item Two"
     onSelect={[Function]}
-    renderContent={null}
     schemaGroup={
       JsonSchemaGroup {
         "entries": Array [
