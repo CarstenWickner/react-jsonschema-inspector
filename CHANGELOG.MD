@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- ignore non-`string` values when searching by `fields`
+
+### Removed
+- run-time proptype validation for JSON Schemas (now only at compile-time through TypeScript)
+- proptype validations for internal (i.e. not exported) components
 
 ## [4.0.0] - 2019-10-28
 ### Changed
