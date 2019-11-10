@@ -568,7 +568,16 @@ describe("createFilterFunctionForColumn()", () => {
             };
             const filterFunction = createFilterFunctionForColumn((rawSubSchema) => rawSubSchema.title === "Match");
             // stringify to more easily detect differences in case of test failure
-            expect(JSON.stringify(filterFunction(columnInput))).toEqual(JSON.stringify([[0, 0], [0, 2, 1], [0, 3, 0], [1, 1], [1, 2, 0], [1, 3, 1]]));
+            expect(JSON.stringify(filterFunction(columnInput))).toEqual(
+                JSON.stringify([
+                    [0, 0],
+                    [0, 2, 1],
+                    [0, 3, 0],
+                    [1, 1],
+                    [1, 2, 0],
+                    [1, 3, 1]
+                ])
+            );
         });
     });
 });
