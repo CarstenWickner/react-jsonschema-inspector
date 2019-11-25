@@ -125,6 +125,7 @@ export interface InspectorDefaultProps {
      * - "itemSchemaGroup": the full `JsonSchemaGroup` associated with the currently selected trailing item (i.e. right-most selection)
      * - "columnData": the full render information for all columns
      * - "selectionColumnIndex": indicating the index of the right-most column containing a selected item (for convenient use of "columnData")
+     * - "optionIndexes": in case of an optional path being selected
      */
     renderSelectionDetails?: (props: {
         itemSchemaGroup: JsonSchemaGroup;
