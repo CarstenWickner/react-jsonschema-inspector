@@ -183,8 +183,8 @@ describe("renders correctly", () => {
             );
             const header = component.find(".jsonschema-inspector-header");
             expect(header.exists()).toBe(true);
-            expect(header.childAt(0).text()).toBe("tool-bar-item");
-            expect(header.childAt(1).prop("searchFilter")).toBe("");
+            expect(header.childAt(0).prop("searchFilter")).toBe("");
+            expect(header.childAt(1).text()).toBe("tool-bar-item");
         });
     });
     it("without header", () => {
