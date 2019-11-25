@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- allow for addition of tool-bar items in the header besides the search input via `renderHeaderToolBar` prop
+
 ### Fixed
 - height of breadcrumb items should not grow with custom trailing content
 

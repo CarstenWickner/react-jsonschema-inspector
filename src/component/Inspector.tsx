@@ -214,25 +214,31 @@ export class Inspector extends React.Component<
             buildArrayProperties,
             searchOptions,
             breadcrumbs,
+            renderHeaderToolBar,
             renderItemContent,
             renderSelectionDetails,
             renderEmptyDetails
         } = this.props;
         const { selectedItems, appendEmptyColumn, enteredSearchFilter, appliedSearchFilter } = this.state;
-        const { columnData } = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties);
+        const renderDataForSelection = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties);
+        const { columnData } = renderDataForSelection;
         // apply search filter if enabled or clear (potentially left-over) search results
         columnData.forEach(this.setFilteredItemsForColumn(searchOptions, appliedSearchFilter));
         const searchFeatureEnabled =
             searchOptions && (searchOptions.byPropertyName || (searchOptions.fields && searchOptions.fields.length) || searchOptions.filterBy);
+        const shouldShowHeaderToolBar = renderHeaderToolBar || searchFeatureEnabled;
         return (
             <div className="jsonschema-inspector">
-                {searchFeatureEnabled && (
+                {shouldShowHeaderToolBar && (
                     <div className="jsonschema-inspector-header">
-                        <InspectorSearchField
-                            searchFilter={enteredSearchFilter}
-                            onSearchFilterChange={this.onSearchFilterChange}
-                            placeholder={searchOptions.inputPlaceholder}
-                        />
+                        {searchFeatureEnabled && (
+                            <InspectorSearchField
+                                searchFilter={enteredSearchFilter}
+                                onSearchFilterChange={this.onSearchFilterChange}
+                                placeholder={searchOptions.inputPlaceholder}
+                            />
+                        )}
+                        {renderHeaderToolBar && <div className="jsonschema-inspector-toolbar">{renderHeaderToolBar(renderDataForSelection)}</div>}
                     </div>
                 )}
                 <div className="jsonschema-inspector-body">
@@ -285,6 +291,7 @@ export class Inspector extends React.Component<
             debounceMaxWait: PropTypes.number
         }),
         onSelect: PropTypes.func,
+        renderHeaderToolBar: PropTypes.func,
         renderItemContent: PropTypes.func,
         renderSelectionDetails: PropTypes.func,
         renderEmptyDetails: PropTypes.func
@@ -303,6 +310,7 @@ export class Inspector extends React.Component<
             fields: ["title", "description"]
         },
         onSelect: undefined,
+        renderHeaderToolBar: undefined,
         renderItemContent: undefined,
         renderSelectionDetails: undefined,
         renderEmptyDetails: undefined

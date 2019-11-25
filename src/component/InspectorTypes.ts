@@ -105,6 +105,10 @@ export interface InspectorDefaultProps {
         breadcrumbsTexts?: Array<string>
     ) => void;
     /**
+     * Custom render function for the header tool-bar (to the left of the search field).
+     */
+    renderHeaderToolBar?: (props: { columnData: Array<RenderColumn> }) => React.ReactElement;
+    /**
      * Custom render function for the content of a single item in a column.
      * Expects a single object as input with the following keys:
      * - "name": providing the name of the respective item

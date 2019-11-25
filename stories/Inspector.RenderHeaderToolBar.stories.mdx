@@ -1,0 +1,41 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import { action } from "@storybook/addon-actions";
+import "./style-overrides.css";
+
+import { Inspector, getCommonFieldValuesFromSchemaGroup } from "../src/index";
+
+import personSchema from "./schema-person.json";
+import shopSelectionSchema from "./schema-shop-selection.json";
+
+<Meta title="Inspector (renderHeaderToolBar)" component={Inspector} />
+
+# Inspector (renderHeaderToolBar)
+## Focus: Customise Header Tool-Bar
+
+<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "renderHeaderToolBar")} />
+
+----
+
+### with custom tool-bar items
+The `renderHeaderToolBar` prop allows you to define additional content to be displayed besides the search filter in the header.
+
+<Preview>
+    <Story name="with custom tool-bar items">
+        <Inspector
+            schemas={{
+                Person: personSchema,
+                Shop: shopSelectionSchema
+            }}
+            defaultSelectedItems={["Person", "friends"]}
+            renderHeaderToolBar={({ columnData }) => (
+                <>
+                    <button type="button" style={{ padding: "0.25em", lineHeight: "2em", marginRight: "1em" }}>Static</button>
+                    {columnData.map((column, index) => (
+                        <button key={index} type="button" style={{ padding: "0.25em", lineHeight: "2em" }}>{column.selectedItem}</button>
+                    ))}
+                </>
+            )}
+            onSelect={action("onSelect")}
+        />
+    </Story>
+</Preview>

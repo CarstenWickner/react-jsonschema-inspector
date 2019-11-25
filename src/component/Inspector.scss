@@ -155,6 +155,11 @@
         flex-direction: row-reverse;
         margin-bottom: $verticalSpacingOutside;
     }
+    &-toolbar {
+        padding: $spacingInside;
+        min-height: 2em;
+        flex-grow: 1;
+    }
     &-search {
         padding: $spacingInside;
 
