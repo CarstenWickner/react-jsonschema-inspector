@@ -162,6 +162,35 @@ describe("renders correctly", () => {
             expect(filteredItems).toBeUndefined();
         });
     });
+    describe("with header tool-bar", () => {
+        const renderHeaderToolBar = (): React.ReactChild => <div>tool-bar-item</div>;
+        it("without search field", () => {
+            const component = shallow(<Inspector schemas={schemas} renderHeaderToolBar={renderHeaderToolBar} searchOptions={null} />);
+            const header = component.find(".jsonschema-inspector-header");
+            expect(header.exists()).toBe(true);
+            expect(header.childAt(0).text()).toBe("tool-bar-item");
+            expect(header.childAt(1).exists()).toBe(false);
+        });
+        it("in addition to search field", () => {
+            const component = shallow(
+                <Inspector
+                    schemas={schemas}
+                    renderHeaderToolBar={renderHeaderToolBar}
+                    searchOptions={{
+                        byPropertyName: true
+                    }}
+                />
+            );
+            const header = component.find(".jsonschema-inspector-header");
+            expect(header.exists()).toBe(true);
+            expect(header.childAt(0).prop("searchFilter")).toBe("");
+            expect(header.childAt(1).text()).toBe("tool-bar-item");
+        });
+    });
+    it("without header", () => {
+        const component = shallow(<Inspector schemas={schemas} searchOptions={null} />);
+        expect(component.find(".jsonschema-inspector-header").exists()).toBe(false);
+    });
     it("without footer", () => {
         const component = shallow(<Inspector schemas={schemas} breadcrumbs={null} />);
         expect(component.find(".jsonschema-inspector-footer").exists()).toBe(false);
