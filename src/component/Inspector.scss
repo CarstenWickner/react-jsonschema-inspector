@@ -154,11 +154,15 @@
     &-header {
         flex-direction: row-reverse;
         margin-bottom: $verticalSpacingOutside;
+        align-items: end;
     }
     &-toolbar {
         padding: $spacingInside;
         min-height: 2em;
         flex-grow: 1;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
     }
     &-search {
         padding: $spacingInside;

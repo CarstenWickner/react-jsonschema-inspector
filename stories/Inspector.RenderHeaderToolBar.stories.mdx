@@ -29,9 +29,9 @@ The `renderHeaderToolBar` prop allows you to define additional content to be dis
             defaultSelectedItems={["Person", "friends"]}
             renderHeaderToolBar={({ columnData }) => (
                 <>
-                    <button type="button" style={{ padding: "0.25em", lineHeight: "2em", marginRight: "1em" }}>Static</button>
-                    {columnData.map((column, index) => (
-                        <button key={index} type="button" style={{ padding: "0.25em", lineHeight: "2em" }}>{column.selectedItem}</button>
+                    <button type="button" style={{ padding: "0.25em", lineHeight: "2em", marginRight: ".5em" }}>Static</button>
+                    {columnData.filter(column => column.selectedItem).map((column, index) => (
+                        <button key={index} type="button" style={{ padding: "0.25em", lineHeight: "2em" }}>{`#${index}: ${column.selectedItem}`}</button>
                     ))}
                 </>
             )}
