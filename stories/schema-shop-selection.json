@@ -8,16 +8,16 @@
             "items": {
                 "oneOf": [
                     {
-                        "$ref": "#/definitions/fruit"
+                        "$ref": "#/$defs/fruit"
                     },
                     {
-                        "$ref": "#/definitions/vegetable"
+                        "$ref": "#/$defs/vegetable"
                     }
                 ]
             }
         }
     },
-    "definitions": {
+    "$defs": {
         "fruit": {
             "type": "object",
             "required": [
@@ -67,7 +67,7 @@
                                 "relatedVegetables": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/definitions/vegetable"
+                                        "$ref": "#/$defs/vegetable"
                                     }
                                 }
                             }

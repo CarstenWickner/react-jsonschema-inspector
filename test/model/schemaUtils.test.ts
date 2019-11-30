@@ -33,11 +33,11 @@ describe("createGroupFromSchema()", () => {
     it("returns allOf group with referenced entry for simple schema", () => {
         const { scope } = new JsonSchema(
             {
-                definitions: { Foo: rawFooSchema }
+                $defs: { Foo: rawFooSchema }
             },
             {}
         );
-        const schema = new JsonSchema({ $ref: "#/definitions/Foo" }, {}, scope);
+        const schema = new JsonSchema({ $ref: "#/$defs/Foo" }, {}, scope);
         const result = createGroupFromSchema(schema);
         expect(result.entries).toHaveLength(1);
         expect(result.entries[0]).toBeInstanceOf(JsonSchema);
@@ -137,15 +137,15 @@ describe("createGroupFromSchema()", () => {
     it("throws error for invalid $ref if scope provided", () => {
         const { scope } = new JsonSchema(
             {
-                definitions: {
+                $defs: {
                     foo: { title: "foo" },
                     bar: { title: "bar" }
                 }
             },
             {}
         );
-        const schema = { $ref: "#/definitions/baz" };
-        expect(() => createGroupFromSchema(new JsonSchema(schema, {}, scope))).toThrowError('Cannot resolve $ref: "#/definitions/baz"');
+        const schema = { $ref: "#/$defs/baz" };
+        expect(() => createGroupFromSchema(new JsonSchema(schema, {}, scope))).toThrowError('Cannot resolve $ref: "#/$defs/baz"');
     });
 });
 describe("getIndexPermutationsForOptions()", () => {
@@ -429,20 +429,20 @@ describe("getFieldValueFromSchemaGroup()", () => {
     it("find single value in $ref-erenced sub-schema", () => {
         const { scope } = new JsonSchema(
             {
-                definitions: {
+                $defs: {
                     foo: { title: "foobar" }
                 }
             },
             {}
         );
-        const schema = { $ref: "#/definitions/foo" };
+        const schema = { $ref: "#/$defs/foo" };
         const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}, scope));
         expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toBe("foobar");
     });
     it("ignores other fields if $ref found", () => {
         const { scope } = new JsonSchema(
             {
-                definitions: {
+                $defs: {
                     bar: { title: "baz" }
                 }
             },
@@ -450,7 +450,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
         );
         const schema = {
             title: "foo",
-            $ref: "#/definitions/bar"
+            $ref: "#/$defs/bar"
         };
         const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}, scope));
         expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toBe("baz");
@@ -466,7 +466,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
         it("finds single value in $ref-erenced group", () => {
             const { scope } = new JsonSchema(
                 {
-                    definitions: {
+                    $defs: {
                         foo: {
                             allOf: [
                                 { description: "foobar" },
@@ -479,23 +479,23 @@ describe("getFieldValueFromSchemaGroup()", () => {
                 },
                 {}
             );
-            const schema = { $ref: "#/definitions/foo" };
+            const schema = { $ref: "#/$defs/foo" };
             const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}, scope));
             expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toBe("baz");
         });
         describe("merging multiple values from allOf", () => {
             const { scope } = new JsonSchema(
                 {
-                    definitions: {
+                    $defs: {
                         foo: {
-                            allOf: [{ $ref: "#/definitions/bar" }, { title: "foobar" }]
+                            allOf: [{ $ref: "#/$defs/bar" }, { title: "foobar" }]
                         },
                         bar: { title: "baz" }
                     }
                 },
                 {}
             );
-            const schema = { $ref: "#/definitions/foo" };
+            const schema = { $ref: "#/$defs/foo" };
             const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}, scope));
 
             it("list values by default", () => {
