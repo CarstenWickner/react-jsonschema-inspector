@@ -33,8 +33,8 @@ describe("renders correctly", () => {
         };
         const schema = {
             title: "Schema Title",
-            items: { $ref: "#/definitions/itemSchema" },
-            definitions: { itemSchema: arrayItemSchema }
+            items: { $ref: "#/$defs/itemSchema" },
+            $defs: { itemSchema: arrayItemSchema }
         };
         const { columnData } = buildColumnData({ "Schema One": schema }, [], ["Schema One"], {});
         const component = shallow(
@@ -128,12 +128,12 @@ describe("collectFormFields()", () => {
         const referenceSchemas = [
             {
                 $id: "external-id",
-                definitions: {
+                $defs: {
                     Bar: { title: "Foobar" }
                 }
             }
         ];
-        const { columnData } = buildColumnData({ Foo: { $ref: "external-id#/definitions/Bar" } }, referenceSchemas, ["Foo"], {});
+        const { columnData } = buildColumnData({ Foo: { $ref: "external-id#/$defs/Bar" } }, referenceSchemas, ["Foo"], {});
         const itemSchemaGroup = ((columnData[0] as unknown) as RenderItemsColumn).items.Foo;
         expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
             {

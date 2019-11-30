@@ -25,7 +25,7 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
                 "#" => JsonSchema {
                   "parserConfig": Object {},
                   "schema": Object {
-                    "definitions": Object {
+                    "$defs": Object {
                       "Target": Object {},
                     },
                   },
@@ -58,7 +58,7 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
                 "#" => JsonSchema {
                   "parserConfig": Object {},
                   "schema": Object {
-                    "definitions": Object {
+                    "$defs": Object {
                       "Target": Object {},
                     },
                   },

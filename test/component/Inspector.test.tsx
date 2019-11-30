@@ -21,14 +21,14 @@ describe("renders correctly", () => {
         },
         "Schema Two": {
             properties: {
-                "Item Three": { $ref: "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" }
+                "Item Three": { $ref: "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector" }
             }
         }
     };
     const referenceSchemas = [
         {
             $id: "https://carstenwickner.github.io/@jsonschema-inspector",
-            definitions: {
+            $defs: {
                 "react-inspector": { $ref: "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector" }
             }
         },

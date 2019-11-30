@@ -73,8 +73,8 @@ describe("renders correctly", () => {
     describe("with array item selection", () => {
         const schema = {
             title: "Bar",
-            items: { $ref: "#/definitions/itemSchema" },
-            definitions: {
+            items: { $ref: "#/$defs/itemSchema" },
+            $defs: {
                 itemSchema: {
                     description: "Array Item",
                     type: "object"

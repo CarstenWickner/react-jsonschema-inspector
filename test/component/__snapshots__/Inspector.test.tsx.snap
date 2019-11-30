@@ -47,28 +47,28 @@ exports[`renders correctly with minimal/default props 1`] = `
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
-                            "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                            "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -80,16 +80,16 @@ exports[`renders correctly with minimal/default props 1`] = `
                             "#" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
-                            "#/definitions/react-inspector" => JsonSchema {
+                            "#/$defs/react-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -168,28 +168,28 @@ exports[`renders correctly with minimal/default props 1`] = `
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
-                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -201,16 +201,16 @@ exports[`renders correctly with minimal/default props 1`] = `
                                 "#" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
-                                "#/definitions/react-inspector" => JsonSchema {
+                                "#/$defs/react-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -236,7 +236,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                     "schema": Object {
                       "properties": Object {
                         "Item Three": Object {
-                          "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector",
+                          "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector",
                         },
                       },
                     },
@@ -251,28 +251,28 @@ exports[`renders correctly with minimal/default props 1`] = `
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
-                            "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                            "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -284,16 +284,16 @@ exports[`renders correctly with minimal/default props 1`] = `
                             "#" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
-                            "#/definitions/react-inspector" => JsonSchema {
+                            "#/$defs/react-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -372,28 +372,28 @@ exports[`renders correctly with minimal/default props 1`] = `
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
-                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -405,16 +405,16 @@ exports[`renders correctly with minimal/default props 1`] = `
                                 "#" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
-                                "#/definitions/react-inspector" => JsonSchema {
+                                "#/$defs/react-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -470,28 +470,28 @@ exports[`renders correctly with minimal/default props 1`] = `
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
-                            "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                            "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -503,16 +503,16 @@ exports[`renders correctly with minimal/default props 1`] = `
                             "#" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
-                            "#/definitions/react-inspector" => JsonSchema {
+                            "#/$defs/react-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -591,28 +591,28 @@ exports[`renders correctly with minimal/default props 1`] = `
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
-                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -624,16 +624,16 @@ exports[`renders correctly with minimal/default props 1`] = `
                                 "#" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
-                                "#/definitions/react-inspector" => JsonSchema {
+                                "#/$defs/react-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -659,7 +659,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                     "schema": Object {
                       "properties": Object {
                         "Item Three": Object {
-                          "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector",
+                          "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector",
                         },
                       },
                     },
@@ -674,28 +674,28 @@ exports[`renders correctly with minimal/default props 1`] = `
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
-                            "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                            "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -707,16 +707,16 @@ exports[`renders correctly with minimal/default props 1`] = `
                             "#" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
-                            "#/definitions/react-inspector" => JsonSchema {
+                            "#/$defs/react-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -795,28 +795,28 @@ exports[`renders correctly with minimal/default props 1`] = `
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
-                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -828,16 +828,16 @@ exports[`renders correctly with minimal/default props 1`] = `
                                 "#" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
-                                "#/definitions/react-inspector" => JsonSchema {
+                                "#/$defs/react-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -902,28 +902,28 @@ exports[`renders correctly with minimal/default props 1`] = `
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
-                            "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                            "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -935,16 +935,16 @@ exports[`renders correctly with minimal/default props 1`] = `
                             "#" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
-                            "#/definitions/react-inspector" => JsonSchema {
+                            "#/$defs/react-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -1023,28 +1023,28 @@ exports[`renders correctly with minimal/default props 1`] = `
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
-                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -1056,16 +1056,16 @@ exports[`renders correctly with minimal/default props 1`] = `
                                 "#" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
-                                "#/definitions/react-inspector" => JsonSchema {
+                                "#/$defs/react-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -1091,7 +1091,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                     "schema": Object {
                       "properties": Object {
                         "Item Three": Object {
-                          "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector",
+                          "$ref": "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector",
                         },
                       },
                     },
@@ -1106,28 +1106,28 @@ exports[`renders correctly with minimal/default props 1`] = `
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
                             "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
-                            "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                            "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -1139,16 +1139,16 @@ exports[`renders correctly with minimal/default props 1`] = `
                             "#" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
-                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                "definitions": Object {
+                                "$defs": Object {
                                   "react-inspector": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                   },
                                 },
+                                "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                               },
                               "scope": [Circular],
                             },
-                            "#/definitions/react-inspector" => JsonSchema {
+                            "#/$defs/react-inspector" => JsonSchema {
                               "parserConfig": Object {},
                               "schema": Object {
                                 "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -1227,28 +1227,28 @@ exports[`renders correctly with minimal/default props 1`] = `
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
                                 "https://carstenwickner.github.io/@jsonschema-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
-                                "https://carstenwickner.github.io/@jsonschema-inspector#/definitions/react-inspector" => JsonSchema {
+                                "https://carstenwickner.github.io/@jsonschema-inspector#/$defs/react-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
@@ -1260,16 +1260,16 @@ exports[`renders correctly with minimal/default props 1`] = `
                                 "#" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
-                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
-                                    "definitions": Object {
+                                    "$defs": Object {
                                       "react-inspector": Object {
                                         "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",
                                       },
                                     },
+                                    "$id": "https://carstenwickner.github.io/@jsonschema-inspector",
                                   },
                                   "scope": [Circular],
                                 },
-                                "#/definitions/react-inspector" => JsonSchema {
+                                "#/$defs/react-inspector" => JsonSchema {
                                   "parserConfig": Object {},
                                   "schema": Object {
                                     "$ref": "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector",

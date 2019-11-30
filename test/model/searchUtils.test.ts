@@ -222,13 +222,13 @@ describe("collectReferencedSubSchemas", () => {
         };
         it.each`
             fieldName            | referencingSchemaPart
-            ${"properties"}      | ${{ bar: { $ref: "#/definitions/Foo" } }}
-            ${"items"}           | ${{ $ref: "#/definitions/Foo" }}
-            ${"additionalItems"} | ${{ $ref: "#/definitions/Foo" }}
+            ${"properties"}      | ${{ bar: { $ref: "#/$defs/Foo" } }}
+            ${"items"}           | ${{ $ref: "#/$defs/Foo" }}
+            ${"additionalItems"} | ${{ $ref: "#/$defs/Foo" }}
         `("returning true as mapped result value for reference in '$fieldName'", ({ fieldName, referencingSchemaPart }) => {
             const schema = new JsonSchema(
                 {
-                    definitions: { Foo: rawSubSchema },
+                    $defs: { Foo: rawSubSchema },
                     [fieldName]: referencingSchemaPart
                 },
                 {}
@@ -242,8 +242,8 @@ describe("collectReferencedSubSchemas", () => {
         it("returning includeNestedOptionals flag as mapped result value for reference in 'allOf'", () => {
             const schema = new JsonSchema(
                 {
-                    definitions: { Foo: rawSubSchema },
-                    allOf: [{}, { $ref: "#/definitions/Foo" }]
+                    $defs: { Foo: rawSubSchema },
+                    allOf: [{}, { $ref: "#/$defs/Foo" }]
                 },
                 {}
             );
@@ -275,11 +275,11 @@ describe("collectReferencedSubSchemas", () => {
     it("returns Map with multiple referenced sub-schemas", () => {
         const schema = new JsonSchema(
             {
-                definitions: {
+                $defs: {
                     Sub1: { title: "Reference Target" },
                     Sub2: { description: "Second Target" }
                 },
-                allOf: [{ $ref: "#/definitions/Sub1" }, { $ref: "#/definitions/Sub2" }]
+                allOf: [{ $ref: "#/$defs/Sub1" }, { $ref: "#/$defs/Sub2" }]
             },
             {}
         );
@@ -319,11 +319,11 @@ describe("createFilterFunctionForSchema()", () => {
                 $id: "https://unique-schema-identifier",
                 title: "Match",
                 properties: {
-                    "Item One": { $ref: "#/definitions/One" },
-                    "Item Two": { $ref: "#/definitions/Two" },
-                    "Item Three": { $ref: "#/definitions/Three" }
+                    "Item One": { $ref: "#/$defs/One" },
+                    "Item Two": { $ref: "#/$defs/Two" },
+                    "Item Three": { $ref: "#/$defs/Three" }
                 },
-                definitions: {
+                $defs: {
                     One: {
                         items: { $ref: "#" }
                     },
@@ -331,15 +331,15 @@ describe("createFilterFunctionForSchema()", () => {
                         items: { title: "Nothing" }
                     },
                     Three: {
-                        allOf: [{ $ref: "#/definitions/Two" }, { $ref: "https://unique-schema-identifier#" }]
+                        allOf: [{ $ref: "#/$defs/Two" }, { $ref: "https://unique-schema-identifier#" }]
                     }
                 }
             },
             {}
         );
-        const schemaOne = schema.scope.find("#/definitions/One");
-        const schemaTwo = schema.scope.find("#/definitions/Two");
-        const schemaThree = schema.scope.find("#/definitions/Three");
+        const schemaOne = schema.scope.find("#/$defs/One");
+        const schemaTwo = schema.scope.find("#/$defs/Two");
+        const schemaThree = schema.scope.find("#/$defs/Three");
 
         it("finding match via circular reference to parent schema", () => {
             const filterFunction = createFilterFunctionForSchema((rawSchema) => rawSchema.title === "Match");
@@ -359,13 +359,13 @@ describe("createFilterFunctionForSchema()", () => {
             const rawSchema = {
                 title: "Match",
                 properties: {
-                    "Array of Main Schema": { $ref: "#/definitions/One" },
-                    "OneOf with Main Schema as Property in Option": { $ref: "#/definitions/Two" },
-                    "AnyOf with Main Schema as Option": { $ref: "#/definitions/Three" },
-                    "AnyOf with OneOf as Option, which has Main Schema as Property": { $ref: "#/definitions/Four" },
-                    "Array of Objects with Main Schema as Option": { $ref: "#/definitions/Five" }
+                    "Array of Main Schema": { $ref: "#/$defs/One" },
+                    "OneOf with Main Schema as Property in Option": { $ref: "#/$defs/Two" },
+                    "AnyOf with Main Schema as Option": { $ref: "#/$defs/Three" },
+                    "AnyOf with OneOf as Option, which has Main Schema as Property": { $ref: "#/$defs/Four" },
+                    "Array of Objects with Main Schema as Option": { $ref: "#/$defs/Five" }
                 },
-                definitions: {
+                $defs: {
                     One: {
                         items: { $ref: "#" }
                     },
@@ -383,10 +383,10 @@ describe("createFilterFunctionForSchema()", () => {
                         anyOf: [{ $ref: "#" }, { title: "Foobar" }]
                     },
                     Four: {
-                        anyOf: [{ $ref: "#/definitions/Two" }, { title: "Qux" }]
+                        anyOf: [{ $ref: "#/$defs/Two" }, { title: "Qux" }]
                     },
                     Five: {
-                        items: { $ref: "#/definitions/Two" }
+                        items: { $ref: "#/$defs/Two" }
                     }
                 }
             };
@@ -404,9 +404,9 @@ describe("createFilterFunctionForSchema()", () => {
 
                 // with "includeNestedOptionalsForMainSchema" flag set to false, it does not matter whether anyOf/oneOf are generally included
                 // when the match is in a property, an "includeNestedOptionalsForMainSchema" false does not hide it
-                expect(filterFunction(scope.find(`#/definitions/${subSchema}`), false)).toBe(resultWhenExcludingOptionals);
+                expect(filterFunction(scope.find(`#/$defs/${subSchema}`), false)).toBe(resultWhenExcludingOptionals);
                 // with "includeNestedOptionalsForMainSchema" flag set to true, both anyOf and oneOf parts are being considered
-                expect(filterFunction(scope.find(`#/definitions/${subSchema}`), true)).toBe(resultWhenIncludingOptionals);
+                expect(filterFunction(scope.find(`#/$defs/${subSchema}`), true)).toBe(resultWhenIncludingOptionals);
             });
         });
 
