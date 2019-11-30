@@ -41,7 +41,7 @@ export class JsonSchema {
 
 /**
  * Helper class to facilitate looking-up re-usable sub-schemas via the "$ref" keyword. A single RefScope instance refers to one main schema
- * and its contained "definitions". Other main schemas maybe used by adding their respective RefScope instances via .addOtherRefScopes().
+ * and its contained "$defs"/"definitions". Other main schemas maybe used by adding their respective RefScope instances via .addOtherRefScopes().
  */
 export class RefScope {
     /**
@@ -85,7 +85,9 @@ export class RefScope {
             // no valid alias provided
             externalRefBase = null;
         }
-        const definitions = getValueFromRawJsonSchema(schema.schema, "definitions");
+        // in draft 2019-09 the keyword "definitions" was renamed to "$defs"
+        const definitionsKeyword = schema.schema.$defs ? "$defs" : "definitions";
+        const definitions = getValueFromRawJsonSchema(schema.schema, definitionsKeyword);
         if (isNonEmptyObject(definitions)) {
             Object.keys(definitions).forEach((key) => {
                 const definition = definitions[key];
@@ -94,15 +96,15 @@ export class RefScope {
                     // from JSON Schema Draft 6: "$id" replaces former "id"
                     const subAlias = definition.$id || definition.id;
                     if (subAlias) {
-                        // any alias provided within "definitions" will only be available as short-hand in this schema
+                        // any alias provided within definitions will only be available as short-hand in this schema
                         this.internalRefs.set(subAlias, subSchema);
                     }
                     // can always reference schema in definitions by its path, starting from the empty fragment
-                    this.internalRefs.set(`#/definitions/${key}`, subSchema);
+                    this.internalRefs.set(`#/${definitionsKeyword}/${key}`, subSchema);
                     if (externalRefBase) {
                         // the convention was fulfilled and the top-level schema defined an absolute URI as its "$id"
                         // this allows referencing a schema in definitions by its path, starting from that URI
-                        this.externalRefs.set(`${externalRefBase}/definitions/${key}`, subSchema);
+                        this.externalRefs.set(`${externalRefBase}/${definitionsKeyword}/${key}`, subSchema);
                     }
                 }
             });
