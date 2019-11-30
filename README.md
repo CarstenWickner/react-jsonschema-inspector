@@ -93,7 +93,8 @@ It is also backwards-compatible with Drafts 4 and 6.
 | `$id` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 6 and 7), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `definitions` |
 | `id` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 4), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `definitions` or if `$id` is present |
 | `$ref` | Yes | used to look-up re-usable sub-schemas transparently (i.e. not displayed), supporting:<ul><li>`#` or the root `$id`/`id` value as root schema references,</li><li>`#/definitions/<name-of-definition>` or the respective `$id`/`id` value from within the `definitions` for sub-schemas,</li><li>absolute URIs are supported as long as those separate schemas are provided via the `referenceSchemas` prop (and their respective root `$id`/`id` matches the given `$ref`)</li><li>absolute URIs ending with `#/definitions/<name-of-definition>` are also supported via the `referenceSchemas` prop</li></ul> |
-| `definitions`| Yes | used to provide re-usable sub-schemas that are being referenced via `$ref` (only in the respective root schemas) |
+| `$defs`| Yes | used to provide re-usable sub-schemas that are being referenced via `$ref` (only in the respective root schemas) (as per Draft 2019-09) |
+| `definitions`| Yes | used to provide re-usable sub-schemas that are being referenced via `$ref` (only in the respective root schemas) (as per Draft 4, 6 or 7) |
 | `properties`| Yes | used to populate the whole structure to be traversed |
 | `required` | Yes | used to add empty `properties` to structure if they are not also mentioned in `properties` directly |
 | `additionalProperties` | - | *ignored* |

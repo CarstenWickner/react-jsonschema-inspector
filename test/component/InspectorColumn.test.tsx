@@ -10,7 +10,7 @@ describe("renders correctly", () => {
     it("with minimal/default props (items)", () => {
         const { scope } = new JsonSchema(
             {
-                definitions: { Target: {} }
+                $defs: { Target: {} }
             },
             {}
         );

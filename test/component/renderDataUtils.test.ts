@@ -35,7 +35,7 @@ describe("createRenderDataBuilder()", () => {
         };
         const foobarSchema = {
             properties: {
-                "Item Three": { $ref: "https://foo.bar/foobar#/definitions/qux" }
+                "Item Three": { $ref: "https://foo.bar/foobar#/$defs/qux" }
             }
         };
         const schemas = {
@@ -50,7 +50,7 @@ describe("createRenderDataBuilder()", () => {
         const referenceSchemas = [
             {
                 $id: "https://foo.bar/foobar",
-                definitions: {
+                $defs: {
                     qux: { $ref: "https://foo.bar/foobar/qux" }
                 }
             },
@@ -442,11 +442,11 @@ describe("createFilterFunctionForColumn()", () => {
                 $id: "https://unique-schema-identifier",
                 title: "Match",
                 properties: {
-                    "Item One": { $ref: "#/definitions/One" },
-                    "Item Two": { $ref: "#/definitions/Two" },
-                    "Item Three": { $ref: "#/definitions/Three" }
+                    "Item One": { $ref: "#/$defs/One" },
+                    "Item Two": { $ref: "#/$defs/Two" },
+                    "Item Three": { $ref: "#/$defs/Three" }
                 },
-                definitions: {
+                $defs: {
                     One: {
                         items: { $ref: "#" }
                     },
@@ -454,7 +454,7 @@ describe("createFilterFunctionForColumn()", () => {
                         items: { title: "Nothing" }
                     },
                     Three: {
-                        allOf: [{ $ref: "#/definitions/Two" }, { $ref: "https://unique-schema-identifier#" }]
+                        allOf: [{ $ref: "#/$defs/Two" }, { $ref: "https://unique-schema-identifier#" }]
                     }
                 }
             },
@@ -462,9 +462,9 @@ describe("createFilterFunctionForColumn()", () => {
         );
         const columnInput = {
             items: {
-                "Item One": createGroupFromSchema(schema.scope.find("#/definitions/One")),
-                "Item Two": createGroupFromSchema(schema.scope.find("#/definitions/Two")),
-                "Item Three": createGroupFromSchema(schema.scope.find("#/definitions/Three"))
+                "Item One": createGroupFromSchema(schema.scope.find("#/$defs/One")),
+                "Item Two": createGroupFromSchema(schema.scope.find("#/$defs/Two")),
+                "Item Three": createGroupFromSchema(schema.scope.find("#/$defs/Three"))
             },
             onSelect: (): void => {}
         };
@@ -482,12 +482,12 @@ describe("createFilterFunctionForColumn()", () => {
             const rawSchema = {
                 title: "Match",
                 properties: {
-                    "I-One": { $ref: "#/definitions/One" },
-                    "I-Two": { $ref: "#/definitions/Two" },
-                    "I-Three": { $ref: "#/definitions/Three" },
-                    "I-Four": { $ref: "#/definitions/Four" }
+                    "I-One": { $ref: "#/$defs/One" },
+                    "I-Two": { $ref: "#/$defs/Two" },
+                    "I-Three": { $ref: "#/$defs/Three" },
+                    "I-Four": { $ref: "#/$defs/Four" }
                 },
-                definitions: {
+                $defs: {
                     One: {
                         items: { $ref: "#" }
                     },
@@ -505,17 +505,17 @@ describe("createFilterFunctionForColumn()", () => {
                         anyOf: [{ $ref: "#" }, { title: "Foobar" }]
                     },
                     Four: {
-                        anyOf: [{ $ref: "#/definitions/Two" }, { title: "Qux" }]
+                        anyOf: [{ $ref: "#/$defs/Two" }, { title: "Qux" }]
                     }
                 }
             };
             const schema = new JsonSchema(rawSchema, {});
             const columnInput = {
                 items: {
-                    "I-One": createGroupFromSchema(schema.scope.find("#/definitions/One")),
-                    "I-Two": createGroupFromSchema(schema.scope.find("#/definitions/Two")),
-                    "I-Three": createGroupFromSchema(schema.scope.find("#/definitions/Three")),
-                    "I-Four": createGroupFromSchema(schema.scope.find("#/definitions/Four"))
+                    "I-One": createGroupFromSchema(schema.scope.find("#/$defs/One")),
+                    "I-Two": createGroupFromSchema(schema.scope.find("#/$defs/Two")),
+                    "I-Three": createGroupFromSchema(schema.scope.find("#/$defs/Three")),
+                    "I-Four": createGroupFromSchema(schema.scope.find("#/$defs/Four"))
                 },
                 onSelect: (): void => {}
             };
