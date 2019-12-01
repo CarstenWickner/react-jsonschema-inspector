@@ -36,10 +36,6 @@ export function createRecursiveFilterFunction(
         if (flatSearchFilter && flatSearchFilter(rawSchema, includeNestedOptionals)) {
             return true;
         }
-        if (rawSchema.$ref) {
-            // if there is a $ref, no other fields are being expected to be present - and the referenced sub-schema is checked separately
-            return false;
-        }
         const searchInParts = (groupKey: "allOf" | "oneOf" | "anyOf"): boolean => {
             const partsArray = getValueFromRawJsonSchema(rawSchema, groupKey);
             return (

@@ -88,7 +88,7 @@ function createGroupFromRawSchemaArray(
         .filter((rawSchemaPart) => typeof rawSchemaPart !== "boolean")
         // convert each part in the group to a JsonSchema instance and (recursively) get its group information
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        .map((rawSchemaPart) => createGroupFromSchema(new JsonSchema(rawSchemaPart as RawJsonSchema, parserConfig, scope)))
+        .map((rawSchemaPart) => createGroupFromSchema(new JsonSchema(rawSchemaPart, parserConfig, scope)))
         // add group info from each schema part to the created group representation
         .forEach(group.with.bind(group));
     return group;
@@ -112,12 +112,11 @@ export function createGroupFromSchema(schema: JsonSchema): JsonSchemaAllOfGroup 
     if (!isNonEmptyObject(rawSchema)) {
         return new JsonSchemaAllOfGroup();
     }
+    const result = new JsonSchemaAllOfGroup().with(schema);
     if (rawSchema.$ref) {
         const referencedSchema = scope.find(rawSchema.$ref);
-        // this schema is just a reference to another separately defined schema
-        return createGroupFromSchema(referencedSchema);
+        result.with(createGroupFromSchema(referencedSchema));
     }
-    const result = new JsonSchemaAllOfGroup().with(schema);
     if (rawSchema.allOf) {
         result.with(createGroupFromRawSchemaArray(JsonSchemaAllOfGroup, schema, rawSchema.allOf));
     }
