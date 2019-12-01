@@ -136,9 +136,13 @@ describe("createRenderDataBuilder()", () => {
             expect(Object.keys(secondColumn.items)).toHaveLength(1);
             expect(secondColumn.items["Item Three"]).toBeInstanceOf(JsonSchemaGroup);
             const secondColumnItemThree = secondColumn.items["Item Three"] as JsonSchemaGroup;
-            expect(secondColumnItemThree.entries).toHaveLength(1);
+            expect(secondColumnItemThree.entries).toHaveLength(3);
             expect(secondColumnItemThree.entries[0]).toBeInstanceOf(JsonSchema);
-            expect((secondColumnItemThree.entries[0] as JsonSchema).schema).toEqual(quxSchema);
+            expect((secondColumnItemThree.entries[0] as JsonSchema).schema).toEqual({ $ref: "https://foo.bar/foobar#/$defs/qux" });
+            expect(secondColumnItemThree.entries[1]).toBeInstanceOf(JsonSchema);
+            expect((secondColumnItemThree.entries[1] as JsonSchema).schema).toEqual({ $ref: "https://foo.bar/foobar/qux" });
+            expect(secondColumnItemThree.entries[2]).toBeInstanceOf(JsonSchema);
+            expect((secondColumnItemThree.entries[2] as JsonSchema).schema).toEqual(quxSchema);
             expect(secondColumn.onSelect).toBeDefined();
             secondColumn.onSelect(null);
             expect(lastCalledOnSelectColumnIndex).toBe(1);

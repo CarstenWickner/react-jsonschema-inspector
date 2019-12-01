@@ -30,18 +30,21 @@ describe("createGroupFromSchema()", () => {
         expect(result.entries).toHaveLength(1);
         expect(result.entries[0]).toBe(schema);
     });
-    it("returns allOf group with referenced entry for simple schema", () => {
+    it("returns allOf group with entry itself and referenced schema", () => {
         const { scope } = new JsonSchema(
             {
                 $defs: { Foo: rawFooSchema }
             },
             {}
         );
-        const schema = new JsonSchema({ $ref: "#/$defs/Foo" }, {}, scope);
+        const rawTargetSchema = { $ref: "#/$defs/Foo" };
+        const schema = new JsonSchema(rawTargetSchema, {}, scope);
         const result = createGroupFromSchema(schema);
-        expect(result.entries).toHaveLength(1);
+        expect(result.entries).toHaveLength(2);
         expect(result.entries[0]).toBeInstanceOf(JsonSchema);
-        expect((result.entries[0] as JsonSchema).schema).toEqual(rawFooSchema);
+        expect((result.entries[0] as JsonSchema).schema).toEqual(rawTargetSchema);
+        expect(result.entries[1]).toBeInstanceOf(JsonSchema);
+        expect((result.entries[1] as JsonSchema).schema).toEqual(rawFooSchema);
     });
     describe.each`
         groupName  | GroupClass
@@ -439,7 +442,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
         const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}, scope));
         expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toBe("foobar");
     });
-    it("ignores other fields if $ref found", () => {
+    it("includes other fields if $ref found", () => {
         const { scope } = new JsonSchema(
             {
                 $defs: {
@@ -453,7 +456,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
             $ref: "#/$defs/bar"
         };
         const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}, scope));
-        expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toBe("baz");
+        expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toEqual(["foo", "baz"]);
     });
     describe("allOf:", () => {
         it("finds single value", () => {
