@@ -328,10 +328,11 @@ describe("createFilterFunctionForSchema()", () => {
                         items: { $ref: "#" }
                     },
                     Two: {
-                        items: { title: "Nothing" }
+                        title: "Nothing"
                     },
                     Three: {
-                        allOf: [{ $ref: "#/$defs/Two" }, { $ref: "https://unique-schema-identifier#" }]
+                        $ref: "#/$defs/Two",
+                        allOf: [true, { $ref: "https://unique-schema-identifier#" }]
                     }
                 }
             },

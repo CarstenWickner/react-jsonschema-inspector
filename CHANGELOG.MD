@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - support `$defs` (introduced in Draft 2019-09) as alternative to `definitions` keyword
+- include other keywords alongside `$ref` (as per Draft 2019-09)
 
 ## [4.1.0] - 2019-11-26
 ### Added
