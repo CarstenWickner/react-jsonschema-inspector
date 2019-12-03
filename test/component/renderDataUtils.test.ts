@@ -122,7 +122,6 @@ describe("createRenderDataBuilder()", () => {
             const { columnData } = getRenderData(inputSchemas, referenceSchemas, [], {}, hideSingleRoot);
             expect(columnData).toHaveLength(1);
             const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
-            // three items each containing a root schema (wrapped in a JsonSchema and again wrapped in a JsonSchemaGroup)
             expect(Object.keys(rootColumn.items)).toHaveLength(rootItemCount);
         });
         it("ignores invalid root selection", () => {
