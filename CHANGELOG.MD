@@ -6,8 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- support `$defs` (introduced in Draft 2019-09) as alternative to `definitions` keyword
-- include other keywords alongside `$ref` (as per Draft 2019-09)
+- Draft 2019-09: support `$defs` as alternative to `definitions` keyword
+- Draft 2019-09: include other keywords alongside `$ref`
 - introduce `hideSingleRootItem` prop for displaying only a single schema's properties
 
 ## [4.1.0] - 2019-11-26
