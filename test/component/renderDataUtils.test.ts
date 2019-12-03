@@ -78,27 +78,51 @@ describe("createRenderDataBuilder()", () => {
             expect(rootColumn.selectedItem).toBeFalsy();
             expect(rootColumn.trailingSelection).toBeFalsy();
         });
-        it("returns single root column for multiple schemas including reference schemas", () => {
-            const { columnData } = getRenderData(schemas, referenceSchemas, [], {});
+        const parentSchema = { properties: schemas };
+        it.each`
+            testTitle                                 | hideSingleRoot | inputSchemas
+            ${"multiple schemas"}                     | ${true}        | ${schemas}
+            ${"multiple schemas"}                     | ${false}       | ${schemas}
+            ${"single parent schema with properties"} | ${true}        | ${{ foo: parentSchema }}
+        `(
+            "$testTitle + hide: $hideSingleRoot = returns root column with multiple schemas including reference schemas",
+            ({ hideSingleRoot, inputSchemas }) => {
+                const { columnData } = getRenderData(inputSchemas, referenceSchemas, [], {}, hideSingleRoot);
+                expect(columnData).toHaveLength(1);
+                const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+                // three items each containing a root schema (wrapped in a JsonSchema and again wrapped in a JsonSchemaGroup)
+                expect(Object.keys(rootColumn.items)).toHaveLength(3);
+                expect(rootColumn.items.foo).toBeInstanceOf(JsonSchemaGroup);
+                const rootColumnItemsFoo = rootColumn.items.foo as JsonSchemaGroup;
+                expect(rootColumnItemsFoo.entries).toHaveLength(1);
+                expect(rootColumnItemsFoo.entries[0]).toBeInstanceOf(JsonSchema);
+                expect((rootColumnItemsFoo.entries[0] as JsonSchema).schema).toEqual(fooSchema);
+                expect(rootColumn.items.bar).toBeInstanceOf(JsonSchemaGroup);
+                const rootColumnItemsBar = rootColumn.items.bar as JsonSchemaGroup;
+                expect(rootColumnItemsBar.entries).toHaveLength(1);
+                expect(rootColumnItemsBar.entries[0]).toBeInstanceOf(JsonSchema);
+                expect((rootColumnItemsBar.entries[0] as JsonSchema).schema).toEqual(barSchema);
+                expect(rootColumn.items.foobar).toBeInstanceOf(JsonSchemaGroup);
+                const rootColumnItemsFoobar = rootColumn.items.foobar as JsonSchemaGroup;
+                expect(rootColumnItemsFoobar.entries).toHaveLength(1);
+                expect(rootColumnItemsFoobar.entries[0]).toBeInstanceOf(JsonSchema);
+                expect((rootColumnItemsFoobar.entries[0] as JsonSchema).schema).toEqual(foobarSchema);
+            }
+        );
+        it.each`
+            testTitle                                | hideSingleRoot | rootItemCount | inputSchemas
+            ${"single parent schema /w properties"}  | ${false}       | ${1}          | ${{ foo: parentSchema }}
+            ${"single parent schema /wo properties"} | ${true}        | ${1}          | ${{ foo: { properties: {} } }}
+            ${"single parent schema /wo properties"} | ${false}       | ${1}          | ${{ foo: { properties: {} } }}
+            ${"two parent schemas /w properties"}    | ${true}        | ${2}          | ${{ foo: parentSchema, bar: parentSchema }}
+            ${"two parent schemas /w properties"}    | ${false}       | ${2}          | ${{ foo: parentSchema, bar: parentSchema }}
+            ${"two parent schemas /wo properties"}   | ${true}        | ${2}          | ${{ foo: { properties: {} }, bar: { properties: {} } }}
+            ${"two parent schemas /wo properties"}   | ${false}       | ${2}          | ${{ foo: { properties: {} }, bar: { properties: {} } }}
+        `("$testTitle + hide: $hideSingleRoot = returns root column with $rootItems item(s)", ({ hideSingleRoot, rootItemCount, inputSchemas }) => {
+            const { columnData } = getRenderData(inputSchemas, referenceSchemas, [], {}, hideSingleRoot);
             expect(columnData).toHaveLength(1);
             const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
-            // three items each containing a root schema (wrapped in a JsonSchema and again wrapped in a JsonSchemaGroup)
-            expect(Object.keys(rootColumn.items)).toHaveLength(3);
-            expect(rootColumn.items.foo).toBeInstanceOf(JsonSchemaGroup);
-            const rootColumnItemsFoo = rootColumn.items.foo as JsonSchemaGroup;
-            expect(rootColumnItemsFoo.entries).toHaveLength(1);
-            expect(rootColumnItemsFoo.entries[0]).toBeInstanceOf(JsonSchema);
-            expect((rootColumnItemsFoo.entries[0] as JsonSchema).schema).toEqual(fooSchema);
-            expect(rootColumn.items.bar).toBeInstanceOf(JsonSchemaGroup);
-            const rootColumnItemsBar = rootColumn.items.bar as JsonSchemaGroup;
-            expect(rootColumnItemsBar.entries).toHaveLength(1);
-            expect(rootColumnItemsBar.entries[0]).toBeInstanceOf(JsonSchema);
-            expect((rootColumnItemsBar.entries[0] as JsonSchema).schema).toEqual(barSchema);
-            expect(rootColumn.items.foobar).toBeInstanceOf(JsonSchemaGroup);
-            const rootColumnItemsFoobar = rootColumn.items.foobar as JsonSchemaGroup;
-            expect(rootColumnItemsFoobar.entries).toHaveLength(1);
-            expect(rootColumnItemsFoobar.entries[0]).toBeInstanceOf(JsonSchema);
-            expect((rootColumnItemsFoobar.entries[0] as JsonSchema).schema).toEqual(foobarSchema);
+            expect(Object.keys(rootColumn.items)).toHaveLength(rootItemCount);
         });
         it("ignores invalid root selection", () => {
             const { columnData } = getRenderData(schemas, referenceSchemas, ["qux"], {});
@@ -255,7 +279,7 @@ describe("createRenderDataBuilder()", () => {
                     oneOf: [barSchema, foobarSchema]
                 }
             };
-            const { columnData } = getRenderData(rootSchemas, [], ["bar", [0], "get(0)"], {}, buildArrayProperties);
+            const { columnData } = getRenderData(rootSchemas, [], ["bar", [0], "get(0)"], {}, false, buildArrayProperties);
             expect(columnData).toHaveLength(4);
             const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(1);

@@ -104,13 +104,21 @@ export class Inspector extends React.Component<
         }
         // need to look-up the currently displayed number of content columns
         // thanks to 'memoize', we just look-up the result of the previous evaluation
-        const { schemas, referenceSchemas, parserConfig, buildArrayProperties } = this.props;
+        const { schemas, referenceSchemas, hideSingleRootItem, parserConfig, buildArrayProperties } = this.props;
         const oldColumnCount =
             (appendEmptyColumn ? 1 : 0) +
-            this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties).columnData.length;
+            this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig, hideSingleRootItem, buildArrayProperties)
+                .columnData.length;
         // now we need to know what the number of content columns will be after changing the state
         // thanks to 'memoize', the subsequent render() call will just look-up the result of this evaluation
-        const newRenderData = this.getRenderDataForSelection(schemas, referenceSchemas, newSelection, parserConfig, buildArrayProperties);
+        const newRenderData = this.getRenderDataForSelection(
+            schemas,
+            referenceSchemas,
+            newSelection,
+            parserConfig,
+            hideSingleRootItem,
+            buildArrayProperties
+        );
         const { columnData } = newRenderData;
         // update state to trigger re-rendering of the whole component
         this.setState(
@@ -159,8 +167,9 @@ export class Inspector extends React.Component<
      * @param {object.<string, object>} schemas - object containing the top-level JsonSchema definitions as values
      * @param {?Array.<object>} referenceSchemas - additional schemas that may be referenced from within main "schemas"
      * @param {?Array.<string>} selectedItems - array of strings identifying the selected properties per column
-     * @param {?object} parserConfig - configuration affecting how the JSON schemas are being traversed/parsed
-     * @param {?Function} buildArrayProperties - function to derive the properties to list for an array, based on a given `JsonSchema` of the items
+     * @param {boolean} hideSingleRootItem - flag indicating whether the root column should be hidden in case of a single item in the root `schemas`
+     * @param {object} parserConfig - configuration affecting how the JSON schemas are being traversed/parsed
+     * @param {Function} buildArrayProperties - function to derive the properties to list for an array, based on a given `JsonSchema` of the items
      * @returns {object} return - wrapper object for the column data (for the sake of future extensibility)
      * {Array.<object>} return.columnData - collected/prepared data for rendering
      * {?object.<string, JsonSchemaGroup>} return.columnData[].items - named schemas to list in the respective column
@@ -210,6 +219,7 @@ export class Inspector extends React.Component<
         const {
             schemas,
             referenceSchemas,
+            hideSingleRootItem,
             parserConfig,
             buildArrayProperties,
             searchOptions,
@@ -220,7 +230,14 @@ export class Inspector extends React.Component<
             renderEmptyDetails
         } = this.props;
         const { selectedItems, appendEmptyColumn, enteredSearchFilter, appliedSearchFilter } = this.state;
-        const renderDataForSelection = this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig, buildArrayProperties);
+        const renderDataForSelection = this.getRenderDataForSelection(
+            schemas,
+            referenceSchemas,
+            selectedItems,
+            parserConfig,
+            hideSingleRootItem,
+            buildArrayProperties
+        );
         const { columnData } = renderDataForSelection;
         // apply search filter if enabled or clear (potentially left-over) search results
         columnData.forEach(this.setFilteredItemsForColumn(searchOptions, appliedSearchFilter));
@@ -261,6 +278,7 @@ export class Inspector extends React.Component<
     static propTypes = {
         schemas: PropTypes.objectOf(PropTypes.object).isRequired,
         referenceSchemas: PropTypes.arrayOf(PropTypes.object),
+        hideSingleRootItem: PropTypes.bool,
         defaultSelectedItems: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.number)])),
         parserConfig: PropTypes.shape({
             anyOf: PropTypes.shape({
@@ -299,6 +317,7 @@ export class Inspector extends React.Component<
 
     static defaultProps: InspectorDefaultProps = {
         referenceSchemas: [],
+        hideSingleRootItem: false,
         defaultSelectedItems: [],
         parserConfig: {},
         buildArrayProperties: undefined,

@@ -41,12 +41,14 @@ function isOptionIndexValidForOptions(optionIndexes: Array<number>, options: Ren
  * @param {object} schemas - named raw schemas to list in root `columnData` entry
  * @param {Array.<object>} referenceSchemas - additional schemas that may be referenced
  * @param {?object} parserConfig - settings determining how a json schema is being traversed/parsed
+ * @param {boolean} hideSingleRootItem - flag indicating whether a single root item in `schemas` should be skipped and its properties shown instead
  * @returns {object.<string, JsonSchemaGroup>} named schema groups, derived from the provided raw schemas
  */
 function createRootColumnData(
     schemas: InspectorProps["schemas"],
     referenceSchemas: InspectorProps["referenceSchemas"],
-    parserConfig: ParserConfig
+    parserConfig: ParserConfig,
+    hideSingleRootItem: InspectorProps["hideSingleRootItem"]
 ): Omit<RenderItemsColumn, "onSelect"> {
     // first prepare those schemas that may be referenced by the displayed ones or each other
     const referenceScopes: Array<RefScope> = [];
@@ -66,6 +68,16 @@ function createRootColumnData(
         referenceScopes.forEach((referenceScope) => schema.scope.addOtherScope(referenceScope));
         return createGroupFromSchema(schema);
     });
+    if (hideSingleRootItem && Object.keys(rootColumnItems).length === 1) {
+        // next column should list all available properties (if there are any)
+        const propertySchemas = getPropertiesFromSchemaGroup(Object.values(rootColumnItems)[0], undefined);
+        if (isNonEmptyObject(propertySchemas)) {
+            // convert the individual JsonSchema values into JsonSchemaGroups
+            return {
+                items: mapObjectValues(propertySchemas, createGroupFromSchema)
+            };
+        }
+    }
     return { items: rootColumnItems };
 }
 
@@ -133,8 +145,9 @@ function buildNextColumn(
  * @param {object.<string, object>} param0 - mapped raw schemas to be listed in the root column
  * @param {Array.<object>} param1 - additional raw schemas that may be referenced but are not listed (directly) in the root column
  * @param {Array.<string|Array.<number>>} param2 - currently selected elements in the respective columns
- * @param {?object} param3 - `parserConfig` object indicating how the schemas should be traversed/parsed
- * @param {?ArrayPropertiesBuilder} param4 - function for building an array's properties
+ * @param {boolean} param3 - flag indicating whether the root column should be hidden in case of a single item in the root `schemas`
+ * @param {?object} param4 - `parserConfig` object indicating how the schemas should be traversed/parsed
+ * @param {?ArrayPropertiesBuilder} param5 - function for building an array's properties
  * @returns {{columnData: Array.<object>}} render data
  */
 /**
@@ -151,10 +164,11 @@ export const createRenderDataBuilder = (onSelectInColumn: (columnIndex: number) 
     referenceSchemas: InspectorProps["referenceSchemas"],
     selectedItems: Array<string | Array<number>>,
     parserConfig: ParserConfig,
+    hideSingleRootItem?: boolean,
     buildArrayProperties?: InspectorProps["buildArrayProperties"]
 ) => {
     // the first column always lists all top-level schemas
-    let nextColumn: Omit<RenderColumn, "onSelect"> | {} = createRootColumnData(schemas, referenceSchemas, parserConfig);
+    let nextColumn: Omit<RenderColumn, "onSelect"> | {} = createRootColumnData(schemas, referenceSchemas, parserConfig, hideSingleRootItem);
     let selectedSchemaGroup: JsonSchemaGroup | undefined;
     const columnData = selectedItems
         .map((selection, index) => {
