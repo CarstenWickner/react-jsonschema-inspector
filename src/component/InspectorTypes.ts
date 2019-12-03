@@ -13,6 +13,10 @@ export interface InspectorDefaultProps {
      */
     referenceSchemas?: Array<RawJsonSchema>;
     /**
+     * Flag indicating whether the root column should be hidden in case of `schemas` containing only a single item.
+     */
+    hideSingleRootItem?: boolean;
+    /**
      * Array of (default) selected items – each item representing the selection in one displayed column.
      */
     defaultSelectedItems?: Array<string | Array<number>>;

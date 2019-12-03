@@ -65,4 +65,34 @@ At the same time, there are a number of tools that automatically generate schema
 
 <Props of={Inspector} />
 
+### designed for multiple schemas
+By default, the inspector caters for one or multiple schemas being represented.
+
+<Preview>
+    <Story name="designed for multiple schemas">
+        <Inspector
+            schemas={{ "Meta Core JSON Schema": metaSchema }}
+            defaultSelectedItems={["Meta Core JSON Schema", "$schema"]}
+        />
+    </Story>
+</Preview>
+
+----
+
+### showing a single schema
+While showing multiple schemas at once is possible, you can also opt to list a single schema's properties
+and hiding the artifical root element (and thereby other parts of the main schema) by setting the `hideSingleRootItem` prop to `true`.
+
+<Preview>
+    <Story name="showing a single schema">
+        <Inspector
+            schemas={{ "Meta Core JSON Schema": metaSchema }}
+            defaultSelectedItems={["$schema"]}
+            hideSingleRootItem={true}
+        />
+    </Story>
+</Preview>
+
+----
+
 Check out the other stories with more specific examples for the respective configuration options.
