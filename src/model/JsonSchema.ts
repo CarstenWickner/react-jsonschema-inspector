@@ -99,12 +99,22 @@ export class RefScope {
                         // any alias provided within definitions will only be available as short-hand in this schema
                         this.internalRefs.set(subAlias, subSchema);
                     }
+                    // from JSON Schema Draft 2019-09: "$anchor" for plain text references (that should no longer be provided via $id)
+                    const anchor = definition.$anchor;
+                    if (anchor) {
+                        // any alias provided within definitions will only be available as short-hand in this schema
+                        this.internalRefs.set(`#${anchor}`, subSchema);
+                    }
                     // can always reference schema in definitions by its path, starting from the empty fragment
                     this.internalRefs.set(`#/${definitionsKeyword}/${key}`, subSchema);
                     if (externalRefBase) {
                         // the convention was fulfilled and the top-level schema defined an absolute URI as its "$id"
                         // this allows referencing a schema in definitions by its path, starting from that URI
                         this.externalRefs.set(`${externalRefBase}/${definitionsKeyword}/${key}`, subSchema);
+                        if (anchor) {
+                            // from JSON Schema Draft 2019-09: "$anchor" can also be used in combination with base URI
+                            this.externalRefs.set(`${externalRefBase}${anchor}`, subSchema);
+                        }
                     }
                 }
             });

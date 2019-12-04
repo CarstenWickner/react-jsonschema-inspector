@@ -32,8 +32,8 @@ npm i react-jsonschema-inspector
 
 | Prop | Description |
 | --- | --- |
-| `schemas` (required) | Object: keys will be displayed in the root column, the values are expected to be independent JSON Schema definitions (compatible to Draft 4, 6 or 7) |
-| `referenceSchemas` | Array of objects: the entries are expected to be JSON Schema definitions with an absolute URI as `$id`/`id` (compatible to Draft 4, 6 or 7). These schemas will not be shown on the root column, but are used to resolve URI `$ref`-erences in any of the displayed `schemas` or in another entry of the `referenceSchemas` |
+| `schemas` (required) | Object: keys will be displayed in the root column, the values are expected to be independent JSON Schema definitions (compatible to Draft 4, 6, 7 or 2019-09) |
+| `referenceSchemas` | Array of objects: the entries are expected to be JSON Schema definitions with an absolute URI as `$id`/`id` (compatible to Draft 4, 6, 7 or 2019-09). These schemas will not be shown on the root column, but are used to resolve URI `$ref`-erences in any of the displayed `schemas` or in another entry of the `referenceSchemas` |
 | `hideSingleRootItem` | Boolean: flag indicating whether the properties of the single entry in the given `schemas` properties should be listed in the root column – in case of multiple entries in `schemas` this is being ignored |
 | `defaultSelectedItems` | Array of strings: each referring to the name of the selected item in the respective column (i.e. the first entry in this array should match one key in the `schemas` object) |
 | `onSelect` | Function: call-back being invoked after the selection changed. Receives two parameters: (1) the selection - as per the `defaultSelectedItems`, (2) an object containing the "columnData" - the full render information for all visible columns |
@@ -83,31 +83,41 @@ As output, the respective helper functions either return a single value or – i
 
 ## Compatibility
 
-This component is compatible with JSON Schema Draft 7.
-It is also backwards-compatible with Drafts 4 and 6.
+This component supports JSON Schema Draft 2019-09.
+It is also backwards-compatible with Drafts 4, 6 and 7.
+
+Please refer to the more detailed listing below regarding particular keywords.
 
 ### Structural Properties
 
 | Property | Support | Description |
 | --- | --- |--- |
-| `$schema` | - | *ignored* (assumed to be compatible to JSON Schema Draft 4, 6 or 7) |
-| `$id` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 6 and 7), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `definitions` |
-| `id` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 4), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `definitions` or if `$id` is present |
-| `$ref` | Yes | used to look-up re-usable sub-schemas transparently (i.e. not displayed), supporting:<ul><li>`#` or the root `$id`/`id` value as root schema references,</li><li>`#/definitions/<name-of-definition>` or the respective `$id`/`id` value from within the `definitions` for sub-schemas,</li><li>absolute URIs are supported as long as those separate schemas are provided via the `referenceSchemas` prop (and their respective root `$id`/`id` matches the given `$ref`)</li><li>absolute URIs ending with `#/definitions/<name-of-definition>` are also supported via the `referenceSchemas` prop</li></ul> |
+| `$schema` | - | *ignored* (assumed to be compatible to JSON Schema Draft 4, 6, 7 or 2019-09) |
+| `$vocabulary` | - | *ignored* |
+| `$id` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 6 upwards), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `$defs`/`definitions` |
+| `id` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 4), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `$defs`/`definitions` or if `$id` is present |
+| `$anchor` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 2019-09) when preceded by `#`, but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `$defs`/`definitions` |
+| `$ref` | Yes | used to look-up re-usable sub-schemas transparently (i.e. not displayed), supporting:<ul><li>`#` or the root `$id`/`id` value as root schema references,</li><li>`#/$defs/<name-of-definition>`/`#/definitions/<name-of-definition>` or the respective `$id`/`id` value from within the `$defs`/`definitions` for sub-schemas,</li><li>absolute URIs are supported as long as those separate schemas are provided via the `referenceSchemas` prop (and their respective root `$id`/`id` matches the given `$ref`)</li><li>absolute URIs ending with `#/$defs/<name-of-definition>`/`#/definitions/<name-of-definition>` or `#<anchor>` are also supported via the `referenceSchemas` prop</li></ul> |
+| `$recursiveAnchor` | - | *ignored* |
+| `$recursiveRef` | - | *ignored* |
 | `$defs`| Yes | used to provide re-usable sub-schemas that are being referenced via `$ref` (only in the respective root schemas) (as per Draft 2019-09) |
 | `definitions`| Yes | used to provide re-usable sub-schemas that are being referenced via `$ref` (only in the respective root schemas) (as per Draft 4, 6 or 7) |
 | `properties`| Yes | used to populate the whole structure to be traversed |
 | `required` | Yes | used to add empty `properties` to structure if they are not also mentioned in `properties` directly |
 | `additionalProperties` | - | *ignored* |
 | `patternProperties` | - | *ignored* |
+| `propertyNames` | - | *ignored* |
+| `unevaluatedProperties` | - | *ignored* |
 | `items`| Partially | used to look-up `properties` of single kind of items in an array; however if `items` is an array of multiple sub-schemas they are being *ignored* |
 | `additionalItems`| Yes | used to look-up `properties` of kind of items in an array if `items` is not present or defined as an array (which is not supported itself), otherwise `additionalItems` are being *ignored* |
+| `unevaluatedItems` | - | *ignored* |
 | `allOf` | Yes | used to combine sub-schemas transparently |
 | `anyOf` | Yes | used to combine sub-schemas |
 | `oneOf` | Yes | used to combine sub-schemas |
 | `not` | - | *ignored* |
 | `contains` | - | *ignored* |
 | `dependencies` | - | *ignored* |
+| `dependentSchemas` | - | *ignored* |
 | `if` | - | *ignored* |
 | `then` | - | *ignored* |
 | `else` | - | *ignored* |
@@ -129,14 +139,16 @@ It is also backwards-compatible with Drafts 4 and 6.
 | `format` | Yes | without further explanations |
 | `multipleOf` | Yes |  |
 | `minimum` | Yes |  |
-| `exclusiveMinimum` | Yes | supported both as `number` per Draft 6 and 7 and `boolean` per Draft 4 |
+| `exclusiveMinimum` | Yes | supported both as `number` per Draft 6 upwards and `boolean` per Draft 4 |
 | `maximum` | Yes |  |
-| `exclusiveMaximum` | Yes | supported both as `number` per Draft 6 and 7 and `boolean` per Draft 4 |
+| `exclusiveMaximum` | Yes | supported both as `number` per Draft 6 upwards and `boolean` per Draft 4 |
 | `required` | Yes | not on the individual items per default |
+| `dependentRequired` | - | *ignored* |
 | `minItems` | Yes |  |
 | `maxItems` | Yes |  |
 | `uniqueItems` | Yes |  |
-| `propertyNames` | - | *ignored* |
+| `minContains` | - | *ignored* |
+| `maxContains` | - | *ignored* |
 | `minProperties` | - | *ignored* |
 | `maxProperties` | - | *ignored* |
 
