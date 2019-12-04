@@ -149,26 +149,32 @@ describe("constructed correctly()", () => {
     it("ignores $id/id values on $defs in external references", () => {
         const subSchemaA = { $id: "A-$id-value" };
         const subSchemaB = { id: "B-id-value" };
+        const subSchemaC = { $anchor: "C-anchor-value" };
         const schema = {
             $id: "http://valid-uri.com/$id#",
             $defs: {
                 A: subSchemaA,
-                B: subSchemaB
+                B: subSchemaB,
+                C: subSchemaC
             }
         };
         const { scope } = new JsonSchema(schema, {});
-        expect(scope.internalRefs.size).toBe(5);
+        expect(scope.internalRefs.size).toBe(7);
         expect(scope.internalRefs.get("#").schema).toEqual(schema);
         expect(scope.internalRefs.get("#/$defs/A").schema).toEqual(subSchemaA);
         expect(scope.internalRefs.get("#/$defs/B").schema).toEqual(subSchemaB);
+        expect(scope.internalRefs.get("#/$defs/C").schema).toEqual(subSchemaC);
         expect(scope.internalRefs.get("A-$id-value").schema).toEqual(subSchemaA);
         expect(scope.internalRefs.get("B-id-value").schema).toEqual(subSchemaB);
+        expect(scope.internalRefs.get("#C-anchor-value").schema).toEqual(subSchemaC);
 
-        expect(scope.externalRefs.size).toBe(4);
+        expect(scope.externalRefs.size).toBe(6);
         expect(scope.externalRefs.get("http://valid-uri.com/$id").schema).toEqual(schema);
         expect(scope.externalRefs.get("http://valid-uri.com/$id#").schema).toEqual(schema);
         expect(scope.externalRefs.get("http://valid-uri.com/$id#/$defs/A").schema).toEqual(subSchemaA);
         expect(scope.externalRefs.get("http://valid-uri.com/$id#/$defs/B").schema).toEqual(subSchemaB);
+        expect(scope.externalRefs.get("http://valid-uri.com/$id#/$defs/C").schema).toEqual(subSchemaC);
+        expect(scope.externalRefs.get("http://valid-uri.com/$id#C-anchor-value").schema).toEqual(subSchemaC);
     });
 });
 describe("RefScope.findSchemaInThisScope()", () => {
