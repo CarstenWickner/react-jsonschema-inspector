@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Exported type definitions should include main `<Inspector>` component and its props
+- Borders of "Details" block should not be shown if there is no selection and no `renderEmptyDetails` prop was provided
+- Borders of "Details" block should not be shown if there is no selection and `renderEmptyDetails` returns no content to be shown
+- Borders of "Details" block should not be shown if there is a selection and `renderSelectionDetails` returns no content to be shown
 
 ## [4.2.0] - 2019-12-04
 ### Added
