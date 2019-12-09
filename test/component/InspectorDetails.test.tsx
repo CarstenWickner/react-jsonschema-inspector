@@ -28,6 +28,7 @@ describe("renders correctly", () => {
         it("shows nothing by default", () => {
             const component = shallow(<InspectorDetails columnData={[]} />);
             expect(component.children().exists()).toBe(false);
+            expect(component.hasClass("nothing-to-show")).toBe(true);
         });
         it("applies custom renderEmptyDetails", () => {
             const component = shallow(
@@ -39,6 +40,17 @@ describe("renders correctly", () => {
                 />
             );
             expect(component.find(".custom-empty-details").text()).toBe("0");
+            expect(component.hasClass("nothing-to-show")).toBe(false);
+        });
+        it("allows for renderEmptyDetails to return nothing", () => {
+            const component = shallow(
+                <InspectorDetails
+                    columnData={[]}
+                    renderEmptyDetails={(): React.ReactElement => null}
+                />
+            );
+            expect(component.children().exists()).toBe(false);
+            expect(component.hasClass("nothing-to-show")).toBe(true);
         });
     });
     describe("with no selection", () => {
@@ -57,6 +69,7 @@ describe("renders correctly", () => {
         it("shows nothing by default", () => {
             const component = shallow(<InspectorDetails columnData={columnData} />);
             expect(component.children().exists()).toBe(false);
+            expect(component.hasClass("nothing-to-show")).toBe(true);
         });
         it("applies custom renderEmptyDetails", () => {
             const component = shallow(
@@ -68,6 +81,17 @@ describe("renders correctly", () => {
                 />
             );
             expect(component.find(".custom-empty-details").text()).toBe("1");
+            expect(component.hasClass("nothing-to-show")).toBe(false);
+        });
+        it("allows for renderEmptyDetails to return nothing", () => {
+            const component = shallow(
+                <InspectorDetails
+                    columnData={[]}
+                    renderEmptyDetails={(): React.ReactElement => null}
+                />
+            );
+            expect(component.children().exists()).toBe(false);
+            expect(component.hasClass("nothing-to-show")).toBe(true);
         });
     });
     describe("with array item selection", () => {
@@ -93,6 +117,7 @@ describe("renders correctly", () => {
             expect(columnData).toEqual(columnDataProp);
             expect(itemSchemaGroup).toEqual(((columnDataProp[1] as unknown) as RenderItemsColumn).items["[0]"]);
             expect(selectionColumnIndex).toEqual(1);
+            expect(component.hasClass("nothing-to-show")).toBe(false);
         });
         it("applies custom renderSelectionDetails", () => {
             const renderSelectionDetails = jest.fn(() => <span className="custom-selection-details" />);
@@ -107,6 +132,17 @@ describe("renders correctly", () => {
             expect(columnData).toEqual(columnDataProp);
             expect(itemSchemaGroup).toEqual(((columnDataProp[1] as unknown) as RenderItemsColumn).items["[0]"]);
             expect(selectionColumnIndex).toBe(1);
+            expect(component.hasClass("nothing-to-show")).toBe(false);
+        });
+        it("allows for renderSelectionDetails to return nothing", () => {
+            const component = shallow(
+                <InspectorDetails
+                    columnData={columnDataProp}
+                    renderSelectionDetails={(): React.ReactElement => null}
+                />
+            );
+            expect(component.children().exists()).toBe(false);
+            expect(component.hasClass("nothing-to-show")).toBe(true);
         });
     });
     describe("with option selection", () => {
@@ -134,6 +170,7 @@ describe("renders correctly", () => {
             expect(columnData).toEqual(columnDataProp);
             expect((itemSchemaGroup.entries[0] as JsonSchema).schema).toEqual(schema);
             expect(selectionColumnIndex).toEqual(1);
+            expect(component.hasClass("nothing-to-show")).toBe(false);
         });
         it("applies custom renderSelectionDetails", () => {
             const renderSelectionDetails = jest.fn(() => <span className="custom-selection-details" />);
@@ -148,6 +185,17 @@ describe("renders correctly", () => {
             expect(columnData).toEqual(columnDataProp);
             expect((itemSchemaGroup.entries[0] as JsonSchema).schema).toEqual(schema);
             expect(selectionColumnIndex).toBe(1);
+            expect(component.hasClass("nothing-to-show")).toBe(false);
+        });
+        it("allows for renderSelectionDetails to return nothing", () => {
+            const component = shallow(
+                <InspectorDetails
+                    columnData={columnDataProp}
+                    renderSelectionDetails={(): React.ReactElement => null}
+                />
+            );
+            expect(component.children().exists()).toBe(false);
+            expect(component.hasClass("nothing-to-show")).toBe(true);
         });
     });
 });
