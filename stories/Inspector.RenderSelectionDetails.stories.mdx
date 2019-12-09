@@ -47,3 +47,19 @@ Via `renderSelectionDetails` you can define your own component to be displayed o
         />
     </Story>
 </Preview>
+
+### disabled
+If `renderSelectionDetails` returns nothing (e.g. `null`), the details panel on the right will be hidden.
+
+<Preview>
+    <Story name="disabled">
+        <Inspector
+            schemas={{
+                Shop: shopSelectionSchema
+            }}
+            defaultSelectedItems={["Shop", "inventory"]}
+            renderSelectionDetails={() => null}
+            onSelect={action("onSelect")}
+        />
+    </Story>
+</Preview>
