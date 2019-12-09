@@ -1,5 +1,6 @@
 {
     "rules": {
+        "@typescript-eslint/no-empty-function": "off",
         "class-methods-use-this": "off",
         "import/no-extraneous-dependencies": "off",
         "indent": ["error", 4, { "ignoredNodes": ["TemplateLiteral"] }],
