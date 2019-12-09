@@ -43,9 +43,5 @@ export const InspectorDetails: React.FunctionComponent<{
     const wrapperClassName = classNames("jsonschema-inspector-details", {
         "nothing-to-show": !detailsContent
     });
-    return (
-        <div className={wrapperClassName}>
-            {detailsContent}
-        </div>
-    );
+    return <div className={wrapperClassName}>{detailsContent}</div>;
 };

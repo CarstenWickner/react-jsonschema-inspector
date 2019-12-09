@@ -43,12 +43,7 @@ describe("renders correctly", () => {
             expect(component.hasClass("nothing-to-show")).toBe(false);
         });
         it("allows for renderEmptyDetails to return nothing", () => {
-            const component = shallow(
-                <InspectorDetails
-                    columnData={[]}
-                    renderEmptyDetails={(): React.ReactElement => null}
-                />
-            );
+            const component = shallow(<InspectorDetails columnData={[]} renderEmptyDetails={(): React.ReactElement => null} />);
             expect(component.children().exists()).toBe(false);
             expect(component.hasClass("nothing-to-show")).toBe(true);
         });
@@ -84,12 +79,7 @@ describe("renders correctly", () => {
             expect(component.hasClass("nothing-to-show")).toBe(false);
         });
         it("allows for renderEmptyDetails to return nothing", () => {
-            const component = shallow(
-                <InspectorDetails
-                    columnData={[]}
-                    renderEmptyDetails={(): React.ReactElement => null}
-                />
-            );
+            const component = shallow(<InspectorDetails columnData={[]} renderEmptyDetails={(): React.ReactElement => null} />);
             expect(component.children().exists()).toBe(false);
             expect(component.hasClass("nothing-to-show")).toBe(true);
         });
@@ -135,12 +125,7 @@ describe("renders correctly", () => {
             expect(component.hasClass("nothing-to-show")).toBe(false);
         });
         it("allows for renderSelectionDetails to return nothing", () => {
-            const component = shallow(
-                <InspectorDetails
-                    columnData={columnDataProp}
-                    renderSelectionDetails={(): React.ReactElement => null}
-                />
-            );
+            const component = shallow(<InspectorDetails columnData={columnDataProp} renderSelectionDetails={(): React.ReactElement => null} />);
             expect(component.children().exists()).toBe(false);
             expect(component.hasClass("nothing-to-show")).toBe(true);
         });
@@ -188,12 +173,7 @@ describe("renders correctly", () => {
             expect(component.hasClass("nothing-to-show")).toBe(false);
         });
         it("allows for renderSelectionDetails to return nothing", () => {
-            const component = shallow(
-                <InspectorDetails
-                    columnData={columnDataProp}
-                    renderSelectionDetails={(): React.ReactElement => null}
-                />
-            );
+            const component = shallow(<InspectorDetails columnData={columnDataProp} renderSelectionDetails={(): React.ReactElement => null} />);
             expect(component.children().exists()).toBe(false);
             expect(component.hasClass("nothing-to-show")).toBe(true);
         });
