@@ -1,4 +1,3 @@
-import { Inspector as InspectorComponent } from "./component/Inspector";
 import { getFieldValueFromSchemaGroup } from "./model/schemaUtils";
 import { minimumValue, maximumValue, commonValues, listValues } from "./model/utils";
 
@@ -8,7 +7,7 @@ import { KeysOfRawJsonSchema, KeysOfRawJsonSchemaWithValuesOf } from "./types/Ra
 /**
  * Main Inspector component (with numerous props).
  */
-export const Inspector = InspectorComponent;
+export { Inspector } from "./component/Inspector";
 
 /**
  * Extract single minimum numeric value from a certain field in the (selected) schema parts of the given schema group.

@@ -1,4 +1,5 @@
 import * as React from "react";
+import classNames from "classnames";
 
 import { InspectorDetailsContent } from "./InspectorDetailsContent";
 import { JsonSchemaGroup } from "../model/JsonSchemaGroup";
@@ -22,24 +23,25 @@ export const InspectorDetails: React.FunctionComponent<{
             optionIndexes = trailingSelectionColumn.selectedItem as Array<number>;
         }
     }
-    return (
-        <div className="jsonschema-inspector-details">
-            {itemSchemaGroup &&
-                renderSelectionDetails &&
-                renderSelectionDetails({
-                    itemSchemaGroup,
-                    selectionColumnIndex,
-                    columnData,
-                    optionIndexes
-                })}
-            {itemSchemaGroup && !renderSelectionDetails && (
-                <InspectorDetailsContent itemSchemaGroup={itemSchemaGroup} selectionColumnIndex={selectionColumnIndex} columnData={columnData} />
-            )}
-            {!itemSchemaGroup &&
-                renderEmptyDetails &&
-                renderEmptyDetails({
-                    rootColumnSchemas: columnData.length ? (columnData[0] as RenderItemsColumn).items : {}
-                })}
-        </div>
-    );
+    let detailsContent: React.ReactElement;
+    if (itemSchemaGroup && renderSelectionDetails) {
+        detailsContent = renderSelectionDetails({
+            itemSchemaGroup,
+            selectionColumnIndex,
+            columnData,
+            optionIndexes
+        });
+    } else if (itemSchemaGroup && !renderSelectionDetails) {
+        detailsContent = (
+            <InspectorDetailsContent itemSchemaGroup={itemSchemaGroup} selectionColumnIndex={selectionColumnIndex} columnData={columnData} />
+        );
+    } else if (!itemSchemaGroup && renderEmptyDetails) {
+        detailsContent = renderEmptyDetails({
+            rootColumnSchemas: columnData.length ? (columnData[0] as RenderItemsColumn).items : {}
+        });
+    }
+    const wrapperClassName = classNames("jsonschema-inspector-details", {
+        "nothing-to-show": !detailsContent
+    });
+    return <div className={wrapperClassName}>{detailsContent}</div>;
 };
