@@ -10,7 +10,7 @@ export interface JSONSchema201909 {
     $ref?: string;
     $schema?: string;
     $vocabulary?: {
-        [key: string]: string;
+        [key: string]: boolean;
     };
     $comment?: string;
 
