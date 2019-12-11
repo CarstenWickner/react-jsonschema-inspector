@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - Exported type definitions should include main `<Inspector>` component and its props
+- Include type definition for Draft 2019-09 for expected props
 - Borders of "Details" block should not be shown if there is no selection and no `renderEmptyDetails` prop was provided
 - Borders of "Details" block should not be shown if there is no selection and `renderEmptyDetails` returns no content to be shown
 - Borders of "Details" block should not be shown if there is a selection and `renderSelectionDetails` returns no content to be shown
