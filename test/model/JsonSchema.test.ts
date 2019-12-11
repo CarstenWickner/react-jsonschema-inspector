@@ -210,6 +210,16 @@ describe("RefScope.find()", () => {
         const { scope } = schema;
         expect(() => scope.find("#/$defs/A")).toThrowError('Cannot resolve $ref: "#/$defs/A"');
     });
+    it.each`
+        testTitle             | mainSchemaId                            | expectedErrorMessage
+        ${"without path"}     | ${"https://base.org"}                   | ${'Cannot resolve $ref: "test.json"/"https://base.org/test.json"'}
+        ${"with path"}        | ${"https://base.org/main.json"}         | ${'Cannot resolve $ref: "test.json"/"https://base.org/test.json"'}
+        ${"with nested path"} | ${"https://base.org/schemas/main.json"} | ${'Cannot resolve $ref: "test.json"/"https://base.org/schemas/test.json"'}
+    `("throws error if not found, also considering base URI $testTitle", ({ mainSchemaId, expectedErrorMessage }) => {
+        const schema = new JsonSchema({ $id: mainSchemaId, title: "Test" }, {});
+        const { scope } = schema;
+        expect(() => scope.find("test.json")).toThrowError(expectedErrorMessage);
+    });
     it("via other scope's `externalRefs`", () => {
         const otherSchemaId = "http://valid-uri.com/$id#";
         const schema = new JsonSchema({ $id: otherSchemaId }, {});
@@ -217,8 +227,23 @@ describe("RefScope.find()", () => {
         scope.addOtherScope(schema.scope);
         expect(scope.find(otherSchemaId)).toEqual(schema);
     });
+    it.each`
+        testTitle             | mainSchemaId                            | targetSchemaId
+        ${"without path"}     | ${"https://base.org"}                   | ${"https://base.org/test.json"}
+        ${"with path"}        | ${"https://base.org/main.json"}         | ${"https://base.org/test.json"}
+        ${"with nested path"} | ${"https://base.org/schemas/main.json"} | ${"https://base.org/schemas/test.json"}
+    `("via other scope's `externalRefs`, also considering base URI $testTitle", ({ mainSchemaId, targetSchemaId }) => {
+        const { scope: otherScopeWithoutMatch } = new JsonSchema({ $id: "https://something-else.com" }, {});
+        const targetSchema = new JsonSchema({ $id: targetSchemaId }, {});
+        const { scope: mainScope } = new JsonSchema({ $id: mainSchemaId, title: "Test" }, {});
+        // first entry in otherScopes does not contain a matching element
+        mainScope.addOtherScope(otherScopeWithoutMatch);
+        // second entry in otherScopes has a matching $id value
+        mainScope.addOtherScope(targetSchema.scope);
+        expect(mainScope.find(targetSchemaId)).toEqual(targetSchema);
+    });
     it("not via other scope's `internalRefs`", () => {
-        const { scope } = new JsonSchema({ title: "Test" }, {});
+        const { scope } = new JsonSchema({ $id: "https://base.org/", title: "Test" }, {});
         scope.addOtherScope(
             new JsonSchema(
                 {

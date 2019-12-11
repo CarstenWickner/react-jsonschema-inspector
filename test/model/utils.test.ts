@@ -1,4 +1,13 @@
-import { isDefined, isNonEmptyObject, mapObjectValues, minimumValue, maximumValue, listValues, commonValues } from "../../src/model/utils";
+import {
+    isDefined,
+    isNonEmptyObject,
+    mapObjectValues,
+    minimumValue,
+    maximumValue,
+    listValues,
+    commonValues,
+    deriveBaseUri
+} from "../../src/model/utils";
 
 describe("isDefined()", () => {
     it("rejects undefined", () => {
@@ -148,5 +157,20 @@ describe("commonValues()", () => {
         ${"returns empty array if params are distinct non-array values"}                       | ${1}         | ${2}         | ${[]}
     `("$testDescription", ({ firstParam, secondParam, result }) => {
         expect(commonValues(firstParam, secondParam)).toEqual(result);
+    });
+});
+describe("deriveBaseUri()", () => {
+    it.each`
+        testDescription                                    | uri                                        | result
+        ${"appends a slash if there is none"}              | ${"example:value"}                         | ${"example:value/"}
+        ${"appends a slash if there is no path"}           | ${"https://example.org"}                   | ${"https://example.org/"}
+        ${"returns unchanged URI if ending with slash"}    | ${"https://example.org/"}                  | ${"https://example.org/"}
+        ${"removes path (only one path element)"}          | ${"https://example.org/test.json"}         | ${"https://example.org/"}
+        ${"removes trailing one (of two) path element(s)"} | ${"https://example.org/schemas/test.json"} | ${"https://example.org/schemas/"}
+        ${"removes query portion"}                         | ${"https://example.org?test"}              | ${"https://example.org/"}
+        ${"removes fragment portion"}                      | ${"https://example.org#test"}              | ${"https://example.org/"}
+        ${"removes both query and fragment portion"}       | ${"https://example.org/a/b/c?test#test"}   | ${"https://example.org/a/b/"}
+    `("$testDescription", ({ uri, result }) => {
+        expect(deriveBaseUri(uri)).toEqual(result);
     });
 });
