@@ -117,6 +117,12 @@ export function createGroupFromSchema(schema: JsonSchema): JsonSchemaAllOfGroup 
         const referencedSchema = scope.find(rawSchema.$ref);
         result.with(createGroupFromSchema(referencedSchema));
     }
+    const recursiveRef = getValueFromRawJsonSchema(rawSchema, "$recursiveRef");
+    if (recursiveRef) {
+        // under some circumstances, $recursiveRef behaves like $ref which is a good starting point for now
+        const referencedSchema = scope.find(recursiveRef);
+        result.with(createGroupFromSchema(referencedSchema));
+    }
     if (rawSchema.allOf) {
         result.with(createGroupFromRawSchemaArray(JsonSchemaAllOfGroup, schema, rawSchema.allOf));
     }

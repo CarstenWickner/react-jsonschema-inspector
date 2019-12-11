@@ -213,65 +213,71 @@ describe("collectReferencedSubSchemas", () => {
         });
     });
     describe.each`
-        includeNestedOptionals
-        ${true}
-        ${false}
-    `("returns Map with a single referenced sub-schema (when includeNestedOptionals === $includeNestedOptionals)", ({ includeNestedOptionals }) => {
-        const rawSubSchema = {
-            title: "Reference Target"
-        };
-        it.each`
-            fieldName            | referencingSchemaPart
-            ${"properties"}      | ${{ bar: { $ref: "#/$defs/Foo" } }}
-            ${"items"}           | ${{ $ref: "#/$defs/Foo" }}
-            ${"additionalItems"} | ${{ $ref: "#/$defs/Foo" }}
-        `("returning true as mapped result value for reference in '$fieldName'", ({ fieldName, referencingSchemaPart }) => {
-            const schema = new JsonSchema(
-                {
-                    $defs: { Foo: rawSubSchema },
-                    [fieldName]: referencingSchemaPart
-                },
-                {}
-            );
-            const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
-            expect(result.size).toBe(1);
-            const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
-            expect(subSchema.schema).toEqual(rawSubSchema);
-            expect(resultIncludingNestedOptionals).toBe(true);
-        });
-        it("returning includeNestedOptionals flag as mapped result value for reference in 'allOf'", () => {
-            const schema = new JsonSchema(
-                {
-                    $defs: { Foo: rawSubSchema },
-                    allOf: [{}, { $ref: "#/$defs/Foo" }]
-                },
-                {}
-            );
-            const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
-            expect(result.size).toBe(1);
-            const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
-            expect(subSchema.schema).toEqual(rawSubSchema);
-            expect(resultIncludingNestedOptionals).toBe(includeNestedOptionals);
-        });
-        it.each`
-            testDescription                                          | allOf
-            ${"directly in 'allOf' (first) and as 'items' (second)"} | ${[{ $ref: "#/definitions/Foo" }, { items: { $ref: "#/definitions/Foo" } }]}
-            ${"directly in 'allOf' (second) and as 'items' (first)"} | ${[{ items: { $ref: "#/definitions/Foo" } }, { $ref: "#/definitions/Foo" }]}
-        `("returning true as mapped result value if same reference occurs $testDescription", ({ allOf }) => {
-            const schema = new JsonSchema(
-                {
-                    definitions: { Foo: rawSubSchema },
-                    allOf
-                },
-                {}
-            );
-            const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
-            expect(result.size).toBe(1);
-            const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
-            expect(subSchema.schema).toEqual(rawSubSchema);
-            expect(resultIncludingNestedOptionals).toBe(true);
-        });
-    });
+        referenceKeyword   | includeNestedOptionals
+        ${"$ref"}          | ${true}
+        ${"$recursiveRef"} | ${true}
+        ${"$ref"}          | ${false}
+        ${"$recursiveRef"} | ${false}
+    `(
+        "returns Map with a single referenced ($referenceKeyword) sub-schema (when includeNestedOptionals === $includeNestedOptionals)",
+        ({ referenceKeyword, includeNestedOptionals }) => {
+            const rawSubSchema = {
+                title: "Reference Target"
+            };
+            it.each`
+                fieldName            | referencingSchemaPart
+                ${"properties"}      | ${{ bar: { [referenceKeyword]: "#/$defs/Foo" } }}
+                ${"items"}           | ${{ [referenceKeyword]: "#/$defs/Foo" }}
+                ${"additionalItems"} | ${{ [referenceKeyword]: "#/$defs/Foo" }}
+            `("returning true as mapped result value for reference in '$fieldName'", ({ fieldName, referencingSchemaPart }) => {
+                const schema = new JsonSchema(
+                    {
+                        $defs: { Foo: rawSubSchema },
+                        [fieldName]: referencingSchemaPart
+                    },
+                    {}
+                );
+                const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
+                expect(result.size).toBe(1);
+                const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
+                expect(subSchema.schema).toEqual(rawSubSchema);
+                expect(resultIncludingNestedOptionals).toBe(true);
+            });
+            it("returning includeNestedOptionals flag as mapped result value for reference in 'allOf'", () => {
+                const schema = new JsonSchema(
+                    {
+                        $defs: { Foo: rawSubSchema },
+                        allOf: [{}, { [referenceKeyword]: "#/$defs/Foo" }]
+                    },
+                    {}
+                );
+                const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
+                expect(result.size).toBe(1);
+                const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
+                expect(subSchema.schema).toEqual(rawSubSchema);
+                expect(resultIncludingNestedOptionals).toBe(includeNestedOptionals);
+            });
+            const fooInDefinitions = { [referenceKeyword]: "#/definitions/Foo" };
+            it.each`
+                testDescription                                          | allOf
+                ${"directly in 'allOf' (first) and as 'items' (second)"} | ${[fooInDefinitions, { items: fooInDefinitions }]}
+                ${"directly in 'allOf' (second) and as 'items' (first)"} | ${[{ items: fooInDefinitions }, fooInDefinitions]}
+            `("returning true as mapped result value if same reference occurs $testDescription", ({ allOf }) => {
+                const schema = new JsonSchema(
+                    {
+                        definitions: { Foo: rawSubSchema },
+                        allOf
+                    },
+                    {}
+                );
+                const result = collectReferencedSubSchemas(schema, includeNestedOptionals);
+                expect(result.size).toBe(1);
+                const [subSchema, resultIncludingNestedOptionals] = Array.from(result.entries())[0];
+                expect(subSchema.schema).toEqual(rawSubSchema);
+                expect(resultIncludingNestedOptionals).toBe(true);
+            });
+        }
+    );
     it("returns Map with multiple referenced sub-schemas", () => {
         const schema = new JsonSchema(
             {

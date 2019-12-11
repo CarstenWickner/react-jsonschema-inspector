@@ -85,9 +85,17 @@ export function collectReferencedSubSchemas(schema: JsonSchema, includeNestedOpt
     const references: Map<JsonSchema, boolean> = new Map();
     // collect all referenced sub-schemas
     const collectReferences = (rawSubSchema: RawJsonSchema, isIncludingOptionals?: boolean): boolean => {
+        // add any referenced schemas to the result set
         if (rawSubSchema.$ref) {
-            // add referenced schema to the result set
             const targetSchema = schema.scope.find(rawSubSchema.$ref);
+            if (references.get(targetSchema) !== true) {
+                references.set(targetSchema, !!isIncludingOptionals);
+            }
+        }
+        const recursiveRef = getValueFromRawJsonSchema(rawSubSchema, "$recursiveRef");
+        if (recursiveRef) {
+            // under some circumstances, $recursiveRef behaves like $ref which is a good starting point for now
+            const targetSchema = schema.scope.find(recursiveRef);
             if (references.get(targetSchema) !== true) {
                 references.set(targetSchema, !!isIncludingOptionals);
             }

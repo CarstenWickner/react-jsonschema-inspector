@@ -99,7 +99,7 @@ Please refer to the more detailed listing below regarding particular keywords.
 | `$anchor` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 2019-09) when preceded by `#`, but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `$defs`/`definitions` |
 | `$ref` | Yes | used to look-up re-usable sub-schemas transparently (i.e. not displayed), supporting:<ul><li>`#` or the root `$id`/`id` value as root schema references,</li><li>`#/$defs/<name-of-definition>`/`#/definitions/<name-of-definition>` or the respective `$id`/`id` value from within the `$defs`/`definitions` for sub-schemas,</li><li>absolute URIs are supported as long as those separate schemas are provided via the `referenceSchemas` prop (and their respective root `$id`/`id` matches the given `$ref`)</li><li>absolute URIs ending with `#/$defs/<name-of-definition>`/`#/definitions/<name-of-definition>` or `#<anchor>` are also supported via the `referenceSchemas` prop</li></ul> |
 | `$recursiveAnchor` | - | *ignored* |
-| `$recursiveRef` | - | *ignored* |
+| `$recursiveRef` | Partially | treated as alias for `$ref` but not yet for advanced scenarios involving `$recursiveAnchor` (as per Draft 2019-09) |
 | `$defs`| Yes | used to provide re-usable sub-schemas that are being referenced via `$ref` (only in the respective root schemas) (as per Draft 2019-09) |
 | `definitions`| Yes | used to provide re-usable sub-schemas that are being referenced via `$ref` (only in the respective root schemas) (as per Draft 4, 6 or 7) |
 | `properties`| Yes | used to populate the whole structure to be traversed |
