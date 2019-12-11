@@ -30,14 +30,18 @@ describe("createGroupFromSchema()", () => {
         expect(result.entries).toHaveLength(1);
         expect(result.entries[0]).toBe(schema);
     });
-    it("returns allOf group with entry itself and referenced schema", () => {
+    it.each`
+        referenceKeyword
+        ${"$ref"}
+        ${"$recursiveRef"}
+    `("returns allOf group with entry itself and referenced schema (via $referenceKeyword)", ({ referenceKeyword }) => {
         const { scope } = new JsonSchema(
             {
                 $defs: { Foo: rawFooSchema }
             },
             {}
         );
-        const rawTargetSchema = { $ref: "#/$defs/Foo" };
+        const rawTargetSchema = { [referenceKeyword]: "#/$defs/Foo" };
         const schema = new JsonSchema(rawTargetSchema, {}, scope);
         const result = createGroupFromSchema(schema);
         expect(result.entries).toHaveLength(2);

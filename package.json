@@ -1,6 +1,6 @@
 {
     "name": "react-jsonschema-inspector",
-    "version": "4.2.1-SNAPSHOT",
+    "version": "4.3.0-SNAPSHOT",
     "description": "View component for traversing/searching in a JSON Schema",
     "homepage": "https://CarstenWickner.github.io/react-jsonschema-inspector",
     "author": "Carsten Wickner",
@@ -13,7 +13,7 @@
         "start": "start-storybook -p 9001 -c .storybook",
         "build": "rollup -c",
         "lint": "tsc --noEmit && npm run lint-code && npm run lint-styles",
-        "lint-code": "eslint {src,test,stories}/**/*.{js,ts,tsx} --report-unused-disable-directives",
+        "lint-code": "eslint {src,test}/**/*.{ts,tsx} --report-unused-disable-directives",
         "lint-styles": "stylelint src stories/**/*.*css stories/**/*.mdx",
         "lint-fix": "npm run lint-code -- --fix",
         "test": "jest",
