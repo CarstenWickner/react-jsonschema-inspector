@@ -37,12 +37,14 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "title": "Main Schema One Title",
                     },
                     "scope": RefScope {
+                      "baseUri": null,
                       "externalRefs": Map {},
                       "internalRefs": Map {
                         "#" => [Circular],
                       },
                       "otherScopes": Array [
                         RefScope {
+                          "baseUri": "https://carstenwickner.github.io/",
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                               "parserConfig": Object {},
@@ -99,6 +101,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "otherScopes": Array [
                             RefScope {
+                              "baseUri": "https://carstenwickner.github.io/@jsonschema-inspector/",
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
@@ -134,6 +137,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           ],
                         },
                         RefScope {
+                          "baseUri": "https://carstenwickner.github.io/@jsonschema-inspector/",
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
                               "parserConfig": Object {},
@@ -164,6 +168,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "otherScopes": Array [
                             RefScope {
+                              "baseUri": "https://carstenwickner.github.io/",
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
@@ -241,12 +246,14 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                     },
                     "scope": RefScope {
+                      "baseUri": null,
                       "externalRefs": Map {},
                       "internalRefs": Map {
                         "#" => [Circular],
                       },
                       "otherScopes": Array [
                         RefScope {
+                          "baseUri": "https://carstenwickner.github.io/",
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                               "parserConfig": Object {},
@@ -303,6 +310,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "otherScopes": Array [
                             RefScope {
+                              "baseUri": "https://carstenwickner.github.io/@jsonschema-inspector/",
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
@@ -338,6 +346,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           ],
                         },
                         RefScope {
+                          "baseUri": "https://carstenwickner.github.io/@jsonschema-inspector/",
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
                               "parserConfig": Object {},
@@ -368,6 +377,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "otherScopes": Array [
                             RefScope {
+                              "baseUri": "https://carstenwickner.github.io/",
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
@@ -460,12 +470,14 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "title": "Main Schema One Title",
                     },
                     "scope": RefScope {
+                      "baseUri": null,
                       "externalRefs": Map {},
                       "internalRefs": Map {
                         "#" => [Circular],
                       },
                       "otherScopes": Array [
                         RefScope {
+                          "baseUri": "https://carstenwickner.github.io/",
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                               "parserConfig": Object {},
@@ -522,6 +534,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "otherScopes": Array [
                             RefScope {
+                              "baseUri": "https://carstenwickner.github.io/@jsonschema-inspector/",
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
@@ -557,6 +570,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           ],
                         },
                         RefScope {
+                          "baseUri": "https://carstenwickner.github.io/@jsonschema-inspector/",
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
                               "parserConfig": Object {},
@@ -587,6 +601,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "otherScopes": Array [
                             RefScope {
+                              "baseUri": "https://carstenwickner.github.io/",
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
@@ -664,12 +679,14 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                     },
                     "scope": RefScope {
+                      "baseUri": null,
                       "externalRefs": Map {},
                       "internalRefs": Map {
                         "#" => [Circular],
                       },
                       "otherScopes": Array [
                         RefScope {
+                          "baseUri": "https://carstenwickner.github.io/",
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                               "parserConfig": Object {},
@@ -726,6 +743,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "otherScopes": Array [
                             RefScope {
+                              "baseUri": "https://carstenwickner.github.io/@jsonschema-inspector/",
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
@@ -761,6 +779,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           ],
                         },
                         RefScope {
+                          "baseUri": "https://carstenwickner.github.io/@jsonschema-inspector/",
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
                               "parserConfig": Object {},
@@ -791,6 +810,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "otherScopes": Array [
                             RefScope {
+                              "baseUri": "https://carstenwickner.github.io/",
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
@@ -892,12 +912,14 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "title": "Main Schema One Title",
                     },
                     "scope": RefScope {
+                      "baseUri": null,
                       "externalRefs": Map {},
                       "internalRefs": Map {
                         "#" => [Circular],
                       },
                       "otherScopes": Array [
                         RefScope {
+                          "baseUri": "https://carstenwickner.github.io/",
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                               "parserConfig": Object {},
@@ -954,6 +976,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "otherScopes": Array [
                             RefScope {
+                              "baseUri": "https://carstenwickner.github.io/@jsonschema-inspector/",
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
@@ -989,6 +1012,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           ],
                         },
                         RefScope {
+                          "baseUri": "https://carstenwickner.github.io/@jsonschema-inspector/",
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
                               "parserConfig": Object {},
@@ -1019,6 +1043,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "otherScopes": Array [
                             RefScope {
+                              "baseUri": "https://carstenwickner.github.io/",
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
@@ -1096,12 +1121,14 @@ exports[`renders correctly with minimal/default props 1`] = `
                       },
                     },
                     "scope": RefScope {
+                      "baseUri": null,
                       "externalRefs": Map {},
                       "internalRefs": Map {
                         "#" => [Circular],
                       },
                       "otherScopes": Array [
                         RefScope {
+                          "baseUri": "https://carstenwickner.github.io/",
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                               "parserConfig": Object {},
@@ -1158,6 +1185,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "otherScopes": Array [
                             RefScope {
+                              "baseUri": "https://carstenwickner.github.io/@jsonschema-inspector/",
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
                                   "parserConfig": Object {},
@@ -1193,6 +1221,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           ],
                         },
                         RefScope {
+                          "baseUri": "https://carstenwickner.github.io/@jsonschema-inspector/",
                           "externalRefs": Map {
                             "https://carstenwickner.github.io/@jsonschema-inspector/react-inspector#" => JsonSchema {
                               "parserConfig": Object {},
@@ -1223,6 +1252,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           },
                           "otherScopes": Array [
                             RefScope {
+                              "baseUri": "https://carstenwickner.github.io/",
                               "externalRefs": Map {
                                 "https://carstenwickner.github.io/@jsonschema-inspector#" => JsonSchema {
                                   "parserConfig": Object {},

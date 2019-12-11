@@ -38,6 +38,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                   "description": "Foobar",
                 },
                 "scope": RefScope {
+                  "baseUri": null,
                   "externalRefs": Map {},
                   "internalRefs": Map {
                     "#" => [Circular],
@@ -53,6 +54,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "title": "Foo",
                     },
                     "scope": RefScope {
+                      "baseUri": null,
                       "externalRefs": Map {},
                       "internalRefs": Map {
                         "#" => [Circular],
@@ -68,6 +70,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "title": "Bar",
                         },
                         "scope": RefScope {
+                          "baseUri": null,
                           "externalRefs": Map {},
                           "internalRefs": Map {
                             "#" => [Circular],
@@ -81,6 +84,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "description": "Baz",
                         },
                         "scope": RefScope {
+                          "baseUri": null,
                           "externalRefs": Map {},
                           "internalRefs": Map {
                             "#" => [Circular],
@@ -140,6 +144,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "description": "Foobar",
                     },
                     "scope": RefScope {
+                      "baseUri": null,
                       "externalRefs": Map {},
                       "internalRefs": Map {
                         "#" => [Circular],
@@ -155,6 +160,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "title": "Foo",
                         },
                         "scope": RefScope {
+                          "baseUri": null,
                           "externalRefs": Map {},
                           "internalRefs": Map {
                             "#" => [Circular],
@@ -170,6 +176,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "title": "Bar",
                             },
                             "scope": RefScope {
+                              "baseUri": null,
                               "externalRefs": Map {},
                               "internalRefs": Map {
                                 "#" => [Circular],
@@ -183,6 +190,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "description": "Baz",
                             },
                             "scope": RefScope {
+                              "baseUri": null,
                               "externalRefs": Map {},
                               "internalRefs": Map {
                                 "#" => [Circular],
@@ -228,6 +236,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                       "description": "Foobar",
                     },
                     "scope": RefScope {
+                      "baseUri": null,
                       "externalRefs": Map {},
                       "internalRefs": Map {
                         "#" => [Circular],
@@ -243,6 +252,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                           "title": "Foo",
                         },
                         "scope": RefScope {
+                          "baseUri": null,
                           "externalRefs": Map {},
                           "internalRefs": Map {
                             "#" => [Circular],
@@ -258,6 +268,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "title": "Bar",
                             },
                             "scope": RefScope {
+                              "baseUri": null,
                               "externalRefs": Map {},
                               "internalRefs": Map {
                                 "#" => [Circular],
@@ -271,6 +282,7 @@ exports[`renders correctly with minimal/default props 1`] = `
                               "description": "Baz",
                             },
                             "scope": RefScope {
+                              "baseUri": null,
                               "externalRefs": Map {},
                               "internalRefs": Map {
                                 "#" => [Circular],

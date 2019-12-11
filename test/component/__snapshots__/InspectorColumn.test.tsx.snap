@@ -20,6 +20,7 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
               "$id": "Schema One",
             },
             "scope": RefScope {
+              "baseUri": null,
               "externalRefs": Map {},
               "internalRefs": Map {
                 "#" => JsonSchema {
@@ -53,6 +54,7 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
               "$id": "Schema Two",
             },
             "scope": RefScope {
+              "baseUri": null,
               "externalRefs": Map {},
               "internalRefs": Map {
                 "#" => JsonSchema {

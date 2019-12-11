@@ -94,8 +94,8 @@ Please refer to the more detailed listing below regarding particular keywords.
 | --- | --- |--- |
 | `$schema` | - | *ignored* (assumed to be compatible to JSON Schema Draft 4, 6, 7 or 2019-09) |
 | `$vocabulary` | - | *ignored* |
-| `$id` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 6 upwards), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `$defs`/`definitions` |
-| `id` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 4), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `$defs`/`definitions` or if `$id` is present |
+| `$id` | Yes | allowed as sub-schema reference in `$ref` or as source for the base URI to prepend to a non-fragment `$ref` (as per Draft 6 upwards), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `$defs`/`definitions` |
+| `id` | Yes | allowed as sub-schema reference in `$ref` or as source for the base URI to prepend to a non-fragment `$ref` (as per Draft 4), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `$defs`/`definitions` or if `$id` is present |
 | `$anchor` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 2019-09) when preceded by `#`, but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `$defs`/`definitions` |
 | `$ref` | Yes | used to look-up re-usable sub-schemas transparently (i.e. not displayed), supporting:<ul><li>`#` or the root `$id`/`id` value as root schema references,</li><li>`#/$defs/<name-of-definition>`/`#/definitions/<name-of-definition>` or the respective `$id`/`id` value from within the `$defs`/`definitions` for sub-schemas,</li><li>absolute URIs are supported as long as those separate schemas are provided via the `referenceSchemas` prop (and their respective root `$id`/`id` matches the given `$ref`)</li><li>absolute URIs ending with `#/$defs/<name-of-definition>`/`#/definitions/<name-of-definition>` or `#<anchor>` are also supported via the `referenceSchemas` prop</li></ul> |
 | `$recursiveAnchor` | - | *ignored* |

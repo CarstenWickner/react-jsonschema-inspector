@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Draft 2019-09: basic support for `$recursiveRef` as alias for `$ref` (not yet covering advanced use cases)
+- Derive base URI from `$id` when looking-up sub-schemas via their `$ref`
 
 ### Fixed
 - Exported type definitions should include main `<Inspector>` component and its props

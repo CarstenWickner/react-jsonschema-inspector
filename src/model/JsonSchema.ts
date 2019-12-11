@@ -1,4 +1,4 @@
-import { isNonEmptyObject } from "./utils";
+import { isNonEmptyObject, deriveBaseUri } from "./utils";
 
 import { RawJsonSchema, getValueFromRawJsonSchema } from "../types/RawJsonSchema";
 import { ParserConfig } from "../types/ParserConfig";
@@ -45,6 +45,11 @@ export class JsonSchema {
  */
 export class RefScope {
     /**
+     * Base URI for resolving references.
+     */
+    readonly baseUri: string | null;
+
+    /**
      * Collection of available sub-schema to be referenced via "$ref" within the originating schema.
      */
     readonly internalRefs: Map<string, JsonSchema> = new Map();
@@ -81,9 +86,11 @@ export class RefScope {
             this.externalRefs.set(mainAliasWithoutFragment, schema);
             // for definitions, there should always be the empty fragment between the URI and the definitions path
             externalRefBase = mainAliasWithFragment;
+            this.baseUri = deriveBaseUri(mainAliasWithoutFragment);
         } else {
             // no valid alias provided
             externalRefBase = null;
+            this.baseUri = null;
         }
         // in draft 2019-09 the keyword "definitions" was renamed to "$defs"
         const definitionsKeyword = schema.schema.$defs ? "$defs" : "definitions";
@@ -150,15 +157,19 @@ export class RefScope {
      */
     find(ref: string): JsonSchema {
         let result = this.findSchemaInThisScope(ref);
+        const alternativeRef = !result && this.baseUri && !ref.startsWith("#") && `${this.baseUri}${ref}`;
+        if (alternativeRef) {
+            result = this.findSchemaInThisScope(alternativeRef);
+        }
         if (!result) {
             this.otherScopes.some((otherScope) => {
-                result = otherScope.findSchemaInThisScope(ref, false);
+                result = otherScope.findSchemaInThisScope(ref, false) || (alternativeRef && otherScope.findSchemaInThisScope(alternativeRef, false));
                 return result;
             });
         }
         if (result) {
             return result;
         }
-        throw new Error(`Cannot resolve $ref: "${ref}"`);
+        throw new Error(`Cannot resolve $ref: "${ref}"` + (alternativeRef ? `/"${alternativeRef}"` : ""));
     }
 }

@@ -137,3 +137,22 @@ export const commonValues = nullAwareReduce(<S, T extends S | Array<S>>(combined
     }
     return mergeResult;
 });
+
+/**
+ * Helper function for extracting a given URI's base URI.
+ *
+ * @param {string} uri - URI for which to determine the base URI
+ * @returns {string} base URI
+ */
+export const deriveBaseUri = (uri: string): string => {
+    // discard trailing fragment and/or query segments
+    const cleanUri = uri.split("?")[0].split("#")[0];
+    // determine whether there is any path segment
+    const lastSlashIndex = cleanUri.lastIndexOf("/");
+    if (lastSlashIndex > cleanUri.indexOf("://") + 2) {
+        // cut-off trailing path segment
+        return cleanUri.substring(0, lastSlashIndex + 1);
+    }
+    // append slash to ensure uniform base URI
+    return `${cleanUri}/`;
+};
