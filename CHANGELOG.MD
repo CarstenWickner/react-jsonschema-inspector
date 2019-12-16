@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Compatibility: replace `<button>` tags for items in columns with focusable `<div>` tags
+- Compatibility: replace css `clip-path` usage for nested-item indicator with css shape from borders
+- Compatibility: replace css `clip-path` usage for leading breadcrumbs icon with css shape from borders
+- Compatibility: replace css `clip-path` usage for breadcrumbs items with css shape from borders
 
 ## [4.3.0] - 2019-12-12
 ### Added

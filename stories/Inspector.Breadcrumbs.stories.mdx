@@ -168,7 +168,7 @@ This can be disabled via `preventNavigation`, i.e. so a double-click does nothin
                 "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
             }}
             referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
-            defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "contains", "default"]}
             breadcrumbs={{
                 // if this is NOT set to true, double-clicking on an item in the breadcrumbs changes the current selection
                 preventNavigation: true
@@ -179,12 +179,11 @@ This can be disabled via `preventNavigation`, i.e. so a double-click does nothin
 
 ----
 
-### with custom items and extra content
-If all the above options are not customised enough, you can also provide your component for each breadcrumb item through `renderItem`.
-Additionally, `renderTrailingContent` allows you to add extra content behind the breadcrumb items, e.g. a "Copy to Clipboard" button.
+### with extra trailing content
+`renderTrailingContent` allows you to add extra content behind the breadcrumb items, e.g. a "Copy to Clipboard" button.
 
 <Preview>
-    <Story name="with custom items and extra content">
+    <Story name="with extra trailing content">
         <Inspector
             schemas={{
                 "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
@@ -192,29 +191,15 @@ Additionally, `renderTrailingContent` allows you to add extra content behind the
                 "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
             }}
             referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
-            defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "contains", "default"]}
             breadcrumbs={{
-                // custom rendering for individual breadcrumb items
-                renderItem: (renderProps) => (
-                    <span
-                        key={renderProps.index}
-                        className={classNames({
-                            "jsonschema-inspector-breadcrumbs-item": true,
-                            "has-nested-items": renderProps.hasNestedItems
-                        })}
-                        style={{ backgroundColor: renderProps.hasNestedItems ? "#a5d6a7" : "#e8f5e9" }}
-                    >
-                        {renderProps.breadcrumbText}
-                    </span>
-                ),
                 // custom rendering of an additional "Copy" button to the right of the breadcrumbs
                 renderTrailingContent: (renderProps) => (
                     <div style={{ flexGrow: 1 }}>
                         <button
                             type="button"
                             style={{
-                                backgroundColor: "#276bd2",
-                                color: "#fff",
+                                backgroundColor: "#a5d6a7",
                                 float: "right",
                                 margin: ".5em",
                                 height: "2.5em"
@@ -226,6 +211,47 @@ Additionally, `renderTrailingContent` allows you to add extra content behind the
                             Copy
                         </button>
                     </div>
+                )
+            }}
+        />
+    </Story>
+</Preview>
+
+----
+
+### with custom items
+If all the above options are not customised enough, you can also provide your component for each breadcrumb item through `renderItem`.
+
+<Preview>
+    <Story name="with custom items">
+        <Inspector
+            schemas={{
+                "Meta Core JSON Schema": { $ref: "http://json-schema.org/draft-07/schema#" },
+                "Meta Hyper JSON Schema": { $ref: "http://json-schema.org/draft-07/hyper-schema#" },
+                "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
+            }}
+            referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "contains", "default"]}
+            breadcrumbs={{
+                // custom rendering for individual breadcrumb items
+                renderItem: (renderProps) => (
+                    <span
+                        key={renderProps.index}
+                        className={classNames({
+                            "jsonschema-inspector-breadcrumbs-item": true,
+                            "has-nested-items": renderProps.hasNestedItems
+                        })}
+                    >
+                        <span
+                            style={{
+                                backgroundColor: renderProps.hasNestedItems ? "transparent" : undefined,
+                                border: ".25em solid #a5d6a7",
+                                lineHeight: "1.5em"
+                            }}
+                        >
+                            {renderProps.breadcrumbText}
+                        </span>
+                    </span>
                 )
             }}
         />
@@ -246,7 +272,7 @@ You can also turn-off the breadcrumbs feature completely by providing `null` ins
                 "Meta Links JSON Schema": { $ref: "http://json-schema.org/draft-07/links#" }
             }}
             referenceSchemas={[metaSchema, hyperMetaSchema, linksMetaSchema]}
-            defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
+            defaultSelectedItems={["Meta Hyper JSON Schema", "contains", "default"]}
             // set to null to disable breadcrumbs completely
             breadcrumbs={null}
         />

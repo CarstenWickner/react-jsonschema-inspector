@@ -41,14 +41,6 @@
     }
     &-item {
         flex-shrink: 0;
-        text-align: start;
-        border: none;
-        background: inherit;
-        color: inherit;
-        font: inherit;
-        padding: 0;
-        margin: 0;
-        width: 100%;
 
         &.selected {
             background-color: $selectionColor;
@@ -62,6 +54,7 @@
         &-content {
             display: flex;
             flex-direction: row;
+            align-items: flex-end;
         }
         &-name {
             display: block;
@@ -72,15 +65,16 @@
         &-icon {
             display: block;
             flex-grow: 0;
-            width: 1em;
-            min-width: 1em;
-            height: 1.69em;
-            margin-top: auto;
+            height: 0;
+            width: 0.25em;
+            min-width: 0.25em;
+            margin: 0.4em 0 0.4em 0.25em;
+            border-top: 0.45em solid transparent;
+            border-left: 0.5em solid transparent;
+            border-bottom: 0.45em solid transparent;
         }
         &.has-nested-items > &-content > &-icon {
-            background-color: #7f7f7f;
-            -webkit-clip-path: polygon(25% 25%, 75% 50%, 25% 75%);
-            clip-path: polygon(25% 25%, 75% 50%, 25% 75%);
+            border-left-color: #7f7f7f;
         }
     }
     &-column {
@@ -88,6 +82,7 @@
         &-placeholder {
             display: flex;
             flex-direction: column;
+            align-items: stretch;
             width: $columnWidth;
             min-width: $columnWidth;
             border-right: $innerBorder;
@@ -112,7 +107,7 @@
         color: $trailingSelectionFontColor;
     }
     &-column.trailing-selection &-item.selected.has-nested-items &-item-icon {
-        background-color: $trailingSelectionFontColor;
+        border-left-color: $trailingSelectionFontColor;
     }
     &-details {
         width: $detailsWidth;
@@ -186,35 +181,62 @@
         padding: $spacingInside 0.75em $spacingInside (5 * $spacingInside);
         font-family: 'Courier New', Courier, monospace;
 
-        &-icon,
-        &-item {
-            display: block;
-            border-radius: $borderRadius;
-        }
         &-icon {
-            background-color: $trailingSelectionColor;
-            height: 1.5em;
-            width: 0.8em;
+            display: block;
+            height: 0;
+            width: 0;
             margin: 0.25em 0 0.25em (-4 * $spacingInside);
-            -webkit-clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
-            clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+            border-top: 0.75em solid transparent;
+            border-left: 0.8em solid $trailingSelectionColor;
+            border-bottom: 0.75em solid transparent;
         }
         &-item {
-            background-color: $selectionColor;
-            margin-right: -0.75em;
-            padding: 0 0.25em 0 1.25em;
-            line-height: 2em;
-            height: 2em;
-            text-overflow: ellipsis;
+            display: block;                text-overflow: ellipsis;
+
+            position: relative;
+
+            & > span {
+                display: block;
+                text-overflow: ellipsis;
+                line-height: 2em;
+                padding: 0 0.25em;
+                margin: 0 -0.25em 0 1em;
+                background-color: $selectionColor;
+            }
+            &:before {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                width: 0;
+                height: 0;
+                left: 0;
+                border-top: 1em solid $selectionColor;
+                border-left: 1em solid transparent;
+                border-bottom: 1em solid $selectionColor;
+            }
 
             &.has-nested-items {
-                padding-right: 1em;
-                -webkit-clip-path: polygon(0% 5%, calc(100% - 1em) 5%, 100% 50%, calc(100% - 1em) 95%, 0% 95%, 1em 50%);
-                clip-path: polygon(0% 5%, calc(100% - 1em) 5%, 100% 50%, calc(100% - 1em) 95%, 0% 95%, 1em 50%);
+                padding-right: 0.25em;
+                margin-right: 0.25em;
+
+                &:after {
+                    right: -1em;
+                    content: "";
+                    position: absolute;
+                    bottom: 0;
+                    width: 0;
+                    height: 0;
+                    border-top: 1em solid transparent;
+                    border-left: 1em solid $selectionColor;
+                    border-bottom: 1em solid transparent;
+                }
             }
             &:not(.has-nested-items) {
-                -webkit-clip-path: polygon(0% 5%, 100% 5%, 100% 95%, 0% 95%, 1em 50%);
-                clip-path: polygon(0% 5%, 100% 5%, 100% 95%, 0% 95%, 1em 50%);
+                margin-right: -0.75em;
+
+                & > span {
+                    padding-right: 0.5em;
+                }
             }
         }
     }
