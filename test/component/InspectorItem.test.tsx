@@ -59,13 +59,13 @@ describe("renders correctly", () => {
     });
     it("while matching filter", () => {
         const component = shallow(<InspectorItem name="Foobar" schemaGroup={new JsonSchemaGroup()} onSelect={(): void => {}} matchesFilter />);
-        expect(component.find("button").hasClass("matching-filter")).toBe(true);
-        expect(component.find("button").hasClass("not-matching-filter")).toBe(false);
+        expect(component.find(".jsonschema-inspector-item").hasClass("matching-filter")).toBe(true);
+        expect(component.find(".jsonschema-inspector-item").hasClass("not-matching-filter")).toBe(false);
     });
     it("while not matching filter", () => {
         const component = shallow(<InspectorItem name="Baz" schemaGroup={new JsonSchemaGroup()} onSelect={(): void => {}} matchesFilter={false} />);
-        expect(component.find("button").hasClass("matching-filter")).toBe(false);
-        expect(component.find("button").hasClass("not-matching-filter")).toBe(true);
+        expect(component.find(".jsonschema-inspector-item").hasClass("matching-filter")).toBe(false);
+        expect(component.find(".jsonschema-inspector-item").hasClass("not-matching-filter")).toBe(true);
     });
     it("with custom rendered content", () => {
         const group = new JsonSchemaGroup();

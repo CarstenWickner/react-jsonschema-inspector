@@ -41,14 +41,6 @@
     }
     &-item {
         flex-shrink: 0;
-        text-align: start;
-        border: none;
-        background: inherit;
-        color: inherit;
-        font: inherit;
-        padding: 0;
-        margin: 0;
-        width: 100%;
 
         &.selected {
             background-color: $selectionColor;
@@ -88,6 +80,7 @@
         &-placeholder {
             display: flex;
             flex-direction: column;
+            align-items: stretch;
             width: $columnWidth;
             min-width: $columnWidth;
             border-right: $innerBorder;

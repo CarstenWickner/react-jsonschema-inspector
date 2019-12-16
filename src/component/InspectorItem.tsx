@@ -17,8 +17,7 @@ export const InspectorItem: React.FunctionComponent<{
 }> = ({ name, schemaGroup, optionIndexes, selected, matchesFilter, onSelect, renderContent }): React.ReactElement => {
     const hasNestedItems = hasSchemaGroupNestedItems(schemaGroup, optionIndexes);
     return (
-        <button
-            type="button"
+        <div
             className={classNames({
                 "jsonschema-inspector-item": true,
                 "has-nested-items": hasNestedItems,
@@ -28,6 +27,7 @@ export const InspectorItem: React.FunctionComponent<{
             })}
             onClick={onSelect}
             onFocus={onSelect}
+            tabIndex={0}
         >
             {renderContent &&
                 renderContent({
@@ -43,6 +43,6 @@ export const InspectorItem: React.FunctionComponent<{
                     <span className="jsonschema-inspector-item-icon" />
                 </div>
             )}
-        </button>
+        </div>
     );
 };
