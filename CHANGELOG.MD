@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Compatibility: replace `<button>` tags for items in columns with focusable `<div>` tags
+- Compatibility: replace css `clip-path` usage for nested-item indicator with css shape from borders
 
 ## [4.3.0] - 2019-12-12
 ### Added

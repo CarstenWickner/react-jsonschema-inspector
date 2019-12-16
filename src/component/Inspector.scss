@@ -54,6 +54,7 @@
         &-content {
             display: flex;
             flex-direction: row;
+            align-items: flex-end;
         }
         &-name {
             display: block;
@@ -64,15 +65,16 @@
         &-icon {
             display: block;
             flex-grow: 0;
-            width: 1em;
-            min-width: 1em;
-            height: 1.69em;
-            margin-top: auto;
+            height: 0;
+            width: 0.25em;
+            min-width: 0.25em;
+            margin: 0.4em 0 0.4em 0.25em;
+            border-top: 0.45em solid transparent;
+            border-left: 0.5em solid transparent;
+            border-bottom: 0.45em solid transparent;
         }
         &.has-nested-items > &-content > &-icon {
-            background-color: #7f7f7f;
-            -webkit-clip-path: polygon(25% 25%, 75% 50%, 25% 75%);
-            clip-path: polygon(25% 25%, 75% 50%, 25% 75%);
+            border-left-color: #7f7f7f;
         }
     }
     &-column {
@@ -105,7 +107,7 @@
         color: $trailingSelectionFontColor;
     }
     &-column.trailing-selection &-item.selected.has-nested-items &-item-icon {
-        background-color: $trailingSelectionFontColor;
+        border-left-color: $trailingSelectionFontColor;
     }
     &-details {
         width: $detailsWidth;
