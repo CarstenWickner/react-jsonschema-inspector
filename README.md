@@ -164,6 +164,6 @@ Please refer to the more detailed listing below regarding particular keywords.
 [coverage-image]: https://coveralls.io/repos/github/CarstenWickner/react-jsonschema-inspector/badge.svg?branch=master
 [coverage-url]: https://coveralls.io/github/CarstenWickner/react-jsonschema-inspector?branch=master
 [storybook-image]: https://raw.githubusercontent.com/storybooks/storybook/next/docs/src/design/homepage/storybook-logo.svg?sanitize=true
-[storybook-url]: https://carstenwickner.github.io/react-jsonschema-inspector
+[storybook-url]: https://CarstenWickner.github.io/react-jsonschema-inspector/?path=/docs/inspector--show-case
 [codesandbox-image]: https://codesandbox.io/static/img/play-codesandbox.svg
 [codesandbox-url]: https://codesandbox.io/s/4x9jn9yzx4?fontsize=13&hidenavigation=1
