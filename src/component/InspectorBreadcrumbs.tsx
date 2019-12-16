@@ -42,7 +42,7 @@ export const InspectorBreadcrumbs: React.FunctionComponent<{
                             })}
                             onDoubleClick={preventNavigation ? undefined : (event): void => onSelect(event, selectedItem)}
                         >
-                            {breadcrumbText}
+                            <span>{breadcrumbText}</span>
                         </span>
                     );
                 })}
