@@ -1,6 +1,6 @@
 {
     "name": "react-jsonschema-inspector",
-    "version": "4.4.1-SNAPSHOT",
+    "version": "4.4.1",
     "description": "View component for traversing/searching in a JSON Schema",
     "homepage": "https://CarstenWickner.github.io/react-jsonschema-inspector/?path=/docs/inspector--show-case",
     "author": "Carsten Wickner",
