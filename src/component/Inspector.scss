@@ -115,7 +115,7 @@
         overflow: auto;
         border-left: $innerBorder;
 
-        &-header:first-child {
+        &-header {
             margin-top: 0;
         }
         &-content {
@@ -191,9 +191,9 @@
             border-bottom: 0.75em solid transparent;
         }
         &-item {
-            display: block;                text-overflow: ellipsis;
-
+            display: block;
             position: relative;
+            margin: 0.1em 0;
 
             & > span {
                 display: block;
@@ -207,9 +207,9 @@
                 content: "";
                 position: absolute;
                 bottom: 0;
+                left: 0;
                 width: 0;
                 height: 0;
-                left: 0;
                 border-top: 1em solid $selectionColor;
                 border-left: 1em solid transparent;
                 border-bottom: 1em solid $selectionColor;
@@ -220,10 +220,10 @@
                 margin-right: 0.25em;
 
                 &:after {
-                    right: -1em;
                     content: "";
                     position: absolute;
                     bottom: 0;
+                    right: -1em;
                     width: 0;
                     height: 0;
                     border-top: 1em solid transparent;
