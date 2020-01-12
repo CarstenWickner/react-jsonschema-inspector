@@ -34,7 +34,7 @@
     "devDependencies": {
         "@mdx-js/loader": "~1.5.2",
         "@storybook/addon-actions": "~5.3.1",
-        "@storybook/addon-docs": "~5.2.8",
+        "@storybook/addon-docs": "~5.3.1",
         "@storybook/addon-options": "~5.3.1",
         "@storybook/react": "~5.3.1",
         "@types/classnames": "^2.2.9",
@@ -55,6 +55,7 @@
         "@wessberg/rollup-plugin-ts": "^1.1.83",
         "awesome-typescript-loader": "~5.2.1",
         "babel-loader": "~8.0.6",
+        "babel-preset-react-app": "^9.1.0",
         "coveralls": "~3.0.6",
         "css-loader": "~3.4.0",
         "enzyme": "~3.11.0",
