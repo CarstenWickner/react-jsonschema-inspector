@@ -40,7 +40,7 @@
         "@types/classnames": "^2.2.9",
         "@types/enzyme": "^3.10.4",
         "@types/enzyme-adapter-react-16": "^1.0.5",
-        "@types/jest": "25.1.0",
+        "@types/jest": "~25.1.1",
         "@types/json-schema": "^7.0.3",
         "@types/lodash.debounce": "^4.0.6",
         "@types/lodash.escaperegexp": "^4.1.6",
