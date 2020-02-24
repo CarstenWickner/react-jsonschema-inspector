@@ -51,7 +51,7 @@
         "@types/react-dom": "^16.9.4",
         "@typescript-eslint/eslint-plugin": "^2.12.0",
         "@typescript-eslint/parser": "^2.12.0",
-        "@typescript-eslint/typescript-estree": "^2.12.0",
+        "@typescript-eslint/typescript-estree": "^2.21.0",
         "@wessberg/rollup-plugin-ts": "^1.1.83",
         "awesome-typescript-loader": "~5.2.1",
         "babel-loader": "~8.0.6",
