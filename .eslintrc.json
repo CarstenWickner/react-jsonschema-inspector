@@ -26,6 +26,7 @@
         }
     },
     "rules": {
+        "@typescript-eslint/type-annotation-spacing": "off",
         "indent": ["error", 4],
         "jsdoc/check-alignment": "warn",
         "jsdoc/check-indentation": "warn",
