@@ -176,8 +176,8 @@ describe("getIndexPermutationsForOptions()", () => {
 });
 describe("getPropertiesFromSchemaGroup()", () => {
     it("returns properties from simple schema", () => {
-        const rawFooSchema = { type: "string" as "string" };
-        const rawBarSchema = { type: "number" as "number" };
+        const rawFooSchema = { type: "string" as const };
+        const rawBarSchema = { type: "number" as const };
         const schema = new JsonSchema(
             {
                 properties: {
@@ -465,7 +465,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
     describe("allOf:", () => {
         it("finds single value", () => {
             const schema = {
-                allOf: [{ description: "foo" }, { title: "bar" }, { type: "object" as "object" }]
+                allOf: [{ description: "foo" }, { title: "bar" }, { type: "object" as const }]
             };
             const schemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
             expect(getFieldValueFromSchemaGroup(schemaGroup, "title")).toBe("bar");
@@ -478,7 +478,7 @@ describe("getFieldValueFromSchemaGroup()", () => {
                             allOf: [
                                 { description: "foobar" },
                                 {
-                                    allOf: [{ title: "baz" }, { type: "object" as "object" }]
+                                    allOf: [{ title: "baz" }, { type: "object" as const }]
                                 }
                             ]
                         }
@@ -571,7 +571,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
         expect(result.schema).toEqual(additionalItemSchema);
     });
     it("ignores array of `items`", () => {
-        const itemSchemaArray = [{ title: "Test" }, { type: "object" as "object" }];
+        const itemSchemaArray = [{ title: "Test" }, { type: "object" as const }];
         const additionalItemSchema = { description: "Value" };
         const schema = {
             items: itemSchemaArray,
@@ -583,7 +583,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
     });
     it("returns null if neither `items` nor `additionalItems` are present", () => {
         const schema = {
-            type: "array" as "array"
+            type: "array" as const
         };
         const result = getTypeOfArrayItemsFromSchemaGroup(createGroupFromSchema(new JsonSchema(schema, {})));
         expect(result).toBeUndefined();
@@ -594,7 +594,7 @@ describe("getTypeOfArrayItemsFromSchemaGroup()", () => {
                 { items: { title: "foo" } },
                 { items: { description: "bar" } },
                 {
-                    allOf: [{}, { items: { type: "object" as "object" } }]
+                    allOf: [{}, { items: { type: "object" as const } }]
                 }
             ]
         };

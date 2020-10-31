@@ -91,12 +91,7 @@ describe("renders correctly", () => {
             onSearchFilterChange("properties");
             // flush based on default debounce times
             (component.instance() as Inspector).debouncedApplySearchFilter(200, 500).flush();
-            expect(
-                component
-                    .find(".jsonschema-inspector-header")
-                    .childAt(0)
-                    .prop("searchFilter")
-            ).toEqual("properties");
+            expect(component.find(".jsonschema-inspector-header").childAt(0).prop("searchFilter")).toEqual("properties");
             const { filteredItems } = (component.find("InspectorColView").prop("columnData") as Array<RenderColumn>)[0];
             expect(filteredItems).toBeDefined();
             expect(filteredItems).toHaveLength(2);
@@ -121,12 +116,7 @@ describe("renders correctly", () => {
             onSearchFilterChange("Schema Two");
             // flush based on default debounce times
             (component.instance() as Inspector).debouncedApplySearchFilter(200, 500).flush();
-            expect(
-                component
-                    .find(".jsonschema-inspector-header")
-                    .childAt(0)
-                    .prop("searchFilter")
-            ).toEqual("Schema Two");
+            expect(component.find(".jsonschema-inspector-header").childAt(0).prop("searchFilter")).toEqual("Schema Two");
             const { filteredItems } = (component.find("InspectorColView").prop("columnData") as Array<RenderColumn>)[0];
             expect(filteredItems).toBeDefined();
             expect(filteredItems).toHaveLength(1);
@@ -152,12 +142,7 @@ describe("renders correctly", () => {
             onSearchFilterChange("12");
             // flush based on default debounce maxWait
             (component.instance() as Inspector).debouncedApplySearchFilter(100, 500).flush();
-            expect(
-                component
-                    .find(".jsonschema-inspector-header")
-                    .childAt(0)
-                    .prop("searchFilter")
-            ).toEqual("12");
+            expect(component.find(".jsonschema-inspector-header").childAt(0).prop("searchFilter")).toEqual("12");
             const { filteredItems } = (component.find("InspectorColView").prop("columnData") as Array<RenderColumn>)[0];
             expect(filteredItems).toBeUndefined();
         });

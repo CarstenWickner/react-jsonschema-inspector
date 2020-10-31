@@ -39,7 +39,7 @@ export interface InspectorDefaultProps {
         schemaGroup: JsonSchemaGroup,
         // selected optionIndexes in the array's JsonSchemaGroup (if it contains options)
         optionIndexes?: Array<number>
-    ) => { [key: string]: JsonSchema | RawJsonSchema };
+    ) => Record<string, JsonSchema | RawJsonSchema>;
     /**
      * Options for the breadcrumbs feature shown in the footer – set to `null` to turn it off.
      * - "prefix": Text to show in front of root level selection, e.g. "//" or "./"
@@ -146,14 +146,14 @@ export interface InspectorDefaultProps {
      * Expects a single object as input with the following key:
      * - "rootColumnSchemas": the full render information for the root column (since there is no selection, there are no other columns)
      */
-    renderEmptyDetails?: (props: { rootColumnSchemas: { [key: string]: JsonSchemaGroup } }) => React.ReactElement;
+    renderEmptyDetails?: (props: { rootColumnSchemas: Record<string, JsonSchemaGroup> }) => React.ReactElement;
 }
 
 export interface InspectorProps extends InspectorDefaultProps {
     /**
      * Object containing names of root level items (as keys) each associated with their respective JSON Schema (as values).
      */
-    schemas: { [key: string]: RawJsonSchema };
+    schemas: Record<string, RawJsonSchema>;
 }
 
 interface RenderColumnDetails {
@@ -162,7 +162,7 @@ interface RenderColumnDetails {
 }
 
 export interface RenderItemsColumn extends RenderColumnDetails {
-    items: { [key: string]: JsonSchemaGroup };
+    items: Record<string, JsonSchemaGroup>;
     selectedItem?: string;
     filteredItems?: Array<string>;
 }

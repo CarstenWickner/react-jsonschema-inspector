@@ -68,7 +68,6 @@ export class JsonSchemaGroup {
      * @param {boolean} checkEntry.param1 - whether nested `allOf`/`oneOf`/`anyOf` may be included in the check
      * @param {boolean} checkEntry.return - whether the predicate's condition was fulfilled
      * @param {?Array.<{index: number}>} optionTarget - array of mutable objects indicating which optional schema parts to consider (ignoring others)
-     * @param {number} optionTarget[].index - mutable index, a value of `0` marks the optional schema part to be considered
      * @returns {boolean} whether `checkEntry` returned 'true' for any item in this group's `entries`
      */
     someEntry(checkEntry: (schema: JsonSchema, includeNestedGroups?: boolean) => boolean, optionTarget?: Array<{ index: number }>): boolean {
@@ -107,7 +106,6 @@ export class JsonSchemaGroup {
      * @param {*} mergeResults.return - combined values including additional single value
      * @param {*} defaultValue - initial value of mergeResults.param0 on first execution
      * @param {?Array.<{index: number}>} optionTarget - array of mutable objects indicating which optional schema parts to consider (ignoring others)
-     * @param {number} optionTarget[].index - mutable index, a value of `0` marks the optional schema part to be considered
      * @returns {*} return combined extracted values from this schema group
      */
     extractValues<T>(

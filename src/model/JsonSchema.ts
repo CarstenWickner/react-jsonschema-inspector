@@ -34,7 +34,6 @@ export class JsonSchema {
     constructor(schema: boolean | RawJsonSchema, parserConfig: ParserConfig, scope?: RefScope) {
         this.schema = typeof schema === "boolean" ? createRawSchemaFromBoolean(schema) : (schema as RawJsonSchema);
         this.parserConfig = parserConfig;
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         this.scope = scope || new RefScope(this);
     }
 }

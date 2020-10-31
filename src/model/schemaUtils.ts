@@ -87,7 +87,6 @@ function createGroupFromRawSchemaArray(
     rawSchemaArray
         .filter((rawSchemaPart) => typeof rawSchemaPart !== "boolean")
         // convert each part in the group to a JsonSchema instance and (recursively) get its group information
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         .map((rawSchemaPart) => createGroupFromSchema(new JsonSchema(rawSchemaPart, parserConfig, scope)))
         // add group info from each schema part to the created group representation
         .forEach(group.with.bind(group));
@@ -272,15 +271,20 @@ export function getTypeOfArrayItemsFromSchemaGroup(schemaGroup: JsonSchemaGroup,
  * Collect all mentioned properties with their associated schema definitions (if available) from a given JsonSchema.
  *
  * @param {JsonSchema} schema - targeted schema to collect properties from (ignoring any nested `allOf`/`anyOf`/`oneOf`)
- * @returns {object.<string, JsonSchema|boolean|object>} collected properties, still including 'true' or ' {}' where no more details are available
+ * @returns {object.<string, JsonSchema|boolean|object>} collected properties, still including 'true' or '{}' where no more details are available
  */
-function getPropertiesFromSchema(schema: JsonSchema): { [key: string]: JsonSchema | boolean | {} } {
+function getPropertiesFromSchema(schema: JsonSchema): Record<string, JsonSchema | boolean | Record<string, never>> {
     const { schema: rawSchema, parserConfig, scope } = schema;
     const { required, properties = {} } = rawSchema;
     const rawProperties = Object.assign({}, ...(required ? required.map((value) => ({ [value]: true })) : []), properties);
     // properties is an Object.<String, raw-json-schema> and should be converted to an Object.<String, JsonSchema>
-    return mapObjectValues(rawProperties, (rawPropertySchema: RawJsonSchema | boolean | {}): JsonSchema | boolean | {} =>
-        isNonEmptyObject(rawPropertySchema) ? new JsonSchema(rawPropertySchema, parserConfig, scope) : (rawPropertySchema as boolean | {})
+    return mapObjectValues(rawProperties, (rawPropertySchema: RawJsonSchema | boolean | Record<string, never>):
+        | JsonSchema
+        | boolean
+        | Record<string, never> =>
+        isNonEmptyObject(rawPropertySchema)
+            ? new JsonSchema(rawPropertySchema, parserConfig, scope)
+            : (rawPropertySchema as boolean | Record<string, never>)
     );
 }
 
@@ -292,9 +296,9 @@ function getPropertiesFromSchema(schema: JsonSchema): { [key: string]: JsonSchem
  * @returns {?object} merged values
  */
 function mergeSchemas(
-    combined: { [key: string]: JsonSchema | boolean | {} },
-    nextValue: { [key: string]: JsonSchema | boolean | {} }
-): { [key: string]: JsonSchema | boolean | {} } {
+    combined: Record<string, JsonSchema | boolean | Record<string, never>>,
+    nextValue: Record<string, JsonSchema | boolean | Record<string, never>>
+): Record<string, JsonSchema | boolean | Record<string, never>> {
     let mergeResult;
     if (!isNonEmptyObject(combined)) {
         // at least initially, "combined" is an empty object
@@ -319,7 +323,7 @@ function mergeSchemas(
  * @param {?Array.<number>} optionIndexes - indexes of selected option(s)
  * @returns {object.<string, JsonSchema>} collection of all properties mentioned in this schema
  */
-export function getPropertiesFromSchemaGroup(schemaGroup: JsonSchemaGroup, optionIndexes?: Array<number>): { [key: string]: JsonSchema } {
+export function getPropertiesFromSchemaGroup(schemaGroup: JsonSchemaGroup, optionIndexes?: Array<number>): Record<string, JsonSchema> {
     const optionTarget = createOptionTargetArrayFromIndexes(optionIndexes);
     const extractedValues = schemaGroup.extractValues(getPropertiesFromSchema, mergeSchemas, {}, optionTarget);
     // convert any remaining non-schema values (e.g. booleans) into schema wrappers
