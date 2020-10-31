@@ -24,11 +24,24 @@ export class JsonSchemaGroup {
      * @returns {boolean} whether entries should be included transparently (otherwise as options)
      */
     shouldTreatEntriesAsOne(): boolean {
-        let filteredEntries = this.entries;
-        if (!this.considerSchemasAsSeparateOptions()) {
-            filteredEntries = filteredEntries.filter((entry) => entry instanceof JsonSchemaGroup && !entry.shouldTreatEntriesAsOne());
+        if (this.entries.length < 2) {
+            return true;
         }
-        return filteredEntries.length < 2;
+        if (this.considerSchemasAsSeparateOptions()) {
+            return false;
+        }
+        let alreadyFoundGroupWithMultipleOptions = false;
+        for (let index = 0; index < this.entries.length; index++) {
+            const entry = this.entries[index];
+            if (entry instanceof JsonSchema || entry.shouldTreatEntriesAsOne()) {
+                continue;
+            }
+            if (alreadyFoundGroupWithMultipleOptions) {
+                return false;
+            }
+            alreadyFoundGroupWithMultipleOptions = true;
+        }
+        return true;
     }
 
     /**
