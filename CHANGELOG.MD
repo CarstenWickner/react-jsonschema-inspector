@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Updating a number of dev dependencies including TypeScript (resulting in slight changes in type definitions)
+
+### Fixed
+- Handling of `allOf` containing multiple `oneOf` and/or `anyOf` entries
 
 ## [4.4.1] - 2019-12-17
 ### Fixed
