@@ -421,7 +421,7 @@ describe("createFilterFunctionForSchema()", () => {
             const rawSchema = {
                 minProperties: 1,
                 allOf: [{ title: "Foo" }, { description: "Bar" }],
-                anyOf: [{ maxProperties: 3 }, { type: "object" as "object" }],
+                anyOf: [{ maxProperties: 3 }, { type: "object" as const }],
                 oneOf: [{ maxProperties: 5 }, { maxProperties: 7 }]
             };
 

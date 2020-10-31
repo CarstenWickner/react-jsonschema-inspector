@@ -112,11 +112,7 @@ describe("someEntry()", () => {
 describe("extractValues()/extractValuesFromEntry()", () => {
     describe("when considerSchemasAsSeparateOptions() === false", () => {
         it("calling given extractFromSchema() function on single schema entry", () => {
-            const extractFromSchema = jest
-                .fn()
-                .mockReturnValueOnce(10)
-                .mockReturnValueOnce("foo")
-                .mockReturnValueOnce(false);
+            const extractFromSchema = jest.fn().mockReturnValueOnce(10).mockReturnValueOnce("foo").mockReturnValueOnce(false);
             const entry = new JsonSchema(true, {});
             const group = new JsonSchemaGroup().with(entry);
 

@@ -59,7 +59,8 @@ export class JsonSchemaAnyOfGroup extends JsonSchemaOptionalsGroup {
      * Constructor for the representation of a schema's `anyOf` property.
      * The `anyOf` property is a collection of sub-schemas of which one or multiple are expected to be fulfilled.
      *
-     * @param {ParserConfig} parserConfig - configuration object determining how particular parts of a schema are being interpreted
+     * @param {{ anyOf?: SchemaPartParserConfig}} parserConfig - configuration object determining how some parts of a schema are being interpreted
+     * @param {SchemaPartParserConfig} parserConfig.anyOf - settings regarding 'anyOf' properties
      */
     constructor(parserConfig: { anyOf?: SchemaPartParserConfig }) {
         super({
@@ -77,7 +78,8 @@ export class JsonSchemaOneOfGroup extends JsonSchemaOptionalsGroup {
      * Constructor for the representation of a schema's `oneOf` property.
      * The `oneOf` property is a collection of sub-schemas of which exactly one is expected to be fulfilled.
      *
-     * @param {ParserConfig} parserConfig - configuration object determining how particular parts of a schema are being interpreted
+     * @param {{ oneOf?: SchemaPartParserConfig}} parserConfig - configuration object determining how some parts of a schema are being interpreted
+     * @param {SchemaPartParserConfig} parserConfig.oneOf - settings regarding 'anyOf' properties
      */
     constructor(parserConfig: { oneOf?: SchemaPartParserConfig }) {
         super({

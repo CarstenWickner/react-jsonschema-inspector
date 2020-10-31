@@ -3,7 +3,7 @@ import * as React from "react";
 import memoize from "memoize-one";
 import debounce from "lodash.debounce";
 import isDeepEqual from "lodash.isequal";
-import { Cancelable } from "lodash";
+import { DebouncedFunc } from "lodash";
 
 import "./Inspector.scss";
 
@@ -36,14 +36,15 @@ export class Inspector extends React.Component<
      * @returns {Function} return debounced function to set applied filter
      * @returns {string} return.value input parameter is the new search filter value to apply
      */
-    debouncedApplySearchFilter = memoize((debounceWait: number, debounceMaxWait: number): ((newSearchFilter: string) => void) & Cancelable =>
-        debounce(
-            (newSearchFilter: string) => {
-                this.setState({ appliedSearchFilter: newSearchFilter });
-            },
-            debounceWait,
-            { maxWait: debounceMaxWait }
-        )
+    debouncedApplySearchFilter = memoize(
+        (debounceWait: number, debounceMaxWait: number): DebouncedFunc<(newSearchFilter: string) => void> =>
+            debounce(
+                (newSearchFilter: string) => {
+                    this.setState({ appliedSearchFilter: newSearchFilter });
+                },
+                debounceWait,
+                { maxWait: debounceMaxWait }
+            )
     );
 
     constructor(props: InspectorProps) {
@@ -134,6 +135,7 @@ export class Inspector extends React.Component<
     /**
      * @param {Array.<string|Array.<number>>} newSelection - updated "electedItems" value in state
      * @param {{columnData:Array.<RenderColumn>}} newRenderData - new complete render data derived from props and updated state
+     * @param {Array.<RenderColumn>} newRenderData.columnData - list of updated columns being rendered
      * @returns {?Function} callback function for setState() being called as a result of an onSelect event
      */
     getSetStateCallbackOnSelect(

@@ -87,7 +87,7 @@ function createRootColumnData(
  * @param {JsonSchema} arrayItemSchema - declared type of items in an array (as per the respective json schema)
  * @returns {{"[0]": JsonSchema}} simple object allowing to access the array's item definition via a single entry
  */
-function buildDefaultArrayProperties(arrayItemSchema: JsonSchema): { [key: string]: JsonSchema } {
+function buildDefaultArrayProperties(arrayItemSchema: JsonSchema): Record<string, JsonSchema> {
     return { "[0]": arrayItemSchema };
 }
 
@@ -103,7 +103,7 @@ function buildNextColumn(
     schemaGroup: JsonSchemaGroup,
     optionIndexes?: Array<number>,
     buildArrayProperties: InspectorProps["buildArrayProperties"] = buildDefaultArrayProperties
-): Omit<RenderColumn, "onSelect"> | {} {
+): Omit<RenderColumn, "onSelect"> | Record<string, never> {
     if (!optionIndexes) {
         const options = getOptionsInSchemaGroup(schemaGroup);
         if (options.options) {
@@ -111,7 +111,7 @@ function buildNextColumn(
             return {
                 contextGroup: schemaGroup as JsonSchemaOptionalsGroup,
                 options
-            };
+            } as Omit<RenderOptionsColumn, "onSelect">;
         }
     }
     // next column should list all available properties
@@ -120,7 +120,7 @@ function buildNextColumn(
         // convert the individual JsonSchema values into JsonSchemaGroups
         return {
             items: mapObjectValues(propertySchemas, createGroupFromSchema)
-        };
+        } as Omit<RenderItemsColumn, "onSelect">;
     }
     // there are no properties, so this might be an array
     const nestedArrayItemSchema = getTypeOfArrayItemsFromSchemaGroup(schemaGroup, optionIndexes);
@@ -134,7 +134,7 @@ function buildNextColumn(
 
         return {
             items: mapObjectValues(arrayProperties, createGroupFromSchema)
-        };
+        } as Omit<RenderItemsColumn, "onSelect">;
     }
     return {};
 }
@@ -158,7 +158,7 @@ function buildNextColumn(
  * @param {Function} onSelectInColumn.return - onSelect call-back for the column at the indicated index
  * @returns {RenderDataBuilder} function for building the standard render data used throughout the component
  */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createRenderDataBuilder = (onSelectInColumn: (columnIndex: number) => RenderColumn["onSelect"]) => (
     schemas: InspectorProps["schemas"],
     referenceSchemas: InspectorProps["referenceSchemas"],
@@ -168,7 +168,12 @@ export const createRenderDataBuilder = (onSelectInColumn: (columnIndex: number) 
     buildArrayProperties?: InspectorProps["buildArrayProperties"]
 ) => {
     // the first column always lists all top-level schemas
-    let nextColumn: Omit<RenderColumn, "onSelect"> | {} = createRootColumnData(schemas, referenceSchemas, parserConfig, hideSingleRootItem);
+    let nextColumn: Omit<RenderColumn, "onSelect"> | Record<string, never> = createRootColumnData(
+        schemas,
+        referenceSchemas,
+        parserConfig,
+        hideSingleRootItem
+    );
     let selectedSchemaGroup: JsonSchemaGroup | undefined;
     const columnData = selectedItems
         .map((selection, index) => {

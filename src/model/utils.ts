@@ -4,6 +4,7 @@
  * @param {*} target - value to confirm
  * @returns {boolean} whether the target is neither undefined nor null
  */
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function isDefined(target: unknown): target is {} {
     return target !== undefined && target !== null;
 }
@@ -14,7 +15,7 @@ export function isDefined(target: unknown): target is {} {
  * @param {*} target - value to confirm as non-empty object
  * @returns {boolean} whether the target is a non-empty object
  */
-export function isNonEmptyObject(target: unknown): target is { [key: string]: unknown } {
+export function isNonEmptyObject(target: unknown): target is Record<string, unknown> {
     return isDefined(target) && typeof target === "object" && !Array.isArray(target) && Object.keys(target).length > 0;
 }
 
@@ -25,7 +26,7 @@ export function isNonEmptyObject(target: unknown): target is { [key: string]: un
  * @param {Function} mappingFunction - conversion to perform
  * @returns {object} cloned object with same keys as the original, but with mapped values
  */
-export function mapObjectValues<O extends { [key: string]: S }, S, T>(original: O, mappingFunction: (value: S) => T): { [key in keyof O]: T } {
+export function mapObjectValues<O extends Record<string, S>, S, T>(original: O, mappingFunction: (value: S) => T): { [key in keyof O]: T } {
     const mappedObject: { [key in keyof O]?: T } = {};
     Object.keys(original).forEach((key: keyof O) => {
         mappedObject[key] = mappingFunction(original[key]);
