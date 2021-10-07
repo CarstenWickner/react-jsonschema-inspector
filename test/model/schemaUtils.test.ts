@@ -111,15 +111,15 @@ describe("createGroupFromSchema()", () => {
         });
     });
     describe("returns allOf group for schema containing mixed groups", () => {
-        const rawFoobarSchema = { type: "object" };
-        const rawBazSchema = { minProperties: 1 };
-        const rawQuxSchema = { maxProperties: 5 };
-        const rawQuuxSchema = { additionalProperties: false };
-        const rawTargetSchema: RawJsonSchema = {
+        const rawFoobarSchema = { type: "object" } as RawJsonSchema;
+        const rawBazSchema = { minProperties: 1 } as RawJsonSchema;
+        const rawQuxSchema = { maxProperties: 5 } as RawJsonSchema;
+        const rawQuuxSchema = { additionalProperties: false } as RawJsonSchema;
+        const rawTargetSchema = {
             allOf: [rawFooSchema, rawBarSchema],
             anyOf: [rawFoobarSchema, rawBazSchema],
             oneOf: [rawQuxSchema, rawQuuxSchema]
-        };
+        } as RawJsonSchema;
 
         it("including oneOf and anyOf if both are present", () => {
             const schema = new JsonSchema(rawTargetSchema, {});
@@ -510,7 +510,8 @@ describe("getFieldValueFromSchemaGroup()", () => {
             });
             it("applies custom mergeFunction", () => {
                 // custom merge function always overrides result with last encountered value
-                const mergeFunction = (first: string, second: string): string => (isDefined(second) ? second : first);
+                const mergeFunction = (first: string | undefined, second?: string | undefined): string | undefined =>
+                    isDefined(second) ? second : first;
                 expect(getFieldValueFromSchemaGroup(schemaGroup, "title", mergeFunction)).toBe("foobar");
             });
         });

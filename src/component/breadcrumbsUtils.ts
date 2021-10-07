@@ -20,7 +20,7 @@ import { InspectorProps, RenderColumn, RenderOptionsColumn } from "./InspectorTy
  * @returns {BreadcrumbBuilder} function extracting breadcrumb text for one column
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const createBreadcrumbBuilder = (breadcrumbsOptions: InspectorProps["breadcrumbs"]) => {
+export const createBreadcrumbBuilder = (breadcrumbsOptions: InspectorProps["breadcrumbs"] & {}) => {
     const { prefix = "", separator = ".", skipSeparator, mutateName } = breadcrumbsOptions;
     return (column: RenderColumn, index: number): string | null => {
         if ((column as RenderOptionsColumn).options) {

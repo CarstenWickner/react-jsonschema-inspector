@@ -153,7 +153,7 @@ describe("extractValues()/extractValuesFromEntry()", () => {
             const group = new MockJsonSchemaGroup(true).with(new JsonSchema(true, {})).with(new JsonSchema(true, {}));
             expect(
                 group.extractValues(
-                    (): string => undefined,
+                    (): string | undefined => undefined,
                     (combined, nextValue) => (!combined ? nextValue : nextValue ? `${combined}, ${nextValue}` : combined),
                     "foobar",
                     optionTargetIn
@@ -165,10 +165,10 @@ describe("extractValues()/extractValuesFromEntry()", () => {
             const group = new MockJsonSchemaGroup(true)
                 .with(new JsonSchema(false, {}))
                 .with(new MockJsonSchemaGroup(true).with(new JsonSchema({ title: "bar" }, {})).with(new JsonSchema({ title: "baz" }, {})));
-            const extractFromSchema = ({ schema }: JsonSchema): string => schema.title;
-            const mergeResults = (combined: string, nextValue: string): string =>
+            const extractFromSchema = ({ schema }: JsonSchema): string | undefined => schema.title;
+            const mergeResults = (combined: string | undefined, nextValue?: string | undefined): string | undefined =>
                 combined && nextValue ? `${combined}, ${nextValue}` : combined || nextValue;
-            const defaultValue: string = null;
+            const defaultValue: string | undefined = undefined;
             const optionTarget = [{ index: 1 }, { index: 0 }];
             expect(group.extractValues(extractFromSchema, mergeResults, defaultValue, optionTarget)).toBe("bar");
             expect(optionTarget).toEqual([{ index: -1 }, { index: -2 }]);

@@ -5,6 +5,7 @@ import { InspectorColumn } from "../../src/component/InspectorColumn";
 
 import { JsonSchema } from "../../src/model/JsonSchema";
 import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
+import { isDefined } from "../../src/model/utils";
 
 describe("renders correctly", () => {
     it("with minimal/default props (items)", () => {
@@ -84,7 +85,11 @@ describe("calls onSelect", () => {
 
     it("clearing selection when clicking on column", () => {
         const component = shallow(<InspectorColumn items={{ Foo: new JsonSchemaGroup() }} onSelect={onSelect} />);
-        component.find(".jsonschema-inspector-column").prop("onClick")(null);
+        const onClickListener = component.find(".jsonschema-inspector-column").prop("onClick");
+        expect(onClickListener).toBeDefined();
+        if (isDefined(onClickListener)) {
+            onClickListener({} as React.MouseEvent);
+        }
         expect(onSelect.mock.calls).toHaveLength(1);
         // expect no second parameter indicating selected item
         expect(onSelect.mock.calls[0]).toHaveLength(1);

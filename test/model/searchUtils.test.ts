@@ -8,6 +8,7 @@ import {
 
 import { JsonSchema } from "../../src/model/JsonSchema";
 import { RawJsonSchema } from "../../src/types/RawJsonSchema";
+import { isDefined } from "../../src/model/utils";
 
 describe("createRecursiveFilterFunction()", () => {
     const flatSearchFilter = jest.fn((rawSchema) => rawSchema.default);
@@ -17,14 +18,6 @@ describe("createRecursiveFilterFunction()", () => {
     });
 
     describe("skipping", () => {
-        it("undefined schema", () => {
-            expect(recursiveFilterFunction(undefined)).toBe(false);
-            expect(flatSearchFilter).not.toHaveBeenCalled();
-        });
-        it("null schema", () => {
-            expect(recursiveFilterFunction(null)).toBe(false);
-            expect(flatSearchFilter).not.toHaveBeenCalled();
-        });
         it("empty schema", () => {
             expect(recursiveFilterFunction(new JsonSchema(true, {}))).toBe(false);
             expect(flatSearchFilter).not.toHaveBeenCalled();
@@ -445,20 +438,11 @@ describe("createFilterFunctionForSchema()", () => {
 });
 describe("filteringByFields()", () => {
     describe("returning undefined", () => {
-        it("for undefined searchFields parameter", () => {
-            expect(filteringByFields(undefined, "filter")).toBeUndefined();
-        });
-        it("for null searchFields parameter", () => {
-            expect(filteringByFields(null, "filter")).toBeUndefined();
-        });
         it("for empty array searchFields parameter", () => {
             expect(filteringByFields([], "filter")).toBeUndefined();
         });
         it("for undefined searchFilter parameter", () => {
             expect(filteringByFields(["const"], undefined)).toBeUndefined();
-        });
-        it("for null searchFilter parameter", () => {
-            expect(filteringByFields(["const"], null)).toBeUndefined();
         });
         it("for empty searchFilter parameter", () => {
             expect(filteringByFields(["const"], "")).toBeUndefined();
@@ -467,15 +451,24 @@ describe("filteringByFields()", () => {
     describe("finding", () => {
         it("exact match in specified field", () => {
             const filterFunction = filteringByFields(["const"], "fieldValue");
-            expect(filterFunction({ const: "fieldValue" })).toBe(true);
+            expect(filterFunction).toBeDefined();
+            if (isDefined(filterFunction)) {
+                expect(filterFunction({ const: "fieldValue" })).toBe(true);
+            }
         });
         it("partial match in specified field", () => {
             const filterFunction = filteringByFields(["const"], "Value");
-            expect(filterFunction({ const: "fieldValuePart" })).toBe(true);
+            expect(filterFunction).toBeDefined();
+            if (isDefined(filterFunction)) {
+                expect(filterFunction({ const: "fieldValuePart" })).toBe(true);
+            }
         });
         it("case-insensitive match in specified field", () => {
             const filterFunction = filteringByFields(["const"], "vALUEpART");
-            expect(filterFunction({ const: "fieldValuePart" })).toBe(true);
+            expect(filterFunction).toBeDefined();
+            if (isDefined(filterFunction)) {
+                expect(filterFunction({ const: "fieldValuePart" })).toBe(true);
+            }
         });
         it("match in first specified field", () => {
             const filterFunction = filteringByFields(["title", "description"], "value");
@@ -483,7 +476,10 @@ describe("filteringByFields()", () => {
                 title: "value",
                 description: "something else"
             };
-            expect(filterFunction(schema)).toBe(true);
+            expect(filterFunction).toBeDefined();
+            if (isDefined(filterFunction)) {
+                expect(filterFunction(schema)).toBe(true);
+            }
         });
         it("match in second specified field", () => {
             const filterFunction = filteringByFields(["title", "description"], "value");
@@ -491,22 +487,34 @@ describe("filteringByFields()", () => {
                 title: "something else",
                 description: "value"
             };
-            expect(filterFunction(schema)).toBe(true);
+            expect(filterFunction).toBeDefined();
+            if (isDefined(filterFunction)) {
+                expect(filterFunction(schema)).toBe(true);
+            }
         });
         it("no match if field not present", () => {
             const filterFunction = filteringByFields(["const"], "value");
             const schema = { title: "value" };
-            expect(filterFunction(schema)).toBe(false);
+            expect(filterFunction).toBeDefined();
+            if (isDefined(filterFunction)) {
+                expect(filterFunction(schema)).toBe(false);
+            }
         });
         it("no match if field value different", () => {
             const filterFunction = filteringByFields(["const"], "value");
             const schema = { const: "something else" };
-            expect(filterFunction(schema)).toBe(false);
+            expect(filterFunction).toBeDefined();
+            if (isDefined(filterFunction)) {
+                expect(filterFunction(schema)).toBe(false);
+            }
         });
         it("no match if field value not of type string", () => {
             const filterFunction = filteringByFields(["const"], "5");
             const schema = { const: 5 };
-            expect(filterFunction(schema)).toBe(false);
+            expect(filterFunction).toBeDefined();
+            if (isDefined(filterFunction)) {
+                expect(filterFunction(schema)).toBe(false);
+            }
         });
     });
 });
@@ -525,19 +533,31 @@ describe("filteringByPropertyName()", () => {
     describe("finding", () => {
         it("exact match", () => {
             const filterFunction = filteringByPropertyName("propertyName");
-            expect(filterFunction("propertyName")).toBe(true);
+            expect(filterFunction).toBeDefined();
+            if (isDefined(filterFunction)) {
+                expect(filterFunction("propertyName")).toBe(true);
+            }
         });
         it("partial match", () => {
             const filterFunction = filteringByPropertyName("Name");
-            expect(filterFunction("propertyName")).toBe(true);
+            expect(filterFunction).toBeDefined();
+            if (isDefined(filterFunction)) {
+                expect(filterFunction("propertyName")).toBe(true);
+            }
         });
         it("case-insensitive match", () => {
             const filterFunction = filteringByPropertyName("PeRTynA");
-            expect(filterFunction("propertyName")).toBe(true);
+            expect(filterFunction).toBeDefined();
+            if (isDefined(filterFunction)) {
+                expect(filterFunction("propertyName")).toBe(true);
+            }
         });
         it("no match if property name different", () => {
             const filterFunction = filteringByPropertyName("Title");
-            expect(filterFunction("propertyName")).toBe(false);
+            expect(filterFunction).toBeDefined();
+            if (isDefined(filterFunction)) {
+                expect(filterFunction("propertyName")).toBe(false);
+            }
         });
     });
 });

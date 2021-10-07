@@ -1,5 +1,6 @@
 import { createRenderDataBuilder, createFilterFunctionForColumn } from "../../src/component/renderDataUtils";
 
+import { SyntheticEvent } from "react";
 import { JsonSchema } from "../../src/model/JsonSchema";
 import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
 import { createGroupFromSchema, getOptionsInSchemaGroup, getFieldValueFromSchemaGroup } from "../../src/model/schemaUtils";
@@ -8,11 +9,12 @@ import { InspectorProps, RenderItemsColumn, RenderOptionsColumn } from "../../sr
 import { ParserConfig } from "../../src/types/ParserConfig";
 
 describe("createRenderDataBuilder()", () => {
-    let lastCalledOnSelectColumnIndex: number;
+    let lastCalledOnSelectColumnIndex: number | undefined;
     const onSelectInColumn = jest.fn((columnIndex: number): RenderItemsColumn["onSelect"] => (): void => {
         lastCalledOnSelectColumnIndex = columnIndex;
     });
     const getRenderData = createRenderDataBuilder(onSelectInColumn);
+    const mockEvent: SyntheticEvent = {} as SyntheticEvent;
 
     beforeEach(() => {
         lastCalledOnSelectColumnIndex = undefined;
@@ -60,7 +62,7 @@ describe("createRenderDataBuilder()", () => {
         it("returns single root column if there are no other settings", () => {
             const { columnData } = getRenderData({ foo: fooSchema }, undefined, [], {});
             expect(columnData).toHaveLength(1);
-            const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+            const rootColumn = columnData[0] as unknown as RenderItemsColumn;
             // single item containing the given schema (wrapped in a JsonSchema and again wrapped in a JsonSchemaGroup)
             expect(Object.keys(rootColumn.items)).toHaveLength(1);
             expect(rootColumn.items.foo).toBeInstanceOf(JsonSchemaGroup);
@@ -73,7 +75,7 @@ describe("createRenderDataBuilder()", () => {
             expect(onSelectInColumn.mock.calls[0][0]).toBe(0);
 
             expect(rootColumn.onSelect).toBeDefined();
-            rootColumn.onSelect(null);
+            rootColumn.onSelect(mockEvent);
             expect(lastCalledOnSelectColumnIndex).toBe(0);
             expect(rootColumn.selectedItem).toBeFalsy();
             expect(rootColumn.trailingSelection).toBeFalsy();
@@ -89,7 +91,7 @@ describe("createRenderDataBuilder()", () => {
             ({ hideSingleRoot, inputSchemas }) => {
                 const { columnData } = getRenderData(inputSchemas, referenceSchemas, [], {}, hideSingleRoot);
                 expect(columnData).toHaveLength(1);
-                const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+                const rootColumn = columnData[0] as unknown as RenderItemsColumn;
                 // three items each containing a root schema (wrapped in a JsonSchema and again wrapped in a JsonSchemaGroup)
                 expect(Object.keys(rootColumn.items)).toHaveLength(3);
                 expect(rootColumn.items.foo).toBeInstanceOf(JsonSchemaGroup);
@@ -121,16 +123,16 @@ describe("createRenderDataBuilder()", () => {
         `("$testTitle + hide: $hideSingleRoot = returns root column with $rootItems item(s)", ({ hideSingleRoot, rootItemCount, inputSchemas }) => {
             const { columnData } = getRenderData(inputSchemas, referenceSchemas, [], {}, hideSingleRoot);
             expect(columnData).toHaveLength(1);
-            const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+            const rootColumn = columnData[0] as unknown as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(rootItemCount);
         });
         it("ignores invalid root selection", () => {
             const { columnData } = getRenderData(schemas, referenceSchemas, ["qux"], {});
             expect(columnData).toHaveLength(1);
-            const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+            const rootColumn = columnData[0] as unknown as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(3);
             expect(rootColumn.onSelect).toBeDefined();
-            rootColumn.onSelect(null);
+            rootColumn.onSelect(mockEvent);
             expect(lastCalledOnSelectColumnIndex).toBe(0);
             expect(rootColumn.selectedItem).toBeFalsy();
             expect(rootColumn.trailingSelection).toBeFalsy();
@@ -138,10 +140,10 @@ describe("createRenderDataBuilder()", () => {
         it("returns single column for root selection without nested items", () => {
             const { columnData } = getRenderData(schemas, referenceSchemas, ["foo"], {});
             expect(columnData).toHaveLength(1);
-            const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+            const rootColumn = columnData[0] as unknown as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(3);
             expect(rootColumn.onSelect).toBeDefined();
-            rootColumn.onSelect(null);
+            rootColumn.onSelect(mockEvent);
             expect(lastCalledOnSelectColumnIndex).toBe(0);
             expect(rootColumn.selectedItem).toBe("foo");
             expect(rootColumn.trailingSelection).toBe(true);
@@ -149,14 +151,14 @@ describe("createRenderDataBuilder()", () => {
         it("returns two columns for root selection with nested items", () => {
             const { columnData } = getRenderData(schemas, referenceSchemas, ["foobar"], {});
             expect(columnData).toHaveLength(2);
-            const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+            const rootColumn = columnData[0] as unknown as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(3);
             expect(rootColumn.onSelect).toBeDefined();
-            rootColumn.onSelect(null);
+            rootColumn.onSelect(mockEvent);
             expect(lastCalledOnSelectColumnIndex).toBe(0);
             expect(rootColumn.selectedItem).toBe("foobar");
             expect(rootColumn.trailingSelection).toBe(true);
-            const secondColumn = (columnData[1] as unknown) as RenderItemsColumn;
+            const secondColumn = columnData[1] as unknown as RenderItemsColumn;
             expect(Object.keys(secondColumn.items)).toHaveLength(1);
             expect(secondColumn.items["Item Three"]).toBeInstanceOf(JsonSchemaGroup);
             const secondColumnItemThree = secondColumn.items["Item Three"] as JsonSchemaGroup;
@@ -168,7 +170,7 @@ describe("createRenderDataBuilder()", () => {
             expect(secondColumnItemThree.entries[2]).toBeInstanceOf(JsonSchema);
             expect((secondColumnItemThree.entries[2] as JsonSchema).schema).toEqual(quxSchema);
             expect(secondColumn.onSelect).toBeDefined();
-            secondColumn.onSelect(null);
+            secondColumn.onSelect(mockEvent);
             expect(lastCalledOnSelectColumnIndex).toBe(1);
             expect(secondColumn.selectedItem).toBeFalsy();
             expect(secondColumn.trailingSelection).toBeFalsy();
@@ -176,18 +178,18 @@ describe("createRenderDataBuilder()", () => {
         it("returns two columns for selection in both columns without further nested items", () => {
             const { columnData } = getRenderData(schemas, referenceSchemas, ["foobar", "Item Three"], {});
             expect(columnData).toHaveLength(2);
-            const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+            const rootColumn = columnData[0] as unknown as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(3);
             expect(rootColumn.onSelect).toBeDefined();
-            rootColumn.onSelect(null);
+            rootColumn.onSelect(mockEvent);
             expect(lastCalledOnSelectColumnIndex).toBe(0);
             expect(rootColumn.selectedItem).toBe("foobar");
             expect(rootColumn.trailingSelection).toBeFalsy();
-            const secondColumn = (columnData[1] as unknown) as RenderItemsColumn;
+            const secondColumn = columnData[1] as unknown as RenderItemsColumn;
             expect(Object.keys(secondColumn.items)).toHaveLength(1);
             expect(secondColumn.items["Item Three"]).toBeInstanceOf(JsonSchemaGroup);
             expect(secondColumn.onSelect).toBeDefined();
-            secondColumn.onSelect(null);
+            secondColumn.onSelect(mockEvent);
             expect(lastCalledOnSelectColumnIndex).toBe(1);
             expect(secondColumn.selectedItem).toBe("Item Three");
             expect(secondColumn.trailingSelection).toBe(true);
@@ -214,23 +216,23 @@ describe("createRenderDataBuilder()", () => {
         it("returns extra column when array is selected", () => {
             const { columnData } = getRenderData(schemas, undefined, ["bar", "[0]"], {});
             expect(columnData).toHaveLength(3);
-            const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+            const rootColumn = columnData[0] as unknown as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(2);
             expect(rootColumn.items.bar).toBeInstanceOf(JsonSchemaGroup);
             expect(rootColumn.selectedItem).toBe("bar");
             expect(rootColumn.trailingSelection).toBeFalsy();
-            const secondColumn = (columnData[1] as unknown) as RenderItemsColumn;
+            const secondColumn = columnData[1] as unknown as RenderItemsColumn;
             expect(Object.keys(secondColumn.items)).toHaveLength(1);
             expect(secondColumn.items["[0]"]).toBeInstanceOf(JsonSchemaGroup);
             expect(secondColumn.items["[0]"].entries).toHaveLength(1);
             expect(secondColumn.items["[0]"].entries[0]).toBeInstanceOf(JsonSchema);
             expect((secondColumn.items["[0]"].entries[0] as JsonSchema).schema).toEqual(fooSchema);
             expect(secondColumn.onSelect).toBeDefined();
-            secondColumn.onSelect(null);
+            secondColumn.onSelect(mockEvent);
             expect(lastCalledOnSelectColumnIndex).toBe(1);
             expect(secondColumn.selectedItem).toBe("[0]");
             expect(secondColumn.trailingSelection).toBe(true);
-            const thirdColumn = (columnData[2] as unknown) as RenderItemsColumn;
+            const thirdColumn = columnData[2] as unknown as RenderItemsColumn;
             expect(Object.keys(thirdColumn.items)).toHaveLength(1);
             expect(thirdColumn.items.qux).toBeInstanceOf(JsonSchemaGroup);
             expect(thirdColumn.selectedItem).toBeFalsy();
@@ -239,28 +241,28 @@ describe("createRenderDataBuilder()", () => {
         it("allows for arrays in arrays", () => {
             const { columnData } = getRenderData(schemas, undefined, ["foobar", "[0]", "[0]", "qux"], {});
             expect(columnData).toHaveLength(4);
-            const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+            const rootColumn = columnData[0] as unknown as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(2);
             expect(rootColumn.items.foobar).toBeInstanceOf(JsonSchemaGroup);
             expect(rootColumn.selectedItem).toBe("foobar");
             expect(rootColumn.trailingSelection).toBeFalsy();
-            const secondColumn = (columnData[1] as unknown) as RenderItemsColumn;
+            const secondColumn = columnData[1] as unknown as RenderItemsColumn;
             expect(Object.keys(secondColumn.items)).toHaveLength(1);
             expect(secondColumn.items["[0]"]).toBeInstanceOf(JsonSchemaGroup);
             expect(secondColumn.items["[0]"].entries).toHaveLength(1);
             expect(secondColumn.items["[0]"].entries[0]).toBeInstanceOf(JsonSchema);
             expect((secondColumn.items["[0]"].entries[0] as JsonSchema).schema).toEqual(barSchema);
             expect(secondColumn.onSelect).toBeDefined();
-            secondColumn.onSelect(null);
+            secondColumn.onSelect(mockEvent);
             expect(lastCalledOnSelectColumnIndex).toBe(1);
             expect(secondColumn.selectedItem).toBe("[0]");
             expect(secondColumn.trailingSelection).toBeFalsy();
-            const thirdColumn = (columnData[2] as unknown) as RenderItemsColumn;
+            const thirdColumn = columnData[2] as unknown as RenderItemsColumn;
             expect(Object.keys(thirdColumn.items)).toHaveLength(1);
             expect((thirdColumn.items["[0]"].entries[0] as JsonSchema).schema).toEqual(fooSchema);
             expect(thirdColumn.selectedItem).toBe("[0]");
             expect(thirdColumn.trailingSelection).toBeFalsy();
-            const fourthColumn = (columnData[3] as unknown) as RenderItemsColumn;
+            const fourthColumn = columnData[3] as unknown as RenderItemsColumn;
             expect(Object.keys(fourthColumn.items)).toHaveLength(1);
             expect(fourthColumn.items.qux).toBeInstanceOf(JsonSchemaGroup);
             expect(fourthColumn.selectedItem).toBe("qux");
@@ -271,7 +273,7 @@ describe("createRenderDataBuilder()", () => {
                 "get(0)": arrayItemSchema,
                 "size()": {
                     type: "number",
-                    minimum: getFieldValueFromSchemaGroup(arraySchemaGroup, "minItems", maximumValue, 0, null, optionIndexes)
+                    minimum: getFieldValueFromSchemaGroup(arraySchemaGroup, "minItems", maximumValue, 0, undefined, optionIndexes)
                 }
             });
             const rootSchemas = {
@@ -281,12 +283,12 @@ describe("createRenderDataBuilder()", () => {
             };
             const { columnData } = getRenderData(rootSchemas, [], ["bar", [0], "get(0)"], {}, false, buildArrayProperties);
             expect(columnData).toHaveLength(4);
-            const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+            const rootColumn = columnData[0] as unknown as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(1);
             expect(rootColumn.items.bar).toBeInstanceOf(JsonSchemaGroup);
             expect(rootColumn.selectedItem).toBe("bar");
             expect(rootColumn.trailingSelection).toBeFalsy();
-            const secondColumn = (columnData[1] as unknown) as RenderOptionsColumn;
+            const secondColumn = columnData[1] as unknown as RenderOptionsColumn;
             expect((secondColumn.contextGroup.entries[0] as JsonSchema).schema).toEqual(rootSchemas.bar);
             expect(secondColumn.options).toEqual({
                 groupTitle: "one of",
@@ -294,7 +296,7 @@ describe("createRenderDataBuilder()", () => {
             });
             expect(secondColumn.selectedItem).toEqual([0]);
             expect(secondColumn.trailingSelection).toBeFalsy();
-            const thirdColumn = (columnData[2] as unknown) as RenderItemsColumn;
+            const thirdColumn = columnData[2] as unknown as RenderItemsColumn;
             expect(Object.keys(thirdColumn.items)).toHaveLength(2);
             expect((thirdColumn.items["get(0)"].entries[0] as JsonSchema).schema).toEqual(fooSchema);
             expect((thirdColumn.items["size()"].entries[0] as JsonSchema).schema).toEqual({
@@ -304,7 +306,7 @@ describe("createRenderDataBuilder()", () => {
             expect(thirdColumn.selectedItem).toBe("get(0)");
             expect(thirdColumn.onSelect).toBeDefined();
             expect(thirdColumn.trailingSelection).toBe(true);
-            const fourthColumn = (columnData[3] as unknown) as RenderItemsColumn;
+            const fourthColumn = columnData[3] as unknown as RenderItemsColumn;
             expect(Object.keys(fourthColumn.items)).toHaveLength(1);
             expect(fourthColumn.items.qux).toBeInstanceOf(JsonSchemaGroup);
             expect(fourthColumn.selectedItem).toBeFalsy();
@@ -350,14 +352,14 @@ describe("createRenderDataBuilder()", () => {
         `("offering the selected root schema's options ($testTitle)", ({ selectedItems }) => {
             const { columnData } = getRenderData(schemas, [], selectedItems, parserConfig);
             expect(columnData).toHaveLength(2);
-            const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+            const rootColumn = columnData[0] as unknown as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(1);
             expect(rootColumn.onSelect).toBeDefined();
-            rootColumn.onSelect(null);
+            rootColumn.onSelect(mockEvent);
             expect(lastCalledOnSelectColumnIndex).toBe(0);
             expect(rootColumn.selectedItem).toBe("root");
             expect(rootColumn.trailingSelection).toBe(true);
-            const secondColumn = (columnData[1] as unknown) as RenderOptionsColumn;
+            const secondColumn = columnData[1] as unknown as RenderOptionsColumn;
             expect(secondColumn.options).toEqual(expectedOptions);
             expect(secondColumn.contextGroup).toBeInstanceOf(JsonSchemaGroup);
             expect(secondColumn.contextGroup.entries).toHaveLength(2);
@@ -365,7 +367,7 @@ describe("createRenderDataBuilder()", () => {
             expect(secondColumn.contextGroup.entries[1]).toBeInstanceOf(JsonSchemaGroup);
             expect((secondColumn.contextGroup.entries[1] as JsonSchemaGroup).entries).toHaveLength(2);
             expect(secondColumn.onSelect).toBeDefined();
-            secondColumn.onSelect(null);
+            secondColumn.onSelect(mockEvent);
             expect(lastCalledOnSelectColumnIndex).toBe(1);
             expect(secondColumn.selectedItem).toBeFalsy();
             expect(secondColumn.trailingSelection).toBeFalsy();
@@ -377,11 +379,11 @@ describe("createRenderDataBuilder()", () => {
         `("offering the selected option's properties", ({ selectedItems }) => {
             const { columnData } = getRenderData(schemas, [], selectedItems, parserConfig);
             expect(columnData).toHaveLength(3);
-            const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+            const rootColumn = columnData[0] as unknown as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(1);
             expect(rootColumn.selectedItem).toBe("root");
             expect(rootColumn.trailingSelection).toBeFalsy();
-            const secondColumn = (columnData[1] as unknown) as RenderOptionsColumn;
+            const secondColumn = columnData[1] as unknown as RenderOptionsColumn;
             expect(secondColumn.options).toEqual(expectedOptions);
             expect(secondColumn.contextGroup).toBeInstanceOf(JsonSchemaGroup);
             expect(secondColumn.contextGroup.entries).toHaveLength(2);
@@ -390,7 +392,7 @@ describe("createRenderDataBuilder()", () => {
             expect((secondColumn.contextGroup.entries[1] as JsonSchemaGroup).entries).toHaveLength(2);
             expect(secondColumn.selectedItem).toEqual([0]);
             expect(secondColumn.trailingSelection).toBe(true);
-            const thirdColumn = (columnData[2] as unknown) as RenderItemsColumn;
+            const thirdColumn = columnData[2] as unknown as RenderItemsColumn;
             expect(Object.keys(thirdColumn.items)).toHaveLength(1);
             expect(thirdColumn.items.foo).toBeInstanceOf(JsonSchemaGroup);
             expect(thirdColumn.items.foo.entries).toHaveLength(1);
@@ -402,11 +404,11 @@ describe("createRenderDataBuilder()", () => {
         it("ignoring an invalid option selection", () => {
             const { columnData } = getRenderData(schemas, [], ["root", [0]], parserConfig);
             expect(columnData).toHaveLength(3);
-            const rootColumn = (columnData[0] as unknown) as RenderItemsColumn;
+            const rootColumn = columnData[0] as unknown as RenderItemsColumn;
             expect(Object.keys(rootColumn.items)).toHaveLength(1);
             expect(rootColumn.selectedItem).toBe("root");
             expect(rootColumn.trailingSelection).toBeFalsy();
-            const secondColumn = (columnData[1] as unknown) as RenderOptionsColumn;
+            const secondColumn = columnData[1] as unknown as RenderOptionsColumn;
             expect(secondColumn.options).toEqual(expectedOptions);
             expect(secondColumn.contextGroup).toBeInstanceOf(JsonSchemaGroup);
             const secondColumnContextGroup = secondColumn.contextGroup;
@@ -416,7 +418,7 @@ describe("createRenderDataBuilder()", () => {
             expect((secondColumnContextGroup.entries[1] as JsonSchemaGroup).entries).toHaveLength(2);
             expect(secondColumn.selectedItem).toEqual([0]);
             expect(secondColumn.trailingSelection).toBe(true);
-            const thirdColumn = (columnData[2] as unknown) as RenderItemsColumn;
+            const thirdColumn = columnData[2] as unknown as RenderItemsColumn;
             expect(Object.keys(thirdColumn.items)).toHaveLength(1);
             expect(thirdColumn.items.foo).toBeInstanceOf(JsonSchemaGroup);
             const thirdColumnItemsFoo = thirdColumn.items.foo as JsonSchemaGroup;

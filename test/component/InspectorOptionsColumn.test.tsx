@@ -8,6 +8,7 @@ import { JsonSchema } from "../../src/model/JsonSchema";
 import { JsonSchemaAllOfGroup } from "../../src/model/JsonSchemaAllOfGroup";
 import { JsonSchemaAnyOfGroup, JsonSchemaOneOfGroup } from "../../src/model/JsonSchemaOptionalsGroup";
 import { ParserConfig } from "../../src/types/ParserConfig";
+import { isDefined } from "../../src/model/utils";
 
 describe("renders correctly", () => {
     const oneOfOptionNameForIndex = (optionIndexes: Array<number>): string => `Exclusive Option ${optionIndexes.map((index) => index + 1).join("-")}`;
@@ -77,7 +78,11 @@ describe("calls onSelect", () => {
 
     it("clearing selection when clicking on column", () => {
         const component = shallow(<InspectorOptionsColumn options={options} contextGroup={contextGroup} onSelect={onSelect} />);
-        component.find(".jsonschema-inspector-column").prop("onClick")(null);
+        const onClickListener = component.find(".jsonschema-inspector-column").prop("onClick");
+        expect(onClickListener).toBeDefined();
+        if (isDefined(onClickListener)) {
+            onClickListener({} as React.MouseEvent);
+        }
         expect(onSelect.mock.calls).toHaveLength(1);
         // expect no second parameter indicating selected item
         expect(onSelect.mock.calls[0]).toHaveLength(1);

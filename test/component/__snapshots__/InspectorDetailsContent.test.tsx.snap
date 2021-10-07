@@ -9,7 +9,7 @@ exports[`renders correctly with minimal/default props 1`] = `
   >
     Details
   </h3>
-  <Component
+  <InspectorDetailsForm
     fields={
       Array [
         Object {

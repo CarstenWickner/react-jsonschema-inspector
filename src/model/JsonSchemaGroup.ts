@@ -1,5 +1,5 @@
 import { JsonSchema } from "./JsonSchema";
-import { listValues } from "./utils";
+import { isDefined, listValues } from "./utils";
 import { RenderOptions } from "../types/RenderOptions";
 
 /**
@@ -109,15 +109,18 @@ export class JsonSchemaGroup {
      * @returns {*} return combined extracted values from this schema group
      */
     extractValues<T>(
-        extractFromSchema: (schema: JsonSchema) => T,
-        mergeResults: (combined?: T, nextValue?: T) => T = listValues,
-        defaultValue?: T,
+        extractFromSchema: (schema: JsonSchema) => T | undefined,
+        mergeResults: (combined: T | undefined, nextValue: T | undefined) => T | undefined = listValues,
+        defaultValue?: T | undefined,
         optionTarget?: Array<{ index: number }>
-    ): T {
+    ): T | undefined {
         // collect schemas where we have both a boolean and a proper schema, favour the proper schema
         const values: Array<T> = [];
         const addToResultAndContinue = (entry: JsonSchema): boolean => {
-            values.push(extractFromSchema(entry));
+            const singleValue = extractFromSchema(entry);
+            if (isDefined(singleValue)) {
+                values.push(singleValue);
+            }
             // indicate to continue traversing all entries
             return false;
         };

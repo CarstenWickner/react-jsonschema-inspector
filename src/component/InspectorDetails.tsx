@@ -23,7 +23,7 @@ export const InspectorDetails: React.FunctionComponent<{
             optionIndexes = trailingSelectionColumn.selectedItem as Array<number>;
         }
     }
-    let detailsContent: React.ReactElement;
+    let detailsContent: React.ReactElement | undefined;
     if (itemSchemaGroup && renderSelectionDetails) {
         detailsContent = renderSelectionDetails({
             itemSchemaGroup,
@@ -39,6 +39,8 @@ export const InspectorDetails: React.FunctionComponent<{
         detailsContent = renderEmptyDetails({
             rootColumnSchemas: columnData.length ? (columnData[0] as RenderItemsColumn).items : {}
         });
+    } else {
+        detailsContent = undefined;
     }
     const wrapperClassName = classNames("jsonschema-inspector-details", {
         "nothing-to-show": !detailsContent

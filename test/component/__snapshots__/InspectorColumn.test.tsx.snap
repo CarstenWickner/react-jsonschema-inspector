@@ -7,7 +7,7 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
   role="presentation"
   tabIndex={-1}
 >
-  <Component
+  <InspectorItem
     key="Item One"
     name="Item One"
     onSelect={[Function]}
@@ -41,7 +41,7 @@ exports[`renders correctly with minimal/default props (items) 1`] = `
     }
     selected={false}
   />
-  <Component
+  <InspectorItem
     key="Item Two"
     name="Item Two"
     onSelect={[Function]}

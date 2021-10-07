@@ -52,7 +52,7 @@ export function getIndexPermutationsForOptions({ options }: RenderOptions): Arra
     const recursivelyCollectOptionIndexes = (entry: RenderOptions, index: number): Array<Array<number>> =>
         isNonEmptyObject(entry) ? getIndexPermutationsForOptions(entry).map((nestedOptions) => [index, ...nestedOptions]) : [[index]];
     const reduceOptionIndexes = (result: Array<Array<number>>, nextOptions: Array<Array<number>>): Array<Array<number>> => result.concat(nextOptions);
-    return options.map(recursivelyCollectOptionIndexes).reduce(reduceOptionIndexes, []);
+    return options === undefined ? [] : options.map(recursivelyCollectOptionIndexes).reduce(reduceOptionIndexes, []);
 }
 
 /**
@@ -107,11 +107,13 @@ function createGroupFromRawSchemaArray(
  * @returns {JsonSchemaAllOfGroup} group of sub-schemas that may define properties about their children
  */
 export function createGroupFromSchema(schema: JsonSchema): JsonSchemaAllOfGroup {
-    const { schema: rawSchema, scope } = schema;
-    if (!isNonEmptyObject(rawSchema)) {
+    const { schema: optionalRawSchema, scope } = schema;
+    if (!isNonEmptyObject(optionalRawSchema)) {
         return new JsonSchemaAllOfGroup();
     }
     const result = new JsonSchemaAllOfGroup().with(schema);
+    // workaround for incorrect type narrowing from RawJsonSchema to Record
+    const rawSchema: RawJsonSchema = optionalRawSchema;
     if (rawSchema.$ref) {
         const referencedSchema = scope.find(rawSchema.$ref);
         result.with(createGroupFromSchema(referencedSchema));
@@ -190,12 +192,13 @@ function getFieldValueFromSchema<K extends KeysOfRawJsonSchema, S extends TypeIn
 export function getFieldValueFromSchemaGroup<K extends KeysOfRawJsonSchema, S extends TypeInRawJsonSchema<K>, T extends S | Array<S>>(
     schemaGroup: JsonSchemaGroup,
     fieldName: K,
-    mergeValues: (combined: T, nextValue: T) => T = listValues,
+    mergeValues: (combined: T | undefined, nextValue?: T | undefined) => T | undefined = listValues,
     defaultValue?: T,
     mappingFunction?: (value: S, parserConfig: ParserConfig, scope: RefScope) => T,
     optionIndexes?: Array<number> | Array<{ index: number }>
-): T {
+): T | undefined {
     return schemaGroup.extractValues(
+        // @ts-ignore
         (schema) => getFieldValueFromSchema(schema, fieldName, mappingFunction),
         mergeValues,
         defaultValue,
@@ -233,9 +236,12 @@ function getSchemaFieldValueFromSchemaGroup(
         fieldName,
         /* merge function */ listValues,
         /* default value */ undefined,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         /* mapping function */ createJsonSchemaIfNotEmpty,
         optionTarget
-    );
+        // typescript incorrectly assumes a RawJsonSchema to be returned here (might be fixed in the future)
+    ) as unknown as JsonSchema | Array<JsonSchema>;
 }
 
 /**
@@ -278,13 +284,12 @@ function getPropertiesFromSchema(schema: JsonSchema): Record<string, JsonSchema 
     const { required, properties = {} } = rawSchema;
     const rawProperties = Object.assign({}, ...(required ? required.map((value) => ({ [value]: true })) : []), properties);
     // properties is an Object.<String, raw-json-schema> and should be converted to an Object.<String, JsonSchema>
-    return mapObjectValues(rawProperties, (rawPropertySchema: RawJsonSchema | boolean | Record<string, never>):
-        | JsonSchema
-        | boolean
-        | Record<string, never> =>
-        isNonEmptyObject(rawPropertySchema)
-            ? new JsonSchema(rawPropertySchema, parserConfig, scope)
-            : (rawPropertySchema as boolean | Record<string, never>)
+    return mapObjectValues(
+        rawProperties,
+        (rawPropertySchema: RawJsonSchema | boolean | Record<string, never>): JsonSchema | boolean | Record<string, never> =>
+            isNonEmptyObject(rawPropertySchema)
+                ? new JsonSchema(rawPropertySchema, parserConfig, scope)
+                : (rawPropertySchema as boolean | Record<string, never>)
     );
 }
 
@@ -325,11 +330,13 @@ function mergeSchemas(
  */
 export function getPropertiesFromSchemaGroup(schemaGroup: JsonSchemaGroup, optionIndexes?: Array<number>): Record<string, JsonSchema> {
     const optionTarget = createOptionTargetArrayFromIndexes(optionIndexes);
+    // @ts-ignore
     const extractedValues = schemaGroup.extractValues(getPropertiesFromSchema, mergeSchemas, {}, optionTarget);
     // convert any remaining non-schema values (e.g. booleans) into schema wrappers
-    const result = mapObjectValues(extractedValues, (value) =>
+    // @ts-ignore
+    const result: Record<string, JsonSchema> = mapObjectValues(extractedValues, (value) =>
         // no need to forward any parserConfig or scope to this (dummy/empty) schema
-        value instanceof JsonSchema ? value : new JsonSchema(value as RawJsonSchema, {})
+        value instanceof JsonSchema ? value : new JsonSchema(value as boolean | RawJsonSchema, {})
     );
     return result;
 }

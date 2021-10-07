@@ -2,6 +2,7 @@ import * as React from "react";
 import { shallow } from "enzyme";
 
 import { InspectorSearchField } from "../../src/component/InspectorSearchField";
+import { isDefined } from "../../src/model/utils";
 
 describe("renders correctly", () => {
     it("with minimal/default props", () => {
@@ -18,16 +19,19 @@ describe("calls onSearchFilterChange", () => {
     let onSearchFilterChange: () => void;
     beforeEach(() => {
         mockEvent = {
-            stopPropagation: (): void => {}
-        };
+            stopPropagation: (): void => {},
+            target: { value: "new-filter-value" } as EventTarget & { value: string }
+        } as React.ChangeEvent<{ value: string }>;
         onSearchFilterChange = jest.fn(() => {});
     });
 
     it("on input's onChange", () => {
         const component = shallow(<InspectorSearchField searchFilter="old-filter-value" onSearchFilterChange={onSearchFilterChange} />);
         const onChange = component.find("input").prop("onChange");
-        mockEvent.target = { value: "new-filter-value" };
-        onChange(mockEvent);
+        expect(onChange).toBeDefined();
+        if (isDefined(onChange)) {
+            onChange(mockEvent);
+        }
         expect(onSearchFilterChange).toHaveBeenCalledWith("new-filter-value");
     });
 });

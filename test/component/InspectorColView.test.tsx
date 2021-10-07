@@ -1,7 +1,7 @@
 import * as React from "react";
 import { mount, shallow } from "enzyme";
 
-import { InspectorColView } from "../../src/component/InspectorColView";
+import { ColViewProps, InspectorColView } from "../../src/component/InspectorColView";
 import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
 
 describe("renders correctly", () => {
@@ -60,7 +60,7 @@ describe("renders correctly", () => {
     });
 });
 describe("update according to prop changes", () => {
-    const singleColumnData = [
+    const singleColumnData: ColViewProps["columnData"] = [
         {
             items: {
                 "Item One": new JsonSchemaGroup(),
@@ -69,7 +69,7 @@ describe("update according to prop changes", () => {
             onSelect: (): void => {}
         }
     ];
-    const doubleColumnData = [
+    const doubleColumnData: ColViewProps["columnData"] = [
         {
             items: {
                 "Item One": new JsonSchemaGroup(),

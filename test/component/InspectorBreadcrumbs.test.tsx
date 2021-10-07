@@ -4,6 +4,7 @@ import { shallow } from "enzyme";
 import { InspectorBreadcrumbs } from "../../src/component/InspectorBreadcrumbs";
 import { createRenderDataBuilder } from "../../src/component/renderDataUtils";
 import { RenderColumn } from "../../src/component/InspectorTypes";
+import { isDefined } from "../../src/model/utils";
 
 describe("renders correctly", () => {
     const buildColumnData = createRenderDataBuilder(() => (): void => {});
@@ -160,8 +161,8 @@ describe("renders correctly", () => {
         }: {
             breadcrumbTexts: Array<string>;
             columnData: Array<RenderColumn>;
-        }): React.ReactElement =>
-            columnDataParam !== columnData ? null : <button type="button">{`Copy to Clipboard: ${breadcrumbTexts.join("")}`}</button>;
+        }): React.ReactElement | undefined =>
+            columnDataParam !== columnData ? undefined : <button type="button">{`Copy to Clipboard: ${breadcrumbTexts.join("")}`}</button>;
         const component = shallow(<InspectorBreadcrumbs columnData={columnData} breadcrumbsOptions={{ renderTrailingContent }} />);
         expect(component.find(".jsonschema-inspector-breadcrumbs-icon").exists()).toBe(true);
         expect(component.find(".jsonschema-inspector-breadcrumbs-item")).toHaveLength(2);
@@ -191,7 +192,11 @@ describe("handles double-click navigation", () => {
         const selectedItems = component.find(".jsonschema-inspector-breadcrumbs-item");
         expect(selectedItems).toHaveLength(2);
 
-        selectedItems.at(0).prop("onDoubleClick")(null);
+        const doubleClickListener = selectedItems.at(0).prop("onDoubleClick");
+        expect(doubleClickListener).toBeDefined();
+        if (isDefined(doubleClickListener)) {
+            doubleClickListener({} as React.MouseEvent);
+        }
         expect(onSelectOne.mock.calls).toHaveLength(1);
         expect(onSelectOne.mock.calls[0][1]).toEqual("foo");
         expect(onSelectTwo.mock.calls).toHaveLength(0);
@@ -201,7 +206,11 @@ describe("handles double-click navigation", () => {
         const selectedItems = component.find(".jsonschema-inspector-breadcrumbs-item");
         expect(selectedItems).toHaveLength(2);
 
-        selectedItems.at(1).prop("onDoubleClick")(null);
+        const doubleClickListener = selectedItems.at(1).prop("onDoubleClick");
+        expect(doubleClickListener).toBeDefined();
+        if (isDefined(doubleClickListener)) {
+            doubleClickListener({} as React.MouseEvent);
+        }
         expect(onSelectOne.mock.calls).toHaveLength(0);
         expect(onSelectTwo.mock.calls).toHaveLength(1);
         expect(onSelectTwo.mock.calls[0][1]).toEqual("bar");

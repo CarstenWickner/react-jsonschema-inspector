@@ -20,7 +20,7 @@ import { RawJsonSchema, KeysOfRawJsonSchemaStringValues, getValueFromRawJsonSche
  * @returns {Function} created filter function for a `JsonSchema`; returning whether the given schema or any of its sub-schemas matches the filter
  */
 export function createRecursiveFilterFunction(
-    flatSearchFilter?: (rawSchema: RawJsonSchema, includeNestedOptionals?: boolean) => boolean,
+    flatSearchFilter?: (rawSchema: RawJsonSchema, includeNestedOptionals?: boolean) => boolean | undefined,
     propertyNameCheck?: (propertyName: string) => boolean
 ): (target: JsonSchema, includeNestedOptionals?: boolean) => boolean {
     const recursiveFilterFunction = (target: JsonSchema, includeNestedOptionals = true): boolean => {
@@ -82,7 +82,7 @@ export function createRecursiveFilterFunction(
  */
 export function collectReferencedSubSchemas(schema: JsonSchema, includeNestedOptionals?: boolean): Map<JsonSchema, boolean> {
     // collect sub-schemas in a Map in order to avoid duplicates
-    const references: Map<JsonSchema, boolean> = new Map();
+    const references: Map<JsonSchema, boolean> = new Map<JsonSchema, boolean>();
     // collect all referenced sub-schemas
     const collectReferences = (rawSubSchema: RawJsonSchema, isIncludingOptionals?: boolean): boolean => {
         // add any referenced schemas to the result set
@@ -129,14 +129,14 @@ export function collectReferencedSubSchemas(schema: JsonSchema, includeNestedOpt
  * @returns {FilterFunctionForSchema} function to apply for filtering
  */
 export function createFilterFunctionForSchema(
-    flatSearchFilter?: (rawSchema: RawJsonSchema, includeNestedOptionals?: boolean) => boolean,
+    flatSearchFilter?: (rawSchema: RawJsonSchema, includeNestedOptionals?: boolean) => boolean | undefined,
     propertyNameCheck?: (propertyName: string) => boolean
-): (jsonSchema: JsonSchema, includeNestedOptionalsForMainSchema: boolean) => boolean {
+): (jsonSchema: JsonSchema, includeNestedOptionalsForMainSchema: boolean | undefined) => boolean {
     const recursiveSearchFilter = createRecursiveFilterFunction(flatSearchFilter, propertyNameCheck);
     // cache definitive search results for the individual sub-schemas
-    const schemaMatchResultsExclOptionals: Map<JsonSchema, boolean> = new Map();
-    const schemaMatchResultsInclOptionals: Map<JsonSchema, boolean> = new Map();
-    const getRememberedResult = (jsonSchema: JsonSchema, includeNestedOptionals: boolean): boolean | undefined => {
+    const schemaMatchResultsExclOptionals: Map<JsonSchema, boolean> = new Map<JsonSchema, boolean>();
+    const schemaMatchResultsInclOptionals: Map<JsonSchema, boolean> = new Map<JsonSchema, boolean>();
+    const getRememberedResult = (jsonSchema: JsonSchema, includeNestedOptionals: boolean | undefined): boolean | undefined => {
         if (schemaMatchResultsExclOptionals.has(jsonSchema)) {
             const resultExcludingOptionals = schemaMatchResultsExclOptionals.get(jsonSchema);
             if (resultExcludingOptionals || !includeNestedOptionals) {
@@ -158,15 +158,15 @@ export function createFilterFunctionForSchema(
     const setRememberedResultExclOptionals = (subSchema: JsonSchema, result: boolean): void => {
         schemaMatchResultsExclOptionals.set(subSchema, result);
     };
-    return (jsonSchema: JsonSchema, includeNestedOptionalsForMainSchema: boolean): boolean => {
+    return (jsonSchema: JsonSchema, includeNestedOptionalsForMainSchema: boolean | undefined): boolean => {
         const rememberedResult = getRememberedResult(jsonSchema, includeNestedOptionalsForMainSchema);
         if (rememberedResult !== undefined) {
             return rememberedResult;
         }
-        const subSchemasToVisit: Map<JsonSchema, boolean> = new Map();
-        subSchemasToVisit.set(jsonSchema, includeNestedOptionalsForMainSchema);
-        const subSchemasInclOptionalsAlreadyVisited: Set<JsonSchema> = new Set();
-        const subSchemasExclOptionalsAlreadyVisited: Set<JsonSchema> = new Set();
+        const subSchemasToVisit: Map<JsonSchema, boolean> = new Map<JsonSchema, boolean>();
+        subSchemasToVisit.set(jsonSchema, !!includeNestedOptionalsForMainSchema);
+        const subSchemasInclOptionalsAlreadyVisited: Set<JsonSchema> = new Set<JsonSchema>();
+        const subSchemasExclOptionalsAlreadyVisited: Set<JsonSchema> = new Set<JsonSchema>();
         const checkSubSchema = ([subSchema, includeNestedOptionalsForSubSchema]: [JsonSchema, boolean]): boolean => {
             let result = recursiveSearchFilter(subSchema, includeNestedOptionalsForSubSchema);
             subSchemasToVisit.delete(subSchema);
@@ -236,21 +236,22 @@ export function createFilterFunctionForSchema(
  * @returns {object.<string, JsonSchema>} return.value expected input is an object representing a view column's items
  * @returns {boolean} return.return - output is the indication whether the given schema is deemed to be a match
  */
-export const filteringByFields = memoize((searchFields: Array<KeysOfRawJsonSchemaStringValues>, searchFilter: string | undefined):
-    | ((rawSchema: RawJsonSchema) => boolean)
-    | undefined => {
-    if (searchFields && searchFields.length && searchFilter) {
-        // use case-insensitive flag "i" in regular expression for value matching
-        const regex = new RegExp(escapeRegExp(searchFilter), "i");
-        return (rawSchema: RawJsonSchema): boolean =>
-            searchFields.some((fieldName) => {
-                const fieldValue = getValueFromRawJsonSchema(rawSchema, fieldName);
-                // check whether the given schema contains a value of type string and whether it matches the search filter
-                return typeof fieldValue === "string" && regex.test(fieldValue);
-            });
-    }
-    return undefined;
-}, isDeepEqual);
+export const filteringByFields = memoize(
+    (searchFields: Array<KeysOfRawJsonSchemaStringValues>, searchFilter: string | undefined): ((rawSchema: RawJsonSchema) => boolean) | undefined => {
+        if (searchFields && searchFields.length && searchFilter) {
+            // use case-insensitive flag "i" in regular expression for value matching
+            const regex = new RegExp(escapeRegExp(searchFilter), "i");
+            return (rawSchema: RawJsonSchema): boolean =>
+                searchFields.some((fieldName) => {
+                    const fieldValue = getValueFromRawJsonSchema(rawSchema, fieldName);
+                    // check whether the given schema contains a value of type string and whether it matches the search filter
+                    return typeof fieldValue === "string" && regex.test(fieldValue);
+                });
+        }
+        return undefined;
+    },
+    isDeepEqual
+);
 
 /**
  * Build the function for determining whether a particular property's name is a (partial) match for the filter text.
@@ -260,7 +261,7 @@ export const filteringByFields = memoize((searchFields: Array<KeysOfRawJsonSchem
  * @returns {string} return.value - expected input is a property's name
  * @returns {boolean} return.return - output is the indication whether the given property name is deemed to be a match
  */
-export const filteringByPropertyName = memoize((searchFilter: string): ((propertyName: string) => boolean) | undefined => {
+export const filteringByPropertyName = memoize((searchFilter: string | null | undefined): ((propertyName: string) => boolean) | undefined => {
     if (searchFilter) {
         // use case-insensitive flag "i" in regular expression for value matching
         const regex = new RegExp(escapeRegExp(searchFilter), "i");
