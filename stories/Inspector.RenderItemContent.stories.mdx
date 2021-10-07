@@ -1,5 +1,4 @@
-import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
-import { action } from "@storybook/addon-actions";
+import { Canvas, Meta, Story, Props } from '@storybook/addon-docs';
 import "./style-overrides.css";
 
 import { Inspector, getCommonFieldValuesFromSchemaGroup } from "../src/index";
@@ -19,7 +18,7 @@ import shopSelectionSchema from "./schema-shop-selection.json";
 ### with custom items
 The `renderItemContent` prop allows you to define your own component to be displayed for a single selectable item in a column.
 
-<Preview>
+<Canvas>
     <Story name="with custom items">
         <Inspector
             schemas={{
@@ -42,7 +41,6 @@ The `renderItemContent` prop allows you to define your own component to be displ
                     </div>
                 );
             }}
-            onSelect={action("onSelect")}
         />
     </Story>
-</Preview>
+</Canvas>

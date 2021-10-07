@@ -1,4 +1,4 @@
-import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import { Canvas, Meta, Story, Props } from '@storybook/addon-docs';
 import "./style-overrides.css";
 
 import { Inspector } from "../src/index";
@@ -19,7 +19,7 @@ import shopSelectionSchema from "./schema-shop-selection.json";
 By default, a search field is being offered in the top right corner. It searches on the displayed item names as well on the "title" and "description" fields of the respective JSON Schema.
 If a search term has been entered, items that are matching themselves or contain matching (nested) items are being highlighted.
 
-<Preview>
+<Canvas>
     <Story name="default">
         <Inspector
             schemas={{
@@ -36,7 +36,7 @@ If a search term has been entered, items that are matching themselves or contain
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
@@ -44,7 +44,7 @@ If a search term has been entered, items that are matching themselves or contain
 The `byPropertyName` prop allows you to toggle the search in item names on or off.
 This can be combined with either `fields` or `filterBy`.
 
-<Preview>
+<Canvas>
     <Story name="in property names">
         <Inspector
             schemas={{
@@ -57,7 +57,7 @@ This can be combined with either `fields` or `filterBy`.
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
@@ -65,7 +65,7 @@ This can be combined with either `fields` or `filterBy`.
 You can provide an array of `fields` in the JSON Schema (that are expected to contain strings) in which to search.
 This can be combined with `byPropertyName`.
 
-<Preview>
+<Canvas>
     <Story name="in schema fields">
         <Inspector
             schemas={{
@@ -78,7 +78,7 @@ This can be combined with `byPropertyName`.
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
@@ -86,7 +86,7 @@ This can be combined with `byPropertyName`.
 You can also provide your own logic to `filterBy` on a given JS object representing a JSON Schema.
 This can be combined with `byPropertyName` but replaces any defined `fields`.
 
-<Preview>
+<Canvas>
     <Story name="per custom logic">
         <Inspector
             schemas={{
@@ -100,14 +100,14 @@ This can be combined with `byPropertyName` but replaces any defined `fields`.
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
 ### with custom placeholder
 Via `inputPlaceholder` you can override the default "Search" hint in the input field with your own (e.g. translated) hint text.
 
-<Preview>
+<Canvas>
     <Story name="with custom placeholder">
         <Inspector
             schemas={{
@@ -122,7 +122,7 @@ Via `inputPlaceholder` you can override the default "Search" hint in the input f
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
@@ -131,7 +131,7 @@ In order to avoid slowing down the user's browser while a search term is being e
 By default, the search will be delayed for at least 200ms until nothing new is being entered or the maximum wait threshold of 500ms is being reached.
 For exceptionally big schemas, you may want to increase these values to reduce the number of search executions.
 
-<Preview>
+<Canvas>
     <Story name="with custom debounce">
         <Inspector
             schemas={{
@@ -148,7 +148,7 @@ For exceptionally big schemas, you may want to increase these values to reduce t
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
@@ -156,7 +156,7 @@ For exceptionally big schemas, you may want to increase these values to reduce t
 You can also turn-off the search feature completely by providing `null` instead of an object to the whole `searchOptions` prop.
 
 
-<Preview>
+<Canvas>
     <Story name="disabled">
         <Inspector
             schemas={{
@@ -168,4 +168,4 @@ You can also turn-off the search feature completely by providing `null` instead 
             searchOptions={null}
         />
     </Story>
-</Preview>
+</Canvas>

@@ -1,6 +1,6 @@
 {
     "name": "react-jsonschema-inspector",
-    "version": "4.4.2-SNAPSHOT",
+    "version": "5.0.0-SNAPSHOT",
     "description": "View component for traversing/searching in a JSON Schema",
     "homepage": "https://CarstenWickner.github.io/react-jsonschema-inspector/?path=/docs/inspector--show-case",
     "author": "Carsten Wickner",
@@ -9,116 +9,106 @@
         "type": "git",
         "url": "git+https://github.com/CarstenWickner/react-jsonschema-inspector.git"
     },
+    "main": "dist/index.js",
+    "module": "dist/react-jsonschema-inspector.esm.js",
+    "typings": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "src"
+    ],
+    "engines": {
+        "node": ">=10"
+    },
     "scripts": {
-        "start": "start-storybook -p 9001 -c .storybook",
-        "build": "rollup -c",
-        "lint": "tsc --noEmit && npm run lint-code && npm run lint-styles",
-        "lint-code": "eslint {src,test}/**/*.{ts,tsx} --report-unused-disable-directives",
-        "lint-styles": "stylelint src stories/**/*.*css stories/**/*.mdx",
-        "lint-fix": "npm run lint-code -- --fix",
-        "test": "jest",
-        "build-storybook": "build-storybook -c .storybook -o docs",
+        "start": "dts watch",
+        "build": "dts build",
+        "test": "dts test",
+        "lint": "dts lint src test",
+        "prepare": "npm run build",
+        "size": "size-limit",
+        "analyze": "size-limit --why",
+        "storybook": "start-storybook -p 9001 --docs",
+        "build-storybook": "build-storybook -o docs --docs",
         "predeploy": "rm -rf docs && npm run lint && npm run test --bail && npm run build-storybook",
         "deploy": "gh-pages -d docs",
-        "prepublishOnly": "rm -rf build && npm run lint && npm run test --bail && npm run build"
+        "prepublishOnly": "rm -rf dist && npm run lint && npm run test --bail && npm run build && npm run build-storybook"
     },
-    "main": "build/index.js",
-    "module": "build/index.es.js",
-    "types": "build/index.d.ts",
-    "files": [
-        "/build"
-    ],
-    "browserslist": [
-        "defaults"
+    "peerDependencies": {
+        "prop-types": ">=15",
+        "react": ">=16"
+    },
+    "prettier": {
+        "arrowParens": "always",
+        "endOfLine": "lf",
+        "printWidth": 150,
+        "semi": true,
+        "tabWidth": 4,
+        "trailingComma": "none"
+    },
+    "size-limit": [
+        {
+            "path": "dist/react-jsonschema-inspector.cjs.production.min.js",
+            "limit": "12 KB"
+        },
+        {
+            "path": "dist/react-jsonschema-inspector.esm.js",
+            "limit": "12 KB"
+        }
     ],
     "devDependencies": {
-        "@mdx-js/loader": "^1.6.19",
-        "@storybook/addon-actions": "^6.0.28",
-        "@storybook/addon-docs": "^6.0.28",
-        "@storybook/addon-options": "^5.3.21",
-        "@storybook/react": "^6.0.28",
-        "@types/classnames": "^2.2.9",
-        "@types/enzyme": "^3.10.4",
-        "@types/enzyme-adapter-react-16": "^1.0.5",
-        "@types/jest": "~25.1.5",
-        "@types/json-schema": "^7.0.3",
+        "@babel/core": "^7.15.5",
+        "@mdx-js/react": "^1.6.22",
+        "@size-limit/preset-small-lib": "^5.0.5",
+        "@storybook/addon-docs": "^6.3.10",
+        "@storybook/addon-essentials": "^6.3.10",
+        "@storybook/addon-info": "^5.3.21",
+        "@storybook/addon-links": "^6.3.10",
+        "@storybook/addon-postcss": "^2.0.0",
+        "@storybook/addons": "^6.3.10",
+        "@storybook/react": "^6.3.10",
+        "@storybook/theming": "^6.3.10",
+        "@types/enzyme": "^3.10.9",
+        "@types/enzyme-adapter-react-16": "^1.0.6",
+        "@types/jest": "~27.0.1",
+        "@types/json-schema": "^7.0.9",
         "@types/lodash.debounce": "^4.0.6",
         "@types/lodash.escaperegexp": "^4.1.6",
         "@types/lodash.isequal": "^4.5.5",
         "@types/prop-types": "^15.7.2",
-        "@types/react": "^16.9.16",
-        "@types/react-dom": "^16.9.4",
-        "@typescript-eslint/eslint-plugin": "^4.6.0",
-        "@typescript-eslint/parser": "^4.6.0",
-        "@typescript-eslint/typescript-estree": "^4.6.0",
-        "@wessberg/rollup-plugin-ts": "^1.1.83",
-        "awesome-typescript-loader": "~5.2.1",
-        "babel-loader": "~8.1.0",
-        "babel-preset-react-app": "^10.0.0",
-        "coveralls": "^3.1.0",
-        "css-loader": "^5.0.0",
+        "@types/react": "^17.0.26",
+        "@types/react-dom": "^17.0.9",
+        "autoprefixer": "^10.3.6",
+        "babel-loader": "^8.2.2",
+        "dts-cli": "^0.17.1",
         "enzyme": "~3.11.0",
-        "enzyme-adapter-react-16": "~1.15.2",
-        "enzyme-to-json": "^3.6.1",
-        "eslint": "^7.12.1",
-        "eslint-config-prettier": "^6.7.0",
-        "eslint-plugin-import": "^2.19.1",
-        "eslint-plugin-jsdoc": "^30.7.3",
-        "eslint-plugin-jsx-a11y": "^6.2.3",
-        "eslint-plugin-prettier": "^3.1.2",
-        "eslint-plugin-react": "^7.18.3",
-        "gh-pages": "^3.1.0",
-        "identity-obj-proxy": "~3.0.0",
-        "jest": "^25.5.4",
-        "node-sass": "^4.14.1",
-        "prettier": "^2.1.2",
-        "react-docgen-typescript-loader": "~3.7.0",
-        "rollup": "^2.0.2",
-        "rollup-plugin-postcss": "^3.1.8",
-        "rollup-plugin-terser": "^7.0.2",
-        "sass-loader": "^10.0.4",
-        "style-loader": "^2.0.0",
-        "stylelint": "^13.1.0",
-        "stylelint-config-recommended-scss": "^4.1.0",
-        "stylelint-scss": "^3.18.0",
-        "ts-jest": "^25.5.1",
-        "typescript": "~3.9.4"
+        "enzyme-adapter-react-16": "~1.15.6",
+        "enzyme-to-json": "^3.6.2",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-config-react-app": "^6.0.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "gh-pages": "^3.2.3",
+        "identity-obj-proxy": "^3.0.0",
+        "node-sass": "^6.0.1",
+        "postcss": "^8.3.8",
+        "postcss-flexbugs-fixes": "^5.0.2",
+        "react": "^16.14.0",
+        "react-dom": "^16.14.0",
+        "react-is": "^17.0.2",
+        "rollup-plugin-postcss": "^4.0.1",
+        "sass-loader": "^10.0.0",
+        "size-limit": "^5.0.5",
+        "tslib": "^2.3.1",
+        "typescript": "^4.4.3"
     },
     "dependencies": {
-        "classnames": "^2.2.6",
+        "classnames": "^2.3.1",
         "lodash.debounce": "^4.0.8",
         "lodash.escaperegexp": "^4.1.2",
         "lodash.isequal": "^4.5.0",
-        "memoize-one": "^5.1.1"
-    },
-    "peerDependencies": {
-        "prop-types": "^15.7.2",
-        "react": "^16.9.5",
-        "react-dom": "^16.9.2"
+        "memoize-one": "^5.2.1"
     },
     "jest": {
         "testEnvironment": "jsdom",
-        "roots": [
-            "<rootDir>/src",
-            "<rootDir>/test"
-        ],
-        "transform": {
-            "^.+\\.tsx?$": "ts-jest"
-        },
-        "globals": {
-            "ts-jest": {
-                "diagnostics": {
-                    "ignoreCodes": [
-                        2322,
-                        2493,
-                        2532,
-                        2740,
-                        7053,
-                        18002
-                    ]
-                }
-            }
-        },
         "setupFilesAfterEnv": [
             "<rootDir>/test/setupTests.ts"
         ],
@@ -128,10 +118,17 @@
         "moduleNameMapper": {
             "\\.(scss)$": "identity-obj-proxy"
         },
-        "clearMocks": true
-    },
-    "bugs": {
-        "url": "https://github.com/CarstenWickner/react-jsonschema-inspector/issues"
+        "clearMocks": true,
+        "globals": {
+            "ts-jest": {
+                "diagnostics": {
+                    "ignoreCodes": [
+                        2493,
+                        2532
+                    ]
+                }
+            }
+        }
     },
     "keywords": [
         "react",

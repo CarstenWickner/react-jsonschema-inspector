@@ -1,5 +1,4 @@
-import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
-import { action } from "@storybook/addon-actions";
+import { Canvas, Meta, Story, Props } from '@storybook/addon-docs';
 import "./style-overrides.css";
 
 import { Inspector, getFieldValueArrayFromSchemaGroup } from "../src/index";
@@ -21,7 +20,7 @@ By default that is a selection of data fields from the JSON Schema displayed in 
 
 Via `renderSelectionDetails` you can define your own component to be displayed on the right in case of an item being selected.
 
-<Preview>
+<Canvas>
     <Story name="with custom selection details">
         <Inspector
             schemas={{
@@ -43,15 +42,14 @@ Via `renderSelectionDetails` you can define your own component to be displayed o
                     </div>
                 );
             }}
-            onSelect={action("onSelect")}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ### disabled
 If `renderSelectionDetails` returns nothing (e.g. `null`), the details panel on the right will be hidden.
 
-<Preview>
+<Canvas>
     <Story name="disabled">
         <Inspector
             schemas={{
@@ -59,7 +57,6 @@ If `renderSelectionDetails` returns nothing (e.g. `null`), the details panel on 
             }}
             defaultSelectedItems={["Shop", "inventory"]}
             renderSelectionDetails={() => null}
-            onSelect={action("onSelect")}
         />
     </Story>
-</Preview>
+</Canvas>

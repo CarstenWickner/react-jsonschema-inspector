@@ -1,4 +1,4 @@
-import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import { Canvas, Meta, Story, Props } from '@storybook/addon-docs';
 import "./style-overrides.css";
 
 import { Inspector } from "../src/index";
@@ -20,7 +20,7 @@ import linksMetaSchema from "./schema-links-meta.json";
 By default, no details panel is shown on the right while no selection has been made.
 Via `renderEmptyDetails`, you can provide a component to be displayed in this case, e.g. in order to outline the usage/purpose of the component in the given context.
 
-<Preview>
+<Canvas>
     <Story name="with display for empty selection">
         <Inspector
             schemas={{
@@ -46,4 +46,4 @@ Via `renderEmptyDetails`, you can provide a component to be displayed in this ca
             )}
         />
     </Story>
-</Preview>
+</Canvas>

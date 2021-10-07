@@ -1,9 +1,10 @@
 /node_modules
-/.npm
+.npm
+.cache
+.vscode
 
-/build
-/coverage
+/dist
 /docs
 
-.vscode
+
 **/.DS_Store
