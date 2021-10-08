@@ -14,7 +14,7 @@ At the same time, there are a number of tools that automatically generate schema
 
 ## Demo
 
-Have a look at the [![Storybook][storybook-image]][storybook-url]
+Have a look at the [Storybook][storybook-url]
 
 Or try it out and [![Edit on CodeSandbox][codesandbox-image]][codesandbox-url]
 
@@ -57,6 +57,7 @@ npm i react-jsonschema-inspector
 | `searchOptions.debounceWait` | Number indicating the delay in milliseconds between the last change to the search term being entered and it actually being applied. This defaults to `200` but may be increased when used with exceptionally large schemas and you experience performance issues. Please refer to the documentation on [`lodash.debounce`](https://lodash.com/docs/4.17.11#debounce). |
 | `searchOptions.debounceMaxWait` | Number indicating the maximum delay in milliseconds after the search term was changed. This defaults to `500`. Please refer to the documentation on [`lodash.debounce`](https://lodash.com/docs/4.17.11#debounce). |
 | `renderHeaderToolBar` | Function: custom render function for additional header tool-bar besides search input. Receives one parameter: object with a: "columnData" property |
+| `renderSearchInput` | Function: custom render function for the search input. Receives one parameter: object with the following properties: "searchFilter", "placeholder", "onChange" |
 | `renderItemContent` | Function: custom render function for name of single property/sub-schema in a column. Receives one parameter: object with the following properties: "name", "hasNestedItems", "selected", "schemaGroup" |
 | `renderSelectionDetails` | Function: custom render function for the "Details" block on the right for the single property/sub-schema being selected. Receives one parameter: object with the following properties: "itemSchemaGroup", "columnData", "selectionColumnIndex", "optionIndexes" |
 | `renderEmptyDetails` | Function: custom render function for the "Details" block on the right if nothing is selected yet. Receives one parameter, which is an object with the "rootColumnSchemas" property, which holds the array of top-level schemas (as derived from the `schemas` prop and augmented by any given `referenceSchemas`)
@@ -157,7 +158,6 @@ Please refer to the more detailed listing below regarding particular keywords.
 [npm-url]: https://www.npmjs.com/package/react-jsonschema-inspector
 [coverage-image]: https://coveralls.io/repos/github/CarstenWickner/react-jsonschema-inspector/badge.svg?branch=master
 [coverage-url]: https://coveralls.io/github/CarstenWickner/react-jsonschema-inspector?branch=master
-[storybook-image]: https://raw.githubusercontent.com/storybooks/storybook/next/docs/src/design/homepage/storybook-logo.svg?sanitize=true
 [storybook-url]: https://CarstenWickner.github.io/react-jsonschema-inspector/?path=/docs/inspector--show-case
 [codesandbox-image]: https://codesandbox.io/static/img/play-codesandbox.svg
 [codesandbox-url]: https://codesandbox.io/s/4x9jn9yzx4?fontsize=13&hidenavigation=1
