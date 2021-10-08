@@ -5,9 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- allow for custom rendering of the search input field via a new `renderSearchInput` prop
+
 ### Changed
 - Updating a number of dev dependencies including TypeScript (resulting in slight changes in type definitions)
-- Dropping support for JSON Schema Draft 4 (mainly ignoring `"id"` properties in favour of `"$id"`)
+- BREAKING CHANGE: Dropping support for JSON Schema Draft 4 (mainly ignoring `"id"` properties in favour of `"$id"`)
 
 ### Fixed
 - Handling of `allOf` containing multiple `oneOf` and/or `anyOf` entries

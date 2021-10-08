@@ -113,6 +113,14 @@ export interface InspectorDefaultProps {
      */
     renderHeaderToolBar?: (props: { columnData: Array<RenderColumn> }) => React.ReactElement | undefined;
     /**
+     * Custom render function for the search field.
+     */
+    renderSearchInput?: (props: {
+        searchFilter: string;
+        placeholder: string;
+        onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    }) => React.ReactElement;
+    /**
      * Custom render function for the content of a single item in a column.
      * Expects a single object as input with the following keys:
      * - "name": providing the name of the respective item

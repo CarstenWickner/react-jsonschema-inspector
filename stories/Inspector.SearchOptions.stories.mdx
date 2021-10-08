@@ -10,7 +10,7 @@ import shopSelectionSchema from "./schema-shop-selection.json";
 # Inspector (searchOptions)
 ## Focus: Search for (nested) property items
 
-<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "searchOptions")} />
+<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "searchOptions" && propName !== "renderSearchInput")} />
 
 ----
 
@@ -150,6 +150,35 @@ For exceptionally big schemas, you may want to increase these values to reduce t
 </Canvas>
 
 ----
+
+### with custom search field
+The `renderSearchInput` prop allows you to define your own component to be displayed as the search input field.
+
+<Canvas>
+    <Story name="with custom search field">
+        <Inspector
+            schemas={{
+                Person: personSchema,
+                Shop: shopSelectionSchema
+            }}
+            defaultSelectedItems={["Shop", "inventory", "[0]"]}
+            renderSearchInput={({ searchFilter, placeholder, onChange }) => (
+                <input
+                    type="search"
+                    className="jsonschema-inspector-search-input"
+                    value={searchFilter}
+                    placeholder={`Custom ${placeholder} Input...`}
+                    onChange={onChange}
+                    style={{
+                        borderRadius: "1em",
+                        backgroundColor: "#e8f5e9",
+                        borderColor: "#a5d6a7"
+                    }}
+                />
+            )}
+        />
+    </Story>
+</Canvas>
 
 ### disabled
 You can also turn-off the search feature completely by providing `null` instead of an object to the whole `searchOptions` prop.
