@@ -229,6 +229,7 @@ export class Inspector extends React.Component<
             searchOptions,
             breadcrumbs,
             renderHeaderToolBar,
+            renderSearchInput,
             renderItemContent,
             renderSelectionDetails,
             renderEmptyDetails
@@ -257,6 +258,7 @@ export class Inspector extends React.Component<
                                 searchFilter={enteredSearchFilter}
                                 onSearchFilterChange={this.onSearchFilterChange}
                                 placeholder={searchOptions.inputPlaceholder}
+                                renderSearchInput={renderSearchInput}
                             />
                         )}
                         {renderHeaderToolBar && <div className="jsonschema-inspector-toolbar">{renderHeaderToolBar(renderDataForSelection)}</div>}
@@ -314,6 +316,7 @@ export class Inspector extends React.Component<
         }),
         onSelect: PropTypes.func,
         renderHeaderToolBar: PropTypes.func,
+        renderSearchInput: PropTypes.func,
         renderItemContent: PropTypes.func,
         renderSelectionDetails: PropTypes.func,
         renderEmptyDetails: PropTypes.func
@@ -334,6 +337,7 @@ export class Inspector extends React.Component<
         },
         onSelect: undefined,
         renderHeaderToolBar: undefined,
+        renderSearchInput: undefined,
         renderItemContent: undefined,
         renderSelectionDetails: undefined,
         renderEmptyDetails: undefined
