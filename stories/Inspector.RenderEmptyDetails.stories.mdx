@@ -1,5 +1,4 @@
-import { Canvas, Meta, Story, Props } from '@storybook/addon-docs';
-import "./style-overrides.css";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector } from "../src/index";
 
@@ -7,12 +6,12 @@ import metaSchema from "./schema-meta.json";
 import hyperMetaSchema from "./schema-hyper-meta.json";
 import linksMetaSchema from "./schema-links-meta.json";
 
-<Meta title="Inspector (renderEmptyDetails)" component={Inspector} />
+<Meta title="renderEmptyDetails" component={Inspector} />
 
 # Inspector (renderEmptyDetails)
 ## Focus: What to show in the details panel on the right while there is no selection
 
-<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "renderEmptyDetails")} />
+<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "renderEmptyDetails")} />
 
 ----
 

@@ -1,17 +1,16 @@
-import { Canvas, Meta, Story, Props } from '@storybook/react';
-import "./style-overrides.css";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector } from "../src/index";
 
 import personSchema from "./schema-person.json";
 import shopSelectionSchema from "./schema-shop-selection.json";
 
-<Meta title="Inspector (parserConfig)" component={Inspector} />
+<Meta title="parserConfig" component={Inspector} />
 
 # Inspector (parserConfig)
 ## Focus: How to represent optional schema parts
 
-<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "parserConfig")} />
+<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "parserConfig")} />
 
 ----
 

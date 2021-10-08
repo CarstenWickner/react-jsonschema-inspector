@@ -27,8 +27,8 @@
         "prepare": "npm run build",
         "size": "size-limit",
         "analyze": "size-limit --why",
-        "storybook": "start-storybook -p 9001 --docs",
-        "build-storybook": "build-storybook -o docs --docs",
+        "storybook": "start-storybook -p 9001",
+        "build-storybook": "build-storybook -o docs",
         "predeploy": "rm -rf docs && npm run lint && npm run test --bail && npm run build-storybook",
         "deploy": "gh-pages -d docs",
         "prepublishOnly": "rm -rf dist && npm run lint && npm run test --bail && npm run build && npm run build-storybook"

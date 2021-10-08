@@ -1,5 +1,4 @@
-import { Canvas, Meta, Story, Props } from '@storybook/addon-docs';
-import "./style-overrides.css";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector, getMaximumFieldValueFromSchemaGroup } from "../src/index";
 
@@ -61,7 +60,7 @@ At the same time, there are a number of tools that automatically generate schema
 
 ## Props
 
-<Props of={Inspector} />
+<ArgsTable of={Inspector} />
 
 ### designed for multiple schemas
 By default, the inspector caters for one or multiple schemas being represented.

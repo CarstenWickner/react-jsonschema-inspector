@@ -1,16 +1,15 @@
-import { Canvas, Meta, Story, Props } from '@storybook/addon-docs';
-import "./style-overrides.css";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector, getFieldValueArrayFromSchemaGroup } from "../src/index";
 
 import shopSelectionSchema from "./schema-shop-selection.json";
 
-<Meta title="Inspector (renderSelectionDetails)" component={Inspector} />
+<Meta title="renderSelectionDetails" component={Inspector} />
 
 # Inspector (renderSelectionDetails)
 ## Focus: Customise details panel on the right for a selected item
 
-<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "renderSelectionDetails")} />
+<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "renderSelectionDetails")} />
 
 ----
 

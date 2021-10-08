@@ -1,17 +1,16 @@
-import { Canvas, Meta, Story, Props } from '@storybook/react';
-import "./style-overrides.css";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector, getMaximumFieldValueFromSchemaGroup } from "../src/index";
 
 import personSchema from "./schema-person.json";
 import shopSelectionSchema from "./schema-shop-selection.json";
 
-<Meta title="Inspector (buildArrayProperties)" component={Inspector} />
+<Meta title="buildArrayProperties" component={Inspector} />
 
 # Inspector (buildArrayProperties)
 ## Focus: How to represent arrays in a Schema
 
-<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "buildArrayProperties")} />
+<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "buildArrayProperties")} />
 
 ----
 

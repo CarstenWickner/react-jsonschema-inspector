@@ -5,6 +5,6 @@
 
 /dist
 /docs
-
+/coverage
 
 **/.DS_Store

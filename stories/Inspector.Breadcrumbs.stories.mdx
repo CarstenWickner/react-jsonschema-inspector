@@ -1,6 +1,4 @@
-import { Canvas, Meta, Story, Props } from '@storybook/addon-docs';
-import "./style-overrides.css";
-import classNames from "classnames";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector } from "../src/index";
 
@@ -8,12 +6,12 @@ import metaSchema from "./schema-meta.json";
 import hyperMetaSchema from "./schema-hyper-meta.json";
 import linksMetaSchema from "./schema-links-meta.json";
 
-<Meta title="Inspector (breadcrumbs)" component={Inspector} />
+<Meta title="breadcrumbs" component={Inspector} />
 
 # Inspector
 ## Focus: Breadcrumbs at the bottom of the Inspector
 
-<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "breadcrumbs")} />
+<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "breadcrumbs")} />
 
 ----
 
@@ -237,10 +235,7 @@ If all the above options are not customised enough, you can also provide your co
                 renderItem: (renderProps) => (
                     <span
                         key={renderProps.index}
-                        className={classNames({
-                            "jsonschema-inspector-breadcrumbs-item": true,
-                            "has-nested-items": renderProps.hasNestedItems
-                        })}
+                        className={`jsonschema-inspector-breadcrumbs-item ${renderProps.hasNestedItems ? "has-nested-items" : ""}`}
                     >
                         <span
                             style={{

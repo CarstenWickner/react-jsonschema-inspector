@@ -1,22 +1,21 @@
-import { Canvas, Meta, Story, Props } from '@storybook/addon-docs';
-import "./style-overrides.css";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector } from "../src/index";
 
 import personSchema from "./schema-person.json";
 import shopSelectionSchema from "./schema-shop-selection.json";
 
-<Meta title="Inspector (searchOptions)" component={Inspector} />
+<Meta title="searchOptions" component={Inspector} />
 
 # Inspector (searchOptions)
 ## Focus: Search for (nested) property items
 
-<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "searchOptions")} />
+<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "searchOptions")} />
 
 ----
 
 ### default
-By default, a search field is being offered in the top right corner. It searches on the displayed item names as well on the "title" and "description" fields of the respective JSON Schema.
+By default, a search field is being offered in the top right corner. It searches on the displayed item names as well as on the "title" and "description" fields of the respective JSON Schema.
 If a search term has been entered, items that are matching themselves or contain matching (nested) items are being highlighted.
 
 <Canvas>
