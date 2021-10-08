@@ -4,7 +4,8 @@ import { shallow } from "enzyme";
 import { Inspector } from "../../src/component/Inspector";
 import { ColViewProps } from "../../src/component/InspectorColView";
 import { JsonSchema } from "../../src/model/JsonSchema";
-import { RenderColumn, RenderItemsColumn } from "../../src/component/InspectorTypes";
+import { InspectorProps, RenderColumn, RenderItemsColumn } from "../../src/component/InspectorTypes";
+import { isDefined } from "../../src/model/utils";
 
 describe("renders correctly", () => {
     const schemas = {
@@ -79,7 +80,8 @@ describe("renders correctly", () => {
                     schemas={schemas}
                     referenceSchemas={referenceSchemas}
                     searchOptions={{
-                        filterBy: (searchFilter) => (rawSchema): boolean => !!rawSchema[searchFilter]
+                        filterBy: (searchFilter) =>
+                            isDefined(searchFilter) ? (rawSchema): boolean => rawSchema.hasOwnProperty(searchFilter) : undefined
                     }}
                 />
             );
@@ -128,7 +130,8 @@ describe("renders correctly", () => {
                     schemas={schemas}
                     referenceSchemas={referenceSchemas}
                     searchOptions={{
-                        filterBy: (searchFilter: string): (() => boolean) => (searchFilter.length < 3 ? undefined : (): boolean => true),
+                        filterBy: (searchFilter: string | null): undefined | (() => boolean) =>
+                            searchFilter && searchFilter.length > 2 ? (): boolean => true : undefined,
                         byPropertyName: false,
                         debounceWait: 100
                     }}
@@ -148,7 +151,7 @@ describe("renders correctly", () => {
         });
     });
     describe("with header tool-bar", () => {
-        const renderHeaderToolBar = (): React.ReactChild => <div>tool-bar-item</div>;
+        const renderHeaderToolBar: InspectorProps["renderHeaderToolBar"] = () => <div>tool-bar-item</div>;
         it("without search field", () => {
             const component = shallow(<Inspector schemas={schemas} renderHeaderToolBar={renderHeaderToolBar} searchOptions={null} />);
             const header = component.find(".jsonschema-inspector-header");
@@ -258,12 +261,12 @@ describe("calls onSelect", () => {
     };
     const mockEvent = {
         stopPropagation: (): void => {}
-    };
+    } as React.SyntheticEvent;
     const onSelect = jest.fn(() => {});
 
     it("when setting root selection", () => {
         const component = shallow(<Inspector schemas={schemas} onSelect={onSelect} />);
-        const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
+        const { onSelect: rootColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[0];
         rootColumnSelect(mockEvent, "Schema One");
         expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][0]).toEqual(["Schema One"]);
@@ -271,13 +274,13 @@ describe("calls onSelect", () => {
     });
     it("when setting root selection (without onSelect prop)", () => {
         const component = shallow(<Inspector schemas={schemas} />);
-        const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
+        const { onSelect: rootColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[0];
         rootColumnSelect(mockEvent, "Schema One");
         expect(component.state("appendEmptyColumn")).toBe(false);
     });
     it("when setting other root selection", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} onSelect={onSelect} />);
-        const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
+        const { onSelect: rootColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[0];
         rootColumnSelect(mockEvent, "Schema Two");
         expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][0]).toEqual(["Schema Two"]);
@@ -286,26 +289,26 @@ describe("calls onSelect", () => {
     });
     it("when setting other root selection (without onSelect prop)", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} />);
-        const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
+        const { onSelect: rootColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[0];
         rootColumnSelect(mockEvent, "Schema Two");
         // expect it to be true because "Schema Two" has no nested items, but "Schema One" has
         expect(component.state("appendEmptyColumn")).toBe(true);
     });
     it("not when setting same root selection", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} onSelect={onSelect} />);
-        const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
+        const { onSelect: rootColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[0];
         rootColumnSelect(mockEvent, "Schema One");
         expect(onSelect.mock.calls).toHaveLength(0);
     });
     it("when clearing and resetting root selection", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} onSelect={onSelect} />);
-        const { onSelect: rootColumnSelectForClearing } = component.find("InspectorColView").prop("columnData")[0];
-        rootColumnSelectForClearing(mockEvent, null);
+        const { onSelect: rootColumnSelectForClearing } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[0];
+        rootColumnSelectForClearing(mockEvent, undefined);
         expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][0]).toEqual([]);
         expect(component.state("appendEmptyColumn")).toBe(true);
 
-        const { onSelect: rootColumnSelectForReset } = component.find("InspectorColView").prop("columnData")[0];
+        const { onSelect: rootColumnSelectForReset } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[0];
         rootColumnSelectForReset(mockEvent, "Schema One");
         expect(onSelect.mock.calls).toHaveLength(2);
         expect(onSelect.mock.calls[1][0]).toEqual(["Schema One"]);
@@ -313,19 +316,19 @@ describe("calls onSelect", () => {
     });
     it("when clearing root selection (without onSelect prop)", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} />);
-        const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
-        rootColumnSelect(mockEvent, null);
+        const { onSelect: rootColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[0];
+        rootColumnSelect(mockEvent, undefined);
         expect(component.state("appendEmptyColumn")).toBe(true);
     });
     it("not when clearing empty root selection", () => {
         const component = shallow(<Inspector schemas={schemas} onSelect={onSelect} />);
-        const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
-        rootColumnSelect(mockEvent, null);
+        const { onSelect: rootColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[0];
+        rootColumnSelect(mockEvent, undefined);
         expect(onSelect.mock.calls).toHaveLength(0);
     });
     it("when setting non-root selection", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} onSelect={onSelect} />);
-        const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
+        const { onSelect: secondColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[1];
         secondColumnSelect(mockEvent, "Item One");
         expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][0]).toEqual(["Schema One", "Item One"]);
@@ -333,7 +336,7 @@ describe("calls onSelect", () => {
     });
     it("when setting other non-root selection", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One", "Item One"]} onSelect={onSelect} />);
-        const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
+        const { onSelect: secondColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[1];
         secondColumnSelect(mockEvent, "Item Two");
         expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][0]).toEqual(["Schema One", "Item Two"]);
@@ -341,14 +344,14 @@ describe("calls onSelect", () => {
     });
     it("not when setting same non-root selection", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One", "Item One"]} onSelect={onSelect} />);
-        const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
+        const { onSelect: secondColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[1];
         secondColumnSelect(mockEvent, "Item One");
         expect(onSelect.mock.calls).toHaveLength(0);
     });
     it("when clearing non-root selection", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One", "Item One"]} onSelect={onSelect} />);
-        const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
-        secondColumnSelect(mockEvent, null);
+        const { onSelect: secondColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[1];
+        secondColumnSelect(mockEvent, undefined);
         expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][0]).toEqual(["Schema One"]);
         // expect it to be false because "Item One" has no nested items
@@ -356,13 +359,13 @@ describe("calls onSelect", () => {
     });
     it("not when clearing empty non-root selection", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} onSelect={onSelect} />);
-        const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
-        secondColumnSelect(mockEvent, null);
+        const { onSelect: secondColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[1];
+        secondColumnSelect(mockEvent, undefined);
         expect(onSelect.mock.calls).toHaveLength(0);
     });
     it("with extra information (excluding breadcrumbs)", () => {
         const component = shallow(<Inspector schemas={schemas} breadcrumbs={null} onSelect={onSelect} />);
-        const { onSelect: rootColumnSelect } = component.find("InspectorColView").prop("columnData")[0];
+        const { onSelect: rootColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[0];
         rootColumnSelect(mockEvent, "Schema One");
         expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][0]).toEqual(["Schema One"]);
@@ -377,7 +380,7 @@ describe("calls onSelect", () => {
         const component = shallow(
             <Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} breadcrumbs={breadcrumbs} onSelect={onSelect} />
         );
-        const { onSelect: secondColumnSelect } = component.find("InspectorColView").prop("columnData")[1];
+        const { onSelect: secondColumnSelect } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[1];
         secondColumnSelect(mockEvent, "Item One");
         expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][0]).toEqual(["Schema One", "Item One"]);
@@ -386,8 +389,8 @@ describe("calls onSelect", () => {
     });
     it("with extra information in case of empty selection", () => {
         const component = shallow(<Inspector schemas={schemas} defaultSelectedItems={["Schema One"]} onSelect={onSelect} />);
-        const { onSelect: rootColumnSelectForClearing } = component.find("InspectorColView").prop("columnData")[0];
-        rootColumnSelectForClearing(mockEvent, null);
+        const { onSelect: rootColumnSelectForClearing } = (component.find("InspectorColView").prop("columnData") as ColViewProps["columnData"])[0];
+        rootColumnSelectForClearing(mockEvent, undefined);
         expect(onSelect.mock.calls).toHaveLength(1);
         expect(onSelect.mock.calls[0][0]).toEqual([]);
         expect(onSelect.mock.calls[0][2]).toEqual([]);

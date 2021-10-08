@@ -69,13 +69,14 @@ export class RefScope {
      * @param {JsonSchema} schema - to collect $ref-erence-able sub-schemas from
      */
     constructor(schema?: JsonSchema) {
+        this.baseUri = null;
         if (!schema || !isNonEmptyObject(schema.schema)) {
             return;
         }
         // can always self-reference via an empty fragment
         this.internalRefs.set("#", schema);
         // from JSON Schema Draft 6: "$id" replaces former "id"
-        const mainAlias = getValueFromRawJsonSchema(schema.schema, "$id") || getValueFromRawJsonSchema(schema.schema, "id");
+        const mainAlias = getValueFromRawJsonSchema(schema.schema, "$id");
         let externalRefBase: string | null;
         if (mainAlias && !mainAlias.startsWith("#")) {
             // an absolute URI can be used both within the schema itself but also from other schemas
@@ -89,24 +90,22 @@ export class RefScope {
         } else {
             // no valid alias provided
             externalRefBase = null;
-            this.baseUri = null;
         }
         // in draft 2019-09 the keyword "definitions" was renamed to "$defs"
-        const definitionsKeyword = schema.schema.$defs ? "$defs" : "definitions";
+        const definitionsKeyword = schema.schema.hasOwnProperty("$defs") ? "$defs" : "definitions";
         const definitions = getValueFromRawJsonSchema(schema.schema, definitionsKeyword);
         if (isNonEmptyObject(definitions)) {
             Object.keys(definitions).forEach((key) => {
                 const definition = definitions[key];
                 if (isNonEmptyObject(definition)) {
                     const subSchema: JsonSchema = new JsonSchema(definition, schema.parserConfig, this);
-                    // from JSON Schema Draft 6: "$id" replaces former "id"
-                    const subAlias = definition.$id || definition.id;
+                    const subAlias = getValueFromRawJsonSchema(definition, "$id");
                     if (subAlias) {
                         // any alias provided within definitions will only be available as short-hand in this schema
                         this.internalRefs.set(subAlias, subSchema);
                     }
                     // from JSON Schema Draft 2019-09: "$anchor" for plain text references (that should no longer be provided via $id)
-                    const anchor = definition.$anchor;
+                    const anchor = getValueFromRawJsonSchema(definition, "$anchor");
                     if (anchor) {
                         // any alias provided within definitions will only be available as short-hand in this schema
                         this.internalRefs.set(`#${anchor}`, subSchema);
@@ -162,13 +161,16 @@ export class RefScope {
         }
         if (!result) {
             this.otherScopes.some((otherScope) => {
-                result = otherScope.findSchemaInThisScope(ref, false) || (alternativeRef && otherScope.findSchemaInThisScope(alternativeRef, false));
+                result = otherScope.findSchemaInThisScope(ref, false);
+                if (!result && alternativeRef) {
+                    result = otherScope.findSchemaInThisScope(alternativeRef, false);
+                }
                 return result;
             });
         }
         if (result) {
             return result;
         }
-        throw new Error(`Cannot resolve $ref: "${ref}"` + (alternativeRef ? `/"${alternativeRef}"` : ""));
+        throw new Error(`Cannot resolve $ref: "${ref}"${alternativeRef ? `/"${alternativeRef}"` : ""}`);
     }
 }

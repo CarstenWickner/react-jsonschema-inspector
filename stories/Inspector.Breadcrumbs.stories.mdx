@@ -1,6 +1,4 @@
-import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
-import "./style-overrides.css";
-import classNames from "classnames";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector } from "../src/index";
 
@@ -8,19 +6,19 @@ import metaSchema from "./schema-meta.json";
 import hyperMetaSchema from "./schema-hyper-meta.json";
 import linksMetaSchema from "./schema-links-meta.json";
 
-<Meta title="Inspector (breadcrumbs)" component={Inspector} />
+<Meta title="breadcrumbs" component={Inspector} />
 
 # Inspector
 ## Focus: Breadcrumbs at the bottom of the Inspector
 
-<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "breadcrumbs")} />
+<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "breadcrumbs")} />
 
 ----
 
 ### default
 If no `breadcrumbs` prop is defined, they are shown by default.
 
-<Preview>
+<Canvas>
     <Story name="default">
         <Inspector
             schemas={{
@@ -32,14 +30,14 @@ If no `breadcrumbs` prop is defined, they are shown by default.
             defaultSelectedItems={["Meta Hyper JSON Schema", "contains"]}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
 ### with prefix
 You can define your own `prefix` to be shown as part of the very first column's selected item.
 
-<Preview>
+<Canvas>
     <Story name="with prefix">
         <Inspector
             schemas={{
@@ -55,14 +53,14 @@ You can define your own `prefix` to be shown as part of the very first column's 
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
 ### with custom separator
 You can define your own `separator` if the default `.` does not suit your needs.
 
-<Preview>
+<Canvas>
     <Story name="with custom separator">
         <Inspector
             schemas={{
@@ -77,7 +75,7 @@ You can define your own `separator` if the default `.` does not suit your needs.
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
@@ -85,7 +83,7 @@ You can define your own `separator` if the default `.` does not suit your needs.
 Via `skipSeparator` you can decide whether a separator should be shown in front of any subsequent selection.
 By default, there is no separator in front of the first column's selection and if the selectable item's name is `"[0]"`.
 
-<Preview>
+<Canvas>
     <Story name="with optional separator">
         <Inspector
             schemas={{
@@ -101,7 +99,7 @@ By default, there is no separator in front of the first column's selection and i
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
@@ -109,7 +107,7 @@ By default, there is no separator in front of the first column's selection and i
 Via `mutateName` you can define an alternative representation of a selected item's name in the breadcrumbs.
 E.g. you can show different separators in combination with `skipSeparator`.
 
-<Preview>
+<Canvas>
     <Story name="with multiple different separators">
         <Inspector
             schemas={{
@@ -125,7 +123,7 @@ E.g. you can show different separators in combination with `skipSeparator`.
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
@@ -133,7 +131,7 @@ E.g. you can show different separators in combination with `skipSeparator`.
 Alternatively you can ignore certain item selections in the breadcrumbs by letting `mutateName` return a falsy value (e.g. `null` or `false`).
 E.g. you can omit the first column's selection in the displayed breadcrumbs. In order to avoid the initial separator you might have to use `skipSeparator` as well.
 
-<Preview>
+<Canvas>
     <Story name="not showing root selection">
         <Inspector
             schemas={{
@@ -151,7 +149,7 @@ E.g. you can omit the first column's selection in the displayed breadcrumbs. In 
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
@@ -159,7 +157,7 @@ E.g. you can omit the first column's selection in the displayed breadcrumbs. In 
 By default, a double-click on an item in the breadcrumbs changes the selection in the `<Inspector>` to the respective item.
 This can be disabled via `preventNavigation`, i.e. so a double-click does nothing but select the text displayed on the breadcrumb item.
 
-<Preview>
+<Canvas>
     <Story name="without navigation on double-click">
         <Inspector
             schemas={{
@@ -175,14 +173,14 @@ This can be disabled via `preventNavigation`, i.e. so a double-click does nothin
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
 ### with extra trailing content
 `renderTrailingContent` allows you to add extra content behind the breadcrumb items, e.g. a "Copy to Clipboard" button.
 
-<Preview>
+<Canvas>
     <Story name="with extra trailing content">
         <Inspector
             schemas={{
@@ -215,14 +213,14 @@ This can be disabled via `preventNavigation`, i.e. so a double-click does nothin
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
 ### with custom items
 If all the above options are not customised enough, you can also provide your component for each breadcrumb item through `renderItem`.
 
-<Preview>
+<Canvas>
     <Story name="with custom items">
         <Inspector
             schemas={{
@@ -237,10 +235,7 @@ If all the above options are not customised enough, you can also provide your co
                 renderItem: (renderProps) => (
                     <span
                         key={renderProps.index}
-                        className={classNames({
-                            "jsonschema-inspector-breadcrumbs-item": true,
-                            "has-nested-items": renderProps.hasNestedItems
-                        })}
+                        className={`jsonschema-inspector-breadcrumbs-item ${renderProps.hasNestedItems ? "has-nested-items" : ""}`}
                     >
                         <span
                             style={{
@@ -256,14 +251,14 @@ If all the above options are not customised enough, you can also provide your co
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
 ### disabled
 You can also turn-off the breadcrumbs feature completely by providing `null` instead of an object to the whole `breadcrumbs` prop.
 
-<Preview>
+<Canvas>
     <Story name="disabled">
         <Inspector
             schemas={{
@@ -277,4 +272,4 @@ You can also turn-off the breadcrumbs feature completely by providing `null` ins
             breadcrumbs={null}
         />
     </Story>
-</Preview>
+</Canvas>

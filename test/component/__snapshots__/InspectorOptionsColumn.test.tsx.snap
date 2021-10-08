@@ -21,7 +21,7 @@ exports[`renders correctly with minimal/default props 1`] = `
     <li
       key="[0]"
     >
-      <Component
+      <InspectorItem
         name="Exclusive Option 1"
         onSelect={[Function]}
         optionIndexes={
@@ -126,7 +126,7 @@ exports[`renders correctly with minimal/default props 1`] = `
         <li
           key="[1,0]"
         >
-          <Component
+          <InspectorItem
             name="Option 2-1"
             onSelect={[Function]}
             optionIndexes={
@@ -218,7 +218,7 @@ exports[`renders correctly with minimal/default props 1`] = `
         <li
           key="[1,1]"
         >
-          <Component
+          <InspectorItem
             name="Option 2-2"
             onSelect={[Function]}
             optionIndexes={

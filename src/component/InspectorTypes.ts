@@ -78,7 +78,7 @@ export interface InspectorDefaultProps {
         /*
          * Custom render function for adding extra elements (e.g. a "Copy to Clipboard" button) after the breadcrumbs.
          */
-        renderTrailingContent?: (props: { breadcrumbTexts: Array<string>; columnData: Array<RenderColumn> }) => React.ReactElement;
+        renderTrailingContent?: (props: { breadcrumbTexts: Array<string>; columnData: Array<RenderColumn> }) => React.ReactElement | undefined;
     };
     /**
      * Options for the search input shown in the header and its impact on the displayed columns – set to `null` to turn it off.
@@ -92,7 +92,7 @@ export interface InspectorDefaultProps {
     searchOptions?: null | {
         byPropertyName?: boolean;
         fields?: Array<KeysOfRawJsonSchemaStringValues>;
-        filterBy?: (enteredSearchFilter: string | null) => (rawSchema: RawJsonSchema) => boolean | undefined;
+        filterBy?: (enteredSearchFilter: string | null) => undefined | ((rawSchema: RawJsonSchema) => boolean);
         inputPlaceholder?: string;
         debounceWait?: number;
         debounceMaxWait?: number;
@@ -111,7 +111,7 @@ export interface InspectorDefaultProps {
     /**
      * Custom render function for the header tool-bar (to the left of the search field).
      */
-    renderHeaderToolBar?: (props: { columnData: Array<RenderColumn> }) => React.ReactElement;
+    renderHeaderToolBar?: (props: { columnData: Array<RenderColumn> }) => React.ReactElement | undefined;
     /**
      * Custom render function for the content of a single item in a column.
      * Expects a single object as input with the following keys:
@@ -140,13 +140,13 @@ export interface InspectorDefaultProps {
         columnData: Array<RenderColumn>;
         selectionColumnIndex: number;
         optionIndexes?: Array<number>;
-    }) => React.ReactElement;
+    }) => React.ReactElement | undefined;
     /**
      * Custom render function for the details block on the right (only used if there is no selection).
      * Expects a single object as input with the following key:
      * - "rootColumnSchemas": the full render information for the root column (since there is no selection, there are no other columns)
      */
-    renderEmptyDetails?: (props: { rootColumnSchemas: Record<string, JsonSchemaGroup> }) => React.ReactElement;
+    renderEmptyDetails?: (props: { rootColumnSchemas: Record<string, JsonSchemaGroup> }) => React.ReactElement | undefined;
 }
 
 export interface InspectorProps extends InspectorDefaultProps {

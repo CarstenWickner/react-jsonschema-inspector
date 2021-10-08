@@ -1,0 +1,52 @@
+name: Node CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  release:
+    types:
+      - created
+
+jobs:
+  build:
+    name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
+    strategy:
+      matrix:
+        node: ['10.x', '14.x']
+        os: [windows-latest, macOS-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm ci
+        run: |
+          npm ci
+        env:
+          CI: true
+      - name: Lint (code & styles)
+        run: |
+          npm run lint
+        env:
+          CI: true
+      - name: Run tests
+        run: |
+          npm run test -- --ci --coverage --maxWorkers=2
+        env:
+          CI: true
+      - name: npm build (module)
+        run: |
+          npm run build
+        env:
+          CI: true
+      - name: npm build (storybook)
+        run: |
+          npm run build-storybook
+        env:
+          CI: true

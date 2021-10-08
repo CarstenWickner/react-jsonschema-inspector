@@ -1,6 +1,4 @@
-import { action } from '@storybook/addon-actions';
-import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
-import "./style-overrides.css";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector, getMaximumFieldValueFromSchemaGroup } from "../src/index";
 
@@ -14,7 +12,7 @@ import linksMetaSchema from "./schema-links-meta.json";
 
 Introducing a component for viewing/traversing (complex) JSON Schemas for the sake of documentation and potentially assisting users of a domain-specific model in finding a particular piece of information.
 
-<Preview>
+<Canvas>
     <Story name="show-case">
         <Inspector
             schemas={{
@@ -50,10 +48,9 @@ Introducing a component for viewing/traversing (complex) JSON Schemas for the sa
                     />
                 </div>
             )}
-            onSelect={action("onSelect")}
         />
     </Story>
-</Preview>
+</Canvas>
 
 The component is expressly not intended for visualising the whole of a JSON Schema (there are already quite a few JSON Schema Viewer components out there doing a great job at that). A possible use-case is inside an application that allows its users to define business rules or other kinds of expressions (e.g. within decision tables) while providing rather complex data structures as input which may also be subject to frequent changes – both good reasons why you wouldn't want to maintain a separate documentation of the all of the available fields. And the majority of generated forms of documentation (e.g. JSDoc, JavaDoc, etc.) may be too big/technical for your users.
 
@@ -63,19 +60,19 @@ At the same time, there are a number of tools that automatically generate schema
 
 ## Props
 
-<Props of={Inspector} />
+<ArgsTable of={Inspector} />
 
 ### designed for multiple schemas
 By default, the inspector caters for one or multiple schemas being represented.
 
-<Preview>
+<Canvas>
     <Story name="designed for multiple schemas">
         <Inspector
             schemas={{ "Meta Core JSON Schema": metaSchema }}
             defaultSelectedItems={["Meta Core JSON Schema", "$schema"]}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
@@ -83,7 +80,7 @@ By default, the inspector caters for one or multiple schemas being represented.
 While showing multiple schemas at once is possible, you can also opt to list a single schema's properties
 and hiding the artifical root element (and thereby other parts of the main schema) by setting the `hideSingleRootItem` prop to `true`.
 
-<Preview>
+<Canvas>
     <Story name="showing a single schema">
         <Inspector
             schemas={{ "Meta Core JSON Schema": metaSchema }}
@@ -91,7 +88,7 @@ and hiding the artifical root element (and thereby other parts of the main schem
             hideSingleRootItem={true}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 

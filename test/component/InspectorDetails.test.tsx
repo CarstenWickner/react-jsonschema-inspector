@@ -43,7 +43,7 @@ describe("renders correctly", () => {
             expect(component.hasClass("nothing-to-show")).toBe(false);
         });
         it("allows for renderEmptyDetails to return nothing", () => {
-            const component = shallow(<InspectorDetails columnData={[]} renderEmptyDetails={(): React.ReactElement => null} />);
+            const component = shallow(<InspectorDetails columnData={[]} renderEmptyDetails={(): undefined => undefined} />);
             expect(component.children().exists()).toBe(false);
             expect(component.hasClass("nothing-to-show")).toBe(true);
         });
@@ -79,7 +79,7 @@ describe("renders correctly", () => {
             expect(component.hasClass("nothing-to-show")).toBe(false);
         });
         it("allows for renderEmptyDetails to return nothing", () => {
-            const component = shallow(<InspectorDetails columnData={[]} renderEmptyDetails={(): React.ReactElement => null} />);
+            const component = shallow(<InspectorDetails columnData={[]} renderEmptyDetails={(): undefined => undefined} />);
             expect(component.children().exists()).toBe(false);
             expect(component.hasClass("nothing-to-show")).toBe(true);
         });
@@ -105,7 +105,7 @@ describe("renders correctly", () => {
                 selectionColumnIndex: number;
             };
             expect(columnData).toEqual(columnDataProp);
-            expect(itemSchemaGroup).toEqual(((columnDataProp[1] as unknown) as RenderItemsColumn).items["[0]"]);
+            expect(itemSchemaGroup).toEqual((columnDataProp[1] as unknown as RenderItemsColumn).items["[0]"]);
             expect(selectionColumnIndex).toEqual(1);
             expect(component.hasClass("nothing-to-show")).toBe(false);
         });
@@ -114,18 +114,18 @@ describe("renders correctly", () => {
             const component = shallow(<InspectorDetails columnData={columnDataProp} renderSelectionDetails={renderSelectionDetails} />);
             expect(component.exists(".custom-selection-details")).toBe(true);
             expect(renderSelectionDetails.mock.calls).toHaveLength(1);
-            const { columnData, itemSchemaGroup, selectionColumnIndex } = renderSelectionDetails.mock.calls[0][0] as {
+            const { columnData, itemSchemaGroup, selectionColumnIndex } = renderSelectionDetails.mock.calls[0][0] as unknown as {
                 itemSchemaGroup: JsonSchemaGroup;
                 columnData: Array<RenderColumn>;
                 selectionColumnIndex: number;
             };
             expect(columnData).toEqual(columnDataProp);
-            expect(itemSchemaGroup).toEqual(((columnDataProp[1] as unknown) as RenderItemsColumn).items["[0]"]);
+            expect(itemSchemaGroup).toEqual((columnDataProp[1] as unknown as RenderItemsColumn).items["[0]"]);
             expect(selectionColumnIndex).toBe(1);
             expect(component.hasClass("nothing-to-show")).toBe(false);
         });
         it("allows for renderSelectionDetails to return nothing", () => {
-            const component = shallow(<InspectorDetails columnData={columnDataProp} renderSelectionDetails={(): React.ReactElement => null} />);
+            const component = shallow(<InspectorDetails columnData={columnDataProp} renderSelectionDetails={(): undefined => undefined} />);
             expect(component.children().exists()).toBe(false);
             expect(component.hasClass("nothing-to-show")).toBe(true);
         });
@@ -162,7 +162,7 @@ describe("renders correctly", () => {
             const component = shallow(<InspectorDetails columnData={columnDataProp} renderSelectionDetails={renderSelectionDetails} />);
             expect(component.exists(".custom-selection-details")).toBe(true);
             expect(renderSelectionDetails.mock.calls).toHaveLength(1);
-            const { columnData, itemSchemaGroup, selectionColumnIndex } = renderSelectionDetails.mock.calls[0][0] as {
+            const { columnData, itemSchemaGroup, selectionColumnIndex } = renderSelectionDetails.mock.calls[0][0] as unknown as {
                 itemSchemaGroup: JsonSchemaGroup;
                 columnData: Array<RenderColumn>;
                 selectionColumnIndex: number;
@@ -173,7 +173,7 @@ describe("renders correctly", () => {
             expect(component.hasClass("nothing-to-show")).toBe(false);
         });
         it("allows for renderSelectionDetails to return nothing", () => {
-            const component = shallow(<InspectorDetails columnData={columnDataProp} renderSelectionDetails={(): React.ReactElement => null} />);
+            const component = shallow(<InspectorDetails columnData={columnDataProp} renderSelectionDetails={(): undefined => undefined} />);
             expect(component.children().exists()).toBe(false);
             expect(component.hasClass("nothing-to-show")).toBe(true);
         });

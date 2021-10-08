@@ -3,9 +3,10 @@ import { shallow } from "enzyme";
 
 import { InspectorDetailsContent, collectFormFields } from "../../src/component/InspectorDetailsContent";
 import { JsonSchema } from "../../src/model/JsonSchema";
+import { JsonSchemaGroup } from "../../src/model/JsonSchemaGroup";
 import { createGroupFromSchema } from "../../src/model/schemaUtils";
 import { createRenderDataBuilder } from "../../src/component/renderDataUtils";
-import { RenderItemsColumn } from "../../src/component/InspectorTypes";
+import { RenderColumn, RenderItemsColumn } from "../../src/component/InspectorTypes";
 
 describe("renders correctly", () => {
     const buildColumnData = createRenderDataBuilder(() => (): void => {});
@@ -20,7 +21,7 @@ describe("renders correctly", () => {
         const component = shallow(
             <InspectorDetailsContent
                 columnData={columnData}
-                itemSchemaGroup={((columnData[0] as unknown) as RenderItemsColumn).items["Schema One"]}
+                itemSchemaGroup={(columnData[0] as unknown as RenderItemsColumn).items["Schema One"]}
                 selectionColumnIndex={0}
             />
         );
@@ -40,7 +41,7 @@ describe("renders correctly", () => {
         const component = shallow(
             <InspectorDetailsContent
                 columnData={columnData}
-                itemSchemaGroup={((columnData[0] as unknown) as RenderItemsColumn).items["Schema One"]}
+                itemSchemaGroup={(columnData[0] as unknown as RenderItemsColumn).items["Schema One"]}
                 selectionColumnIndex={0}
             />
         );
@@ -59,7 +60,7 @@ describe("renders correctly", () => {
         const component = shallow(
             <InspectorDetailsContent
                 columnData={columnData}
-                itemSchemaGroup={((columnData[0] as unknown) as RenderItemsColumn).items.Foo}
+                itemSchemaGroup={(columnData[0] as unknown as RenderItemsColumn).items.Foo}
                 selectionColumnIndex={1}
             />
         );
@@ -73,6 +74,7 @@ describe("renders correctly", () => {
 });
 describe("collectFormFields()", () => {
     const buildColumnData = createRenderDataBuilder(() => (): void => {});
+    const mockColumnDataForGroup = (group: JsonSchemaGroup): Array<RenderColumn> => [{ items: { foo: group }, onSelect: (): void => {} }];
     it.each`
         field            | rowValue         | labelText
         ${"title"}       | ${"Title Value"} | ${"Title"}
@@ -95,7 +97,7 @@ describe("collectFormFields()", () => {
             ["Foo"],
             {}
         );
-        const itemSchemaGroup = ((columnData[0] as unknown) as RenderItemsColumn).items.Foo;
+        const itemSchemaGroup = (columnData[0] as unknown as RenderItemsColumn).items.Foo;
         expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([{ labelText, rowValue }]);
     });
     it.each`
@@ -121,7 +123,7 @@ describe("collectFormFields()", () => {
             ["Foo"],
             {}
         );
-        const itemSchemaGroup = ((columnData[0] as unknown) as RenderItemsColumn).items.Foo;
+        const itemSchemaGroup = (columnData[0] as unknown as RenderItemsColumn).items.Foo;
         expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([{ labelText, rowValue }]);
     });
     it("includes `title` from $ref-erenced schema", () => {
@@ -134,7 +136,7 @@ describe("collectFormFields()", () => {
             }
         ];
         const { columnData } = buildColumnData({ Foo: { $ref: "external-id#/$defs/Bar" } }, referenceSchemas, ["Foo"], {});
-        const itemSchemaGroup = ((columnData[0] as unknown) as RenderItemsColumn).items.Foo;
+        const itemSchemaGroup = (columnData[0] as unknown as RenderItemsColumn).items.Foo;
         expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
             {
                 labelText: "Title",
@@ -157,7 +159,7 @@ describe("collectFormFields()", () => {
 
         it("from main schema", () => {
             const { columnData } = buildColumnData(schemas, [], ["Foo", "Bar"], {});
-            const itemSchemaGroup = ((columnData[1] as unknown) as RenderItemsColumn).items.Bar;
+            const itemSchemaGroup = (columnData[1] as unknown as RenderItemsColumn).items.Bar;
             expect(collectFormFields(itemSchemaGroup, columnData, 1)).toEqual([
                 {
                     labelText: "Description",
@@ -171,7 +173,7 @@ describe("collectFormFields()", () => {
         });
         it("from optional sub schema", () => {
             const { columnData } = buildColumnData(schemas, [], ["Foo", "Bar", [0]], {});
-            const itemSchemaGroup = ((columnData[1] as unknown) as RenderItemsColumn).items.Bar;
+            const itemSchemaGroup = (columnData[1] as unknown as RenderItemsColumn).items.Bar;
             expect(collectFormFields(itemSchemaGroup, columnData, 2)).toEqual([
                 {
                     labelText: "Title",
@@ -189,7 +191,7 @@ describe("collectFormFields()", () => {
         });
         it("from property in optional sub schema", () => {
             const { columnData } = buildColumnData(schemas, [], ["Foo", "Bar", [1], "Foobar"], {});
-            const itemSchemaGroup = ((columnData[3] as unknown) as RenderItemsColumn).items.Foobar;
+            const itemSchemaGroup = (columnData[3] as unknown as RenderItemsColumn).items.Foobar;
             expect(collectFormFields(itemSchemaGroup, columnData, 3)).toEqual([
                 {
                     labelText: "Required",
@@ -205,7 +207,8 @@ describe("collectFormFields()", () => {
             ${"with `exclusiveMinimum` === false"} | ${{ minimum: 42, exclusiveMinimum: false }}
         `("$testDescription", ({ schema }) => {
             const itemSchemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
-            expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([
+            const columnData = mockColumnDataForGroup(itemSchemaGroup);
+            expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
                 {
                     labelText: "Min Value",
                     rowValue: "42 (inclusive)"
@@ -220,7 +223,8 @@ describe("collectFormFields()", () => {
             ${"schema with multiple allOf values"} | ${{ allOf: [{ minimum: 42, exclusiveMinimum: false }, { exclusiveMinimum: true }] }}
         `("in $testDescription", ({ schema }) => {
             const itemSchemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
-            expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([
+            const columnData = mockColumnDataForGroup(itemSchemaGroup);
+            expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
                 {
                     labelText: "Min Value",
                     rowValue: "42 (exclusive)"
@@ -235,7 +239,8 @@ describe("collectFormFields()", () => {
             ${"schema with multiple allOf values"} | ${{ allOf: [{ exclusiveMinimum: 20 }, { exclusiveMinimum: 42 }] }}
         `("in $testDescription", ({ schema }) => {
             const itemSchemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
-            expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([
+            const columnData = mockColumnDataForGroup(itemSchemaGroup);
+            expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
                 {
                     labelText: "Min Value",
                     rowValue: "42 (exclusive)"
@@ -250,7 +255,8 @@ describe("collectFormFields()", () => {
             ${"with `exclusiveMaximum` === false"} | ${{ maximum: 84, exclusiveMaximum: false }}
         `("$testDescription", ({ schema }) => {
             const itemSchemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
-            expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([
+            const columnData = mockColumnDataForGroup(itemSchemaGroup);
+            expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
                 {
                     labelText: "Max Value",
                     rowValue: "84 (inclusive)"
@@ -265,7 +271,8 @@ describe("collectFormFields()", () => {
             ${"schema with multiple allOf values"} | ${{ allOf: [{ maximum: 84, exclusiveMaximum: false }, { exclusiveMaximum: true }] }}
         `("in $testDescription", ({ schema }) => {
             const itemSchemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
-            expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([
+            const columnData = mockColumnDataForGroup(itemSchemaGroup);
+            expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
                 {
                     labelText: "Max Value",
                     rowValue: "84 (exclusive)"
@@ -280,7 +287,8 @@ describe("collectFormFields()", () => {
             ${"schema with multiple allOf values"} | ${{ allOf: [{ exclusiveMaximum: 84 }, { exclusiveMaximum: 100 }] }}
         `("in $testDescription", ({ schema }) => {
             const itemSchemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
-            expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([
+            const columnData = mockColumnDataForGroup(itemSchemaGroup);
+            expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
                 {
                     labelText: "Max Value",
                     rowValue: "84 (exclusive)"
@@ -302,13 +310,15 @@ describe("collectFormFields()", () => {
             ${"when intersecting enums (2)"} | ${{ allOf: [fooBarEnum, fooBarBazEnum] }}    | ${"Possible Values"} | ${["foo", "bar"]}
         `("$testDescription", ({ inputSchema, labelText, rowValue }) => {
             const itemSchemaGroup = createGroupFromSchema(new JsonSchema(inputSchema, {}));
-            expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([{ labelText, rowValue }]);
+            const columnData = mockColumnDataForGroup(itemSchemaGroup);
+            expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([{ labelText, rowValue }]);
         });
     });
     it("includes `default` (object)", () => {
         const schema = { default: {} };
         const itemSchemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
-        expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([
+        const columnData = mockColumnDataForGroup(itemSchemaGroup);
+        expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
             {
                 labelText: "Default Value",
                 rowValue: "{}"
@@ -318,7 +328,8 @@ describe("collectFormFields()", () => {
     it("includes `default` (non-object)", () => {
         const schema = { default: false };
         const itemSchemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
-        expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([
+        const columnData = mockColumnDataForGroup(itemSchemaGroup);
+        expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
             {
                 labelText: "Default Value",
                 rowValue: false
@@ -334,7 +345,8 @@ describe("collectFormFields()", () => {
             ]
         };
         const itemSchemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
-        expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([
+        const columnData = mockColumnDataForGroup(itemSchemaGroup);
+        expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
             {
                 labelText: "Example(s)",
                 rowValue: '[{"field":"value"}]'
@@ -344,7 +356,8 @@ describe("collectFormFields()", () => {
     it("includes `examples` (non-objects)", () => {
         const schema = { examples: [42, 84] };
         const itemSchemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
-        expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([
+        const columnData = mockColumnDataForGroup(itemSchemaGroup);
+        expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
             {
                 labelText: "Example(s)",
                 rowValue: [42, 84]
@@ -354,7 +367,8 @@ describe("collectFormFields()", () => {
     it("ignores empty `examples`", () => {
         const schema: { examples: Array<string> } = { examples: [] };
         const itemSchemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
-        expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([]);
+        const columnData = mockColumnDataForGroup(itemSchemaGroup);
+        expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([]);
     });
     describe("includes `uniqueItems`", () => {
         it.each`
@@ -363,7 +377,8 @@ describe("collectFormFields()", () => {
             ${"schema with multiple allOf values"} | ${{ allOf: [{ uniqueItems: false }, { uniqueItems: true }] }}
         `("in $testDescription", ({ schema }) => {
             const itemSchemaGroup = createGroupFromSchema(new JsonSchema(schema, {}));
-            expect(collectFormFields(itemSchemaGroup, [{ items: { foo: itemSchemaGroup } }], 0)).toEqual([
+            const columnData = mockColumnDataForGroup(itemSchemaGroup);
+            expect(collectFormFields(itemSchemaGroup, columnData, 0)).toEqual([
                 {
                     labelText: "Items Unique",
                     rowValue: "Yes"

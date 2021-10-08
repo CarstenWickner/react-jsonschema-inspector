@@ -3,10 +3,11 @@ import classNames from "classnames";
 
 import { createBreadcrumbBuilder } from "./breadcrumbsUtils";
 import { InspectorProps, RenderColumn, RenderOptionsColumn } from "./InspectorTypes";
+import { isDefined } from "../model/utils";
 
 export const InspectorBreadcrumbs: React.FunctionComponent<{
     columnData: Array<RenderColumn>;
-    breadcrumbsOptions: InspectorProps["breadcrumbs"];
+    breadcrumbsOptions: InspectorProps["breadcrumbs"] & {};
 }> = ({ columnData, breadcrumbsOptions }): React.ReactElement => {
     const buildBreadcrumb = createBreadcrumbBuilder(breadcrumbsOptions);
     const { preventNavigation, renderItem, renderTrailingContent } = breadcrumbsOptions;
@@ -49,7 +50,7 @@ export const InspectorBreadcrumbs: React.FunctionComponent<{
             </div>
             {renderTrailingContent &&
                 renderTrailingContent({
-                    breadcrumbTexts: columnData.map(buildBreadcrumb).filter((b) => !!b),
+                    breadcrumbTexts: columnData.map(buildBreadcrumb).filter(isDefined) as string[],
                     columnData
                 })}
         </>

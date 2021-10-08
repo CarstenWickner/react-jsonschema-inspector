@@ -54,7 +54,7 @@ export class Inspector extends React.Component<
         // the state should be kept minimal
         // the expensive logic is handled in getRenderDataForSelection()
         this.state = {
-            selectedItems: defaultSelectedItems,
+            selectedItems: defaultSelectedItems || [],
             appendEmptyColumn: false,
             enteredSearchFilter: "",
             appliedSearchFilter: ""
@@ -69,7 +69,7 @@ export class Inspector extends React.Component<
     onSearchFilterChange = (enteredSearchFilter: string): void => {
         this.setState({ enteredSearchFilter });
         const { searchOptions } = this.props;
-        const { debounceWait = 200, debounceMaxWait = 500 } = searchOptions;
+        const { debounceWait = 200, debounceMaxWait = 500 } = searchOptions || {};
         this.debouncedApplySearchFilter(debounceWait, debounceMaxWait)(enteredSearchFilter);
     };
 
@@ -81,56 +81,58 @@ export class Inspector extends React.Component<
      * {*} return.param0.event - the originally triggered event (e.g. onClick, onDoubleClick, onKeyDown, etc.)
      * {string} return.param0.selectedItem - the item to select (or `null` to discard any selection in this column – and all subsequent ones)
      */
-    onSelectInColumn = (columnIndex: number): RenderColumn["onSelect"] => (event, selectedItem): void => {
-        // the lowest child component accepting the click/selection event should consume it
-        event.stopPropagation();
-        const { selectedItems, appendEmptyColumn } = this.state;
-        if (selectedItems.length === columnIndex && !selectedItem) {
-            // click clearing selection in next column (where there was no selection yet)
-            // i.e. no change = no need for any action
-            return;
-        }
-        if (selectedItems.length === columnIndex + 1 && isDeepEqual(selectedItems[columnIndex], selectedItem)) {
-            // click on current/last selection
-            // i.e. no change = no need for any action
-            return;
-        }
-        // shallow-copy array of item identifiers
-        const newSelection = selectedItems.slice();
-        // discard any extraneous columns
-        newSelection.length = columnIndex;
-        // add the new selection in the targeted column (i.e. at the end), if a particular item was selected
-        if (selectedItem) {
-            newSelection.push(selectedItem);
-        }
-        // need to look-up the currently displayed number of content columns
-        // thanks to 'memoize', we just look-up the result of the previous evaluation
-        const { schemas, referenceSchemas, hideSingleRootItem, parserConfig, buildArrayProperties } = this.props;
-        const oldColumnCount =
-            (appendEmptyColumn ? 1 : 0) +
-            this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig, hideSingleRootItem, buildArrayProperties)
-                .columnData.length;
-        // now we need to know what the number of content columns will be after changing the state
-        // thanks to 'memoize', the subsequent render() call will just look-up the result of this evaluation
-        const newRenderData = this.getRenderDataForSelection(
-            schemas,
-            referenceSchemas,
-            newSelection,
-            parserConfig,
-            hideSingleRootItem,
-            buildArrayProperties
-        );
-        const { columnData } = newRenderData;
-        // update state to trigger re-rendering of the whole component
-        this.setState(
-            {
-                selectedItems: newSelection,
-                appendEmptyColumn: columnData.length < oldColumnCount
-            },
-            // due to the two-step process, the newRenderData will NOT include the filteredItems
-            this.getSetStateCallbackOnSelect(newSelection, newRenderData)
-        );
-    };
+    onSelectInColumn =
+        (columnIndex: number): RenderColumn["onSelect"] =>
+        (event, selectedItem): void => {
+            // the lowest child component accepting the click/selection event should consume it
+            event.stopPropagation();
+            const { selectedItems, appendEmptyColumn } = this.state;
+            if (selectedItems.length === columnIndex && !selectedItem) {
+                // click clearing selection in next column (where there was no selection yet)
+                // i.e. no change = no need for any action
+                return;
+            }
+            if (selectedItems.length === columnIndex + 1 && isDeepEqual(selectedItems[columnIndex], selectedItem)) {
+                // click on current/last selection
+                // i.e. no change = no need for any action
+                return;
+            }
+            // shallow-copy array of item identifiers
+            const newSelection = selectedItems.slice();
+            // discard any extraneous columns
+            newSelection.length = columnIndex;
+            // add the new selection in the targeted column (i.e. at the end), if a particular item was selected
+            if (selectedItem) {
+                newSelection.push(selectedItem);
+            }
+            // need to look-up the currently displayed number of content columns
+            // thanks to 'memoize', we just look-up the result of the previous evaluation
+            const { schemas, referenceSchemas, hideSingleRootItem, parserConfig = {}, buildArrayProperties } = this.props;
+            const oldColumnCount =
+                (appendEmptyColumn ? 1 : 0) +
+                this.getRenderDataForSelection(schemas, referenceSchemas, selectedItems, parserConfig, hideSingleRootItem, buildArrayProperties)
+                    .columnData.length;
+            // now we need to know what the number of content columns will be after changing the state
+            // thanks to 'memoize', the subsequent render() call will just look-up the result of this evaluation
+            const newRenderData = this.getRenderDataForSelection(
+                schemas,
+                referenceSchemas,
+                newSelection,
+                parserConfig,
+                hideSingleRootItem,
+                buildArrayProperties
+            );
+            const { columnData } = newRenderData;
+            // update state to trigger re-rendering of the whole component
+            this.setState(
+                {
+                    selectedItems: newSelection,
+                    appendEmptyColumn: columnData.length < oldColumnCount
+                },
+                // due to the two-step process, the newRenderData will NOT include the filteredItems
+                this.getSetStateCallbackOnSelect(newSelection, newRenderData)
+            );
+        };
 
     /**
      * @param {Array.<string|Array.<number>>} newSelection - updated "electedItems" value in state
@@ -222,7 +224,7 @@ export class Inspector extends React.Component<
             schemas,
             referenceSchemas,
             hideSingleRootItem,
-            parserConfig,
+            parserConfig = {},
             buildArrayProperties,
             searchOptions,
             breadcrumbs,
@@ -250,7 +252,7 @@ export class Inspector extends React.Component<
             <div className="jsonschema-inspector">
                 {shouldShowHeaderToolBar && (
                     <div className="jsonschema-inspector-header">
-                        {searchFeatureEnabled && (
+                        {searchFeatureEnabled && searchOptions && (
                             <InspectorSearchField
                                 searchFilter={enteredSearchFilter}
                                 onSearchFilterChange={this.onSearchFilterChange}

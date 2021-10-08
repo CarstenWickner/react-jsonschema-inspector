@@ -1,25 +1,23 @@
-import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
-import { action } from "@storybook/addon-actions";
-import "./style-overrides.css";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector, getCommonFieldValuesFromSchemaGroup } from "../src/index";
 
 import personSchema from "./schema-person.json";
 import shopSelectionSchema from "./schema-shop-selection.json";
 
-<Meta title="Inspector (renderItemContent)" component={Inspector} />
+<Meta title="renderItemContent" component={Inspector} />
 
 # Inspector (renderItemContent)
 ## Focus: Customise item component
 
-<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "renderItemContent")} />
+<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "renderItemContent")} />
 
 ----
 
 ### with custom items
 The `renderItemContent` prop allows you to define your own component to be displayed for a single selectable item in a column.
 
-<Preview>
+<Canvas>
     <Story name="with custom items">
         <Inspector
             schemas={{
@@ -42,7 +40,6 @@ The `renderItemContent` prop allows you to define your own component to be displ
                     </div>
                 );
             }}
-            onSelect={action("onSelect")}
         />
     </Story>
-</Preview>
+</Canvas>

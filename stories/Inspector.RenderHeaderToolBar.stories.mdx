@@ -1,25 +1,23 @@
-import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
-import { action } from "@storybook/addon-actions";
-import "./style-overrides.css";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector, getCommonFieldValuesFromSchemaGroup } from "../src/index";
 
 import personSchema from "./schema-person.json";
 import shopSelectionSchema from "./schema-shop-selection.json";
 
-<Meta title="Inspector (renderHeaderToolBar)" component={Inspector} />
+<Meta title="renderHeaderToolBar" component={Inspector} />
 
 # Inspector (renderHeaderToolBar)
 ## Focus: Customise Header Tool-Bar
 
-<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "renderHeaderToolBar")} />
+<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "renderHeaderToolBar")} />
 
 ----
 
 ### with custom tool-bar items
 The `renderHeaderToolBar` prop allows you to define additional content to be displayed besides the search filter in the header.
 
-<Preview>
+<Canvas>
     <Story name="with custom tool-bar items">
         <Inspector
             schemas={{
@@ -37,7 +35,6 @@ The `renderHeaderToolBar` prop allows you to define additional content to be dis
                     ))}
                 </>
             )}
-            onSelect={action("onSelect")}
         />
     </Story>
-</Preview>
+</Canvas>

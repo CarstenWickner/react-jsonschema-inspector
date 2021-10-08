@@ -1,5 +1,4 @@
-import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
-import "./style-overrides.css";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector } from "../src/index";
 
@@ -7,12 +6,12 @@ import metaSchema from "./schema-meta.json";
 import hyperMetaSchema from "./schema-hyper-meta.json";
 import linksMetaSchema from "./schema-links-meta.json";
 
-<Meta title="Inspector (renderEmptyDetails)" component={Inspector} />
+<Meta title="renderEmptyDetails" component={Inspector} />
 
 # Inspector (renderEmptyDetails)
 ## Focus: What to show in the details panel on the right while there is no selection
 
-<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "renderEmptyDetails")} />
+<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "renderEmptyDetails")} />
 
 ----
 
@@ -20,7 +19,7 @@ import linksMetaSchema from "./schema-links-meta.json";
 By default, no details panel is shown on the right while no selection has been made.
 Via `renderEmptyDetails`, you can provide a component to be displayed in this case, e.g. in order to outline the usage/purpose of the component in the given context.
 
-<Preview>
+<Canvas>
     <Story name="with display for empty selection">
         <Inspector
             schemas={{
@@ -46,4 +45,4 @@ Via `renderEmptyDetails`, you can provide a component to be displayed in this ca
             )}
         />
     </Story>
-</Preview>
+</Canvas>

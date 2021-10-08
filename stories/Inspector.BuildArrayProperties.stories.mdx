@@ -1,24 +1,23 @@
-import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
-import "./style-overrides.css";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector, getMaximumFieldValueFromSchemaGroup } from "../src/index";
 
 import personSchema from "./schema-person.json";
 import shopSelectionSchema from "./schema-shop-selection.json";
 
-<Meta title="Inspector (buildArrayProperties)" component={Inspector} />
+<Meta title="buildArrayProperties" component={Inspector} />
 
 # Inspector (buildArrayProperties)
 ## Focus: How to represent arrays in a Schema
 
-<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "buildArrayProperties")} />
+<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "buildArrayProperties")} />
 
 ----
 
 ### default
 If no `buildArrayProperties` prop is defined, an array is represented by an object containing a single item `"[0]"` of the array's content type.
 
-<Preview>
+<Canvas>
     <Story name="default">
         <Inspector
             schemas={{
@@ -30,7 +29,7 @@ If no `buildArrayProperties` prop is defined, an array is represented by an obje
             buildArrayProperties={(arrayItemSchema) => ({ "[0]": arrayItemSchema })}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
@@ -38,7 +37,7 @@ If no `buildArrayProperties` prop is defined, an array is represented by an obje
 Through `buildArrayProperties` you can alternatively define what items to shows for a given array type and what schema should be associated with each of them.
 The schema for an array's property item can be either an instance of the `JsonSchema` class returned by various helper functions (and provided as the first parameter to `buildArrayProperties`) or an object representing a JSON Schema.
 
-<Preview>
+<Canvas>
     <Story name="with additional properties">
         <Inspector
             schemas={{
@@ -58,4 +57,4 @@ The schema for an array's property item can be either an instance of the `JsonSc
             })}
         />
     </Story>
-</Preview>
+</Canvas>

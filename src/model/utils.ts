@@ -5,7 +5,7 @@
  * @returns {boolean} whether the target is neither undefined nor null
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function isDefined(target: unknown): target is {} {
+export function isDefined<T>(target: T): target is T & {} {
     return target !== undefined && target !== null;
 }
 
@@ -15,7 +15,7 @@ export function isDefined(target: unknown): target is {} {
  * @param {*} target - value to confirm as non-empty object
  * @returns {boolean} whether the target is a non-empty object
  */
-export function isNonEmptyObject(target: unknown): target is Record<string, unknown> {
+export function isNonEmptyObject<T>(target: T): target is T & Record<string, any> {
     return isDefined(target) && typeof target === "object" && !Array.isArray(target) && Object.keys(target).length > 0;
 }
 
@@ -29,7 +29,10 @@ export function isNonEmptyObject(target: unknown): target is Record<string, unkn
 export function mapObjectValues<O extends Record<string, S>, S, T>(original: O, mappingFunction: (value: S) => T): { [key in keyof O]: T } {
     const mappedObject: { [key in keyof O]?: T } = {};
     Object.keys(original).forEach((key: keyof O) => {
-        mappedObject[key] = mappingFunction(original[key]);
+        const mappedValue = mappingFunction(original[key]);
+        if (isDefined(mappedValue)) {
+            mappedObject[key] = mappedValue;
+        }
     });
     return mappedObject as { [key in keyof O]: T };
 }
@@ -43,7 +46,7 @@ export function mapObjectValues<O extends Record<string, S>, S, T>(original: O, 
  * @returns {Function} also expecting two parameters: (1) the temporary result of previous reduce steps and (2) the single value to add/merge with
  */
 function nullAwareReduce<T>(mergeDefinedValues: (combined: T, nextValue: T) => T) {
-    return (combined: T, nextValue?: T): T => {
+    return (combined: T | undefined, nextValue?: T | undefined): T | undefined => {
         let mergeResult: T | undefined;
         if (!isDefined(nextValue)) {
             mergeResult = combined;
@@ -64,7 +67,9 @@ function nullAwareReduce<T>(mergeDefinedValues: (combined: T, nextValue: T) => T
  * @param {?number} nextValue - next value to compare with
  * @returns {?number} lowest encountered value
  */
-export const minimumValue: (combined: number, nextValue?: number) => number = nullAwareReduce((a, b) => (a < b ? a : b));
+export const minimumValue: (combined: number | undefined, nextValue?: number | undefined) => number | undefined = nullAwareReduce((a, b) =>
+    a < b ? a : b
+);
 
 /**
  * Generic function to be used in Array.reduce() – returning the highest encountered value.
@@ -74,7 +79,9 @@ export const minimumValue: (combined: number, nextValue?: number) => number = nu
  * @param {?number} nextValue - next value to compare with
  * @returns {?number} highest encountered value
  */
-export const maximumValue: (combined: number, nextValue?: number) => number = nullAwareReduce((a, b) => (a > b ? a : b));
+export const maximumValue: (combined: number | undefined, nextValue?: number | undefined) => number | undefined = nullAwareReduce((a, b) =>
+    a > b ? a : b
+);
 
 /**
  * Generic function to be used in Array.reduce() – returning all encountered values.
@@ -84,7 +91,7 @@ export const maximumValue: (combined: number, nextValue?: number) => number = nu
  * @param {?*} nextValue - single value to merge with "combined"
  * @returns {?*|Array.<*>} either single (defined) value or array of multiple (defined) values
  */
-export const listValues = nullAwareReduce(<S, T extends S | Array<S>>(combined: T, nextValue: S) => {
+export const listValues = nullAwareReduce(<S, T extends S | Array<S>>(combined: T | undefined, nextValue: S) => {
     let mergeResult: T;
     if (combined === nextValue) {
         mergeResult = combined;
@@ -116,7 +123,7 @@ export const listValues = nullAwareReduce(<S, T extends S | Array<S>>(combined: 
  * @returns {?*|Array.<*>} either single (defined) value, array of multiple (defined) values, or empty array if encountered values do not intersect
  */
 export const commonValues = nullAwareReduce(<S, T extends S | Array<S>>(combined: T, nextValue: T) => {
-    let mergeResult: T;
+    let mergeResult: T | undefined;
     if (combined === nextValue) {
         mergeResult = combined;
     } else if (Array.isArray(combined)) {
@@ -127,14 +134,14 @@ export const commonValues = nullAwareReduce(<S, T extends S | Array<S>>(combined
             mergeResult = (filteredCombined.length === 1 ? filteredCombined[0] : filteredCombined) as T;
         } else {
             // "combined" is an array already but "nextValue" is a single value
-            mergeResult = combined.includes(nextValue) ? nextValue : (([] as unknown) as T);
+            mergeResult = combined.includes(nextValue) ? nextValue : ([] as unknown as T);
         }
     } else if (Array.isArray(nextValue)) {
         // "combined" is a single value but "nextValue" is an array already
-        mergeResult = nextValue.includes(combined) ? combined : (([] as unknown) as T);
+        mergeResult = nextValue.includes(combined) ? combined : ([] as unknown as T);
     } else {
         // "combined" and "nextValue" are single values but are not the same
-        mergeResult = ([] as unknown) as T;
+        mergeResult = [] as unknown as T;
     }
     return mergeResult;
 });

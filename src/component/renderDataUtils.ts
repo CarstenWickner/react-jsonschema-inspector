@@ -158,69 +158,74 @@ function buildNextColumn(
  * @param {Function} onSelectInColumn.return - onSelect call-back for the column at the indicated index
  * @returns {RenderDataBuilder} function for building the standard render data used throughout the component
  */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const createRenderDataBuilder = (onSelectInColumn: (columnIndex: number) => RenderColumn["onSelect"]) => (
-    schemas: InspectorProps["schemas"],
-    referenceSchemas: InspectorProps["referenceSchemas"],
-    selectedItems: Array<string | Array<number>>,
-    parserConfig: ParserConfig,
-    hideSingleRootItem?: boolean,
-    buildArrayProperties?: InspectorProps["buildArrayProperties"]
-) => {
-    // the first column always lists all top-level schemas
-    let nextColumn: Omit<RenderColumn, "onSelect"> | Record<string, never> = createRootColumnData(
-        schemas,
-        referenceSchemas,
-        parserConfig,
-        hideSingleRootItem
-    );
-    let selectedSchemaGroup: JsonSchemaGroup | undefined;
-    const columnData = selectedItems
-        .map((selection, index) => {
-            const currentColumn = nextColumn;
-            const isOptionSelection = typeof selection !== "string";
-            let isValidSelection: boolean;
-            if (isOptionSelection && selectedSchemaGroup && (currentColumn as RenderOptionsColumn).options) {
-                isValidSelection = isOptionIndexValidForOptions(selection as Array<number>, (currentColumn as RenderOptionsColumn).options);
-            } else if (!isOptionSelection && (currentColumn as RenderItemsColumn).items) {
-                selectedSchemaGroup = (currentColumn as RenderItemsColumn).items[selection as string];
-                isValidSelection = isDefined(selectedSchemaGroup);
-            } else {
-                isValidSelection = false;
-            }
-            if (isValidSelection) {
-                nextColumn = buildNextColumn(selectedSchemaGroup, isOptionSelection ? (selection as Array<number>) : undefined, buildArrayProperties);
-                if (isOptionSelection) {
-                    selectedSchemaGroup = undefined;
+export const createRenderDataBuilder =
+    (onSelectInColumn: (columnIndex: number) => RenderColumn["onSelect"]) =>
+    (
+        schemas: InspectorProps["schemas"],
+        referenceSchemas: InspectorProps["referenceSchemas"],
+        selectedItems: Array<string | Array<number>>,
+        parserConfig: ParserConfig,
+        hideSingleRootItem?: boolean,
+        buildArrayProperties?: InspectorProps["buildArrayProperties"]
+    ): { columnData: RenderColumn[] } => {
+        // the first column always lists all top-level schemas
+        let nextColumn: Omit<RenderColumn, "onSelect"> | Record<string, never> = createRootColumnData(
+            schemas,
+            referenceSchemas,
+            parserConfig,
+            hideSingleRootItem
+        );
+        let selectedSchemaGroup: JsonSchemaGroup | undefined;
+        const columnData = selectedItems
+            .map((selection, index) => {
+                const currentColumn = nextColumn;
+                const isOptionSelection = typeof selection !== "string";
+                let isValidSelection: boolean;
+                if (isOptionSelection && selectedSchemaGroup && (currentColumn as RenderOptionsColumn).options) {
+                    isValidSelection = isOptionIndexValidForOptions(selection as Array<number>, (currentColumn as RenderOptionsColumn).options);
+                } else if (!isOptionSelection && (currentColumn as RenderItemsColumn).items) {
+                    selectedSchemaGroup = (currentColumn as RenderItemsColumn).items[selection as string];
+                    isValidSelection = isDefined(selectedSchemaGroup);
+                } else {
+                    isValidSelection = false;
                 }
-            } else {
-                nextColumn = {};
+                if (isValidSelection) {
+                    nextColumn = buildNextColumn(
+                        selectedSchemaGroup as JsonSchemaGroup,
+                        isOptionSelection ? (selection as Array<number>) : undefined,
+                        buildArrayProperties
+                    );
+                    if (isOptionSelection) {
+                        selectedSchemaGroup = undefined;
+                    }
+                } else {
+                    nextColumn = {};
+                }
+                // name of the selected item (i.e. key in 'items') or int array of option indexes
+                (currentColumn as RenderColumn).selectedItem = isValidSelection ? selection : undefined;
+                (currentColumn as RenderColumn).onSelect = onSelectInColumn(index);
+                return currentColumn as RenderColumn;
+            })
+            .filter((column) => (column as RenderItemsColumn).items || (column as RenderOptionsColumn).options);
+        // set the flag for the last column containing a valid selection
+        const columnCount = columnData.length;
+        if (columnCount) {
+            // there is at least one column, check whether the last column has a valid selection
+            const selectedItemInLastColumn = columnData[columnCount - 1].selectedItem;
+            // if the last column has no valid selection, the second to last column must have one
+            if (selectedItemInLastColumn || columnCount > 1) {
+                // there is at least one column with a valid selection, mark the column with the trailing selection as such
+                columnData[selectedItemInLastColumn ? columnCount - 1 : columnCount - 2].trailingSelection = true;
             }
-            // name of the selected item (i.e. key in 'items') or int array of option indexes
-            (currentColumn as RenderColumn).selectedItem = isValidSelection ? selection : undefined;
-            (currentColumn as RenderColumn).onSelect = onSelectInColumn(index);
-            return currentColumn as RenderColumn;
-        })
-        .filter((column) => (column as RenderItemsColumn).items || (column as RenderOptionsColumn).options);
-    // set the flag for the last column containing a valid selection
-    const columnCount = columnData.length;
-    if (columnCount) {
-        // there is at least one column, check whether the last column has a valid selection
-        const selectedItemInLastColumn = columnData[columnCount - 1].selectedItem;
-        // if the last column has no valid selection, the second to last column must have one
-        if (selectedItemInLastColumn || columnCount > 1) {
-            // there is at least one column with a valid selection, mark the column with the trailing selection as such
-            columnData[selectedItemInLastColumn ? columnCount - 1 : columnCount - 2].trailingSelection = true;
         }
-    }
-    // append last column where there is no selection yet, unless the last selected item has no nested items or options of its own
-    if (isNonEmptyObject(nextColumn)) {
-        (nextColumn as RenderColumn).onSelect = onSelectInColumn(selectedItems.length);
-        columnData.push(nextColumn as RenderColumn);
-    }
-    // wrap the result into a new object in order to make this more easily extensible in the future
-    return { columnData };
-};
+        // append last column where there is no selection yet, unless the last selected item has no nested items or options of its own
+        if (isNonEmptyObject(nextColumn)) {
+            (nextColumn as RenderColumn).onSelect = onSelectInColumn(selectedItems.length);
+            columnData.push(nextColumn as RenderColumn);
+        }
+        // wrap the result into a new object in order to make this more easily extensible in the future
+        return { columnData };
+    };
 
 /**
  * Check whether a given JsonSchema has any nested properties or is an array.
@@ -270,7 +275,7 @@ export function hasSchemaGroupNestedItems(schemaGroup: JsonSchemaGroup, optionIn
  * @returns {FilterFunctionForColumn} function that returns the list of `filteredItems` for a given entry in the standard `columnData` array
  */
 export function createFilterFunctionForColumn(
-    flatSchemaFilterFunction?: (rawSchema: RawJsonSchema, includeNestedOptionals?: boolean) => boolean,
+    flatSchemaFilterFunction?: (rawSchema: RawJsonSchema, includeNestedOptionals?: boolean) => boolean | undefined,
     propertyNameFilterFunction: (name: string) => boolean = (): boolean => false
 ): (column: RenderColumn) => Array<string> | Array<Array<number>> {
     const containsMatchingItems = createFilterFunctionForSchema(flatSchemaFilterFunction, propertyNameFilterFunction);

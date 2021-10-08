@@ -1,25 +1,23 @@
-import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
-import "./style-overrides.css";
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
 
 import { Inspector } from "../src/index";
 
 import personSchema from "./schema-person.json";
 import shopSelectionSchema from "./schema-shop-selection.json";
 
-
-<Meta title="Inspector (parserConfig)" component={Inspector} />
+<Meta title="parserConfig" component={Inspector} />
 
 # Inspector (parserConfig)
 ## Focus: How to represent optional schema parts
 
-<Props of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "parserConfig")} />
+<ArgsTable of={Inspector} exclude={Object.keys(Inspector.propTypes).filter(propName => propName !== "parserConfig")} />
 
 ----
 
 ### default
 If no `parserConfig` prop is defined, `anyOf`/`oneOf` parts will be listed as "Option 1-2-3-..." under an "any of"/"one of" title.
 
-<Preview>
+<Canvas>
     <Story name="default">
         <Inspector
             schemas={{
@@ -40,14 +38,14 @@ If no `parserConfig` prop is defined, `anyOf`/`oneOf` parts will be listed as "O
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
 ### with custom group titles
 You can override the respective "any of"/"one of" titles via `anyOf.groupTitle` and `oneOf.groupTitle` respectively.
 
-<Preview>
+<Canvas>
     <Story name="with custom group titles">
         <Inspector
             schemas={{
@@ -66,14 +64,14 @@ You can override the respective "any of"/"one of" titles via `anyOf.groupTitle` 
             }}
         />
     </Story>
-</Preview>
+</Canvas>
 
 ----
 
 ### with custom option names
 Through `anyOf.optionNameForIndex`/`oneOf.optionNameForIndex` you can replace the default "Option 1-2-3-..." items with your preferred (e.g. translated) labels.
 
-<Preview>
+<Canvas>
     <Story name="with custom option names">
         <Inspector
             schemas={{
@@ -92,4 +90,4 @@ Through `anyOf.optionNameForIndex`/`oneOf.optionNameForIndex` you can replace th
             }}
         />
     </Story>
-</Preview>
+</Canvas>

@@ -59,8 +59,8 @@ export function collectFormFields(
     const optionIndexes = typeof selectedItem === "string" ? undefined : selectedItem;
     const getValue = <K extends KeysOfRawJsonSchema, T extends TypeInRawJsonSchema<K> | Array<TypeInRawJsonSchema<K>>>(
         fieldName: K,
-        mergeValues: (combined: T, nextValue: T) => T = listValues
-    ): T => getFieldValueFromSchemaGroup(itemSchemaGroup, fieldName, mergeValues, undefined, undefined, optionIndexes);
+        mergeValues: (combined: T | undefined, nextValue?: T | undefined) => T | undefined = listValues
+    ): T | undefined => getFieldValueFromSchemaGroup(itemSchemaGroup, fieldName, mergeValues, undefined, undefined, optionIndexes);
 
     addFormField("Title", getValue("title"));
     addFormField("Description", getValue("description"));

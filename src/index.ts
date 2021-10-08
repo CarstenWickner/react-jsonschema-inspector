@@ -24,7 +24,7 @@ export const getMinimumFieldValueFromSchemaGroup = (
     fieldName: KeysOfRawJsonSchemaWithValuesOf<number>,
     defaultValue: number,
     optionIndexes?: Array<number>
-): number => getFieldValueFromSchemaGroup(schemaGroup, fieldName, minimumValue, defaultValue, undefined, optionIndexes);
+): number => getFieldValueFromSchemaGroup(schemaGroup, fieldName, minimumValue, defaultValue, undefined, optionIndexes) as number;
 
 /**
  * Extract single maximum numeric value from a certain field in the (selected) schema parts of the given schema group.
@@ -41,7 +41,7 @@ export const getMaximumFieldValueFromSchemaGroup = (
     fieldName: KeysOfRawJsonSchemaWithValuesOf<number>,
     defaultValue: number,
     optionIndexes?: Array<number>
-): number => getFieldValueFromSchemaGroup(schemaGroup, fieldName, maximumValue, defaultValue, undefined, optionIndexes);
+): number => getFieldValueFromSchemaGroup(schemaGroup, fieldName, maximumValue, defaultValue, undefined, optionIndexes) as number;
 
 /**
  * Extract intersecting value (parts) from a certain field in the (selected) schema parts of the given schema group.
@@ -58,9 +58,11 @@ export const getMaximumFieldValueFromSchemaGroup = (
 export const getCommonFieldValuesFromSchemaGroup = <S, T extends S | Array<S>>(
     schemaGroup: JsonSchemaGroup,
     fieldName: KeysOfRawJsonSchema,
-    defaultValue: T,
+    defaultValue: S,
     optionIndexes?: Array<number>
-): T => getFieldValueFromSchemaGroup(schemaGroup, fieldName, commonValues, defaultValue, undefined, optionIndexes);
+): T =>
+    // @ts-ignore
+    getFieldValueFromSchemaGroup(schemaGroup, fieldName, commonValues, defaultValue, undefined, optionIndexes) as T;
 
 /**
  * Extract all value (parts) from a certain field in the (selected) schema parts of the given schema group.
@@ -77,6 +79,6 @@ export const getCommonFieldValuesFromSchemaGroup = <S, T extends S | Array<S>>(
 export const getFieldValueArrayFromSchemaGroup = <S, T extends S | Array<S>>(
     schemaGroup: JsonSchemaGroup,
     fieldName: KeysOfRawJsonSchema,
-    defaultValue: T,
+    defaultValue: S,
     optionIndexes?: Array<number>
-): T => getFieldValueFromSchemaGroup(schemaGroup, fieldName, listValues, defaultValue, undefined, optionIndexes);
+): T => getFieldValueFromSchemaGroup(schemaGroup, fieldName, listValues, defaultValue, undefined, optionIndexes) as T;
