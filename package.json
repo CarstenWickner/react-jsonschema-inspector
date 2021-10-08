@@ -25,8 +25,6 @@
         "test": "dts test",
         "lint": "dts lint src test",
         "prepare": "npm run build",
-        "size": "size-limit",
-        "analyze": "size-limit --why",
         "storybook": "start-storybook -p 9001",
         "build-storybook": "build-storybook -o docs",
         "predeploy": "rm -rf docs && npm run lint && npm run test --bail && npm run build-storybook",
@@ -45,20 +43,9 @@
         "tabWidth": 4,
         "trailingComma": "none"
     },
-    "size-limit": [
-        {
-            "path": "dist/react-jsonschema-inspector.cjs.production.min.js",
-            "limit": "12 KB"
-        },
-        {
-            "path": "dist/react-jsonschema-inspector.esm.js",
-            "limit": "12 KB"
-        }
-    ],
     "devDependencies": {
         "@babel/core": "^7.15.5",
         "@mdx-js/react": "^1.6.22",
-        "@size-limit/preset-small-lib": "^5.0.5",
         "@storybook/addon-docs": "^6.3.10",
         "@storybook/addon-essentials": "^6.3.10",
         "@storybook/addon-info": "^5.3.21",
