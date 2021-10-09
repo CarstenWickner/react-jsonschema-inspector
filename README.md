@@ -30,8 +30,8 @@ npm i react-jsonschema-inspector
 
 | Prop | Description |
 | --- | --- |
-| `schemas` (required) | Object: keys will be displayed in the root column, the values are expected to be independent JSON Schema definitions (compatible to Draft 4, 6, 7 or 2019-09) |
-| `referenceSchemas` | Array of objects: the entries are expected to be JSON Schema definitions with an absolute URI as `$id`/`id` (compatible to Draft 4, 6, 7 or 2019-09). These schemas will not be shown on the root column, but are used to resolve URI `$ref`-erences in any of the displayed `schemas` or in another entry of the `referenceSchemas` |
+| `schemas` (required) | Object: keys will be displayed in the root column, the values are expected to be independent JSON Schema definitions (compatible to Draft 6, 7 or 2019-09) |
+| `referenceSchemas` | Array of objects: the entries are expected to be JSON Schema definitions with an absolute URI as `$id` (compatible to Draft 6, 7 or 2019-09). These schemas will not be shown on the root column, but are used to resolve URI `$ref`-erences in any of the displayed `schemas` or in another entry of the `referenceSchemas` |
 | `hideSingleRootItem` | Boolean: flag indicating whether the properties of the single entry in the given `schemas` properties should be listed in the root column – in case of multiple entries in `schemas` this is being ignored |
 | `defaultSelectedItems` | Array of strings: each referring to the name of the selected item in the respective column (i.e. the first entry in this array should match one key in the `schemas` object) |
 | `onSelect` | Function: call-back being invoked after the selection changed. Receives two parameters: (1) the selection - as per the `defaultSelectedItems`, (2) an object containing the "columnData" - the full render information for all visible columns |
@@ -94,7 +94,7 @@ Please refer to the more detailed listing below regarding particular keywords.
 | `$schema` | - | *ignored* (assumed to be compatible to JSON Schema Draft 4, 6, 7 or 2019-09) |
 | `$vocabulary` | - | *ignored* |
 | `$id` | Yes | allowed as sub-schema reference in `$ref` or as source for the base URI to prepend to a non-fragment `$ref` (as per Draft 6 upwards), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `$defs`/`definitions` |
-| `id` | Yes | allowed as sub-schema reference in `$ref` or as source for the base URI to prepend to a non-fragment `$ref` (as per Draft 4), but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `$defs`/`definitions` or if `$id` is present |
+| `id` | - | *ignored* |
 | `$anchor` | Yes | allowed as sub-schema reference in `$ref` (as per Draft 2019-09) when preceded by `#`, but not displayed; *ignored* if specified anywhere but in the root schema or inside an entry in `$defs`/`definitions` |
 | `$ref` | Yes | used to look-up re-usable sub-schemas transparently (i.e. not displayed), supporting:<ul><li>`#` or the root `$id`/`id` value as root schema references,</li><li>`#/$defs/<name-of-definition>`/`#/definitions/<name-of-definition>` or the respective `$id`/`id` value from within the `$defs`/`definitions` for sub-schemas,</li><li>absolute URIs are supported as long as those separate schemas are provided via the `referenceSchemas` prop (and their respective root `$id`/`id` matches the given `$ref`)</li><li>absolute URIs ending with `#/$defs/<name-of-definition>`/`#/definitions/<name-of-definition>` or `#<anchor>` are also supported via the `referenceSchemas` prop</li></ul> |
 | `$recursiveAnchor` | - | *ignored* |
