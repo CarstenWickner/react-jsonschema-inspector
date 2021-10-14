@@ -33,6 +33,31 @@ Introducing a component for viewing/traversing (complex) JSON Schemas for the sa
                     minimum: getMaximumFieldValueFromSchemaGroup(arraySchemaGroup, "minItems", 0, optionIndexes)
                 }
             })}
+            breadcrumbs={{
+                skipSeparator: (fieldName, _column, index) => fieldName === "[0]" || index === 1,
+                mutateName: ((fieldName, _column, index) => fieldName && (index === 0 ? `${fieldName}:` : fieldName)),
+                renderTrailingContent: (renderProps) => (
+                    <div style={{ flexGrow: 1 }}>
+                        <button
+                            type="button"
+                            title="Copy to clipboard"
+                            disabled={renderProps.columnData.length === 1 || !renderProps.columnData[1].selectedItem}
+                            style={{
+                                float: "right",
+                                margin: ".5em",
+                                height: "2em"
+                            }}
+                            onClick={() => {
+                                const breadcrumbsText = renderProps.breadcrumbTexts.slice(1).join("");
+                                navigator.clipboard.writeText(breadcrumbsText);
+                                window.alert(`Successfully copied to clipboard:\n\n${breadcrumbsText}`);
+                            }}
+                        >
+                            📋
+                        </button>
+                    </div>
+                )
+            }}
             renderEmptyDetails={({ rootColumnSchemas }) => (
                 <div style={{ padding: "0.5em 1em 0" }}>
                     <h3>JSON Schema Inspector</h3>

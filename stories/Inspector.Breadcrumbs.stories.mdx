@@ -196,15 +196,18 @@ This can be disabled via `preventNavigation`, i.e. so a double-click does nothin
                     <div style={{ flexGrow: 1 }}>
                         <button
                             type="button"
+                            disabled={!renderProps.columnData[0].selectedItem}
                             style={{
                                 backgroundColor: "#a5d6a7",
                                 float: "right",
                                 margin: ".5em",
-                                height: "2.5em"
+                                height: "2em"
                             }}
-                            onClick={() =>
-                                window.alert(`E.g. could have copied current breadcrumbs to clipboard:\n\n\t"${renderProps.breadcrumbTexts.join("")}"`)
-                            }
+                            onClick={() => {
+                                const breadcrumbsText = renderProps.breadcrumbTexts.join("");
+                                navigator.clipboard.writeText(breadcrumbsText);
+                                window.alert(`Successfully copied to clipboard:\n\n${breadcrumbsText}`);
+                            }}
                         >
                             Copy
                         </button>
